@@ -1,0 +1,92 @@
+{
+  "changelog": [
+    {
+      "version": "Alpha-241102",
+      "changes": [
+        "Added $lBreaker$r",
+        "Added $lScoreboard$r",
+        "Added $lInfinite Aura$r (WIP)",
+        "Added $lExhibition$r mode to $lClick GUI$r (WIP)"
+      ]
+    },
+    {
+      "version": "Alpha-241026",
+      "changes": [
+        "Added $lLag Notifier$r",
+        "Added $lAstolfo$r Target HUD to $lKill Aura$r"
+      ]
+    },
+    {
+      "version": "Alpha-241025",
+      "changes": [
+        "Recoded $lInventory Manager$r (still a bit buggy)",
+        "Added $lGuess The Build$r module",
+        "Added $lTarget HUD$r to $lKill Aura$r"
+      ]
+    },
+    {
+      "version": "Alpha-241021",
+      "changes": [
+        "Reverted to LWJGL2",
+        "Fixed some bugs in $lInventory Manager$r"
+      ]
+    },
+    {
+      "version": "Alpha-241020",
+      "changes": [
+        "Added $lInventory Manager$r",
+        "Fixed a bug in $lNo Rotate$r that prevented it from working",
+        "Improved $lMiniblox$r mode in $lFlight$r"
+      ]
+    },
+    {
+      "version": "Alpha-241019",
+      "changes": [
+        "Added $lTeleport$r",
+        "Added $lPriority$r mode to $lKill Aura$r",
+        "Added $lOptimize$r option to $lVanilla No Slow$r",
+        "Added $lSet$r command",
+        "Added $lTarget Strade$r option to $lKill Aura$r",
+        "Improved $lMiniblox$r mode in $lFlight$r"
+      ]
+    },
+    {
+      "version": "Alpha-241016",
+      "changes": [
+        "Added $lAnti Fall$r",
+        "Added $lMiniblox$r mode to $lSpeed$r, $lFlight$r and $lNo Fall$r",
+        "Added $lSwitch$r mode to $lNo Slow$r",
+        "Added more modes to $lCapes$r"
+      ]
+    },
+    {
+      "version": "Alpha-241010",
+      "changes": [
+        "Added $lFast Mine$r",
+        "Added $lDebugger$r",
+        "Added $lItem Spoofer$r (experimental)",
+        "Added $lGive$r command",
+        "Added custom creative tabs",
+        "Improved $lAuto Block$r and $lNo Slow$r compatibility"
+      ]
+    },
+    {
+      "version": "Alpha-241003",
+      "changes": [
+        "Added $lAuto Block$r",
+        "Added $lFlight$r",
+        "Added $lPanic$r",
+        "Improved $lKill Aura$r to work more like vanilla attacking",
+        "Improved $lScaffold$r to works more like vanilla block placing",
+        "Sprinting now works while using items with $lNo Slow$r",
+        "Fixed a bug where Group Settings weren't saving properly"
+      ]
+    },
+    {
+      "version": "Alpha-241002",
+      "changes": [
+        "Initial Alpha Release"
+      ]
+    }
+  ]
+}

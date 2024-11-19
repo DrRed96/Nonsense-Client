@@ -1,0 +1,89 @@
+package wtf.bhopper.nonsense.module.property.impl;
+
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+import wtf.bhopper.nonsense.module.property.Property;
+import wtf.bhopper.nonsense.module.property.annotations.DisplayName;
+import wtf.bhopper.nonsense.util.misc.GeneralUtil;
+
+import java.util.function.Supplier;
+
+public class EnumProperty<T extends Enum<T>> extends Property<T> {
+
+    private final T[] values;
+
+    public EnumProperty(String displayName, String description, T value, Supplier<Boolean> dependency) {
+        super(displayName, description, value, dependency);
+        this.values = this.getEnumConstants();
+    }
+
+    public EnumProperty(String displayName, String description, T value) {
+        this(displayName, description, value, () -> true);
+    }
+
+    @SuppressWarnings("unchecked")
+    private T[] getEnumConstants() {
+        return (T[])this.get().getClass().getEnumConstants();
+    }
+
+    public boolean is(T value) {
+        return this.get() == value;
+    }
+
+    public boolean isAny(T... values) {
+        for (T value : values) {
+            if (this.get() == value) return true;
+        }
+        return false;
+    }
+
+    public void cycleForwards() {
+        int index = this.get().ordinal() + 1;
+        if (index >= values.length) index = 0;
+        this.set(values[index]);
+    }
+
+    public void cycleBackwards() {
+        int index = this.get().ordinal() - 1;
+        if (index < 0) index = values.length - 1;
+        this.set(values[index]);
+    }
+
+    @Override
+    public String getDisplayValue() {
+        return toDisplay(this.get());
+    }
+
+    @Override
+    public JsonElement serialize() {
+        return new JsonPrimitive(this.get().name());
+    }
+
+    @Override
+    public void deserialize(JsonElement element) {
+        try {
+            String valueStr = element.getAsString();
+            for (T value : this.values) {
+                if (value.name().equalsIgnoreCase(valueStr)) {
+                    this.set(value);
+                    break;
+                }
+            }
+        } catch (Exception ignored) {}
+    }
+
+    public static <E extends Enum<?>> String toDisplay(E e) {
+
+        try {
+            if (e.getClass().getField(e.name()).isAnnotationPresent(DisplayName.class)) {
+                return e.getClass().getField(e.name()).getAnnotation(DisplayName.class).value();
+            }
+        } catch (NoSuchFieldException | NullPointerException ignored) {}
+
+        return toDisplay(e.name());
+    }
+
+    public static String toDisplay(String str) {
+        return GeneralUtil.capitalize(str.replace('_', ' ').toLowerCase());
+    }
+}
