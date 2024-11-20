@@ -11,6 +11,9 @@ import java.util.Arrays;
 
 public class GeneralUtil {
 
+    public static final String ALPHABET = "abcdefghijklmnopqrstuvwxyz";
+    public static final String CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+
     public static String capitalize(String str) {
         char prevChar = ' ';
         StringBuilder builder = new StringBuilder();

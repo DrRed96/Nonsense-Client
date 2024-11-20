@@ -39,6 +39,8 @@ import optifine.Config;
 import optifine.DynamicLights;
 import optifine.PlayerControllerOF;
 import optifine.Reflector;
+import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.module.impl.visual.BarrierView;
 
 public class WorldClient extends World
 {
@@ -49,16 +51,15 @@ public class WorldClient extends World
     private ChunkProviderClient clientChunkProvider;
 
     /** Contains all entities for this client, both spawned and non-spawned. */
-    private final Set entityList = Sets.newHashSet();
+    private final Set<Entity> entityList = Sets.newHashSet();
 
     /**
      * Contains all entities for this client that were not spawned due to a non-present chunk. The game will attempt to
      * spawn up to 10 pending entities with each subsequent tick until the spawn queue is empty.
      */
-    private final Set entitySpawnQueue = Sets.newHashSet();
+    private final Set<Entity> entitySpawnQueue = Sets.newHashSet();
     private final Minecraft mc = Minecraft.getMinecraft();
-    private final Set previousActiveChunkSet = Sets.newHashSet();
-    private static final String __OBFID = "CL_00000882";
+    private final Set<ChunkCoordIntPair> previousActiveChunkSet = Sets.newHashSet();
     private BlockPosM randomTickPosM = new BlockPosM(0, 0, 0, 3);
     private boolean playerUpdate = false;
 
@@ -73,7 +74,7 @@ public class WorldClient extends World
         this.mapStorage = new SaveDataMemoryStorage();
         this.calculateInitialSkylight();
         this.calculateInitialWeather();
-        Reflector.postForgeBusEvent(Reflector.WorldEvent_Load_Constructor, new Object[] {this});
+        Reflector.postForgeBusEvent(Reflector.WorldEvent_Load_Constructor, this);
 
         if (this.mc.playerController != null && this.mc.playerController.getClass() == PlayerControllerMP.class)
         {
@@ -98,7 +99,7 @@ public class WorldClient extends World
 
         for (int i = 0; i < 10 && !this.entitySpawnQueue.isEmpty(); ++i)
         {
-            Entity entity = (Entity)this.entitySpawnQueue.iterator().next();
+            Entity entity = this.entitySpawnQueue.iterator().next();
             this.entitySpawnQueue.remove(entity);
 
             if (!this.loadedEntityList.contains(entity))
@@ -320,6 +321,12 @@ public class WorldClient extends World
         boolean flag = this.mc.playerController.getCurrentGameType() == WorldSettings.GameType.CREATIVE && itemstack != null && Block.getBlockFromItem(itemstack.getItem()) == Blocks.barrier;
         BlockPosM blockposm = this.randomTickPosM;
 
+        try {
+            if (Nonsense.module(BarrierView.class).isToggled()) {
+                flag = true;
+            }
+        } catch (NullPointerException ignored) {}
+
         for (int i = 0; i < 1000; ++i)
         {
             int j = p_73029_1_ + this.rand.nextInt(b0) - this.rand.nextInt(b0);
@@ -331,7 +338,7 @@ public class WorldClient extends World
 
             if (flag && iblockstate.getBlock() == Blocks.barrier)
             {
-                this.spawnParticle(EnumParticleTypes.BARRIER, (double)((float)j + 0.5F), (double)((float)k + 0.5F), (double)((float)l + 0.5F), 0.0D, 0.0D, 0.0D, new int[0]);
+                this.spawnParticle(EnumParticleTypes.BARRIER, (float)j + 0.5F, (float)k + 0.5F, (float)l + 0.5F, 0.0D, 0.0D, 0.0D);
             }
         }
     }
@@ -343,28 +350,24 @@ public class WorldClient extends World
     {
         this.loadedEntityList.removeAll(this.unloadedEntityList);
 
-        for (int i = 0; i < this.unloadedEntityList.size(); ++i)
-        {
-            Entity entity = (Entity)this.unloadedEntityList.get(i);
+        for (Entity entity : this.unloadedEntityList) {
             int j = entity.chunkCoordX;
             int k = entity.chunkCoordZ;
 
-            if (entity.addedToChunk && this.isChunkLoaded(j, k, true))
-            {
+            if (entity.addedToChunk && this.isChunkLoaded(j, k, true)) {
                 this.getChunkFromChunkCoords(j, k).removeEntity(entity);
             }
         }
 
-        for (int l = 0; l < this.unloadedEntityList.size(); ++l)
-        {
-            this.onEntityRemoved((Entity)this.unloadedEntityList.get(l));
+        for (Entity entity : this.unloadedEntityList) {
+            this.onEntityRemoved(entity);
         }
 
         this.unloadedEntityList.clear();
 
         for (int i1 = 0; i1 < this.loadedEntityList.size(); ++i1)
         {
-            Entity entity1 = (Entity)this.loadedEntityList.get(i1);
+            Entity entity1 = this.loadedEntityList.get(i1);
 
             if (entity1.ridingEntity != null)
             {
@@ -488,9 +491,8 @@ public class WorldClient extends World
 
     private boolean isPlayerActing()
     {
-        if (this.mc.playerController instanceof PlayerControllerOF)
+        if (this.mc.playerController instanceof PlayerControllerOF playercontrollerof)
         {
-            PlayerControllerOF playercontrollerof = (PlayerControllerOF)this.mc.playerController;
             return playercontrollerof.isActing();
         }
         else

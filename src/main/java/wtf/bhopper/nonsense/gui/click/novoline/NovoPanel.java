@@ -105,4 +105,8 @@ public class NovoPanel extends NovoComponent {
         }
     }
 
+    public ModuleCategory getCategory() {
+        return this.category;
+    }
+
 }

@@ -53,7 +53,7 @@ public class ItemMap extends ItemMapBase
             s = "map_" + stack.getMetadata();
             mapdata = new MapData(s);
             mapdata.scale = 3;
-            mapdata.calculateMapCenter((double)worldIn.getWorldInfo().getSpawnX(), (double)worldIn.getWorldInfo().getSpawnZ(), mapdata.scale);
+            mapdata.calculateMapCenter(worldIn.getWorldInfo().getSpawnX(), worldIn.getWorldInfo().getSpawnZ(), mapdata.scale);
             mapdata.dimension = (byte)worldIn.provider.getDimensionId();
             mapdata.markDirty();
             worldIn.setItemData(s, mapdata);

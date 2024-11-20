@@ -618,4 +618,8 @@ public class PlayerControllerMP
     {
         return this.isHittingBlock;
     }
+
+    public float getCurrentBlockDamage() {
+        return this.curBlockDamageMP;
+    }
 }

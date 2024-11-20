@@ -9,16 +9,20 @@ import wtf.bhopper.nonsense.module.impl.combat.Criticals;
 import wtf.bhopper.nonsense.module.impl.combat.KillAura;
 import wtf.bhopper.nonsense.module.impl.combat.NoClickDelay;
 import wtf.bhopper.nonsense.module.impl.combat.Velocity;
+import wtf.bhopper.nonsense.module.impl.exploit.Disabler;
+import wtf.bhopper.nonsense.module.impl.exploit.PingSpoofer;
+import wtf.bhopper.nonsense.module.impl.exploit.Plugins;
 import wtf.bhopper.nonsense.module.impl.exploit.ServerLagger;
 import wtf.bhopper.nonsense.module.impl.movement.*;
+import wtf.bhopper.nonsense.module.impl.other.AntiAim;
+import wtf.bhopper.nonsense.module.impl.other.DiscordRPCMod;
 import wtf.bhopper.nonsense.module.impl.other.PackSpoofer;
+import wtf.bhopper.nonsense.module.impl.player.AutoRespawn;
+import wtf.bhopper.nonsense.module.impl.player.GameSpeed;
 import wtf.bhopper.nonsense.module.impl.player.NoFall;
 import wtf.bhopper.nonsense.module.impl.player.NoRotate;
 import wtf.bhopper.nonsense.module.impl.movement.Scaffold;
-import wtf.bhopper.nonsense.module.impl.visual.Capes;
-import wtf.bhopper.nonsense.module.impl.visual.ClickGui;
-import wtf.bhopper.nonsense.module.impl.visual.HudMod;
-import wtf.bhopper.nonsense.module.impl.visual.ItemAnimations;
+import wtf.bhopper.nonsense.module.impl.visual.*;
 
 import java.util.Arrays;
 import java.util.Collection;
@@ -43,23 +47,38 @@ public class ModuleManager {
                 new Scaffold(),
                 new Flight(),
                 new Speed(),
+                new Step(),
+                new AntiFall(),
+                new Jesus(),
+                new Phase(),
                 new MovementFix(),
 
                 // Player
                 new NoFall(),
                 new NoRotate(),
+                new AutoRespawn(),
+                new GameSpeed(),
 
                 // Exploit
+                new PingSpoofer(),
+                new Disabler(),
                 new ServerLagger(),
+                new Plugins(),
 
                 // Other
+                new AntiAim(),
                 new PackSpoofer(),
+                new DiscordRPCMod(),
 
                 // Visual
                 new HudMod(),
                 new ClickGui(),
+                new BlockOverlay(),
                 new ItemAnimations(),
-                new Capes()
+                new NoRender(),
+                new Capes(),
+                new ItemPhysics(),
+                new BarrierView()
         );
 
         Nonsense.getEventBus().subscribe(this);
@@ -102,6 +121,17 @@ public class ModuleManager {
                 .stream()
                 .filter(module -> module.category == category)
                 .collect(Collectors.toList());
+    }
+
+    public int size() {
+        return this.modules.size();
+    }
+
+    public int amountEnabled() {
+        return (int)this.getModules()
+                .stream()
+                .filter(Module::isToggled)
+                .count();
     }
 
 }

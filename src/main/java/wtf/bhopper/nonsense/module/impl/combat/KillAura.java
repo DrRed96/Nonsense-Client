@@ -7,6 +7,8 @@ import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.client.C02PacketUseEntity;
+import net.minecraft.util.BlockPos;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
@@ -163,16 +165,18 @@ public class KillAura extends Module {
 
         Vec3 hitVec = this.getHitVec(this.target);
 
-        if (hitVec.distanceTo(PlayerUtil.eyesPos()) <= this.swingRange.getDouble()) {
-            PlayerUtil.swing(switch (this.swingMode.get()) {
-                case CLIENT -> false;
-                case SILENT -> true;
-                case ATTACK_ONLY -> !this.isTargetValid;
-            });
-        }
+        boolean canSwing = hitVec.distanceTo(PlayerUtil.eyesPos()) <= this.swingRange.getDouble();
 
         if (this.isTargetValid && this.target.hurtResistantTime <= 15) {
-            PacketUtil.send(new C02PacketUseEntity(this.target, C02PacketUseEntity.Action.ATTACK));
+            PacketUtil.leftClickPackets(new MovingObjectPosition(this.target, hitVec), switch (this.swingMode.get()) {
+                case CLIENT, ATTACK_ONLY -> true;
+                case SILENT -> false;
+            });
+        } else if (canSwing) {
+            PacketUtil.leftClickPackets(new MovingObjectPosition(MovingObjectPosition.MovingObjectType.MISS, hitVec, null, new BlockPos(hitVec)), switch (this.swingMode.get()) {
+                case CLIENT -> true;
+                case SILENT, ATTACK_ONLY -> false;
+            });
         }
 
         this.attackTimer.reset();

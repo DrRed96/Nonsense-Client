@@ -40,9 +40,11 @@ public enum Nonsense {
     // Util
     private File dataDir;
     private TickRate tickRate;
+    private long startTime;
 
     public void setup() {
         LOGGER.info("Loading {} {}", NAME, VERSION);
+        this.startTime = System.currentTimeMillis();
 
         this.dataDir = new File(Minecraft.getMinecraft().mcDataDir, NAME);
         if (!this.dataDir.exists()) {
@@ -94,6 +96,10 @@ public enum Nonsense {
 
     public static TickRate getTickRate() {
         return INSTANCE.tickRate;
+    }
+
+    public static long getStartTime() {
+        return INSTANCE.startTime;
     }
 
 }

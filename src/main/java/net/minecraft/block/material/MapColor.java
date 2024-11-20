@@ -7,8 +7,8 @@ public class MapColor
      */
     public static final MapColor[] mapColorArray = new MapColor[64];
     public static final MapColor airColor = new MapColor(0, 0);
-    public static final MapColor grassColor = new MapColor(1, 8368696);
-    public static final MapColor sandColor = new MapColor(2, 16247203);
+    public static final MapColor grassColor = new MapColor(1, 0x7fb238);
+    public static final MapColor sandColor = new MapColor(2, 0xf7e9a3);
     public static final MapColor clothColor = new MapColor(3, 13092807);
     public static final MapColor tntColor = new MapColor(4, 16711680);
     public static final MapColor iceColor = new MapColor(5, 10526975);
@@ -48,7 +48,6 @@ public class MapColor
 
     /** Holds the index of the color used on map. */
     public final int colorIndex;
-    private static final String __OBFID = "CL_00000544";
 
     private MapColor(int index, int color)
     {
@@ -91,6 +90,6 @@ public class MapColor
         int i = (this.colorValue >> 16 & 255) * short1 / 255;
         int j = (this.colorValue >> 8 & 255) * short1 / 255;
         int k = (this.colorValue & 255) * short1 / 255;
-        return -16777216 | i << 16 | j << 8 | k;
+        return 0xff000000 | i << 16 | j << 8 | k;
     }
 }

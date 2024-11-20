@@ -1,7 +1,6 @@
 package wtf.bhopper.nonsense.command.impl;
 
 import wtf.bhopper.nonsense.command.Command;
-import wtf.bhopper.nonsense.command.CommandExecutionException;
 import wtf.bhopper.nonsense.command.CommandInfo;
 import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
 
@@ -9,7 +8,7 @@ import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
 public class Say extends Command {
 
     @Override
-    public void execute(String[] args, String rawCommand) throws CommandExecutionException {
+    public void execute(String[] args, String rawCommand) throws Exception {
         if (args.length < 2) {
             ChatUtil.error("Missing arguments: %s", this.syntax);
             return;

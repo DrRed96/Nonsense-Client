@@ -35,14 +35,19 @@ public class NovoModule extends NovoComponent {
 
         this.yOff = this.panel.yOff;
 
+        boolean intersecting = this.mouseIntersecting(mouseX, mouseY, MOD_HEIGHT);
+
         int color;
         if (this.module.isToggled()) {
             color = NovoGui.getColor(this.panel);
-        } else if (this.mouseIntersecting(mouseX, mouseY, MOD_HEIGHT)) {
+        } else if (intersecting) {
             color = BG_COLOR_DARK;
-            this.setToolTip(this.module.description);
         } else {
             color = BG_COLOR;
+        }
+
+        if (intersecting) {
+            this.setToolTip(this.module.description);
         }
 
         this.drawBackground(MOD_HEIGHT, color);

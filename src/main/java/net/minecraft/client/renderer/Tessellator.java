@@ -6,7 +6,7 @@ public class Tessellator
     private WorldVertexBufferUploader vboUploader = new WorldVertexBufferUploader();
 
     /** The static instance of the Tessellator. */
-    private static final Tessellator instance = new Tessellator(2097152);
+    private static final Tessellator instance = new Tessellator(0x200000);
 
     public static Tessellator getInstance()
     {

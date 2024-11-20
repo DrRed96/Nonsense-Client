@@ -245,8 +245,8 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
 
             try {
                 while (!this.outboundPacketsQueue.isEmpty()) {
-                    NetworkManager.InboundHandlerTuplePacketListener networkmanager$inboundhandlertuplepacketlistener = (NetworkManager.InboundHandlerTuplePacketListener) this.outboundPacketsQueue.poll();
-                    this.dispatchPacket(networkmanager$inboundhandlertuplepacketlistener.packet, networkmanager$inboundhandlertuplepacketlistener.futureListeners);
+                    NetworkManager.InboundHandlerTuplePacketListener listener = this.outboundPacketsQueue.poll();
+                    this.dispatchPacket(listener.packet, listener.futureListeners);
                 }
             } finally {
                 this.field_181680_j.readLock().unlock();
@@ -293,7 +293,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
     }
 
     public static NetworkManager func_181124_a(InetAddress p_181124_0_, int p_181124_1_, boolean p_181124_2_) {
-        final NetworkManager networkmanager = new NetworkManager(EnumPacketDirection.CLIENTBOUND);
+        final NetworkManager networkManager = new NetworkManager(EnumPacketDirection.CLIENTBOUND);
         Class<? extends SocketChannel> oclass;
         LazyLoadBase<? extends EventLoopGroup> lazyloadbase;
 
@@ -305,18 +305,21 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
             lazyloadbase = CLIENT_NIO_EVENTLOOP;
         }
 
-        ((Bootstrap) ((Bootstrap) ((Bootstrap) (new Bootstrap()).group((EventLoopGroup) lazyloadbase.getValue())).handler(new ChannelInitializer<Channel>() {
-            protected void initChannel(Channel p_initChannel_1_) throws Exception {
+        new Bootstrap().group(lazyloadbase.getValue()).handler(new ChannelInitializer<>() {
+            protected void initChannel(Channel channel) {
                 try {
-                    p_initChannel_1_.config().setOption(ChannelOption.TCP_NODELAY, Boolean.valueOf(true));
-                } catch (ChannelException var3) {
-                    ;
-                }
+                    channel.config().setOption(ChannelOption.TCP_NODELAY, Boolean.TRUE);
+                } catch (ChannelException ignored) { }
 
-                p_initChannel_1_.pipeline().addLast((String) "timeout", (ChannelHandler) (new ReadTimeoutHandler(30))).addLast((String) "splitter", (ChannelHandler) (new MessageDeserializer2())).addLast((String) "decoder", (ChannelHandler) (new MessageDeserializer(EnumPacketDirection.CLIENTBOUND))).addLast((String) "prepender", (ChannelHandler) (new MessageSerializer2())).addLast((String) "encoder", (ChannelHandler) (new MessageSerializer(EnumPacketDirection.SERVERBOUND))).addLast((String) "packet_handler", (ChannelHandler) networkmanager);
+                channel.pipeline().addLast("timeout", new ReadTimeoutHandler(30))
+                        .addLast("splitter", new MessageDeserializer2())
+                        .addLast("decoder", new MessageDeserializer(EnumPacketDirection.CLIENTBOUND))
+                        .addLast("prepender", new MessageSerializer2())
+                        .addLast("encoder", new MessageSerializer(EnumPacketDirection.SERVERBOUND))
+                        .addLast("packet_handler", networkManager);
             }
-        })).channel(oclass)).connect(p_181124_0_, p_181124_1_).syncUninterruptibly();
-        return networkmanager;
+        }).channel(oclass).connect(p_181124_0_, p_181124_1_).syncUninterruptibly();
+        return networkManager;
     }
 
     /**

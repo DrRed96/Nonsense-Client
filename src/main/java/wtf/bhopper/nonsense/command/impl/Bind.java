@@ -3,7 +3,6 @@ package wtf.bhopper.nonsense.command.impl;
 import org.lwjglx.input.Keyboard;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.command.Command;
-import wtf.bhopper.nonsense.command.CommandExecutionException;
 import wtf.bhopper.nonsense.command.CommandInfo;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
@@ -11,7 +10,7 @@ import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
 @CommandInfo(name = "Bind", description = "Sets a key-bind.", syntax = ".bind <module> <key> | .bind del <module> | .bind <clear>", alias = "b")
 public class Bind extends Command {
     @Override
-    public void execute(String[] args, String rawCommand) throws CommandExecutionException {
+    public void execute(String[] args, String rawCommand) throws Exception {
         if (args.length < 2) {
             ChatUtil.error("Missing arguments: %s", this.syntax);
             return;

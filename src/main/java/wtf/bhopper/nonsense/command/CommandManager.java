@@ -21,9 +21,11 @@ public class CommandManager {
         this.commands.add(new Bind());
         this.commands.add(new ConfigCmd());
         this.commands.add(new Debug());
+        this.commands.add(new Give());
         this.commands.add(new Help());
         this.commands.add(new Say());
         this.commands.add(new Toggle());
+        this.commands.add(new Vclip());
 
         Nonsense.getEventBus().subscribe(this);
     }
@@ -45,10 +47,9 @@ public class CommandManager {
                     if (alias.equalsIgnoreCase(commandName)) {
                         try {
                             command.execute(args, event.message);
-                        } catch (CommandExecutionException exception) {
-                            ChatUtil.error("%s", exception.getMessage());
                         } catch (Throwable throwable) {
                             ChatUtil.error("Error: %s", throwable.getMessage());
+                            Nonsense.LOGGER.error("Command Error", throwable);
                         }
                         return;
                     }

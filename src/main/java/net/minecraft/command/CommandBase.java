@@ -326,9 +326,9 @@ public abstract class CommandBase implements ICommand
         }
     }
 
-    public static IChatComponent getChatComponentFromNthArg(ICommandSender sender, String[] args, int p_147178_2_) throws CommandException, PlayerNotFoundException
+    public static IChatComponent getChatComponentFromNthArg(ICommandSender sender, String[] args, int index) throws CommandException, PlayerNotFoundException
     {
-        return getChatComponentFromNthArg(sender, args, p_147178_2_, false);
+        return getChatComponentFromNthArg(sender, args, index, false);
     }
 
     public static IChatComponent getChatComponentFromNthArg(ICommandSender sender, String[] args, int index, boolean p_147176_3_) throws PlayerNotFoundException
@@ -498,11 +498,11 @@ public abstract class CommandBase implements ICommand
     public static Item getItemByText(ICommandSender sender, String id) throws NumberInvalidException
     {
         ResourceLocation resourcelocation = new ResourceLocation(id);
-        Item item = (Item)Item.itemRegistry.getObject(resourcelocation);
+        Item item = Item.itemRegistry.getObject(resourcelocation);
 
         if (item == null)
         {
-            throw new NumberInvalidException("commands.give.item.notFound", new Object[] {resourcelocation});
+            throw new NumberInvalidException("commands.give.item.notFound", resourcelocation);
         }
         else
         {

@@ -46,4 +46,8 @@ public class C00PacketKeepAlive implements Packet<INetHandlerPlayServer>
     {
         return this.key;
     }
+
+    public void setKey(int key) {
+        this.key = key;
+    }
 }

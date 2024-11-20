@@ -11,6 +11,8 @@ import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
 import wtf.bhopper.nonsense.util.render.ColorUtil;
 
+import java.util.function.Supplier;
+
 @ModuleInfo(name = "Click GUI",
         description = "Configure the Click GUI.",
         category = ModuleCategory.VISUAL,
@@ -18,13 +20,14 @@ import wtf.bhopper.nonsense.util.render.ColorUtil;
 public class ClickGui extends Module {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Which Click GUI to use.", Mode.NOVOLINE);
-    public final ColorProperty color = new ColorProperty("Color", "Color of the Click GUI", ColorUtil.NONSENSE_COLOR);
+    public final BooleanProperty categoryColors = new BooleanProperty("Category Colors", "Category colors.", false);
+    public final ColorProperty color = new ColorProperty("Color", "Color of the Click GUI", ColorUtil.NONSENSE_COLOR, () -> !this.categoryColors.get());
     public final BooleanProperty toolTips = new BooleanProperty("Toop Tips", "Renders tool tips.", false);
 
     private NovoGui novoline;
 
     public ClickGui() {
-        this.addProperties(this.mode, this.color, this.toolTips);
+        this.addProperties(this.mode, this.categoryColors, this.color, this.toolTips);
     }
 
     public void initGuis() {

@@ -82,15 +82,15 @@ public class GameConfiguration
     {
         public final Session session;
         public final PropertyMap userProperties;
-        public final PropertyMap field_181172_c;
+        public final PropertyMap profileProperties;
         public final Proxy proxy;
 
-        public UserInformation(Session p_i46375_1_, PropertyMap p_i46375_2_, PropertyMap p_i46375_3_, Proxy p_i46375_4_)
+        public UserInformation(Session session, PropertyMap userProperties, PropertyMap profileProperties, Proxy proxy)
         {
-            this.session = p_i46375_1_;
-            this.userProperties = p_i46375_2_;
-            this.field_181172_c = p_i46375_3_;
-            this.proxy = p_i46375_4_;
+            this.session = session;
+            this.userProperties = userProperties;
+            this.profileProperties = profileProperties;
+            this.proxy = proxy;
         }
     }
 }

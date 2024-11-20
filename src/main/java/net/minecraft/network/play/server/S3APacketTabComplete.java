@@ -27,7 +27,7 @@ public class S3APacketTabComplete implements Packet<INetHandlerPlayClient>
 
         for (int i = 0; i < this.matches.length; ++i)
         {
-            this.matches[i] = buf.readStringFromBuffer(32767);
+            this.matches[i] = buf.readStringFromBuffer(0x7FFF);
         }
     }
 
@@ -52,7 +52,7 @@ public class S3APacketTabComplete implements Packet<INetHandlerPlayClient>
         handler.handleTabComplete(this);
     }
 
-    public String[] func_149630_c()
+    public String[] getMatches()
     {
         return this.matches;
     }

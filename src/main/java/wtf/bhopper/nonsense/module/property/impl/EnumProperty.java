@@ -3,6 +3,7 @@ package wtf.bhopper.nonsense.module.property.impl;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
 import wtf.bhopper.nonsense.module.property.Property;
+import wtf.bhopper.nonsense.module.property.annotations.Description;
 import wtf.bhopper.nonsense.module.property.annotations.DisplayName;
 import wtf.bhopper.nonsense.util.misc.GeneralUtil;
 
@@ -49,6 +50,14 @@ public class EnumProperty<T extends Enum<T>> extends Property<T> {
         this.set(values[index]);
     }
 
+    public String getFullDescription() {
+        String enumDesc = getEnumDescription(this.get());
+        if (enumDesc != null) {
+            return this.description + "\n" + this.getDisplayValue() + ": " + enumDesc;
+        }
+        return this.description;
+    }
+
     @Override
     public String getDisplayValue() {
         return toDisplay(this.get());
@@ -85,5 +94,15 @@ public class EnumProperty<T extends Enum<T>> extends Property<T> {
 
     public static String toDisplay(String str) {
         return GeneralUtil.capitalize(str.replace('_', ' ').toLowerCase());
+    }
+
+    public static <E extends Enum<E>> String getEnumDescription(E e) {
+        try {
+            if (e.getClass().getField(e.name()).isAnnotationPresent(Description.class))  {
+                return e.getClass().getField(e.name()).getAnnotation(Description.class).value();
+            }
+        } catch (NoSuchFieldException | NullPointerException ignored) {}
+
+        return null;
     }
 }

@@ -5,6 +5,8 @@ import net.minecraft.network.play.server.S48PacketResourcePackSend;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
 import wtf.bhopper.nonsense.event.impl.EventReceivePacket;
+import wtf.bhopper.nonsense.gui.hud.notification.Notification;
+import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
@@ -19,6 +21,7 @@ public class PackSpoofer extends Module {
             event.cancel();
             PacketUtil.send(new C19PacketResourcePackStatus(packet.getHash(), C19PacketResourcePackStatus.Action.ACCEPTED));
             PacketUtil.send(new C19PacketResourcePackStatus(packet.getHash(), C19PacketResourcePackStatus.Action.SUCCESSFULLY_LOADED));
+            Notification.send("Pack Spoofer", "Spoofed Pack: " + packet.getURL(), NotificationType.SUCCESS, 3000);
         }
     };
 

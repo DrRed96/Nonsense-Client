@@ -1,6 +1,7 @@
 package wtf.bhopper.nonsense.util.minecraft;
 
 import net.minecraft.potion.Potion;
+import net.minecraft.util.MathHelper;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.impl.EventMove;
 import wtf.bhopper.nonsense.event.impl.EventSlowDown;
@@ -21,6 +22,12 @@ public class MoveUtil implements MinecraftInstance {
             baseSpeed *= 1.0 + 0.2 * (mc.thePlayer.getActivePotionEffect(Potion.moveSpeed).getAmplifier() + 1);
         }
         return baseSpeed;
+    }
+
+    public static double getSpeed() {
+        double x = mc.thePlayer.posX - mc.thePlayer.prevPosX;
+        double z = mc.thePlayer.posZ - mc.thePlayer.prevPosZ;
+        return MathHelper.sqrt_double(x * x + z * z);
     }
 
     public static void setSpeed(double speed) {

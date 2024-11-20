@@ -2,28 +2,28 @@ package wtf.bhopper.nonsense.gui.screens.creative;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
-import net.minecraft.event.ClickEvent;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
 import net.minecraft.potion.Potion;
-import net.minecraft.util.EnumChatFormatting;
-import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
 import wtf.bhopper.nonsense.util.minecraft.ItemBuilder;
 
 import java.util.List;
 
 @SuppressWarnings("unsued")
 public class CustomCreativeTabs extends CreativeTabs {
-    public static final CreativeTabs[] TABS = new CreativeTabs[6];
+    public static final CreativeTabs[] TABS = new CreativeTabs[12];
 
-    public static final CustomCreativeTabs tabUnobtainable = new CustomCreativeTabs(0, "Exploits", Item.getItemFromBlock(Blocks.barrier), items -> {
+    public static final CustomCreativeTabs tabAdmin = new CustomCreativeTabs(0, "Admin", Item.getItemFromBlock(Blocks.barrier), items -> {
         items.add(new ItemStack(Blocks.command_block));
         items.add(new ItemStack(Blocks.mob_spawner));
         items.add(new ItemStack(Blocks.barrier));
         items.add(new ItemStack(Items.command_block_minecart));
+    });
+
+    public static final CustomCreativeTabs tabUnobtainable = new CustomCreativeTabs(1, "Exploits", Items.spawn_egg, items -> {
 
         items.add(new ItemStack(Items.spawn_egg, 1, 63));
         items.add(new ItemStack(Items.spawn_egg, 1, 64));
@@ -67,7 +67,7 @@ public class CustomCreativeTabs extends CreativeTabs {
     });
 
 
-    public static final CustomCreativeTabs tabTest = new CustomCreativeTabs(1, "OP Items", Items.diamond_sword, items -> {
+    public static final CustomCreativeTabs tabOP = new CustomCreativeTabs(2, "OP Items", Items.diamond_sword, items -> {
 
         items.add(ItemBuilder.of(Items.diamond_sword)
                 .addEnchantment(Enchantment.sharpness, Short.MAX_VALUE)
@@ -172,13 +172,13 @@ public class CustomCreativeTabs extends CreativeTabs {
 
     });
 
-    public static final CustomCreativeTabs tabExploits = new CustomCreativeTabs(2, "Banners", Items.banner, items -> {
+    public static final CustomCreativeTabs tabExploits = new CustomCreativeTabs(3, "Banners", Items.banner, items -> {
         for (int i = 0; i < 16; i++) {
             items.add(new ItemStack(Items.banner, 1, i));
         }
     });
 
-    public static final CustomCreativeTabs tabHypixel = new CustomCreativeTabs(3, "Hypixel", Items.gold_ingot, items -> {
+    public static final CustomCreativeTabs tabHypixel = new CustomCreativeTabs(4, "Hypixel", Items.gold_ingot, items -> {
 
         NBTTagCompound menu1Attributes = new NBTTagCompound();
         menu1Attributes.setString("HOUSING_MENU", "OWNER");
@@ -336,7 +336,75 @@ public class CustomCreativeTabs extends CreativeTabs {
 
     });
 
-    public static final CustomCreativeTabs tabStupid = new CustomCreativeTabs(4, "Nonsense", Item.getItemFromBlock(Blocks.deadbush), items -> {
+    public static final CreativeTabs tabAllSearch = (new CreativeTabs(5, "search", TABS) {
+        public Item getTabIconItem() {
+            return Items.compass;
+        }
+    }).setBackgroundImageName("item_search.png");
+
+    public static final CustomCreativeTabs tabHeads = new CustomCreativeTabs(6, "Player Heads", Items.skull, items -> {
+        items.add(ItemBuilder.of(Items.skull)
+                .setMeta(3)
+                .setDisplayName("\2476Arithmo's Head")
+                .addTag("SkullOwner", ItemBuilder.skullCompound("fe7dbb41-998c-554f-812f-058604a39955", "e3RleHR1cmVzOntTS0lOOnt1cmw6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmNiNWMwMmQzMDNiNGZkMjViM2JhYzVmY2M1YmI5YTI0ZGZlMWQ2ZjM0Yzg5YzY3Y2IwYTViYmY0NThjMWE4In19fQ=="))
+                .build());
+
+        items.add(ItemBuilder.of(Items.skull)
+                .setMeta(3)
+                .setDisplayName("\2476aswdfzxcvbhgtyyn's Head")
+                .addTag("SkullOwner", ItemBuilder.skullCompound("51818755-c60f-5d6f-a771-b9889d1c75d7", "e3RleHR1cmVzOntTS0lOOnt1cmw6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzM1N2MyNWI1NzQ4Mjg1Njg4M2Q2NWI1MmI0OGIxYzNiNjI3MWQxMmVhMjZjOWI0NGM5NDI4MTJlNTcyIn19fQ=="))
+                .build());
+
+        items.add(ItemBuilder.of(Items.skull)
+                .setMeta(3)
+                .setDisplayName("\2476CalculusHvH's Head")
+                .addTag("SkullOwner", ItemBuilder.skullCompound("30880b64-84a0-5a1e-aceb-9c5660984230", "e3RleHR1cmVzOntTS0lOOnt1cmw6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGM4ZThlMjY2YmU4ZGY1NTk5ZjZhMDBlMGRkNDg2NmFiMWFiZTdjYzc1OTYyZWYzMjA0YjI1ZjlkNzJiNmExYSJ9fX0="))
+                .build());
+
+        items.add(ItemBuilder.of(Items.skull)
+                .setMeta(3)
+                .setDisplayName("\2476DalekLogic's Head")
+                .addTag("SkullOwner", ItemBuilder.skullCompound("4f6e6c27-465a-54b9-a2e0-c9d51006d877", "e3RleHR1cmVzOntTS0lOOnt1cmw6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTE5MWIyODI1NWViY2RiMDFkYzI0YWFmODU0YzllMjA1YTk1YWU0MWY3YzdjZTQ1ZDk2ZjQyNWM3MmQ4MTEyNiJ9fX0="))
+                .build());
+
+        items.add(ItemBuilder.of(Items.skull)
+                .setMeta(3)
+                .setDisplayName("\2476REZA's Head")
+                .addTag("SkullOwner", ItemBuilder.skullCompound("dae5a4e4-bf48-58fe-a42f-27ecdacf9b2b", "e3RleHR1cmVzOntTS0lOOnt1cmw6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmVmZWFmNGUxOThjOWViZDNmN2ZiNmMxNTYxZGJkNjBkMDg5YzJmZWNkZGQ4ZTdkMjM2ZGFkY2U2ZmZiM2UzYiJ9fX0="))
+                .build());
+
+        items.add(ItemBuilder.of(Items.skull)
+                .setMeta(3)
+                .setDisplayName("\2476Technoblade's Head")
+                .addTag("SkullOwner", ItemBuilder.skullCompound("3e256793-f343-5f21-8f79-d48e202968a2", "e3RleHR1cmVzOntTS0lOOnt1cmw6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGNhNTM4Zjc4NzA0OGRiYTI3ZGNkYmJjYjcyZDJmNTc4Zjg1NzczMTY4ZDcyNDY2MjY2ZTc1NWY0NzFjODkifX19"))
+                .build());
+
+        items.add(ItemBuilder.of(Items.skull)
+                .setMeta(3)
+                .setDisplayName("\2476The_Bi11iona1re's Head")
+                .addTag("SkullOwner", ItemBuilder.skullCompound("57cab3df-9cb5-5e4d-b93f-187bd20da553", "e3RleHR1cmVzOntTS0lOOnt1cmw6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmU5Yjg0YTI0ZmJmNTFhZmM0YzYzODExNThiNmNjYTQ5NjQxYTUyNjEwZjVjYTcxYjAyY2FjMmI1ZmIwZDQxMyJ9fX0="))
+                .build());
+
+        items.add(ItemBuilder.of(Items.skull)
+                .setMeta(3)
+                .setDisplayName("\2476tua's Head")
+                .addTag("SkullOwner", ItemBuilder.skullCompound("9d88b35b-f58d-5cce-8ebd-fe51449d1b53", "e3RleHR1cmVzOntTS0lOOnt1cmw6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGY3NTc2YWVjZTY4NTllYzIzZjQyZDA2N2YyYmYxNjg1MDc1YzU3NmIzZmQyMDc2NTRlMTk0MjMxNTM4NjRjYyJ9fX0="))
+                .build());
+
+        items.add(ItemBuilder.of(Items.skull)
+                .setMeta(3)
+                .setDisplayName("\2476Xylan's Head")
+                .addTag("SkullOwner", ItemBuilder.skullCompound("966d29d4-d98a-5a8e-a7a1-a376bd203d40", "e3RleHR1cmVzOntTS0lOOnt1cmw6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTI5NjAxNmRjZTkyOWQ5MDJkNWUwMDA0Mjk4M2MxZDA1ZmVmZjA1YWM5MDgxMzQyMzMxODY2MGQ0NjRjMDE2In19fQ=="))
+                .build());
+
+        items.add(ItemBuilder.of(Items.skull)
+                .setMeta(3)
+                .setDisplayName("\2476zarzel's Head")
+                .addTag("SkullOwner", ItemBuilder.skullCompound("8ef75223-d9d7-55db-9598-a1056549b018", "e3RleHR1cmVzOntTS0lOOnt1cmw6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDAwNzE3MjM4MzVjZDBjYTljNmU5ZTFiNTc1ZjZiODg2ZTIzYjJjNDA4OWVhNDQxMjhlYmU3YzIxMTY1N2MyZiJ9fX0="))
+                .build());
+    });
+
+    public static final CustomCreativeTabs tabStupid = new CustomCreativeTabs(7, "Nonsense", Item.getItemFromBlock(Blocks.deadbush), items -> {
 
         items.add(ItemBuilder.of(Items.stick)
                 .setDisplayName("\247c\247lS\2476\247lT\247e\247lI\247a\247lC\247b\247lK \2479\247lO\247d\247lF \247c\247lD\2476\247lE\247e\247lS\247a\247lT\247b\247lI\2479\247lN\247d\247lY")
@@ -365,6 +433,13 @@ public class CustomCreativeTabs extends CreativeTabs {
                 .addEnchantment(Enchantment.knockback, Short.MIN_VALUE)
                 .addEnchantment(Enchantment.fireAspect, Short.MIN_VALUE)
                 .addEnchantment(Enchantment.looting, Short.MIN_VALUE)
+                .build());
+
+        items.add(ItemBuilder.of(Items.diamond_hoe)
+                .setDisplayName("Power Tiller")
+                .setLore("This will last a long time")
+                .addEnchantment(Enchantment.efficiency, 10)
+                .addEnchantment(Enchantment.unbreaking, 10)
                 .build());
 
         ItemBuilder bigBook = ItemBuilder.of(Items.enchanted_book).setDisplayName("BIG BOOK");
@@ -407,54 +482,6 @@ public class CustomCreativeTabs extends CreativeTabs {
                 .addEnchantment(Enchantment.infinity)
                 .build());
 
-        items.add(ItemBuilder.of(Items.skull)
-                .setMeta(3)
-                .setDisplayName("\2476Arithmo's Head")
-                .addTag("SkullOwner", ItemBuilder.skullCompound("fe7dbb41-998c-554f-812f-058604a39955", "e3RleHR1cmVzOntTS0lOOnt1cmw6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmNiNWMwMmQzMDNiNGZkMjViM2JhYzVmY2M1YmI5YTI0ZGZlMWQ2ZjM0Yzg5YzY3Y2IwYTViYmY0NThjMWE4In19fQ=="))
-                .build());
-
-        items.add(ItemBuilder.of(Items.skull)
-                .setMeta(3)
-                .setDisplayName("\2476aswdfzxcvbhgtyyn's Head")
-                .addTag("SkullOwner", ItemBuilder.skullCompound("51818755-c60f-5d6f-a771-b9889d1c75d7", "e3RleHR1cmVzOntTS0lOOnt1cmw6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzM1N2MyNWI1NzQ4Mjg1Njg4M2Q2NWI1MmI0OGIxYzNiNjI3MWQxMmVhMjZjOWI0NGM5NDI4MTJlNTcyIn19fQ=="))
-                .build());
-
-        items.add(ItemBuilder.of(Items.skull)
-                .setMeta(3)
-                .setDisplayName("\2476CalculusHvH's Head")
-                .addTag("SkullOwner", ItemBuilder.skullCompound("30880b64-84a0-5a1e-aceb-9c5660984230", "e3RleHR1cmVzOntTS0lOOnt1cmw6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGM4ZThlMjY2YmU4ZGY1NTk5ZjZhMDBlMGRkNDg2NmFiMWFiZTdjYzc1OTYyZWYzMjA0YjI1ZjlkNzJiNmExYSJ9fX0="))
-                .build());
-
-        items.add(ItemBuilder.of(Items.skull)
-                .setMeta(3)
-                .setDisplayName("\2476DalekLogic's Head")
-                .addTag("SkullOwner", ItemBuilder.skullCompound("4f6e6c27-465a-54b9-a2e0-c9d51006d877", "e3RleHR1cmVzOntTS0lOOnt1cmw6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTE5MWIyODI1NWViY2RiMDFkYzI0YWFmODU0YzllMjA1YTk1YWU0MWY3YzdjZTQ1ZDk2ZjQyNWM3MmQ4MTEyNiJ9fX0="))
-                .build());
-
-        items.add(ItemBuilder.of(Items.skull)
-                .setMeta(3)
-                .setDisplayName("\2476REZA's Head")
-                .addTag("SkullOwner", ItemBuilder.skullCompound("dae5a4e4-bf48-58fe-a42f-27ecdacf9b2b", "e3RleHR1cmVzOntTS0lOOnt1cmw6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmVmZWFmNGUxOThjOWViZDNmN2ZiNmMxNTYxZGJkNjBkMDg5YzJmZWNkZGQ4ZTdkMjM2ZGFkY2U2ZmZiM2UzYiJ9fX0="))
-                .build());
-
-        items.add(ItemBuilder.of(Items.skull)
-                .setMeta(3)
-                .setDisplayName("\2476Technoblade's Head")
-                .addTag("SkullOwner", ItemBuilder.skullCompound("3e256793-f343-5f21-8f79-d48e202968a2", "e3RleHR1cmVzOntTS0lOOnt1cmw6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGNhNTM4Zjc4NzA0OGRiYTI3ZGNkYmJjYjcyZDJmNTc4Zjg1NzczMTY4ZDcyNDY2MjY2ZTc1NWY0NzFjODkifX19"))
-                .build());
-
-        items.add(ItemBuilder.of(Items.skull)
-                .setMeta(3)
-                .setDisplayName("\2476Xylan's Head")
-                .addTag("SkullOwner", ItemBuilder.skullCompound("966d29d4-d98a-5a8e-a7a1-a376bd203d40", "e3RleHR1cmVzOntTS0lOOnt1cmw6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTI5NjAxNmRjZTkyOWQ5MDJkNWUwMDA0Mjk4M2MxZDA1ZmVmZjA1YWM5MDgxMzQyMzMxODY2MGQ0NjRjMDE2In19fQ=="))
-                .build());
-
-        items.add(ItemBuilder.of(Items.skull)
-                .setMeta(3)
-                .setDisplayName("\2476zarzel's Head")
-                .addTag("SkullOwner", ItemBuilder.skullCompound("8ef75223-d9d7-55db-9598-a1056549b018", "e3RleHR1cmVzOntTS0lOOnt1cmw6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDAwNzE3MjM4MzVjZDBjYTljNmU5ZTFiNTc1ZjZiODg2ZTIzYjJjNDA4OWVhNDQxMjhlYmU3YzIxMTY1N2MyZiJ9fX0="))
-                .build());
-
         items.add(ItemBuilder.of(Items.cake)
                 .setAmount(64)
                 .build());
@@ -488,7 +515,11 @@ public class CustomCreativeTabs extends CreativeTabs {
                 .build());
     });
 
-    public static final CreativeTabs tabInventory = (new CreativeTabs(5, "Survival Inventory", TABS) {
+    public static final CustomCreativeTabs unused0 = new CustomCreativeTabs(8, "Unused", Items.glass_bottle, tabs -> {});
+    public static final CustomCreativeTabs unused1 = new CustomCreativeTabs(9, "Unused", Items.glass_bottle, tabs -> {});
+    public static final CustomCreativeTabs unused2 = new CustomCreativeTabs(10, "Unused", Items.glass_bottle, tabs -> {});
+
+    public static final CreativeTabs tabInventory = (new CreativeTabs(11, "survival", TABS) {
         public Item getTabIconItem() {
             return Item.getItemFromBlock(Blocks.chest);
         }
@@ -524,6 +555,11 @@ public class CustomCreativeTabs extends CreativeTabs {
     @Override
     public int getTabColumn() {
         return columnOverride % 6;
+    }
+
+    @Override
+    public String getTranslatedTabLabel() {
+        return this.getTabLabel();
     }
 
     public interface ItemAdder {

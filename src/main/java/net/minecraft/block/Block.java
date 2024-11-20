@@ -32,6 +32,8 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.event.impl.EventBlockCollide;
 
 public class Block
 {
@@ -137,7 +139,7 @@ public class Block
     public Block.SoundType stepSound;
     public float blockParticleGravity;
     protected final Material blockMaterial;
-    protected final MapColor field_181083_K;
+    protected final MapColor mapColor;
 
     /**
      * Determines how much velocity is maintained while moving on top of this block
@@ -246,7 +248,7 @@ public class Block
      */
     public MapColor getMapColor(IBlockState state)
     {
-        return this.field_181083_K;
+        return this.mapColor;
     }
 
     /**
@@ -281,18 +283,18 @@ public class Block
         return state;
     }
 
-    public Block(Material p_i46399_1_, MapColor p_i46399_2_)
+    public Block(Material material, MapColor mapColor)
     {
         this.enableStats = true;
         this.stepSound = soundTypeStone;
         this.blockParticleGravity = 1.0F;
         this.slipperiness = 0.6F;
-        this.blockMaterial = p_i46399_1_;
-        this.field_181083_K = p_i46399_2_;
+        this.blockMaterial = material;
+        this.mapColor = mapColor;
         this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
         this.fullBlock = this.isOpaqueCube();
         this.lightOpacity = this.isOpaqueCube() ? 255 : 0;
-        this.translucent = !p_i46399_1_.blocksLight();
+        this.translucent = !material.blocksLight();
         this.blockState = this.createBlockState();
         this.setDefaultState(this.blockState.getBaseState());
     }
@@ -438,12 +440,12 @@ public class Block
 
     protected final void setBlockBounds(float minX, float minY, float minZ, float maxX, float maxY, float maxZ)
     {
-        this.minX = (double)minX;
-        this.minY = (double)minY;
-        this.minZ = (double)minZ;
-        this.maxX = (double)maxX;
-        this.maxY = (double)maxY;
-        this.maxZ = (double)maxZ;
+        this.minX = minX;
+        this.minY = minY;
+        this.minZ = minZ;
+        this.maxX = maxX;
+        this.maxY = maxY;
+        this.maxZ = maxZ;
     }
 
     public int getMixedBrightnessForBlock(IBlockAccess worldIn, BlockPos pos)
@@ -465,7 +467,7 @@ public class Block
 
     public boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
     {
-        return side == EnumFacing.DOWN && this.minY > 0.0D ? true : (side == EnumFacing.UP && this.maxY < 1.0D ? true : (side == EnumFacing.NORTH && this.minZ > 0.0D ? true : (side == EnumFacing.SOUTH && this.maxZ < 1.0D ? true : (side == EnumFacing.WEST && this.minX > 0.0D ? true : (side == EnumFacing.EAST && this.maxX < 1.0D ? true : !worldIn.getBlockState(pos).getBlock().isOpaqueCube())))));
+        return side == EnumFacing.DOWN && this.minY > 0.0D || (side == EnumFacing.UP && this.maxY < 1.0D || (side == EnumFacing.NORTH && this.minZ > 0.0D || (side == EnumFacing.SOUTH && this.maxZ < 1.0D || (side == EnumFacing.WEST && this.minX > 0.0D ? true : (side == EnumFacing.EAST && this.maxX < 1.0D ? true : !worldIn.getBlockState(pos).getBlock().isOpaqueCube())))));
     }
 
     /**
@@ -486,11 +488,14 @@ public class Block
      */
     public void addCollisionBoxesToList(World worldIn, BlockPos pos, IBlockState state, AxisAlignedBB mask, List<AxisAlignedBB> list, Entity collidingEntity)
     {
-        AxisAlignedBB axisalignedbb = this.getCollisionBoundingBox(worldIn, pos, state);
+        AxisAlignedBB bounds = this.getCollisionBoundingBox(worldIn, pos, state);
 
-        if (axisalignedbb != null && mask.intersectsWith(axisalignedbb))
+        EventBlockCollide event = new EventBlockCollide(this, pos, bounds);
+        Nonsense.getEventBus().post(event);
+
+        if (!event.isCancelled() && event.bounds != null && mask.intersectsWith(event.bounds))
         {
-            list.add(axisalignedbb);
+            list.add(event.bounds);
         }
     }
 

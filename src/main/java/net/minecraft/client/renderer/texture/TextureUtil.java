@@ -26,7 +26,7 @@ import org.lwjgl.opengl.GL12;
 public class TextureUtil
 {
     private static final Logger logger = LogManager.getLogger();
-    private static final IntBuffer dataBuffer = GLAllocation.createDirectIntBuffer(4194304);
+    private static final IntBuffer dataBuffer = GLAllocation.createDirectIntBuffer(0x400000);
     public static final DynamicTexture missingTexture = new DynamicTexture(16, 16);
     public static final int[] missingTextureData = missingTexture.getTextureData();
     private static final int[] mipmapBuffer;

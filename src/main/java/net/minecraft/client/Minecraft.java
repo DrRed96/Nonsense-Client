@@ -95,10 +95,7 @@ import org.lwjglx.input.Mouse;
 import org.lwjglx.opengl.*;
 import org.lwjglx.util.glu.GLU;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.event.impl.EventClickAction;
-import wtf.bhopper.nonsense.event.impl.EventSelectItem;
-import wtf.bhopper.nonsense.event.impl.EventKeyPress;
-import wtf.bhopper.nonsense.event.impl.EventTick;
+import wtf.bhopper.nonsense.event.impl.*;
 import wtf.bhopper.nonsense.util.minecraft.InventoryUtil;
 
 import javax.imageio.ImageIO;
@@ -244,7 +241,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
     /**
      * When you place a block, it's set to 6, decremented once per tick, when it's 0, you can place another block.
      */
-    private int rightClickDelayTimer;
+    public int rightClickDelayTimer;
     private String serverName;
     private int serverPort;
 
@@ -334,7 +331,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
         this.fileResourcepacks = gameConfig.folderInfo.resourcePacksDir;
         this.launchedVersion = gameConfig.gameInfo.version;
         this.twitchDetails = gameConfig.userInfo.userProperties;
-        this.field_181038_N = gameConfig.userInfo.field_181172_c;
+        this.field_181038_N = gameConfig.userInfo.profileProperties;
         this.mcDefaultResourcePack = new DefaultResourcePack((new ResourceIndex(gameConfig.folderInfo.assetsDir, gameConfig.folderInfo.assetIndex)).getResourceMap());
         this.proxy = gameConfig.userInfo.proxy == null ? Proxy.NO_PROXY : gameConfig.userInfo.proxy;
         this.sessionService = (new YggdrasilAuthenticationService(gameConfig.userInfo.proxy, UUID.randomUUID().toString())).createMinecraftSessionService();
@@ -1251,26 +1248,33 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
     }
 
     private void clickMouse() {
+
+        EventPreClick event = new EventPreClick(EventPreClick.Button.LEFT, false, this.objectMouseOver);
+        Nonsense.getEventBus().post(event);
+        if (event.isCancelled()) {
+            return;
+        }
+
         if (this.leftClickCounter <= 0) {
             this.thePlayer.swingItem();
 
-            if (this.objectMouseOver == null) {
+            if (event.mouseOver == null) {
                 logger.error("Null returned as \'hitResult\', this shouldn\'t happen!");
 
                 if (this.playerController.isNotCreative()) {
                     this.leftClickCounter = 10;
                 }
             } else {
-                switch (this.objectMouseOver.typeOfHit) {
+                switch (event.mouseOver.typeOfHit) {
                     case ENTITY:
-                        this.playerController.attackEntity(this.thePlayer, this.objectMouseOver.entityHit);
+                        this.playerController.attackEntity(this.thePlayer, event.mouseOver.entityHit);
                         break;
 
                     case BLOCK:
-                        BlockPos blockpos = this.objectMouseOver.getBlockPos();
+                        BlockPos blockpos = event.mouseOver.getBlockPos();
 
                         if (this.theWorld.getBlockState(blockpos).getBlock().getMaterial() != Material.air) {
-                            this.playerController.clickBlock(blockpos, this.objectMouseOver.sideHit);
+                            this.playerController.clickBlock(blockpos, event.mouseOver.sideHit);
                             break;
                         }
 
@@ -1290,31 +1294,38 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
      * Called when user clicked he's mouse right button (place)
      */
     private void rightClickMouse() {
+
+        EventPreClick event = new EventPreClick(EventPreClick.Button.RIGHT, false, this.objectMouseOver);
+        Nonsense.getEventBus().post(event);
+        if (event.isCancelled()) {
+            return;
+        }
+
         if (!this.playerController.isHittingBlock()) {
             this.rightClickDelayTimer = 4;
             boolean flag = true;
             ItemStack itemstack = this.thePlayer.inventory.getCurrentItem();
 
-            if (this.objectMouseOver == null) {
+            if (event.mouseOver == null) {
                 logger.warn("Null returned as \'hitResult\', this shouldn\'t happen!");
             } else {
-                switch (this.objectMouseOver.typeOfHit) {
+                switch (event.mouseOver.typeOfHit) {
                     case ENTITY:
-                        if (this.playerController.isPlayerRightClickingOnEntity(this.thePlayer, this.objectMouseOver.entityHit, this.objectMouseOver)) {
+                        if (this.playerController.isPlayerRightClickingOnEntity(this.thePlayer, event.mouseOver.entityHit, event.mouseOver)) {
                             flag = false;
-                        } else if (this.playerController.interactWithEntitySendPacket(this.thePlayer, this.objectMouseOver.entityHit)) {
+                        } else if (this.playerController.interactWithEntitySendPacket(this.thePlayer, event.mouseOver.entityHit)) {
                             flag = false;
                         }
 
                         break;
 
                     case BLOCK:
-                        BlockPos blockpos = this.objectMouseOver.getBlockPos();
+                        BlockPos blockpos = event.mouseOver.getBlockPos();
 
                         if (this.theWorld.getBlockState(blockpos).getBlock().getMaterial() != Material.air) {
                             int i = itemstack != null ? itemstack.stackSize : 0;
 
-                            if (this.playerController.onPlayerRightClick(this.thePlayer, this.theWorld, itemstack, blockpos, this.objectMouseOver.sideHit, this.objectMouseOver.hitVec)) {
+                            if (this.playerController.onPlayerRightClick(this.thePlayer, this.theWorld, itemstack, blockpos, event.mouseOver.sideHit, event.mouseOver.hitVec)) {
                                 flag = false;
                                 this.thePlayer.swingItem();
                             }

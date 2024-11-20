@@ -10,6 +10,6 @@ public abstract class Command implements MinecraftInstance {
     public final String syntax = this.getClass().getAnnotation(CommandInfo.class).syntax();
     public final String[] alias =  GeneralUtil.concat(new String[]{name}, this.getClass().getAnnotation(CommandInfo.class).alias());
 
-    public abstract void execute(String[] args, String rawCommand) throws CommandExecutionException;
+    public abstract void execute(String[] args, String rawCommand) throws Exception;
 
 }

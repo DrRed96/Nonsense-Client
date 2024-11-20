@@ -46,13 +46,40 @@ public class NovoGui extends GuiScreen {
         }
 
         if (this.toolTip != null && mod().toolTips.get()) {
-            float[] bounds = new float[4];
+
+            float y = mousePos[1];
+
             NVGHelper.fontSize(14.0F);
             NVGHelper.textAlign(NVG_ALIGN_LEFT | NVG_ALIGN_BOTTOM);
-            NVGHelper.textBounds(mousePos[0], mousePos[1], this.toolTip, bounds);
 
-            NVGHelper.drawRoundedRect(bounds[0] - 2.0F, bounds[1] - 2.0F, bounds[2] - bounds[0] + 4.0F, bounds[3] - bounds[1] + 4.0F, 2.0F, 0x80000000);
-            NVGHelper.drawText(this.toolTip, mousePos[0], mousePos[1], 0xFFFFFFFF);
+            float[] bounds = null;
+
+            String[] parts = this.toolTip.split("\n");
+            for (int i = parts.length - 1; i >= 0; i--) {
+                String tip = parts[i];
+                float[] b = new float[4];
+                NVGHelper.textBounds(mousePos[0], y, tip, b);
+                if (bounds == null) {
+                    bounds = b;
+                } else {
+                    bounds[0] = Math.min(bounds[0], b[0]);
+                    bounds[1] = Math.min(bounds[1], b[1]);
+                    bounds[2] = Math.max(bounds[2], b[2]);
+                    bounds[3] = Math.max(bounds[3], b[3]);
+                }
+                y -= 16.0F;
+            }
+
+            if (bounds != null) {
+                NVGHelper.drawRoundedRect(bounds[0] - 2.0F, bounds[1] - 2.0F, bounds[2] - bounds[0] + 4.0F, bounds[3] - bounds[1] + 4.0F, 4.0F, 0x80000000);
+
+                y = mousePos[1];
+                for (int i = parts.length - 1; i >= 0; i--) {
+                    NVGHelper.drawText(parts[i], mousePos[0], y, 0xFFFFFFFF);
+                    y -= 16.0F;
+                }
+
+            }
         }
 
         NVGHelper.end();
@@ -93,6 +120,9 @@ public class NovoGui extends GuiScreen {
     }
 
     public static int getColor(NovoPanel panel) {
+        if (mod().categoryColors.get()) {
+            return panel.getCategory().color;
+        }
         return mod().color.getRGB();
     }
 

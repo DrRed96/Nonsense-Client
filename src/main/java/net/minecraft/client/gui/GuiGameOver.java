@@ -30,7 +30,7 @@ public class GuiGameOver extends GuiScreen implements GuiYesNoCallback
             }
             else
             {
-                this.buttonList.add(new GuiButton(1, this.width / 2 - 100, this.height / 4 + 96, I18n.format("deathScreen.leaveServer", new Object[0])));
+                this.buttonList.add(new GuiButton(1, this.width / 2 - 100, this.height / 4 + 96, I18n.format("deathScreen.leaveServer")));
             }
         }
         else
@@ -67,7 +67,7 @@ public class GuiGameOver extends GuiScreen implements GuiYesNoCallback
         {
             case 0:
                 this.mc.thePlayer.respawnPlayer();
-                this.mc.displayGuiScreen((GuiScreen)null);
+                this.mc.displayGuiScreen(null);
                 break;
 
             case 1:

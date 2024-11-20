@@ -13,7 +13,7 @@ public class Stitcher
 {
     private final int mipmapLevelStitcher;
     private final Set setStitchHolders = Sets.newHashSetWithExpectedSize(256);
-    private final List stitchSlots = Lists.newArrayListWithCapacity(256);
+    private final List<Slot> stitchSlots = Lists.newArrayListWithCapacity(256);
     private int currentWidth;
     private int currentHeight;
     private final int maxWidth;
@@ -76,23 +76,22 @@ public class Stitcher
         }
     }
 
-    public List getStichSlots()
+    public List<TextureAtlasSprite> getStichSlots()
     {
-        ArrayList arraylist = Lists.newArrayList();
+        ArrayList<Slot> arraylist = Lists.newArrayList();
 
-        for (Object stitcher$slot : this.stitchSlots)
+        for (Slot stitcher$slot : this.stitchSlots)
         {
-            ((Slot) stitcher$slot).getAllStitchSlots(arraylist);
+            stitcher$slot.getAllStitchSlots(arraylist);
         }
 
-        ArrayList arraylist1 = Lists.newArrayList();
+        ArrayList<TextureAtlasSprite> arraylist1 = Lists.newArrayList();
 
-        for (Object stitcher$slot10 : arraylist)
+        for (Slot stitcher$slot10 : arraylist)
         {
-            Slot stitcher$slot1 = (Slot) stitcher$slot10;
-            Stitcher.Holder stitcher$holder = stitcher$slot1.getStitchHolder();
+            Stitcher.Holder stitcher$holder = stitcher$slot10.getStitchHolder();
             TextureAtlasSprite textureatlassprite = stitcher$holder.getAtlasSprite();
-            textureatlassprite.initSprite(this.currentWidth, this.currentHeight, stitcher$slot1.getOriginX(), stitcher$slot1.getOriginY(), stitcher$holder.isRotated());
+            textureatlassprite.initSprite(this.currentWidth, this.currentHeight, stitcher$slot10.getOriginX(), stitcher$slot10.getOriginY(), stitcher$holder.isRotated());
             arraylist1.add(textureatlassprite);
         }
 

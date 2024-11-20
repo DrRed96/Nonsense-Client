@@ -25,8 +25,10 @@ public class EventBus<Event> {
             if (annotation != null) {
                 final Type eventType = ((ParameterizedType) (field.getGenericType())).getActualTypeArguments()[0];
 
-                if (!field.isAccessible())
+                if (!field.canAccess(subscriber)) {
                     field.setAccessible(true);
+                }
+
                 try {
                     final Listener<Event> listener =
                             (Listener<Event>) LOOKUP.unreflectGetter(field)
@@ -63,8 +65,9 @@ public class EventBus<Event> {
             final int size = callSites.size();
             final List<Listener<Event>> listeners = new ArrayList<>(size);
 
-            for (int i = 0; i < size; i++)
-                listeners.add(callSites.get(i).listener);
+            for (CallSite<Event> callSite : callSites) {
+                listeners.add(callSite.listener);
+            }
 
             listenerCache.put(type, listeners);
         }
@@ -88,16 +91,6 @@ public class EventBus<Event> {
         }
     }
 
-    private static class CallSite<Event> {
-        private final Object owner;
-        private final Listener<Event> listener;
-        private final byte priority;
-
-        public CallSite(Object owner, Listener<Event> listener, byte priority) {
-            this.owner = owner;
-            this.listener = listener;
-            this.priority = priority;
-        }
-    }
+    private record CallSite<Event>(Object owner, Listener<Event> listener, byte priority) { }
 
 }

@@ -21,7 +21,7 @@ public class NovoSelector extends NovoComponent {
         }
 
         if (this.mouseIntersecting(mouseX, mouseY, MOD_HEIGHT)) {
-            this.setToolTip(this.property.description);
+            this.setToolTip(this.property.getFullDescription());
         }
 
         this.yOff = this.panel.yOff;

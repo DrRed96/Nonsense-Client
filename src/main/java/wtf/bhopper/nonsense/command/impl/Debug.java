@@ -6,21 +6,18 @@ import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.util.EnumChatFormatting;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.command.Command;
-import wtf.bhopper.nonsense.command.CommandExecutionException;
 import wtf.bhopper.nonsense.command.CommandInfo;
 import wtf.bhopper.nonsense.gui.hud.notification.Notification;
 import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
 import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
-import wtf.bhopper.nonsense.util.misc.JsonUtil;
 
 import java.io.File;
-import java.io.FileWriter;
 import java.io.IOException;
 
 @CommandInfo(name = "Debug", description = "Helps with debugging", syntax = ".debug <args>")
 public class Debug extends Command {
     @Override
-    public void execute(String[] args, String rawCommand) throws CommandExecutionException {
+    public void execute(String[] args, String rawCommand) throws Exception {
 
         if (args.length < 2) {
             ChatUtil.error("Invalid arguments.");
@@ -69,18 +66,16 @@ public class Debug extends Command {
 
                 File file = dir.toPath().resolve(String.format("dump_%08x.nbt", stack.hashCode())).toFile();
 
-                try {
 
-                    CompressedStreamTools.write(stack.getTagCompound(), file);
 
-                    ChatUtil.Builder.of("%sDumped NBT data to file: %s", ChatUtil.DEBUG_PREFIX, file.getPath())
-                            .setColor(EnumChatFormatting.AQUA)
-                            .setHoverEvent("Click to open file")
-                            .setClickEvent(ClickEvent.Action.OPEN_FILE, file.getPath())
-                            .send();
-                } catch (IOException exception) {
-                    throw new CommandExecutionException(exception);
-                }
+                CompressedStreamTools.write(stack.getTagCompound(), file);
+
+                ChatUtil.Builder.of("%sDumped NBT data to file: %s", ChatUtil.DEBUG_PREFIX, file.getPath())
+                        .setColor(EnumChatFormatting.AQUA)
+                        .setHoverEvent("Click to open file")
+                        .setClickEvent(ClickEvent.Action.OPEN_FILE, file.getPath())
+                        .send();
+
 
             }
 

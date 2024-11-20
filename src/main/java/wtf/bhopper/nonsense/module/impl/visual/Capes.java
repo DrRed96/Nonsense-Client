@@ -22,7 +22,7 @@ import java.awt.*;
 public class Capes extends Module {
 
     public final EnumProperty<Cape> cape = new EnumProperty<>("Cape", "There's too many of them...", Cape.NONSENSE);
-    public final BooleanProperty glint = new BooleanProperty("Glint", "Renders an enchantment glint over the cape", false);
+    public final BooleanProperty glint = new BooleanProperty("Enchanted", "Renders an enchantment glint over the cape", false);
 
     // Frame counter for animated capes
     private int frameCounter = 0;

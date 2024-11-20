@@ -1,6 +1,8 @@
 package wtf.bhopper.nonsense.module.impl.player;
 
 import net.minecraft.network.play.client.C03PacketPlayer;
+import net.minecraft.util.MovingObjectPosition;
+import net.minecraft.util.Vec3;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
 import wtf.bhopper.nonsense.event.impl.EventPreMotion;
@@ -79,6 +81,18 @@ public class NoFall extends Module {
                     this.lastFallDistance = mc.thePlayer.fallDistance;
                 }
             }
+
+            case MINIBLOX -> {
+                if (this.willTakeDamage()) {
+                    Vec3 start = mc.thePlayer.getPositionEyes(1.0F);
+                    Vec3 end = start.subtract(0.0, start.yCoord, 0.0);
+                    MovingObjectPosition result = mc.theWorld.rayTraceBlocks(start, end, false, false, false);
+                    if (result.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+                        PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, result.hitVec.yCoord, mc.thePlayer.posZ, true));
+                        this.lastFallDistance = mc.thePlayer.fallDistance;
+                    }
+                }
+            }
         }
     };
 
@@ -90,7 +104,8 @@ public class NoFall extends Module {
         SPOOF,
         PACKET,
         NO_GROUND,
-        VERUS
+        VERUS,
+        MINIBLOX
     }
 
 }

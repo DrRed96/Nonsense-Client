@@ -347,29 +347,23 @@ public class WorldRenderer
     {
         int i = this.vertexCount * this.vertexFormat.getNextOffset() + this.vertexFormat.func_181720_d(this.field_181678_g);
 
-        switch (WorldRenderer.WorldRenderer$2.field_181661_a[this.field_181677_f.getType().ordinal()])
-        {
-            case 1:
-                this.byteBuffer.putFloat(i, (float)p_181671_1_);
-                this.byteBuffer.putFloat(i + 4, (float)p_181671_2_);
-                break;
-
-            case 2:
-            case 3:
+        switch (WorldRenderer$2.field_181661_a[this.field_181677_f.getType().ordinal()]) {
+            case 1 -> {
+                this.byteBuffer.putFloat(i, (float) p_181671_1_);
+                this.byteBuffer.putFloat(i + 4, (float) p_181671_2_);
+            }
+            case 2, 3 -> {
                 this.byteBuffer.putInt(i, p_181671_1_);
                 this.byteBuffer.putInt(i + 4, p_181671_2_);
-                break;
-
-            case 4:
-            case 5:
-                this.byteBuffer.putShort(i, (short)p_181671_2_);
-                this.byteBuffer.putShort(i + 2, (short)p_181671_1_);
-                break;
-
-            case 6:
-            case 7:
-                this.byteBuffer.put(i, (byte)p_181671_2_);
-                this.byteBuffer.put(i + 1, (byte)p_181671_1_);
+            }
+            case 4, 5 -> {
+                this.byteBuffer.putShort(i, (short) p_181671_2_);
+                this.byteBuffer.putShort(i + 2, (short) p_181671_1_);
+            }
+            case 6, 7 -> {
+                this.byteBuffer.put(i, (byte) p_181671_2_);
+                this.byteBuffer.put(i + 1, (byte) p_181671_1_);
+            }
         }
 
         this.func_181667_k();

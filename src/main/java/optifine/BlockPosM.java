@@ -25,13 +25,13 @@ public class BlockPosM extends BlockPos
         this(MathHelper.floor_double(p_i23_1_), MathHelper.floor_double(p_i23_3_), MathHelper.floor_double(p_i23_5_));
     }
 
-    public BlockPosM(int p_i24_1_, int p_i24_2_, int p_i24_3_, int p_i24_4_)
+    public BlockPosM(int mx, int my, int mz, int level)
     {
         super(0, 0, 0);
-        this.mx = p_i24_1_;
-        this.my = p_i24_2_;
-        this.mz = p_i24_3_;
-        this.level = p_i24_4_;
+        this.mx = mx;
+        this.my = my;
+        this.mz = mz;
+        this.level = level;
     }
 
     /**

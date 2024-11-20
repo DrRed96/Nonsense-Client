@@ -10,7 +10,6 @@ import shadersmod.client.ShadersRender;
 
 public class VboRenderList extends ChunkRenderContainer
 {
-    private static final String __OBFID = "CL_00002533";
 
     public void renderChunkLayer(EnumWorldBlockLayer layer)
     {

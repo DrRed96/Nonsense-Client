@@ -6,6 +6,7 @@ import net.minecraft.util.ResourceLocation;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
+import wtf.bhopper.nonsense.module.property.annotations.DisplayName;
 import wtf.bhopper.nonsense.module.property.impl.*;
 import wtf.bhopper.nonsense.util.render.ColorUtil;
 
@@ -24,9 +25,21 @@ public class HudMod extends Module {
     public final NumberProperty moduleListBackground = new NumberProperty("Background", "Background transparency.", 120.0, 0.0, 255.0, 1.0, NumberProperty.FORMAT_INT);
     public final EnumProperty<ModuleListSorting> moduleListSorting = new EnumProperty<>("Sorting", "How the module list should be sorted", ModuleListSorting.LENGTH);
 
+    private final GroupProperty information = new GroupProperty("Information", "HUD Information");
+    public final BooleanProperty coords = new BooleanProperty("Coordinates", "Displays your coordinates.", true);
+    public final BooleanProperty angles = new BooleanProperty("Angles", "Displays your pitch and yaw.", false);
+    public final EnumProperty<Speed> speed = new EnumProperty<>("Speed", "Display your move speed.", Speed.MPS);
+    public final BooleanProperty tps = new BooleanProperty("TPS", "Displays the servers ticks per second.", false);
+    public final BooleanProperty pots = new BooleanProperty("Potions", "Displays your active potion effects.", true);
+    public final BooleanProperty fps = new BooleanProperty("FPS", "Displays your FPS.", false);
+
     private final GroupProperty notificationGroup = new GroupProperty("Notifications", "Notifications");
     public final BooleanProperty notificationEnabled = new BooleanProperty("Enabled", "Enables notifications.", true);
     public final EnumProperty<NotificationSound> notificationSound = new EnumProperty<>("Sound", "Sound that gets played when you get a notification.", NotificationSound.POP);
+
+    public final ColorProperty color = new ColorProperty("Color", "HUD color.", ColorUtil.NONSENSE_COLOR);
+    public final NumberProperty fontSize = new NumberProperty("Font Size", "Size of the custom font", 18.0, 11.0, 24.0, 1.0, NumberProperty.FORMAT_PIXELS);
+    public final BooleanProperty hideInF3 = new BooleanProperty("Hide In F3", "Hides the HUD while in F3", true);
 
     public HudMod() {
         this.moduleListGroup.addProperties(this.moduleListEnabled,
@@ -39,8 +52,9 @@ public class HudMod extends Module {
                 this.moduleListSpacing,
                 this.moduleListBackground,
                 this.moduleListSorting);
+        this.information.addProperties(this.coords, this.angles, this.speed, this.tps, this.pots, this.fps);
         this.notificationGroup.addProperties(this.notificationEnabled, this.notificationSound);
-        this.addProperties(this.moduleListGroup, this.notificationGroup);
+        this.addProperties(this.moduleListGroup, this.information, this.notificationGroup, this.color, this.fontSize, this.hideInF3);
         this.toggle(true);
     }
 
@@ -59,6 +73,14 @@ public class HudMod extends Module {
     public enum ModuleListSorting {
         LENGTH,
         ALPHABETICAL
+    }
+
+    public enum Speed {
+        @DisplayName("m/s") MPS,
+        @DisplayName("Km/h") KMPH,
+        @DisplayName("mph") MPH,
+        RAW,
+        NONE
     }
 
     public enum NotificationSound {

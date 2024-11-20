@@ -32,8 +32,8 @@ public class NoRotate extends Module {
             packet.setRotations(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch);
 
             switch (this.mode.get()) {
-                case PACKET -> PacketUtil.send(new C03PacketPlayer.C05PacketPlayerLook(packet.getYaw(), packet.getPitch(), mc.thePlayer.onGround));
                 case EDIT -> this.rotation = new Rotation(packet.getYaw(), packet.getPitch());
+                case PACKET -> PacketUtil.send(new C03PacketPlayer.C05PacketPlayerLook(packet.getYaw(), packet.getPitch(), mc.thePlayer.onGround));
             }
         }
     };
@@ -48,8 +48,8 @@ public class NoRotate extends Module {
 
     private enum Mode {
         VANILLA,
-        PACKET,
-        EDIT
+        EDIT,
+        PACKET
     }
 
 }

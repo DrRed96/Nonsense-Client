@@ -49,6 +49,8 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.event.impl.EventPostStep;
+import wtf.bhopper.nonsense.event.impl.EventPreStep;
 import wtf.bhopper.nonsense.event.impl.EventStrafe;
 
 public abstract class Entity implements ICommandSender {
@@ -588,9 +590,9 @@ public abstract class Entity implements ICommandSender {
 
             if (this.isInWeb) {
                 this.isInWeb = false;
-                x *= 0.25D;
-                y *= 0.05000000074505806D;
-                z *= 0.25D;
+                x *= 0.25;
+                y *= 0.05;
+                z *= 0.25;
                 this.motionX = 0.0D;
                 this.motionY = 0.0D;
                 this.motionZ = 0.0D;
@@ -667,13 +669,18 @@ public abstract class Entity implements ICommandSender {
 
             this.setEntityBoundingBox(this.getEntityBoundingBox().offset(0.0D, 0.0D, z));
 
-            if (this.stepHeight > 0.0F && flag1 && (d3 != x || d5 != z)) {
+            EventPreStep eventStep = new EventPreStep(this.stepHeight);
+            if (this.isClientPlayer()) {
+                Nonsense.getEventBus().post(eventStep);
+            }
+
+            if (eventStep.height > 0.0F && flag1 && (d3 != x || d5 != z)) {
                 double d11 = x;
                 double d7 = y;
                 double d8 = z;
                 AxisAlignedBB axisalignedbb3 = this.getEntityBoundingBox();
                 this.setEntityBoundingBox(axisalignedbb);
-                y = (double) this.stepHeight;
+                y = eventStep.height;
                 List<AxisAlignedBB> list = this.worldObj.getCollidingBoundingBoxes(this, this.getEntityBoundingBox().addCoord(d3, y, d5));
                 AxisAlignedBB axisalignedbb4 = this.getEntityBoundingBox();
                 AxisAlignedBB axisalignedbb5 = axisalignedbb4.addCoord(d3, 0.0D, d5);
@@ -746,6 +753,8 @@ public abstract class Entity implements ICommandSender {
                     y = d7;
                     z = d8;
                     this.setEntityBoundingBox(axisalignedbb3);
+                } else if (this.isClientPlayer()) {
+                    Nonsense.getEventBus().post(new EventPostStep(this.stepHeight, y + 1.0));
                 }
             }
 
@@ -757,7 +766,7 @@ public abstract class Entity implements ICommandSender {
             this.onGround = this.isCollidedVertically && d4 < 0.0D;
             this.isCollided = this.isCollidedHorizontally || this.isCollidedVertically;
             int i = MathHelper.floor_double(this.posX);
-            int j = MathHelper.floor_double(this.posY - 0.20000000298023224D);
+            int j = MathHelper.floor_double(this.posY - 0.2);
             int k = MathHelper.floor_double(this.posZ);
             BlockPos blockpos = new BlockPos(i, j, k);
             Block block1 = this.worldObj.getBlockState(blockpos).getBlock();
@@ -805,7 +814,7 @@ public abstract class Entity implements ICommandSender {
                     this.nextStepDistance = (int) this.distanceWalkedOnStepModified + 1;
 
                     if (this.isInWater()) {
-                        float f = MathHelper.sqrt_double(this.motionX * this.motionX * 0.20000000298023224D + this.motionY * this.motionY + this.motionZ * this.motionZ * 0.20000000298023224D) * 0.35F;
+                        float f = MathHelper.sqrt_double(this.motionX * this.motionX * 0.2 + this.motionY * this.motionY + this.motionZ * this.motionZ * 0.2) * 0.35F;
 
                         if (f > 1.0F) {
                             f = 1.0F;
@@ -991,7 +1000,7 @@ public abstract class Entity implements ICommandSender {
      * Returns if this entity is in water and will end up adding the waters velocity to the entity
      */
     public boolean handleWaterMovement() {
-        if (this.worldObj.handleMaterialAcceleration(this.getEntityBoundingBox().expand(0.0D, -0.4000000059604645D, 0.0D).contract(0.001D, 0.001D, 0.001D), Material.water, this)) {
+        if (this.worldObj.handleMaterialAcceleration(this.getEntityBoundingBox().expand(0.0D, -0.4, 0.0D).contract(0.001D, 0.001D, 0.001D), Material.water, this)) {
             if (!this.inWater && !this.firstUpdate) {
                 this.resetHeight();
             }

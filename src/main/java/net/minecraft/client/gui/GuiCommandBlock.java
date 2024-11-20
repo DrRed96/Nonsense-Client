@@ -96,10 +96,10 @@ public class GuiCommandBlock extends GuiScreen
 
                 if (!this.localCommandBlock.shouldTrackOutput())
                 {
-                    this.localCommandBlock.setLastOutput((IChatComponent)null);
+                    this.localCommandBlock.setLastOutput(null);
                 }
 
-                this.mc.displayGuiScreen((GuiScreen)null);
+                this.mc.displayGuiScreen(null);
             }
             else if (button.id == 4)
             {

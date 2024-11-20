@@ -21,14 +21,14 @@ public class MovingObjectPosition
         this(MovingObjectPosition.MovingObjectType.BLOCK, hitVecIn, facing, blockPosIn);
     }
 
-    public MovingObjectPosition(Vec3 p_i45552_1_, EnumFacing facing)
+    public MovingObjectPosition(Vec3 hitVec, EnumFacing facing)
     {
-        this(MovingObjectPosition.MovingObjectType.BLOCK, p_i45552_1_, facing, BlockPos.ORIGIN);
+        this(MovingObjectPosition.MovingObjectType.BLOCK, hitVec, facing, BlockPos.ORIGIN);
     }
 
-    public MovingObjectPosition(Entity p_i2304_1_)
+    public MovingObjectPosition(Entity entity)
     {
-        this(p_i2304_1_, new Vec3(p_i2304_1_.posX, p_i2304_1_.posY, p_i2304_1_.posZ));
+        this(entity, new Vec3(entity.posX, entity.posY, entity.posZ));
     }
 
     public MovingObjectPosition(MovingObjectPosition.MovingObjectType typeOfHitIn, Vec3 hitVecIn, EnumFacing sideHitIn, BlockPos blockPosIn)
@@ -56,10 +56,10 @@ public class MovingObjectPosition
         return "HitResult{type=" + this.typeOfHit + ", blockpos=" + this.blockPos + ", f=" + this.sideHit + ", pos=" + this.hitVec + ", entity=" + this.entityHit + '}';
     }
 
-    public static enum MovingObjectType
+    public enum MovingObjectType
     {
         MISS,
         BLOCK,
-        ENTITY;
+        ENTITY
     }
 }

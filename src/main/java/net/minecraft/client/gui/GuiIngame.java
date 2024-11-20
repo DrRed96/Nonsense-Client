@@ -313,6 +313,8 @@ public class GuiIngame extends Gui {
             this.renderScoreboard(scoreobjective1, scaledRes);
         }
 
+        Nonsense.getHud().infoDisplay.draw();
+
         if (mc.currentScreen == null) {
             Nonsense.getHud().notifications.draw(partialTicks);
         }

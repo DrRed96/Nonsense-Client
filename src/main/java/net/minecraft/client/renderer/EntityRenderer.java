@@ -88,6 +88,10 @@ import org.lwjglx.util.glu.GLU;
 import org.lwjglx.util.glu.Project;
 import shadersmod.client.Shaders;
 import shadersmod.client.ShadersRender;
+import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.event.impl.EventRender3D;
+import wtf.bhopper.nonsense.module.impl.visual.BlockOverlay;
+import wtf.bhopper.nonsense.module.impl.visual.NoRender;
 
 public class EntityRenderer implements IResourceManagerReloadListener
 {
@@ -175,8 +179,8 @@ public class EntityRenderer implements IResourceManagerReloadListener
 
     /** Rain sound counter */
     private int rainSoundCounter;
-    private float[] rainXCoords = new float[1024];
-    private float[] rainYCoords = new float[1024];
+    private float[] rainXCoords = new float[0x400];
+    private float[] rainYCoords = new float[0x400];
 
     /** Fog color buffer */
     private FloatBuffer fogColorBuffer = GLAllocation.createDirectFloatBuffer(16);
@@ -200,7 +204,6 @@ public class EntityRenderer implements IResourceManagerReloadListener
     private int shaderIndex;
     private boolean useShader;
     public int frameCount;
-    private static final String __OBFID = "CL_00000947";
     private boolean initialized = false;
     private World updatedWorld = null;
     private boolean showDebugInfo = false;
@@ -533,7 +536,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
             if (this.pointedEntity != null && flag && vec3.distanceTo(vec33) > 3.0D)
             {
                 this.pointedEntity = null;
-                this.mc.objectMouseOver = new MovingObjectPosition(MovingObjectPosition.MovingObjectType.MISS, vec33, (EnumFacing)null, new BlockPos(vec33));
+                this.mc.objectMouseOver = new MovingObjectPosition(MovingObjectPosition.MovingObjectType.MISS, vec33, null, new BlockPos(vec33));
             }
 
             if (this.pointedEntity != null && (d2 < d1 || this.mc.objectMouseOver == null))
@@ -580,7 +583,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
     /**
      * Changes the field of view of the player depending on if they are underwater or not
      */
-    private float getFOVModifier(float partialTicks, boolean p_78481_2_)
+    private float getFOVModifier(float partialTicks, boolean applyFovSetting)
     {
         if (this.debugView)
         {
@@ -591,7 +594,7 @@ public class EntityRenderer implements IResourceManagerReloadListener
             Entity entity = this.mc.getRenderViewEntity();
             float f = 70.0F;
 
-            if (p_78481_2_)
+            if (applyFovSetting)
             {
                 f = this.mc.gameSettings.fovSetting;
 
@@ -650,9 +653,13 @@ public class EntityRenderer implements IResourceManagerReloadListener
 
     private void hurtCameraEffect(float partialTicks)
     {
-        if (this.mc.getRenderViewEntity() instanceof EntityLivingBase)
+        NoRender noRender = Nonsense.module(NoRender.class);
+        if (noRender.isToggled() && noRender.hurtCamera.get()) {
+            return;
+        }
+
+        if (this.mc.getRenderViewEntity() instanceof EntityLivingBase entitylivingbase)
         {
-            EntityLivingBase entitylivingbase = (EntityLivingBase)this.mc.getRenderViewEntity();
             float f = (float)entitylivingbase.hurtTime - partialTicks;
 
             if (entitylivingbase.getHealth() <= 0.0F)
@@ -1400,7 +1407,9 @@ public class EntityRenderer implements IResourceManagerReloadListener
 
     private boolean isDrawBlockOutline()
     {
-        if (!this.drawBlockOutline)
+        BlockOverlay blockOverlay = Nonsense.module(BlockOverlay.class);
+
+        if (!this.drawBlockOutline || (blockOverlay.isToggled() && blockOverlay.mouseOver.isEnabled()))
         {
             return false;
         }
@@ -1842,6 +1851,8 @@ public class EntityRenderer implements IResourceManagerReloadListener
             this.mc.mcProfiler.endStartSection("forge_render_last");
             Reflector.callVoid(Reflector.ForgeHooksClient_dispatchRenderLast, new Object[] {renderglobal, Float.valueOf(partialTicks)});
         }
+
+        Nonsense.getEventBus().post(new EventRender3D(partialTicks));
 
         this.mc.mcProfiler.endStartSection("hand");
         boolean flag2 = ReflectorForge.renderFirstPersonHand(this.mc.renderGlobal, partialTicks, pass);

@@ -4,7 +4,6 @@ import net.minecraft.event.ClickEvent;
 import net.minecraft.util.EnumChatFormatting;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.command.Command;
-import wtf.bhopper.nonsense.command.CommandExecutionException;
 import wtf.bhopper.nonsense.command.CommandInfo;
 import wtf.bhopper.nonsense.config.Config;
 import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
@@ -17,7 +16,7 @@ import java.io.IOException;
         alias = {"properties", "settings", "c", "s", "p"})
 public class ConfigCmd extends Command {
     @Override
-    public void execute(String[] args, String rawCommand) throws CommandExecutionException {
+    public void execute(String[] args, String rawCommand) throws Exception {
 
         if (args.length < 2) {
             ChatUtil.error("Missing arguments: %s", this.syntax);

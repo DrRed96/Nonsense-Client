@@ -633,36 +633,36 @@ public class PacketBuffer extends ByteBuf {
         return this.buf.writeBoolean(p_writeBoolean_1_);
     }
 
-    public ByteBuf writeByte(int p_writeByte_1_) {
-        return this.buf.writeByte(p_writeByte_1_);
+    public ByteBuf writeByte(int b) {
+        return this.buf.writeByte(b);
     }
 
-    public ByteBuf writeShort(int p_writeShort_1_) {
-        return this.buf.writeShort(p_writeShort_1_);
+    public ByteBuf writeShort(int s) {
+        return this.buf.writeShort(s);
     }
 
-    public ByteBuf writeMedium(int p_writeMedium_1_) {
-        return this.buf.writeMedium(p_writeMedium_1_);
+    public ByteBuf writeMedium(int m) {
+        return this.buf.writeMedium(m);
     }
 
-    public ByteBuf writeInt(int p_writeInt_1_) {
-        return this.buf.writeInt(p_writeInt_1_);
+    public ByteBuf writeInt(int i) {
+        return this.buf.writeInt(i);
     }
 
-    public ByteBuf writeLong(long p_writeLong_1_) {
-        return this.buf.writeLong(p_writeLong_1_);
+    public ByteBuf writeLong(long l) {
+        return this.buf.writeLong(l);
     }
 
-    public ByteBuf writeChar(int p_writeChar_1_) {
-        return this.buf.writeChar(p_writeChar_1_);
+    public ByteBuf writeChar(int c) {
+        return this.buf.writeChar(c);
     }
 
-    public ByteBuf writeFloat(float p_writeFloat_1_) {
-        return this.buf.writeFloat(p_writeFloat_1_);
+    public ByteBuf writeFloat(float f) {
+        return this.buf.writeFloat(f);
     }
 
-    public ByteBuf writeDouble(double p_writeDouble_1_) {
-        return this.buf.writeDouble(p_writeDouble_1_);
+    public ByteBuf writeDouble(double d) {
+        return this.buf.writeDouble(d);
     }
 
     public ByteBuf writeBytes(ByteBuf p_writeBytes_1_) {

@@ -19,6 +19,8 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeColorHelper;
+import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.event.impl.EventBlockCollide;
 
 public abstract class BlockLiquid extends Block
 {
@@ -27,7 +29,7 @@ public abstract class BlockLiquid extends Block
     protected BlockLiquid(Material materialIn)
     {
         super(materialIn);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(LEVEL, Integer.valueOf(0)));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(LEVEL, 0));
         this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
         this.setTickRandomly(true);
     }
@@ -39,7 +41,7 @@ public abstract class BlockLiquid extends Block
 
     public int colorMultiplier(IBlockAccess worldIn, BlockPos pos, int renderPass)
     {
-        return this.blockMaterial == Material.water ? BiomeColorHelper.getWaterColorAtPos(worldIn, pos) : 16777215;
+        return this.blockMaterial == Material.water ? BiomeColorHelper.getWaterColorAtPos(worldIn, pos) : 0xffffff;
     }
 
     /**
@@ -57,7 +59,7 @@ public abstract class BlockLiquid extends Block
 
     protected int getLevel(IBlockAccess worldIn, BlockPos pos)
     {
-        return worldIn.getBlockState(pos).getBlock().getMaterial() == this.blockMaterial ? ((Integer)worldIn.getBlockState(pos).getValue(LEVEL)).intValue() : -1;
+        return worldIn.getBlockState(pos).getBlock().getMaterial() == this.blockMaterial ? worldIn.getBlockState(pos).getValue(LEVEL) : -1;
     }
 
     protected int getEffectiveFlowDecay(IBlockAccess worldIn, BlockPos pos)
@@ -81,7 +83,7 @@ public abstract class BlockLiquid extends Block
 
     public boolean canCollideCheck(IBlockState state, boolean hitIfLiquid)
     {
-        return hitIfLiquid && ((Integer)state.getValue(LEVEL)).intValue() == 0;
+        return hitIfLiquid && state.getValue(LEVEL) == 0;
     }
 
     /**
@@ -90,12 +92,12 @@ public abstract class BlockLiquid extends Block
     public boolean isBlockSolid(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
     {
         Material material = worldIn.getBlockState(pos).getBlock().getMaterial();
-        return material == this.blockMaterial ? false : (side == EnumFacing.UP ? true : (material == Material.ice ? false : super.isBlockSolid(worldIn, pos, side)));
+        return material != this.blockMaterial && (side == EnumFacing.UP || (material != Material.ice && super.isBlockSolid(worldIn, pos, side)));
     }
 
     public boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
     {
-        return worldIn.getBlockState(pos).getBlock().getMaterial() == this.blockMaterial ? false : (side == EnumFacing.UP ? true : super.shouldSideBeRendered(worldIn, pos, side));
+        return worldIn.getBlockState(pos).getBlock().getMaterial() != this.blockMaterial && (side == EnumFacing.UP || super.shouldSideBeRendered(worldIn, pos, side));
     }
 
     public boolean func_176364_g(IBlockAccess blockAccess, BlockPos pos)
@@ -120,7 +122,9 @@ public abstract class BlockLiquid extends Block
 
     public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)
     {
-        return null;
+        EventBlockCollide event = new EventBlockCollide(this, pos, null);
+        Nonsense.getEventBus().post(event);
+        return event.bounds;
     }
 
     /**
