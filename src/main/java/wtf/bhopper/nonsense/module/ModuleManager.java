@@ -76,6 +76,7 @@ public class ModuleManager {
                 new BlockOverlay(),
                 new ItemAnimations(),
                 new NoRender(),
+                new LagNotifier(),
                 new Capes(),
                 new ItemPhysics(),
                 new BarrierView()

@@ -14,9 +14,9 @@ public class NBTTagIntArray extends NBTBase
     {
     }
 
-    public NBTTagIntArray(int[] p_i45132_1_)
+    public NBTTagIntArray(int[] arr)
     {
-        this.intArray = p_i45132_1_;
+        this.intArray = arr;
     }
 
     /**

@@ -31,6 +31,7 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 import org.lwjglx.opengl.GLContext;
 import org.lwjglx.util.glu.Project;
+import wtf.bhopper.nonsense.gui.screens.altmanager.GuiAltManager;
 
 public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
 {
@@ -280,7 +281,8 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
 
         if (button.id == 14 && this.realmsButton.visible)
         {
-            this.switchToRealms();
+            this.mc.displayGuiScreen(new GuiAltManager(this));
+//            this.switchToRealms();
         }
 
         if (button.id == 4)

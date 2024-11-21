@@ -24,7 +24,7 @@ public class Potion {
      * The array of potion types.
      */
     public static final Potion[] potionTypes = new Potion[32];
-    private static final Map<ResourceLocation, Potion> field_180150_I = Maps.<ResourceLocation, Potion>newHashMap();
+    private static final Map<ResourceLocation, Potion> field_180150_I = Maps.newHashMap();
     public static final Potion field_180151_b = null;
     public static final Potion moveSpeed = (new Potion(1, new ResourceLocation("speed"), false, 0x7cafc6)).setPotionName("potion.moveSpeed").setIconIndex(0, 0).registerPotionAttributeModifier(SharedMonsterAttributes.movementSpeed, "91AEAA56-376B-4498-935B-2F7F68070635", 0.2, 2);
     public static final Potion moveSlowdown = (new Potion(2, new ResourceLocation("slowness"), true, 5926017)).setPotionName("potion.moveSlowdown").setIconIndex(1, 0).registerPotionAttributeModifier(SharedMonsterAttributes.movementSpeed, "7107DE5E-7CE8-4030-940E-514C1F160890", -0.15, 2);

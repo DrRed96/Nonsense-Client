@@ -27,6 +27,7 @@ public class NovoModule extends NovoComponent {
             else if (p instanceof EnumProperty<?> enumProperty) components.add(new NovoSelector(this.panel, enumProperty, 0));
             else if (p instanceof ColorProperty colorProperty) components.add(new NovoColorPicker(this.panel, colorProperty, 0));
             else if (p instanceof GroupProperty groupProperty) components.add(new NovoGroup(this.panel, groupProperty, 0));
+            else if (p instanceof ButtonProperty buttonProperty) components.add(new NovoButton(this.panel, buttonProperty, 0));
         }
     }
 

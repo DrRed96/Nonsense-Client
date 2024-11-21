@@ -9,12 +9,15 @@ import wtf.bhopper.nonsense.event.impl.EventSpeed;
 
 public class MoveUtil implements MinecraftInstance {
 
+    public static final double BASE_SPEED = 2.873;
+    public static final double JUMP_HEIGHT = 0.42;
+
     public static boolean isMoving() {
         return mc.thePlayer.moveForward != 0.0F || mc.thePlayer.moveStrafing != 0.0F;
     }
 
     public static double baseSpeed() {
-        double baseSpeed = mc.thePlayer.capabilities.getWalkSpeed() * 2.873;
+        double baseSpeed = mc.thePlayer.capabilities.getWalkSpeed() * BASE_SPEED;
         if (mc.thePlayer.isPotionActive(Potion.moveSlowdown)) {
             baseSpeed /= 1.0 + 0.2 * (mc.thePlayer.getActivePotionEffect(Potion.moveSlowdown).getAmplifier() + 1);
         }
@@ -25,9 +28,7 @@ public class MoveUtil implements MinecraftInstance {
     }
 
     public static double getSpeed() {
-        double x = mc.thePlayer.posX - mc.thePlayer.prevPosX;
-        double z = mc.thePlayer.posZ - mc.thePlayer.prevPosZ;
-        return MathHelper.sqrt_double(x * x + z * z);
+        return Math.hypot(mc.thePlayer.motionX, mc.thePlayer.motionZ);
     }
 
     public static void setSpeed(double speed) {

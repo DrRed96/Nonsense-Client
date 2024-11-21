@@ -165,7 +165,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
     private Entity renderViewEntity;
     public Entity pointedEntity;
     public EffectRenderer effectRenderer;
-    private final Session session;
+    private Session session;
     private boolean isGamePaused;
 
     /**
@@ -2576,5 +2576,9 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
 
     public void func_181537_a(boolean p_181537_1_) {
         this.field_181541_X = p_181537_1_;
+    }
+
+    public void setSession(Session session) {
+        this.session = session;
     }
 }

@@ -3,6 +3,7 @@ package wtf.bhopper.nonsense.module.impl.visual;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.util.ResourceLocation;
+import wtf.bhopper.nonsense.gui.screens.GuiMoveHudComponents;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
@@ -39,6 +40,7 @@ public class HudMod extends Module {
 
     public final ColorProperty color = new ColorProperty("Color", "HUD color.", ColorUtil.NONSENSE_COLOR);
     public final NumberProperty fontSize = new NumberProperty("Font Size", "Size of the custom font", 18.0, 11.0, 24.0, 1.0, NumberProperty.FORMAT_PIXELS);
+    public final ButtonProperty moveComponents = new ButtonProperty("Move Components", "Click to move the HUD components.", () -> mc.displayGuiScreen(new GuiMoveHudComponents()));
     public final BooleanProperty hideInF3 = new BooleanProperty("Hide In F3", "Hides the HUD while in F3", true);
 
     public HudMod() {
@@ -54,7 +56,7 @@ public class HudMod extends Module {
                 this.moduleListSorting);
         this.information.addProperties(this.coords, this.angles, this.speed, this.tps, this.pots, this.fps);
         this.notificationGroup.addProperties(this.notificationEnabled, this.notificationSound);
-        this.addProperties(this.moduleListGroup, this.information, this.notificationGroup, this.color, this.fontSize, this.hideInF3);
+        this.addProperties(this.moduleListGroup, this.information, this.notificationGroup, this.color, this.fontSize, this.moveComponents, this.hideInF3);
         this.toggle(true);
     }
 

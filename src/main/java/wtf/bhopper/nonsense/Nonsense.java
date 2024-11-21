@@ -1,8 +1,10 @@
 package wtf.bhopper.nonsense;
 
+import com.google.gson.Gson;
 import net.minecraft.client.Minecraft;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import wtf.bhopper.nonsense.alt.AltManager;
 import wtf.bhopper.nonsense.command.CommandManager;
 import wtf.bhopper.nonsense.config.ConfigManager;
 import wtf.bhopper.nonsense.event.Event;
@@ -25,6 +27,7 @@ public enum Nonsense {
     public static final String VERSION = "241116";
 
     public static final Logger LOGGER = LogManager.getLogger(NAME);
+    public static final Gson GSON = new Gson();
 
     // Event Bus
     private EventBus<Event> eventBus;
@@ -33,6 +36,7 @@ public enum Nonsense {
     private ModuleManager moduleManager;
     private CommandManager commandManager;
     private ConfigManager configManager;
+    private AltManager altManager;
 
     // Render Components
     private Hud hud;
@@ -55,6 +59,7 @@ public enum Nonsense {
         this.moduleManager = new ModuleManager();
         this.commandManager = new CommandManager();
         this.configManager = new ConfigManager();
+        this.altManager = new AltManager();
 
         NVGHelper.init();
         Fonts.init();
@@ -84,6 +89,10 @@ public enum Nonsense {
 
     public static ConfigManager getConfigManager() {
         return INSTANCE.configManager;
+    }
+
+    public static AltManager getAltManager() {
+        return INSTANCE.altManager;
     }
 
     public static Hud getHud() {

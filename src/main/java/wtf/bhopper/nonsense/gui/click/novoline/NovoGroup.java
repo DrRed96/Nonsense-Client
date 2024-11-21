@@ -26,6 +26,7 @@ public class NovoGroup extends NovoComponent {
             else if (p instanceof EnumProperty<?> enumProperty) components.add(new NovoSelector(this.panel, enumProperty, this.indention + 1));
             else if (p instanceof ColorProperty colorProperty) components.add(new NovoColorPicker(this.panel, colorProperty, this.indention + 1));
             else if (p instanceof GroupProperty groupProperty) components.add(new NovoGroup(this.panel, groupProperty, this.indention + 1));
+            else if (p instanceof ButtonProperty buttonProperty) components.add(new NovoButton(this.panel, buttonProperty, this.indention + 1));
         }
 
     }

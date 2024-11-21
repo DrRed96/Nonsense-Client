@@ -42,7 +42,7 @@ public class GuiCustomCreative extends InventoryEffectRenderer {
     private static InventoryBasic field_147060_v = new InventoryBasic("tmp", true, 45);
 
     /** Currently selected creative inventory tab index. */
-    private static int selectedTabIndex = CustomCreativeTabs.tabAdmin.getTabIndex();
+    private static int selectedTabIndex = CustomCreativeTabs.tabOperator.getTabIndex();
 
     /** Amount scrolled in Creative mode inventory (0 = top, 1 = bottom) */
     private float currentScroll;

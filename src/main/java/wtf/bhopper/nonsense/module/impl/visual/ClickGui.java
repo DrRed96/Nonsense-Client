@@ -22,7 +22,7 @@ public class ClickGui extends Module {
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Which Click GUI to use.", Mode.NOVOLINE);
     public final BooleanProperty categoryColors = new BooleanProperty("Category Colors", "Category colors.", false);
     public final ColorProperty color = new ColorProperty("Color", "Color of the Click GUI", ColorUtil.NONSENSE_COLOR, () -> !this.categoryColors.get());
-    public final BooleanProperty toolTips = new BooleanProperty("Toop Tips", "Renders tool tips.", false);
+    public final BooleanProperty toolTips = new BooleanProperty("Tool Tips", "Renders tool tips.", false);
 
     private NovoGui novoline;
 

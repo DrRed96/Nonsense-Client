@@ -1,6 +1,7 @@
 package net.minecraft.client.gui;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.MathHelper;
 
 public class ScaledResolution {
@@ -53,5 +54,10 @@ public class ScaledResolution {
 
     public int getScaleFactor() {
         return this.scaleFactor;
+    }
+
+    public void scaleToFactor(float factor) {
+        float scale = (1.0F / this.scaleFactor) * factor;
+        GlStateManager.scale(scale, scale, scale);
     }
 }

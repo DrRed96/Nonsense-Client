@@ -2,28 +2,37 @@ package wtf.bhopper.nonsense.gui.screens.creative;
 
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
+import net.minecraft.event.ClickEvent;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
 import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
+import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
 import wtf.bhopper.nonsense.util.minecraft.ItemBuilder;
+import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
 
 import java.util.List;
 
-@SuppressWarnings("unsued")
-public class CustomCreativeTabs extends CreativeTabs {
+@SuppressWarnings("unused")
+public class CustomCreativeTabs extends CreativeTabs implements MinecraftInstance {
     public static final CreativeTabs[] TABS = new CreativeTabs[12];
 
-    public static final CustomCreativeTabs tabAdmin = new CustomCreativeTabs(0, "Admin", Item.getItemFromBlock(Blocks.barrier), items -> {
+    public static final CustomCreativeTabs tabOperator = new CustomCreativeTabs(0, "Operator", Item.getItemFromBlock(Blocks.barrier), items -> {
         items.add(new ItemStack(Blocks.command_block));
-        items.add(new ItemStack(Blocks.mob_spawner));
         items.add(new ItemStack(Blocks.barrier));
         items.add(new ItemStack(Items.command_block_minecart));
+        items.add(new ItemStack(Blocks.dragon_egg));
+        items.add(new ItemStack(Blocks.brown_mushroom_block));
+        items.add(new ItemStack(Blocks.red_mushroom_block));
+        items.add(new ItemStack(Blocks.farmland));
+        items.add(new ItemStack(Blocks.mob_spawner));
+        items.add(new ItemStack(Blocks.lit_furnace));
     });
 
-    public static final CustomCreativeTabs tabUnobtainable = new CustomCreativeTabs(1, "Exploits", Items.spawn_egg, items -> {
+    public static final CustomCreativeTabs tabExploits = new CustomCreativeTabs(1, "Exploits", Items.command_block_minecart, items -> {
 
         items.add(new ItemStack(Items.spawn_egg, 1, 63));
         items.add(new ItemStack(Items.spawn_egg, 1, 64));
@@ -32,30 +41,8 @@ public class CustomCreativeTabs extends CreativeTabs {
         items.add(new ItemStack(Items.spawn_egg, 1, 97));
         items.add(new ItemStack(Items.spawn_egg, 1, 200));
 
-        items.add(ItemBuilder.of(Items.potionitem)
-                .setMeta(0x4001) // 0x4000 for the splash potion and 0x1 for the color
-                .addPotionEffect(Potion.blindness, 1000000, 2)
-                .addPotionEffect(Potion.moveSlowdown, 1000000, 2)
-                .addPotionEffect(Potion.confusion, 1000000, 2)
-                .addPotionEffect(Potion.poison, 1000000, 2)
-                .addPotionEffect(Potion.wither, 1000000, 2)
-                .addPotionEffect(Potion.weakness, 1000000, 2)
-                .addPotionEffect(Potion.hunger, 1000000, 2)
-                .addPotionEffect(Potion.digSlowdown, 1000000, 2)
-                .build());
-
-        items.add(ItemBuilder.of(Items.potionitem)
-                .setMeta(0x4001)
-                .addPotionEffect(Potion.invisibility, 1000000, 2)
-                .build());
-
-        items.add(ItemBuilder.of(Items.potionitem)
-                .setMeta(0x4001)
-                .addPotionEffect(Potion.heal, 0, 125)
-                .build());
-
         items.add(ItemBuilder.of(Blocks.anvil)
-                .setMeta(420)
+                .setMeta(Short.MAX_VALUE)
                 .setDisplayName("\247c\247lForce OP v2")
                 .build());
 
@@ -63,6 +50,52 @@ public class CustomCreativeTabs extends CreativeTabs {
                 .setMeta(Short.MAX_VALUE)
                 .setDisplayName("\247rnull")
                 .build());
+
+        NBTTagCompound opSign = new NBTTagCompound();
+        opSign.setTag("Text1", ChatUtil.Builder.of("Troll").setClickEvent(ClickEvent.Action.RUN_COMMAND, "/op " + mc.thePlayer.getName()).nbt());
+        items.add(ItemBuilder.of(Items.sign)
+                .setDisplayName("\2474\247lForce OP Sign")
+                .addTag("BlockEntityTag", opSign)
+                .build());
+
+        NBTTagList opBook = new NBTTagList();
+        opBook.appendTag(new NBTTagString("{\"extra\":[{\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/op " + mc.thePlayer.getName() + "\"},\"text\":\"Troll\"}],\"text\":\"\"}"));
+        items.add(ItemBuilder.of(Items.written_book)
+                .addTag("pages", opBook)
+                .addTag("author", new NBTTagString(mc.thePlayer.getName()))
+                .addTag("title", new NBTTagString("\2474\247lForce OP Book"))
+                .addTag("generation", new NBTTagInt(0))
+                .build());
+
+        NBTTagList backDoorBook = new NBTTagList();
+        backDoorBook.appendTag(new NBTTagString("{\"extra\":[{\"color\":\"green\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/gamemode 1 @p\"},\"text\":\"Creative\"},{\"color\":\"reset\",\"text\":\"\\n-------------------\\n\"},{\"color\":\"red\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/gamemode 0 @p\"},\"text\":\"Survival\"},{\"color\":\"reset\",\"text\":\"\\n-------------------\\n\"},{\"bold\":true,\"underlined\":true,\"color\":\"dark_blue\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/give @p bedrock 64\"},\"text\":\"Give 64 Bedrock\"}],\"text\":\"\"}"));
+        items.add(ItemBuilder.of(Items.written_book)
+                .addTag("pages", backDoorBook)
+                .addTag("author", new NBTTagString("\uFF30\uFF59\uFF52\uFF4F\uFF42\uFF59\uFF54\uFF45"))
+                .addTag("title", new NBTTagString("\uFF22\uFF41\uFF43\uFF4B\uFF44\uFF4F\uFF4F\uFF52 \uFF22\uFF4F\uFF4F\uFF4B"))
+                .addTag("generation", new NBTTagInt(3))
+                .build());
+
+        NBTTagCompound fireworks = new NBTTagCompound();
+        NBTTagList fireworksExplosions = new NBTTagList();
+        NBTTagCompound fireworksExplosions0 = new NBTTagCompound();
+        fireworksExplosions0.setIntArray("Colors", new int[]{0xFFFFFF});
+        fireworksExplosions0.setIntArray("FadeColors", new int[]{0});
+        fireworksExplosions0.setByte("Flicker", (byte)1);
+        fireworksExplosions0.setByte("Trail", (byte)1);
+        fireworksExplosions0.setByte("Type", (byte)0);
+        fireworks.setByte("Flight", Byte.MAX_VALUE);
+        fireworks.setTag("Explosions", fireworksExplosions);
+
+        items.add(ItemBuilder.of(Items.fireworks)
+                .setDisplayName("\247c\247lInfinity Fireworks")
+                .addTag("HideFlags", new NBTTagInt(0x3F))
+                .addTag("Fireworks", fireworks)
+                .build());
+
+        items.add(buildDragonChestExploit());
+
+        items.add(new ItemStack(Blocks.leaves, 1, 4));
 
     });
 
@@ -172,10 +205,37 @@ public class CustomCreativeTabs extends CreativeTabs {
 
     });
 
-    public static final CustomCreativeTabs tabExploits = new CustomCreativeTabs(3, "Banners", Items.banner, items -> {
-        for (int i = 0; i < 16; i++) {
-            items.add(new ItemStack(Items.banner, 1, i));
-        }
+    public static final CustomCreativeTabs tabPotions = new CustomCreativeTabs(3, "Potions", Items.potionitem, items -> {
+        items.add(ItemBuilder.of(Items.potionitem)
+                .setMeta(0x4001) // 0x4000 for the splash potion and 0x1 for the color
+                .addPotionEffect(Potion.blindness, 1000000, 2)
+                .addPotionEffect(Potion.moveSlowdown, 1000000, 2)
+                .addPotionEffect(Potion.confusion, 1000000, 2)
+                .addPotionEffect(Potion.poison, 1000000, 2)
+                .addPotionEffect(Potion.wither, 1000000, 2)
+                .addPotionEffect(Potion.weakness, 1000000, 2)
+                .addPotionEffect(Potion.hunger, 1000000, 2)
+                .addPotionEffect(Potion.digSlowdown, 1000000, 2)
+                .setDisplayName("\247rSplash Potion of Annoyance")
+                .build());
+
+        items.add(ItemBuilder.of(Items.potionitem)
+                .setMeta(0x4001)
+                .addPotionEffect(new PotionEffect(Potion.invisibility.getId(), 1000000, 2, false, false))
+                .setDisplayName("\247rSplash Potion of Infinite Invisibility")
+                .build());
+
+        items.add(ItemBuilder.of(Items.potionitem)
+                .addPotionEffect(new PotionEffect(Potion.saturation.getId(), 1000000, 2, false, false))
+                .setDisplayName("\247rSplash Potion of Infinite Saturation")
+                .build());
+
+        items.add(ItemBuilder.of(Items.potionitem)
+                .setMeta(0x4001)
+                .addPotionEffect(Potion.heal, 0, 125)
+                .setDisplayName("\247rSplash Potion of Death")
+                .build());
+
     });
 
     public static final CustomCreativeTabs tabHypixel = new CustomCreativeTabs(4, "Hypixel", Items.gold_ingot, items -> {
@@ -342,7 +402,13 @@ public class CustomCreativeTabs extends CreativeTabs {
         }
     }).setBackgroundImageName("item_search.png");
 
-    public static final CustomCreativeTabs tabHeads = new CustomCreativeTabs(6, "Player Heads", Items.skull, items -> {
+    public static final CustomCreativeTabs tabBanners = new CustomCreativeTabs(6, "Banners", Items.banner, items -> {
+        for (int i = 0; i < 16; i++) {
+            items.add(new ItemStack(Items.banner, 1, i));
+        }
+    });
+
+    public static final CustomCreativeTabs tabHeads = new CustomCreativeTabs(7, "Player Heads", Items.skull, items -> {
         items.add(ItemBuilder.of(Items.skull)
                 .setMeta(3)
                 .setDisplayName("\2476Arithmo's Head")
@@ -404,7 +470,10 @@ public class CustomCreativeTabs extends CreativeTabs {
                 .build());
     });
 
-    public static final CustomCreativeTabs tabStupid = new CustomCreativeTabs(7, "Nonsense", Item.getItemFromBlock(Blocks.deadbush), items -> {
+    public static final CustomCreativeTabs unused1 = new CustomCreativeTabs(8, "Unused", Item.getItemFromBlock(Blocks.air), tabs -> {});
+    public static final CustomCreativeTabs unused2 = new CustomCreativeTabs(9, "Unused", Item.getItemFromBlock(Blocks.air), tabs -> {});
+
+    public static final CustomCreativeTabs tabStupid = new CustomCreativeTabs(10, "Nonsense", Item.getItemFromBlock(Blocks.deadbush), items -> {
 
         items.add(ItemBuilder.of(Items.stick)
                 .setDisplayName("\247c\247lS\2476\247lT\247e\247lI\247a\247lC\247b\247lK \2479\247lO\247d\247lF \247c\247lD\2476\247lE\247e\247lS\247a\247lT\247b\247lI\2479\247lN\247d\247lY")
@@ -451,7 +520,7 @@ public class CustomCreativeTabs extends CreativeTabs {
         items.add(bigBook.build());
 
         ItemBuilder biggerBook = ItemBuilder.of(Items.enchanted_book).setDisplayName("BIGGER BOOK");
-        ;
+
         for (Enchantment enchantment : Enchantment.enchantmentsList) {
             if (enchantment != null) {
                 biggerBook.addStoredEnchantment(enchantment, 10);
@@ -460,7 +529,7 @@ public class CustomCreativeTabs extends CreativeTabs {
         items.add(biggerBook.build());
 
         ItemBuilder biggestBook = ItemBuilder.of(Items.enchanted_book).setDisplayName("BIGGEST BOOK");
-        ;
+
         for (Enchantment enchantment : Enchantment.enchantmentsList) {
             if (enchantment != null) {
                 biggestBook.addStoredEnchantment(enchantment, Short.MAX_VALUE);
@@ -503,23 +572,9 @@ public class CustomCreativeTabs extends CreativeTabs {
                 .addTag("generation", new NBTTagInt(3)) // Makes the book 'Tattered' (meaning it can't be copied)
                 .build());
 
-
-        NBTTagList opPages = new NBTTagList();
-        opPages.appendTag(new NBTTagString("{\"extra\":[{\"color\":\"green\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/gamemode 1 @p\"},\"text\":\"Creative\"},{\"color\":\"reset\",\"text\":\"\\n-------------------\\n\"},{\"color\":\"red\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/gamemode 0 @p\"},\"text\":\"Survival\"},{\"color\":\"reset\",\"text\":\"\\n-------------------\\n\"},{\"bold\":true,\"underlined\":true,\"color\":\"dark_blue\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/give @p bedrock 64\"},\"text\":\"Give 64 Bedrock\"}],\"text\":\"\"}"));
-
-        items.add(ItemBuilder.of(Items.written_book)
-                .addTag("pages", opPages)
-                .addTag("author", new NBTTagString("\uFF30\uFF59\uFF52\uFF4F\uFF42\uFF59\uFF54\uFF45"))
-                .addTag("title", new NBTTagString("\uFF22\uFF41\uFF43\uFF4B\uFF44\uFF4F\uFF4F\uFF52 \uFF22\uFF4F\uFF4F\uFF4B"))
-                .addTag("generation", new NBTTagInt(3))
-                .build());
     });
 
-    public static final CustomCreativeTabs unused0 = new CustomCreativeTabs(8, "Unused", Items.glass_bottle, tabs -> {});
-    public static final CustomCreativeTabs unused1 = new CustomCreativeTabs(9, "Unused", Items.glass_bottle, tabs -> {});
-    public static final CustomCreativeTabs unused2 = new CustomCreativeTabs(10, "Unused", Items.glass_bottle, tabs -> {});
-
-    public static final CreativeTabs tabInventory = (new CreativeTabs(11, "survival", TABS) {
+    public static final CreativeTabs tabInventory = (new CreativeTabs(11, "inventory", TABS) {
         public Item getTabIconItem() {
             return Item.getItemFromBlock(Blocks.chest);
         }
@@ -564,5 +619,80 @@ public class CustomCreativeTabs extends CreativeTabs {
 
     public interface ItemAdder {
         void addItems(List<ItemStack> items);
+    }
+
+    public static ItemStack buildDragonChestExploit() {
+
+        NBTTagList motion0 = new NBTTagList();
+        for (int i = 0; i < 3; i++) {
+            motion0.appendTag(new NBTTagDouble(0.0));
+        }
+
+        NBTTagCompound dragonSpawn = new NBTTagCompound();
+        dragonSpawn.setString("EntityId", "EnderDragon");
+        dragonSpawn.setInteger("MaxNearbyEntities", 1000);
+        dragonSpawn.setInteger("RequiredPlayerRange", 100);
+        dragonSpawn.setInteger("SpawnCount", 100);
+        dragonSpawn.setInteger("MinSpawnDelay", 20);
+        dragonSpawn.setInteger("MaxSpawnDelay", 20);
+        dragonSpawn.setInteger("SpawnRange", 100);
+
+        NBTTagCompound spawnDataDragon = new NBTTagCompound();
+        spawnDataDragon.setTag("Motion", motion0);
+        spawnDataDragon.setString("Block", "mob_spawner");
+        spawnDataDragon.setInteger("Time", 1);
+        spawnDataDragon.setInteger("Data", 0);
+        spawnDataDragon.setInteger("DropItem", 0);
+        spawnDataDragon.setTag("TileEntityData", dragonSpawn);
+
+        NBTTagCompound tileEntityData = new NBTTagCompound();
+        tileEntityData.setString("EntityId", "FallingSand");
+        tileEntityData.setInteger("MaxNearbyEntities", 1000);
+        tileEntityData.setInteger("RequiredPlayerRange", 100);
+        tileEntityData.setInteger("SpawnCount", 100);
+        tileEntityData.setInteger("MinSpawnDelay", 20);
+        tileEntityData.setInteger("MaxSpawnDelay", 20);
+        tileEntityData.setInteger("SpawnRange", 500);
+        tileEntityData.setTag("SpawnData", spawnDataDragon);
+
+        NBTTagCompound spawnDataSand = new NBTTagCompound();
+        spawnDataSand.setTag("Motion", motion0);
+        spawnDataSand.setString("Block", "mob_spawner");
+        spawnDataSand.setInteger("Time", 1);
+        spawnDataSand.setInteger("Data", 0);
+        spawnDataSand.setInteger("DropItem", 0);
+        spawnDataSand.setTag("TileEntityData", tileEntityData);
+
+        NBTTagCompound blockEntityTag = new NBTTagCompound();
+        blockEntityTag.setString("EntityId", "FallingSand");
+        blockEntityTag.setInteger("MaxNearbyEntities", 1000);
+        blockEntityTag.setInteger("RequiredPlayerRange", 100);
+        blockEntityTag.setInteger("SpawnCount", 100);
+        blockEntityTag.setInteger("MinSpawnDelay", 5);
+        blockEntityTag.setInteger("MaxSpawnDelay", 5);
+        blockEntityTag.setInteger("SpawnRange", 500);
+        blockEntityTag.setInteger("Delay", 20);
+        blockEntityTag.setTag("SpawnData", spawnDataSand);
+
+        ItemStack item = ItemBuilder.of(Blocks.mob_spawner)
+                .setAmount(64)
+                .addTag("BlockEntityTag", blockEntityTag)
+                .build();
+        NBTTagCompound itemNbt = new NBTTagCompound();
+        itemNbt.setByte("Slot", (byte)0);
+        item.writeToNBT(itemNbt);
+
+        NBTTagCompound exploit = new NBTTagCompound();
+        NBTTagList items = new NBTTagList();
+        items.appendTag(itemNbt);
+
+        exploit.setTag("Items", items);
+        exploit.setString("value", "Chest");
+        exploit.setString("Lock", "");
+
+        return ItemBuilder.of(Blocks.chest)
+                .setDisplayName("\247c\247lDragon Spawner Chest")
+                .addTag("BlockEntityTag", exploit)
+                .build();
     }
 }

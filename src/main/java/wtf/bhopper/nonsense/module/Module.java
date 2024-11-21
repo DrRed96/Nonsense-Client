@@ -92,7 +92,9 @@ public abstract class Module implements PropertyContainer, MinecraftInstance {
 
         JsonObject properties = new JsonObject();
         for (Property<?> property : this.properties) {
-            properties.add(property.name, property.serialize());
+            try {
+                properties.add(property.name, property.serialize());
+            } catch (UnsupportedOperationException ignored) {}
         }
         moduleObject.add("properties", properties);
 

@@ -29,7 +29,9 @@ public class GroupProperty extends Property<List<Property<?>>> implements Proper
     public JsonElement serialize() {
         JsonObject object = new JsonObject();
         for (Property<?> property : this.getProperties()) {
-            object.add(property.name, property.serialize());
+            try {
+                object.add(property.name, property.serialize());
+            } catch (UnsupportedOperationException ignored) {}
         }
         return object;
     }
