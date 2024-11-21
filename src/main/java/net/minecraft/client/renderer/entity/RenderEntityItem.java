@@ -98,6 +98,7 @@ public class RenderEntityItem extends Render<EntityItem>
     {
         if (PlayerUtil.canUpdate() && Nonsense.module(ItemPhysics.class).isToggled()) {
             ItemPhysics.doRender(this, entity, x, y, z, entityYaw, partialTicks);
+            return;
         }
 
         ItemStack itemstack = entity.getEntityItem();

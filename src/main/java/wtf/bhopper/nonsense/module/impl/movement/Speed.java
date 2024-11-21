@@ -1,8 +1,10 @@
 package wtf.bhopper.nonsense.module.impl.movement;
 
+import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
 import wtf.bhopper.nonsense.event.impl.EventMove;
+import wtf.bhopper.nonsense.event.impl.EventPreMotion;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
@@ -10,8 +12,7 @@ import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
 import wtf.bhopper.nonsense.util.minecraft.MoveUtil;
-
-import java.util.function.Supplier;
+import wtf.bhopper.nonsense.util.misc.Clock;
 
 @ModuleInfo(name = "Speed",
         description = "Increases your move speed.",
@@ -21,14 +22,33 @@ public class Speed extends Module {
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Method for speed.", Mode.VANILLA);
     private final NumberProperty speedSet = new NumberProperty("Speed", "Move speed.", () -> this.mode.is(Mode.VANILLA), 1.0, 0.5, 3.0, 0.01);
     private final BooleanProperty jump = new BooleanProperty("Jump", "Automatically Jumps", false, () -> this.mode.is(Mode.VANILLA));
+    private final NumberProperty bhopSpeed = new NumberProperty("Bhop Speed", "Speed for Bhop Mode.\n1.6 will bypass NCP", () -> this.mode.is(Mode.BHOP), 1.6, 0.0, 3.0, 0.01);
+    private final BooleanProperty limit = new BooleanProperty("Limit Speed", "Limits your speed, useful for servers with strict anti-cheats.", false, () -> this.mode.is(Mode.BHOP));
+
+    private double speed = 0.0;
+    private double lastDist = 0.0;
+    private int stage = 0;
+
+    private final Clock timer = new Clock();
 
     public Speed() {
-        this.addProperties(this.mode, this.speedSet, this.jump);
+        this.addProperties(this.mode, this.speedSet, this.jump, this.bhopSpeed, this.limit);
         this.setSuffix(mode::getDisplayValue);
+    }
+
+    @Override
+    public void onEnable() {
+        this.speed = 0.0;
+        this.lastDist = 0.0;
+        this.stage = 0;
     }
 
     @EventLink
     public final Listener<EventMove> onMove = event -> {
+
+        if (Nonsense.module(Flight.class).isToggled()) {
+            return;
+        }
 
         switch (this.mode.get()) {
             case VANILLA -> {
@@ -39,12 +59,61 @@ public class Speed extends Module {
                     }
                 }
             }
+
+            case BHOP -> {
+
+                switch (this.stage) {
+                    case 0 -> {
+                        if (MoveUtil.isMoving()) {
+                            this.speed = MoveUtil.baseSpeed() * 1.18 - 0.01;
+                            this.stage = 1;
+                        }
+                    }
+
+                    case 1 -> {
+                        if (MoveUtil.isMoving() && mc.thePlayer.onGround) {
+                            MoveUtil.vertical(event, MoveUtil.jumpHeight(0.4));
+                            this.speed *= this.bhopSpeed.getDouble();
+                            this.stage = 2;
+                        }
+                    }
+
+                    case 2 -> {
+                        this.speed = this.lastDist - (this.lastDist - MoveUtil.baseSpeed()) * 0.66;
+                        this.stage = 3;
+                    }
+
+                    case 3 -> {
+                        if (mc.thePlayer.isCollidedVertically || !mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer, mc.thePlayer.getEntityBoundingBox().offset(0.0, mc.thePlayer.motionY, 0.0)).isEmpty()) {
+                            this.stage = 0;
+                        }
+                        this.speed = this.lastDist - this.lastDist / 159.0;
+                    }
+
+                }
+
+                if (this.limit.get()) {
+                    if (this.timer.hasReached(2500L)) {
+                        this.timer.reset();
+                    }
+
+                    this.speed = Math.min(this.speed, this.timer.hasReached(1250L) ? 0.44 : 0.43);
+                }
+
+                this.speed = Math.max(this.speed, MoveUtil.baseSpeed());
+                MoveUtil.setSpeed(event, this.speed);
+
+            }
         }
 
     };
 
+    @EventLink
+    public final Listener<EventPreMotion> onPre = event -> this.lastDist = MoveUtil.lastDistance();
+
     private enum Mode {
-        VANILLA
+        VANILLA,
+        BHOP
     }
 
 }

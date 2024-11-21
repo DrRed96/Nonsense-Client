@@ -124,7 +124,9 @@ public abstract class Module implements PropertyContainer, MinecraftInstance {
             if (propertiesElement instanceof JsonObject object) {
                 for (Property<?> property : this.properties) {
                     if (object.has(property.name)) {
-                        property.deserialize(object.get(property.name));
+                        try {
+                            property.deserialize(object.get(property.name));
+                        } catch (UnsupportedOperationException ignored) {}
                     }
                 }
             }

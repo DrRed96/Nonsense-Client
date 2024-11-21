@@ -5,11 +5,24 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
+
 public class MathUtil {
 
     public static double getIncremental(double val, double inc) {
         double inverse = 1.0 / inc;
         return (double)Math.round(val * inverse) / inverse;
+    }
+
+    public static double round(double value, int places) {
+        if (places < 0) {
+            throw new IllegalArgumentException();
+        }
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
     }
 
     public static int lerp(int a, int b, float f) {

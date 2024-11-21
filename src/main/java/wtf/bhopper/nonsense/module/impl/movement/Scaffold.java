@@ -1,6 +1,7 @@
 package wtf.bhopper.nonsense.module.impl.movement;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.material.Material;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -14,10 +15,12 @@ import wtf.bhopper.nonsense.event.impl.*;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
+import wtf.bhopper.nonsense.module.property.annotations.DisplayName;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
 import wtf.bhopper.nonsense.util.minecraft.*;
+import wtf.bhopper.nonsense.util.misc.Clock;
 
 import java.util.Arrays;
 import java.util.List;
@@ -45,6 +48,10 @@ public class Scaffold extends Module {
     private final EnumProperty<RotationsMode> rotationsMode = new EnumProperty<>("Mode", "Method for rotations.", RotationsMode.INSTANT);
     private final EnumProperty<RotationsHitVec> rotationsHitVec = new EnumProperty<>("Hit Vector", "Block placement vector.", RotationsHitVec.CENTRE);
 
+    private final GroupProperty towerGroup = new GroupProperty("Tower", "Scaffold tower");
+    private final BooleanProperty towerEnable = new BooleanProperty("Enable", "Enables tower", true);
+    private final EnumProperty<TowerMode> towerMode = new EnumProperty<>("Mode", "Tower mode", TowerMode.VANILLA);
+
     private final BooleanProperty swing = new BooleanProperty("Swing", "Swings client sided.", true);
     private final EnumProperty<SwapMode> swap = new EnumProperty<>("Swap", "Swaps mode.", SwapMode.SILENT);
 
@@ -53,9 +60,14 @@ public class Scaffold extends Module {
     private Rotation rotations = null;
     private int slot = -1;
 
+    private int towerStage = 0;
+    private boolean spoofGround = false;
+    private final Clock towerTimer = new Clock();
+
     public Scaffold() {
         this.rotationGroup.addProperties(this.rotationsMode, this.rotationsHitVec);
-        this.addProperties(this.mode, this.rotationGroup, this.swing, this.swap);
+        this.towerGroup.addProperties(this.towerEnable, this.towerMode);
+        this.addProperties(this.mode, this.rotationGroup, this.towerGroup, this.swing, this.swap);
         this.setSuffix(this.mode::getDisplayValue);
     }
 
@@ -65,6 +77,8 @@ public class Scaffold extends Module {
         this.hitVec = null;
         this.rotations = null;
         this.slot = -1;
+        this.towerStage = 0;
+        this.spoofGround = false;
     }
 
     @EventLink
@@ -130,6 +144,11 @@ public class Scaffold extends Module {
         if (this.rotations != null) {
             event.setRotations(this.rotations);
         }
+
+        if (this.spoofGround) {
+            event.onGround = true;
+            this.spoofGround = false;
+        }
     };
 
     @EventLink
@@ -137,6 +156,60 @@ public class Scaffold extends Module {
         if (this.blockData != null) {
             event.cancel();
         }
+    };
+
+    @EventLink
+    public final Listener<EventMove> onMove = event -> {
+
+        if (this.towerEnable.get()) {
+            switch (this.towerMode.get()) {
+                case VANILLA -> {
+                    if (mc.gameSettings.keyBindJump.isKeyDown() && this.slot != -1 && BlockUtil.getBlockRelativeToPlayer(0, -1, 0).getMaterial() != Material.air) {
+                        MoveUtil.vertical(event, 0.42);
+                    }
+                }
+
+                case NCP -> {
+                    if (mc.gameSettings.keyBindJump.isKeyDown()) {
+                        switch (this.towerStage) {
+                            case 0 -> {
+                                if (this.blockData != null && this.slot != -1 && BlockUtil.getBlockRelativeToPlayer(0, -1, 0).getMaterial() != Material.air) {
+                                    MoveUtil.vertical(event, 0.42);
+                                    this.towerStage = 1;
+                                }
+                            }
+                            case 1 -> {
+                                MoveUtil.vertical(event, 0.33);
+                                this.towerStage = 2;
+                            }
+                            case 2 -> {
+                                MoveUtil.vertical(event, 1.0 - mc.thePlayer.posY % 1);
+                                this.towerStage = 3;
+                            }
+                            case 3 -> {
+                                if (BlockUtil.getBlockRelativeToPlayer(0, -1, 0).getMaterial() != Material.air && this.slot != -1) {
+                                    MoveUtil.vertical(event, 0.42);
+                                    this.spoofGround = true;
+                                } else {
+                                    this.towerStage = 0;
+                                }
+                            }
+                        }
+
+                    } else {
+                        this.towerStage = 0;
+                    }
+                }
+
+                case VERUS -> {
+                    if (mc.gameSettings.keyBindJump.isKeyDown() && this.slot != -1 && BlockUtil.getBlockRelativeToPlayer(0, -1, 0).getMaterial() != Material.air && mc.thePlayer.ticksExisted % 2 == 0) {
+                        MoveUtil.vertical(event, 0.42);
+                    }
+                }
+
+            }
+        }
+
     };
 
     public void placeBlock() {
@@ -205,7 +278,9 @@ public class Scaffold extends Module {
         int slot = -1;
         for (int i = 0; i < 9; i++) {
             ItemStack stack = mc.thePlayer.inventory.mainInventory[i];
-            if (stack == null || !isValid(stack)) continue;
+            if (stack == null || !isValid(stack)) {
+                continue;
+            }
             if (stack.stackSize > 0) {
                 if (stack.stackSize > highestStack) {
                     highestStack = stack.stackSize;
@@ -223,7 +298,8 @@ public class Scaffold extends Module {
         return false;
     }
 
-    private record BlockData(BlockPos blockPos, EnumFacing facing) { }
+    private record BlockData(BlockPos blockPos, EnumFacing facing) {
+    }
 
     private enum Mode {
         VANILLA
@@ -237,6 +313,12 @@ public class Scaffold extends Module {
     private enum RotationsHitVec {
         CENTRE,
         CLOSEST
+    }
+
+    private enum TowerMode {
+        VANILLA,
+        @DisplayName("NCP") NCP,
+        VERUS
     }
 
     private enum SwapMode {

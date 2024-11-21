@@ -47,7 +47,7 @@ public class InfoDisplay implements MinecraftInstance {
         }
 
         if (!mod.speed.is(HudMod.Speed.NONE)) {
-            double speed = MoveUtil.getSpeed() * mc.timer.timerSpeed;
+            double speed = Math.hypot(mc.thePlayer.posX - mc.thePlayer.prevPosX, mc.thePlayer.posZ - mc.thePlayer.prevPosZ) * mc.timer.timerSpeed;
             this.components.add(new Component("Speed", switch (mod.speed.get()) {
                 case MPS -> String.format("%.2f m/s", speed * 20.0);
                 case KMPH -> String.format("%.2f Km/h", speed * 72.0);

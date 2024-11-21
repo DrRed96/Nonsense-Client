@@ -4,13 +4,16 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.network.play.client.C03PacketPlayer;
+import net.minecraft.util.MovingObjectPosition;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
+import wtf.bhopper.nonsense.event.impl.EventPreClick;
 import wtf.bhopper.nonsense.event.impl.EventSendPacket;
 import wtf.bhopper.nonsense.event.impl.EventTick;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
+import wtf.bhopper.nonsense.module.property.annotations.DisplayName;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
@@ -43,10 +46,10 @@ public class Criticals extends Module {
     };
 
     @EventLink
-    public final Listener<EventSendPacket> onSendPacket = event -> {
+    public final Listener<EventPreClick> onClick = event -> {
 
-        if (event.packet instanceof C02PacketUseEntity packet) {
-            Entity entity = packet.getEntityFromWorld(mc.theWorld);
+        if (event.mouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && mc.leftClickCounter <= 0) {
+            Entity entity = event.mouseOver.entityHit;
 
             if (!(entity instanceof EntityLivingBase)) {
                 return;
@@ -66,6 +69,12 @@ public class Criticals extends Module {
                     PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, false));
                 }
 
+                case NCP_PACKET -> {
+                    PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.11, mc.thePlayer.posZ, false));
+                    PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.1100013579, mc.thePlayer.posZ, false));
+                    PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0000013579, mc.thePlayer.posZ, false));
+                }
+
                 case LOW -> {
                     PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 1.0E-14, mc.thePlayer.posZ, false));
                     PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, false));
@@ -79,6 +88,7 @@ public class Criticals extends Module {
 
     private enum Mode {
         PACKET,
+        @DisplayName("NCP Packet") NCP_PACKET,
         LOW
     }
 

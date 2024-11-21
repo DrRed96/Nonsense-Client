@@ -41,7 +41,10 @@ public class GroupProperty extends Property<List<Property<?>>> implements Proper
         if (element instanceof JsonObject object) {
             for (Property<?> property : this.getProperties()) {
                 if (object.has(property.name)) {
-                    property.deserialize(object.get(property.name));
+                    try {
+                        property.deserialize(object.get(property.name));
+                    } catch (UnsupportedOperationException ignored) {}
+
                 }
             }
         }

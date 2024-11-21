@@ -49,8 +49,10 @@ public class ModuleManager {
                 new Speed(),
                 new Step(),
                 new AntiFall(),
+                new InventoryMove(),
                 new Jesus(),
                 new Phase(),
+                new Strafe(),
                 new MovementFix(),
 
                 // Player

@@ -130,7 +130,7 @@ public class ModuleList {
                 return;
             }
 
-            this.name = Hud.mod().moduleListDisplay.get() ? module.displayName : module.name;
+            this.name = Hud.mod().moduleListDisplay.get() ? module.displayName : module.displayName.replace(" ", "");
             this.suffix = module.getSuffix();
 
             if (Hud.mod().moduleListLowerCase.get()) {

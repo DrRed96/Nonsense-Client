@@ -34,6 +34,6 @@ public class ButtonProperty extends Property<Void> {
 
     @Override
     public void deserialize(JsonElement element) {
-        // Does nothing
+        throw new UnsupportedOperationException();
     }
 }

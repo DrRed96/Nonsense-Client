@@ -103,7 +103,12 @@ public class ItemBuilder {
     }
 
     public ItemBuilder addPotionEffect(Potion potion, int duration, int amplifier) {
-        this.effects.add(new PotionEffect(potion.id, duration, amplifier));
+        this.effects.add(new PotionEffect(potion.getId(), duration, amplifier));
+        return this;
+    }
+
+    public ItemBuilder addPotionEffect(Potion potion, int duration, int amplifier, boolean ambient, boolean showParticles) {
+        this.effects.add(new PotionEffect(potion.getId(), duration, amplifier, ambient, showParticles));
         return this;
     }
 

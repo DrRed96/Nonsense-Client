@@ -10,9 +10,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.JsonUtils;
 import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
 import wtf.bhopper.nonsense.util.minecraft.ItemBuilder;
 import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
+import wtf.bhopper.nonsense.util.misc.JsonUtil;
 
 import java.util.List;
 
@@ -52,14 +54,16 @@ public class CustomCreativeTabs extends CreativeTabs implements MinecraftInstanc
                 .build());
 
         NBTTagCompound opSign = new NBTTagCompound();
-        opSign.setTag("Text1", ChatUtil.Builder.of("Troll").setClickEvent(ClickEvent.Action.RUN_COMMAND, "/op " + mc.thePlayer.getName()).nbt());
+        opSign.setTag("Text1", new NBTTagString("{\"text\":\"Troll\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/op @p\"}}"));
         items.add(ItemBuilder.of(Items.sign)
                 .setDisplayName("\2474\247lForce OP Sign")
                 .addTag("BlockEntityTag", opSign)
                 .build());
 
+
+
         NBTTagList opBook = new NBTTagList();
-        opBook.appendTag(new NBTTagString("{\"extra\":[{\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/op " + mc.thePlayer.getName() + "\"},\"text\":\"Troll\"}],\"text\":\"\"}"));
+        opBook.appendTag(new NBTTagString("{\"extra\":[{\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/op @p\"},\"text\":\"Troll\"}],\"text\":\"\"}"));
         items.add(ItemBuilder.of(Items.written_book)
                 .addTag("pages", opBook)
                 .addTag("author", new NBTTagString(mc.thePlayer.getName()))
@@ -84,6 +88,7 @@ public class CustomCreativeTabs extends CreativeTabs implements MinecraftInstanc
         fireworksExplosions0.setByte("Flicker", (byte)1);
         fireworksExplosions0.setByte("Trail", (byte)1);
         fireworksExplosions0.setByte("Type", (byte)0);
+        fireworksExplosions.appendTag(fireworksExplosions0);
         fireworks.setByte("Flight", Byte.MAX_VALUE);
         fireworks.setTag("Explosions", fireworksExplosions);
 
@@ -96,6 +101,7 @@ public class CustomCreativeTabs extends CreativeTabs implements MinecraftInstanc
         items.add(buildDragonChestExploit());
 
         items.add(new ItemStack(Blocks.leaves, 1, 4));
+        items.add(new ItemStack(Blocks.stone_slab, 1, 2));
 
     });
 
@@ -221,19 +227,14 @@ public class CustomCreativeTabs extends CreativeTabs implements MinecraftInstanc
 
         items.add(ItemBuilder.of(Items.potionitem)
                 .setMeta(0x4001)
-                .addPotionEffect(new PotionEffect(Potion.invisibility.getId(), 1000000, 2, false, false))
+                .addPotionEffect(Potion.invisibility, 1000000, 2, false, false)
                 .setDisplayName("\247rSplash Potion of Infinite Invisibility")
                 .build());
 
         items.add(ItemBuilder.of(Items.potionitem)
-                .addPotionEffect(new PotionEffect(Potion.saturation.getId(), 1000000, 2, false, false))
-                .setDisplayName("\247rSplash Potion of Infinite Saturation")
-                .build());
-
-        items.add(ItemBuilder.of(Items.potionitem)
                 .setMeta(0x4001)
-                .addPotionEffect(Potion.heal, 0, 125)
-                .setDisplayName("\247rSplash Potion of Death")
+                .addPotionEffect(Potion.heal, 1000000, 125)
+                .setDisplayName("\247rSplash Potion of Instant Death")
                 .build());
 
     });
@@ -691,7 +692,7 @@ public class CustomCreativeTabs extends CreativeTabs implements MinecraftInstanc
         exploit.setString("Lock", "");
 
         return ItemBuilder.of(Blocks.chest)
-                .setDisplayName("\247c\247lDragon Spawner Chest")
+                .setDisplayName("\247c\247lDragon Spawn Loop Chest")
                 .addTag("BlockEntityTag", exploit)
                 .build();
     }

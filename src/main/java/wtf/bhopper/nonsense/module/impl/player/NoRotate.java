@@ -11,6 +11,7 @@ import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.util.minecraft.PacketUtil;
+import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
 import wtf.bhopper.nonsense.util.minecraft.Rotation;
 
 @ModuleInfo(name = "No Rotate",
@@ -28,6 +29,10 @@ public class NoRotate extends Module {
 
     @EventLink
     public final Listener<EventReceivePacket> onReceivePacket = event -> {
+        if (!PlayerUtil.canUpdate()) {
+            return;
+        }
+
         if (event.packet instanceof S08PacketPlayerPosLook packet) {
             packet.setRotations(mc.thePlayer.rotationYaw, mc.thePlayer.rotationPitch);
 

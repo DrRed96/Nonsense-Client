@@ -51,6 +51,7 @@ public class Capes extends Module {
         DORTWARE,
         EXHIBITION(new OverlayCape("exhibition", () -> new Color(ColorUtil.rainbow(System.currentTimeMillis(), 0, 0.55F, 0.9F)))),
         FUTURE,
+        GATO,
         LIGHTNING(new AnimatedCape("lightning", 11, 3)),
         MILLION,
         MINECON_2011,

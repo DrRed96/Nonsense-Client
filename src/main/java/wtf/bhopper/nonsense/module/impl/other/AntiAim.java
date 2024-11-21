@@ -1,6 +1,7 @@
 package wtf.bhopper.nonsense.module.impl.other;
 
 import io.netty.util.internal.ThreadLocalRandom;
+import wtf.bhopper.nonsense.event.EventPriorities;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
 import wtf.bhopper.nonsense.event.impl.EventPreMotion;
@@ -34,7 +35,7 @@ public class AntiAim extends Module {
         this.spinYaw = mc.thePlayer.rotationYaw;
     }
 
-    @EventLink
+    @EventLink(EventPriorities.VERY_HIGH)
     public final Listener<EventPreMotion> onPre = event -> {
         float yaw = event.yaw;
         float pitch = event.pitch;

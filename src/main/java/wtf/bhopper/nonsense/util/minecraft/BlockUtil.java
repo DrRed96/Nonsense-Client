@@ -15,6 +15,10 @@ public class BlockUtil implements MinecraftInstance {
         return getBlock(blockPos).getMaterial() == Material.air;
     }
 
+    public static Block getBlockRelativeToPlayer(final double offsetX, final double offsetY, final double offsetZ) {
+        return mc.theWorld.getBlockState(new BlockPos(mc.thePlayer.posX + offsetX, mc.thePlayer.posY + offsetY, mc.thePlayer.posZ + offsetZ)).getBlock();
+    }
+
     public static Block getRelativeBlock(double x, double y, double z) {
         return getBlock(new BlockPos(mc.thePlayer).add(x, y, z));
     }
