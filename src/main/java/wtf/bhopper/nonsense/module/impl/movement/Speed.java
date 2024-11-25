@@ -14,15 +14,18 @@ import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
 import wtf.bhopper.nonsense.util.minecraft.MoveUtil;
 import wtf.bhopper.nonsense.util.misc.Clock;
 
+import java.util.function.Supplier;
+
 @ModuleInfo(name = "Speed",
         description = "Increases your move speed.",
         category = ModuleCategory.MOVEMENT)
 public class Speed extends Module {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Method for speed.", Mode.VANILLA);
-    private final NumberProperty speedSet = new NumberProperty("Speed", "Move speed.", () -> this.mode.is(Mode.VANILLA), 1.0, 0.5, 3.0, 0.01);
-    private final BooleanProperty jump = new BooleanProperty("Jump", "Automatically Jumps", false, () -> this.mode.is(Mode.VANILLA));
+    private final NumberProperty speedSet = new NumberProperty("Speed", "Move speed.", () -> this.mode.is(Mode.VANILLA), 1.0, 0.1, 3.0, 0.01);
+    private final BooleanProperty jump = new BooleanProperty("Jump", "Automatically Jumps", false, () -> this.mode.isAny(Mode.VANILLA, Mode.MINIBLOX));
     private final NumberProperty bhopSpeed = new NumberProperty("Bhop Speed", "Speed for Bhop Mode.\n1.6 will bypass NCP", () -> this.mode.is(Mode.BHOP), 1.6, 0.0, 3.0, 0.01);
+    private final BooleanProperty bhopSlow = new BooleanProperty("Slow", "Slows you down more to help bypass", false, () -> this.mode.is(Mode.BHOP));
     private final BooleanProperty limit = new BooleanProperty("Limit Speed", "Limits your speed, useful for servers with strict anti-cheats.", false, () -> this.mode.is(Mode.BHOP));
 
     private double speed = 0.0;
@@ -32,8 +35,14 @@ public class Speed extends Module {
     private final Clock timer = new Clock();
 
     public Speed() {
-        this.addProperties(this.mode, this.speedSet, this.jump, this.bhopSpeed, this.limit);
-        this.setSuffix(mode::getDisplayValue);
+        this.addProperties(this.mode, this.speedSet, this.jump, this.bhopSpeed, this.bhopSlow, this.limit);
+        this.setSuffix(() -> {
+            if (this.mode.is(Mode.BHOP) && this.bhopSlow.get()) {
+                return "Bhop Slow";
+            }
+
+            return this.mode.getDisplayValue();
+        });
     }
 
     @Override
@@ -55,7 +64,7 @@ public class Speed extends Module {
                 if (MoveUtil.isMoving()) {
                     MoveUtil.setSpeed(event, this.speedSet.getDouble());
                     if (this.jump.get() && mc.thePlayer.onGround) {
-                        MoveUtil.vertical(event, MoveUtil.jumpHeight(MoveUtil.JUMP_HEIGHT));
+                        MoveUtil.vertical(event, MoveUtil.jumpHeight());
                     }
                 }
             }
@@ -79,7 +88,7 @@ public class Speed extends Module {
                     }
 
                     case 2 -> {
-                        this.speed = this.lastDist - (this.lastDist - MoveUtil.baseSpeed()) * 0.66;
+                        this.speed = this.lastDist - (this.lastDist - MoveUtil.baseSpeed()) * (this.bhopSlow.get() ? 0.76 : 0.66);
                         this.stage = 3;
                     }
 
@@ -87,7 +96,7 @@ public class Speed extends Module {
                         if (mc.thePlayer.isCollidedVertically || !mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer, mc.thePlayer.getEntityBoundingBox().offset(0.0, mc.thePlayer.motionY, 0.0)).isEmpty()) {
                             this.stage = 0;
                         }
-                        this.speed = this.lastDist - this.lastDist / 159.0;
+                        this.speed = this.lastDist - this.lastDist / MoveUtil.SLOWDOWN_FACTOR;
                     }
 
                 }
@@ -104,6 +113,15 @@ public class Speed extends Module {
                 MoveUtil.setSpeed(event, this.speed);
 
             }
+
+            case MINIBLOX -> {
+                if (MoveUtil.isMoving()) {
+                    MoveUtil.setSpeed(event, 0.39); // Miniblox has a hard speed cap, this is about as fast as you can go without C0B resetting
+                    if (this.jump.get() && mc.thePlayer.onGround) {
+                        MoveUtil.vertical(event, MoveUtil.jumpHeight());
+                    }
+                }
+            }
         }
 
     };
@@ -113,7 +131,8 @@ public class Speed extends Module {
 
     private enum Mode {
         VANILLA,
-        BHOP
+        BHOP,
+        MINIBLOX
     }
 
 }

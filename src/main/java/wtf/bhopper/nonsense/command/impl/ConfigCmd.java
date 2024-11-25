@@ -6,6 +6,8 @@ import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.command.Command;
 import wtf.bhopper.nonsense.command.CommandInfo;
 import wtf.bhopper.nonsense.config.Config;
+import wtf.bhopper.nonsense.gui.hud.notification.Notification;
+import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
 import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
 
 import java.io.IOException;
@@ -33,13 +35,14 @@ public class ConfigCmd extends Command {
                 if (Nonsense.getConfigManager().hasConfig(args[2])) {
                     try {
                         Nonsense.getConfigManager().getConfig(args[2]).load();
-                        ChatUtil.info("Loaded config: %s", args[2]);
+                        Notification.send("Config Manager", "Loaded config: " + args[2], NotificationType.SUCCESS, 3000);
                     } catch (IOException exception) {
-                        ChatUtil.error("Failed to load config: %s", exception.getMessage());
+                        Notification.send("Config Manager", "Failed to load config: " + exception.getMessage(), NotificationType.ERROR, 3000);
                     }
                 } else {
-                    ChatUtil.error("Config: %s, does not exist.", args[2]);
+                    Notification.send("Config Manager", "Config: " + args[2] + ", does not exist.", NotificationType.ERROR, 3000);
                 }
+                Nonsense.getConfigManager().reloadConfigs();
             }
 
             case "save" -> {
@@ -50,9 +53,9 @@ public class ConfigCmd extends Command {
 
                 try {
                     Nonsense.getConfigManager().getConfig(args[2]).save();
-                    ChatUtil.info("Saved config: %s", args[2]);
+                    Notification.send("Config Manager", "Saved config: " + args[2], NotificationType.SUCCESS, 3000);
                 } catch (IOException exception) {
-                    ChatUtil.error("Failed to save config: %s", exception.getMessage());
+                    Notification.send("Config Manager", "Failed to save config: " + exception.getMessage(), NotificationType.ERROR, 3000);
                 }
 
             }

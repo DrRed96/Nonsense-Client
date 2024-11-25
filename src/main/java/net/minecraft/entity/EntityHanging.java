@@ -16,7 +16,7 @@ public abstract class EntityHanging extends Entity
     private int tickCounter1;
     protected BlockPos hangingPosition;
 
-    /** The direction the entity is facing */
+    /** The direction the entity is face */
     public EnumFacing facingDirection;
 
     public EntityHanging(World worldIn)
@@ -36,7 +36,7 @@ public abstract class EntityHanging extends Entity
     }
 
     /**
-     * Updates facing and bounding box based on it
+     * Updates face and bounding box based on it
      */
     protected void updateFacingWithBoundingBox(EnumFacing facingDirectionIn)
     {
@@ -48,7 +48,7 @@ public abstract class EntityHanging extends Entity
     }
 
     /**
-     * Updates the entity bounding box based on current facing
+     * Updates the entity bounding box based on current face
      */
     private void updateBoundingBox()
     {

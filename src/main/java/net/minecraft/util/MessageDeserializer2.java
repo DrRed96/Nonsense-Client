@@ -5,44 +5,37 @@ import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.ByteToMessageDecoder;
 import io.netty.handler.codec.CorruptedFrameException;
+
 import java.util.List;
+
 import net.minecraft.network.PacketBuffer;
 
-public class MessageDeserializer2 extends ByteToMessageDecoder
-{
-    protected void decode(ChannelHandlerContext p_decode_1_, ByteBuf p_decode_2_, List<Object> p_decode_3_) throws Exception
-    {
-        p_decode_2_.markReaderIndex();
+public class MessageDeserializer2 extends ByteToMessageDecoder {
+    protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {
+        in.markReaderIndex();
         byte[] abyte = new byte[3];
 
-        for (int i = 0; i < abyte.length; ++i)
-        {
-            if (!p_decode_2_.isReadable())
-            {
-                p_decode_2_.resetReaderIndex();
+        for (int i = 0; i < abyte.length; ++i) {
+            if (!in.isReadable()) {
+                in.resetReaderIndex();
                 return;
             }
 
-            abyte[i] = p_decode_2_.readByte();
+            abyte[i] = in.readByte();
 
-            if (abyte[i] >= 0)
-            {
+            if (abyte[i] >= 0) {
                 PacketBuffer packetbuffer = new PacketBuffer(Unpooled.wrappedBuffer(abyte));
 
-                try
-                {
+                try {
                     int j = packetbuffer.readVarIntFromBuffer();
 
-                    if (p_decode_2_.readableBytes() >= j)
-                    {
-                        p_decode_3_.add(p_decode_2_.readBytes(j));
+                    if (in.readableBytes() >= j) {
+                        out.add(in.readBytes(j));
                         return;
                     }
 
-                    p_decode_2_.resetReaderIndex();
-                }
-                finally
-                {
+                    in.resetReaderIndex();
+                } finally {
                     packetbuffer.release();
                 }
 

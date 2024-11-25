@@ -68,6 +68,7 @@ import org.apache.logging.log4j.Logger;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.impl.EventJoinGame;
 import wtf.bhopper.nonsense.event.impl.EventSendPacket;
+import wtf.bhopper.nonsense.module.impl.other.Debugger;
 
 import java.io.File;
 import java.io.IOException;
@@ -562,7 +563,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
                 this.gameController.displayGuiScreen(new GuiDisconnected(this.guiScreenServer, "disconnect.lost", reason));
             }
         } else {
-            this.gameController.displayGuiScreen(new GuiDisconnected(new GuiMultiplayer(new GuiMainMenu()), "disconnect.lost", reason));
+            this.gameController.displayGuiScreen(new GuiDisconnected(new GuiMultiplayer(GuiMainMenu.newInstance()), "disconnect.lost", reason));
         }
     }
 
@@ -572,6 +573,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
         if (!event.isCancelled()) {
             this.netManager.sendPacket(event.packet);
         }
+        Nonsense.getEventBus().post(new Debugger.EventPacketDebug(packet, event.isCancelled() ? Debugger.State.CANCELED : Debugger.State.NORMAL, Debugger.EventPacketDebug.Direction.OUTGOING));
     }
 
     public void handleCollectItem(S0DPacketCollectItem packetIn) {
@@ -830,8 +832,8 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
         PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.gameController);
         EntityPlayer entityplayer = this.gameController.thePlayer;
 
-        if (packetIn.func_149175_c() == -1) {
-            entityplayer.inventory.setItemStack(packetIn.func_149174_e());
+        if (packetIn.getWindowId() == -1) {
+            entityplayer.inventory.setItemStack(packetIn.getItem());
         } else {
             boolean flag = false;
 
@@ -840,16 +842,16 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
                 flag = guicontainercreative.getSelectedTabIndex() != CreativeTabs.tabInventory.getTabIndex();
             }
 
-            if (packetIn.func_149175_c() == 0 && packetIn.func_149173_d() >= 36 && packetIn.func_149173_d() < 45) {
-                ItemStack itemstack = entityplayer.inventoryContainer.getSlot(packetIn.func_149173_d()).getStack();
+            if (packetIn.getWindowId() == 0 && packetIn.getSlot() >= 36 && packetIn.getSlot() < 45) {
+                ItemStack itemstack = entityplayer.inventoryContainer.getSlot(packetIn.getSlot()).getStack();
 
-                if (packetIn.func_149174_e() != null && (itemstack == null || itemstack.stackSize < packetIn.func_149174_e().stackSize)) {
-                    packetIn.func_149174_e().animationsToGo = 5;
+                if (packetIn.getItem() != null && (itemstack == null || itemstack.stackSize < packetIn.getItem().stackSize)) {
+                    packetIn.getItem().animationsToGo = 5;
                 }
 
-                entityplayer.inventoryContainer.putStackInSlot(packetIn.func_149173_d(), packetIn.func_149174_e());
-            } else if (packetIn.func_149175_c() == entityplayer.openContainer.windowId && (packetIn.func_149175_c() != 0 || !flag)) {
-                entityplayer.openContainer.putStackInSlot(packetIn.func_149173_d(), packetIn.func_149174_e());
+                entityplayer.inventoryContainer.putStackInSlot(packetIn.getSlot(), packetIn.getItem());
+            } else if (packetIn.getWindowId() == entityplayer.openContainer.windowId && (packetIn.getWindowId() != 0 || !flag)) {
+                entityplayer.openContainer.putStackInSlot(packetIn.getSlot(), packetIn.getItem());
             }
         }
     }

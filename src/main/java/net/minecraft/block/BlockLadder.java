@@ -45,23 +45,11 @@ public class BlockLadder extends Block
         {
             float f = 0.125F;
 
-            switch ((EnumFacing)iblockstate.getValue(FACING))
-            {
-                case NORTH:
-                    this.setBlockBounds(0.0F, 0.0F, 1.0F - f, 1.0F, 1.0F, 1.0F);
-                    break;
-
-                case SOUTH:
-                    this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, f);
-                    break;
-
-                case WEST:
-                    this.setBlockBounds(1.0F - f, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
-                    break;
-
-                case EAST:
-                default:
-                    this.setBlockBounds(0.0F, 0.0F, 0.0F, f, 1.0F, 1.0F);
+            switch (iblockstate.getValue(FACING)) {
+                case NORTH -> this.setBlockBounds(0.0F, 0.0F, 1.0F - f, 1.0F, 1.0F, 1.0F);
+                case SOUTH -> this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, f);
+                case WEST -> this.setBlockBounds(1.0F - f, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F);
+                default -> this.setBlockBounds(0.0F, 0.0F, 0.0F, f, 1.0F, 1.0F);
             }
         }
     }
@@ -81,7 +69,7 @@ public class BlockLadder extends Block
 
     public boolean canPlaceBlockAt(World worldIn, BlockPos pos)
     {
-        return worldIn.getBlockState(pos.west()).getBlock().isNormalCube() ? true : (worldIn.getBlockState(pos.east()).getBlock().isNormalCube() ? true : (worldIn.getBlockState(pos.north()).getBlock().isNormalCube() ? true : worldIn.getBlockState(pos.south()).getBlock().isNormalCube()));
+        return worldIn.getBlockState(pos.west()).getBlock().isNormalCube() || (worldIn.getBlockState(pos.east()).getBlock().isNormalCube() ? true : (worldIn.getBlockState(pos.north()).getBlock().isNormalCube() ? true : worldIn.getBlockState(pos.south()).getBlock().isNormalCube()));
     }
 
     /**

@@ -57,7 +57,12 @@ public class ScaledResolution {
     }
 
     public void scaleToFactor(float factor) {
-        float scale = (1.0F / this.scaleFactor) * factor;
+        float scale = factor / this.scaleFactor;
+        GlStateManager.scale(scale, scale, scale);
+    }
+
+    public void scaleToOne() {
+        float scale = 1.0F / this.scaleFactor;
         GlStateManager.scale(scale, scale, scale);
     }
 }

@@ -60,6 +60,7 @@ public enum Nonsense {
         this.commandManager = new CommandManager();
         this.configManager = new ConfigManager();
         this.altManager = new AltManager();
+        this.altManager.tryLoad();
 
         NVGHelper.init();
         Fonts.init();

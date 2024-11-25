@@ -33,7 +33,7 @@ public class EntityLeashKnot extends EntityHanging
     }
 
     /**
-     * Updates facing and bounding box based on it
+     * Updates face and bounding box based on it
      */
     public void updateFacingWithBoundingBox(EnumFacing facingDirectionIn)
     {

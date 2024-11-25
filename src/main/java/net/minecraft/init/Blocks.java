@@ -238,9 +238,9 @@ public class Blocks
     /**
      * Returns the Block in the blockRegistry with the specified name.
      */
-    private static Block getRegisteredBlock(String p_180383_0_)
+    private static Block getRegisteredBlock(String id)
     {
-        return (Block)Block.blockRegistry.getObject(new ResourceLocation(p_180383_0_));
+        return Block.blockRegistry.getObject(new ResourceLocation(id));
     }
 
     static

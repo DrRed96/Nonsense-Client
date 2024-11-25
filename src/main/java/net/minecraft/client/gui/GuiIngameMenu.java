@@ -54,20 +54,20 @@ public class GuiIngameMenu extends GuiScreen
                 boolean flag1 = this.mc.func_181540_al();
                 button.enabled = false;
                 this.mc.theWorld.sendQuittingDisconnectingPacket();
-                this.mc.loadWorld((WorldClient)null);
+                this.mc.loadWorld(null);
 
                 if (flag)
                 {
-                    this.mc.displayGuiScreen(new GuiMainMenu());
+                    this.mc.displayGuiScreen(GuiMainMenu.newInstance());
                 }
                 else if (flag1)
                 {
                     RealmsBridge realmsbridge = new RealmsBridge();
-                    realmsbridge.switchToRealms(new GuiMainMenu());
+                    realmsbridge.switchToRealms(GuiMainMenu.newInstance());
                 }
                 else
                 {
-                    this.mc.displayGuiScreen(new GuiMultiplayer(new GuiMainMenu()));
+                    this.mc.displayGuiScreen(new GuiMultiplayer(GuiMainMenu.newInstance()));
                 }
 
             case 2:

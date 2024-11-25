@@ -56,7 +56,7 @@ public class NovoColorPicker extends NovoComponent {
         float boxX = WIDTH - 24.0F;
         float boxY = yOff + MOD_HEIGHT / 2.0F - 8.0F;
         NVGHelper.textAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
-        NVGHelper.drawText(this.property.getDisplayValue(), boxX - 3.0F, yOff + MOD_HEIGHT / 2.0F + 1.0F, 0xFFFFFFFF);
+        NVGHelper.drawText(this.property.getDisplayValueNoAlpha(), boxX - 3.0F, yOff + MOD_HEIGHT / 2.0F + 1.0F, 0xFFFFFFFF);
         NVGHelper.drawRect(boxX, boxY, 16.0F, 16.0F, OUTLINE_COLOR);
         NVGHelper.drawImage(boxX + 1.0F, boxY + 1.0F, 14.0F, 14.0F, 400.0F, 400.0F, transparent);
         NVGHelper.drawRect(boxX + 1.0F, boxY + 1.0F, 14.0F, 14.0F, property.getRGB());

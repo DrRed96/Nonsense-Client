@@ -52,6 +52,8 @@ import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.impl.EventPostStep;
 import wtf.bhopper.nonsense.event.impl.EventPreStep;
 import wtf.bhopper.nonsense.event.impl.EventStrafe;
+import wtf.bhopper.nonsense.util.minecraft.Rotation;
+import wtf.bhopper.nonsense.util.minecraft.RotationUtil;
 
 public abstract class Entity implements ICommandSender {
     private static final AxisAlignedBB ZERO_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
@@ -2297,7 +2299,7 @@ public abstract class Entity implements ICommandSender {
     }
 
     public EnumFacing getHorizontalFacing() {
-        return EnumFacing.getHorizontal(MathHelper.floor_double((double) (this.rotationYaw * 4.0F / 360.0F) + 0.5D) & 3);
+        return EnumFacing.getHorizontal(MathHelper.floor_double((double) ((this.isClientPlayer() ? RotationUtil.serverYaw : this.rotationYaw) * 4.0F / 360.0F) + 0.5D) & 3);
     }
 
     protected HoverEvent getHoverEvent() {

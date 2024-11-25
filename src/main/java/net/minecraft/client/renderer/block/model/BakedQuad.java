@@ -42,7 +42,7 @@ public class BakedQuad implements IVertexProducer
 
     public String toString()
     {
-        return "vertex: " + this.vertexData.length / 7 + ", tint: " + this.tintIndex + ", facing: " + this.face + ", sprite: " + this.sprite;
+        return "vertex: " + this.vertexData.length / 7 + ", tint: " + this.tintIndex + ", face: " + this.face + ", sprite: " + this.sprite;
     }
 
     public BakedQuad(int[] vertexDataIn, int tintIndexIn, EnumFacing faceIn)

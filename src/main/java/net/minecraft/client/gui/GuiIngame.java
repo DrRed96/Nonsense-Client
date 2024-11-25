@@ -286,7 +286,7 @@ public class GuiIngame extends Gui {
             this.mc.mcProfiler.endSection();
         }
 
-        Nonsense.getHud().moduleList.draw(partialTicks);
+        Nonsense.getHud().moduleList.draw(partialTicks, scaledRes);
 
         Scoreboard scoreboard = this.mc.theWorld.getScoreboard();
         ScoreObjective scoreobjective = null;
@@ -306,10 +306,10 @@ public class GuiIngame extends Gui {
             this.renderScoreboard(scoreobjective1, scaledRes);
         }
 
-        Nonsense.getHud().infoDisplay.draw();
+        Nonsense.getHud().infoDisplay.draw(scaledRes);
 
         if (mc.currentScreen == null) {
-            Nonsense.getHud().notifications.draw(partialTicks);
+            Nonsense.getHud().notifications.draw(scaledRes, partialTicks);
         }
 
         if (!(mc.currentScreen instanceof GuiChat || mc.currentScreen instanceof GuiMoveHudComponents)) {

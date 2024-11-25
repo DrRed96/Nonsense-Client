@@ -203,6 +203,13 @@ public class NVGHelper implements MinecraftInstance {
         closePath();
     }
 
+    public static void drawRectOutline(float x, float y, float width, float height, int color) {
+        drawRect(x + 1.0F, y, width - 1.0F, 1.0F, color);
+        drawRect(x + 1.0F, y + height, width - 1.0F, 1.0F, color);
+        drawRect(x, y, 1.0F, height + 1.0F, color);
+        drawRect(x + width, y, 1.0F, height + 1.0F, color);
+    }
+
     public static void drawRoundedRect(float x, float y, float width, float height, float radius, int color) {
         beginPath();
         roundedRect(x, y, width, height, radius);

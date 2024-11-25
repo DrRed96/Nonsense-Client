@@ -23,7 +23,7 @@ public class GuiMemoryErrorScreen extends GuiScreen
     {
         if (button.id == 0)
         {
-            this.mc.displayGuiScreen(new GuiMainMenu());
+            this.mc.displayGuiScreen(GuiMainMenu.newInstance());
         }
         else if (button.id == 1)
         {

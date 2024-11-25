@@ -63,7 +63,11 @@ public class Jesus extends Module {
     };
 
     private boolean shouldSetBounds() {
-        return !PlayerUtil.isInLiquid() && !mc.thePlayer.movementInput.sneak;
+        try {
+            return !PlayerUtil.isInLiquid() && !mc.thePlayer.movementInput.sneak;
+        } catch (NullPointerException ignored) {
+            return false;
+        }
     }
 
     private boolean canBoost() {

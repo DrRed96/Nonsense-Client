@@ -1,13 +1,16 @@
 package wtf.bhopper.nonsense.module.impl.movement;
 
 import net.minecraft.block.Block;
+import net.minecraft.block.BlockSlab;
 import net.minecraft.block.material.Material;
+import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.C09PacketHeldItemChange;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
@@ -21,6 +24,7 @@ import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
 import wtf.bhopper.nonsense.util.minecraft.*;
 import wtf.bhopper.nonsense.util.misc.Clock;
+import wtf.bhopper.nonsense.util.misc.MathUtil;
 
 import java.util.Arrays;
 import java.util.List;
@@ -47,6 +51,7 @@ public class Scaffold extends Module {
     private final GroupProperty rotationGroup = new GroupProperty("Rotations", "Scaffold rotations.");
     private final EnumProperty<RotationsMode> rotationsMode = new EnumProperty<>("Mode", "Method for rotations.", RotationsMode.INSTANT);
     private final EnumProperty<RotationsHitVec> rotationsHitVec = new EnumProperty<>("Hit Vector", "Block placement vector.", RotationsHitVec.CENTRE);
+    private final BooleanProperty rotationRayCast = new BooleanProperty("Ray Cast", "Ray Cast the hit vector", false);
 
     private final GroupProperty towerGroup = new GroupProperty("Tower", "Scaffold tower");
     private final BooleanProperty towerEnable = new BooleanProperty("Enable", "Enables tower", true);
@@ -54,7 +59,9 @@ public class Scaffold extends Module {
 
     private final BooleanProperty swing = new BooleanProperty("Swing", "Swings client sided.", true);
     private final EnumProperty<SwapMode> swap = new EnumProperty<>("Swap", "Swaps mode.", SwapMode.SILENT);
+    private final BooleanProperty sameY = new BooleanProperty("Same Y", "Keeps your Y position the same", false);
 
+    private double playerY = -1.0F;
     private BlockData blockData = null;
     private Vec3 hitVec = null;
     private Rotation rotations = null;
@@ -65,9 +72,9 @@ public class Scaffold extends Module {
     private final Clock towerTimer = new Clock();
 
     public Scaffold() {
-        this.rotationGroup.addProperties(this.rotationsMode, this.rotationsHitVec);
+        this.rotationGroup.addProperties(this.rotationsMode, this.rotationsHitVec, this.rotationRayCast);
         this.towerGroup.addProperties(this.towerEnable, this.towerMode);
-        this.addProperties(this.mode, this.rotationGroup, this.towerGroup, this.swing, this.swap);
+        this.addProperties(this.mode, this.rotationGroup, this.towerGroup, this.swing, this.swap, this.sameY);
         this.setSuffix(this.mode::getDisplayValue);
     }
 
@@ -79,6 +86,7 @@ public class Scaffold extends Module {
         this.slot = -1;
         this.towerStage = 0;
         this.spoofGround = false;
+        this.playerY = mc.thePlayer.posY;
     }
 
     @EventLink
@@ -106,10 +114,72 @@ public class Scaffold extends Module {
                 return;
             }
 
+            BlockPos pos = this.blockData.blockPos;
+            EnumFacing face = this.blockData.facing;
+
             this.hitVec = switch (this.rotationsHitVec.get()) {
-                case CENTRE -> RotationUtil.getHitVec(this.blockData.blockPos, this.blockData.facing);
-                case CLOSEST -> RotationUtil.getHitVecOptimized(this.blockData.blockPos, this.blockData.facing);
+                case CENTRE -> RotationUtil.getHitVec(pos, face);
+                case CLOSEST -> RotationUtil.getHitVecOptimized(pos, face);
+                case RANDOM -> {
+                    double x = (double)pos.getX() + 0.5 + (double)face.getFrontOffsetX() * 0.5;
+                    double y = (double)pos.getY() + 0.5 + (double)face.getFrontOffsetY() * 0.5;
+                    double z = (double)pos.getZ() + 0.5 + (double)face.getFrontOffsetZ() * 0.5;
+
+                    if (face.getAxis() != EnumFacing.Axis.Y) {
+                        y += MathUtil.random(0.49, 0.5);
+                    } else {
+                        x += MathUtil.random(-0.3, 0.3);
+                        z += MathUtil.random(-0.3, 0.3);
+                    }
+
+                    if (face.getAxis() == EnumFacing.Axis.X) {
+                        z += MathUtil.random(-0.3, 0.3);
+                    } else if (face.getAxis() == EnumFacing.Axis.Z) {
+                        x += MathUtil.random(-0.3, 0.3);
+                    }
+
+                    yield new Vec3(x, y, z);
+                }
+                case CORNER -> new Vec3(pos.getX(), pos.getY(), pos.getZ());
             };
+
+            if (this.hitVec != null && this.rotationRayCast.get()) {
+                Vec3 src = PlayerUtil.eyesPos();
+                MovingObjectPosition rayCast = mc.theWorld.rayTraceBlocks(src, this.hitVec, false, false, true);
+
+                if (rayCast == null || rayCast.hitVec == null || rayCast.typeOfHit != MovingObjectPosition.MovingObjectType.BLOCK) {
+                    this.hitVec = null;
+                    return;
+                }
+
+                switch (face.getAxis()) {
+                    case X -> rayCast.hitVec = new Vec3(Math.round(rayCast.hitVec.xCoord), rayCast.hitVec.yCoord, rayCast.hitVec.zCoord);
+                    case Z -> rayCast.hitVec = new Vec3(rayCast.hitVec.xCoord, rayCast.hitVec.yCoord, Math.round(rayCast.hitVec.zCoord));
+                }
+
+                if (face != EnumFacing.DOWN && face != EnumFacing.UP) {
+                    final IBlockState blockState = mc.theWorld.getBlockState(rayCast.getBlockPos());
+                    final Block blockAtPos = blockState.getBlock();
+
+                    double blockFaceOffset;
+
+                    if (blockAtPos instanceof BlockSlab && !((BlockSlab) blockAtPos).isDouble()) {
+                        final BlockSlab.EnumBlockHalf half = blockState.getValue(BlockSlab.HALF);
+
+                        blockFaceOffset = MathUtil.random(0.1, 0.4);
+
+                        if (half == BlockSlab.EnumBlockHalf.TOP) {
+                            blockFaceOffset += 0.5;
+                        }
+                    } else {
+                        blockFaceOffset = MathUtil.random(0.1, 0.9);
+                    }
+
+                    rayCast.hitVec = rayCast.hitVec.addVector(0.0, -blockFaceOffset, 0.0);
+                }
+
+                this.hitVec = rayCast.hitVec;
+            }
 
             this.placeBlock();
         }
@@ -170,6 +240,24 @@ public class Scaffold extends Module {
                 }
 
                 case NCP -> {
+                    if (mc.gameSettings.keyBindJump.isKeyDown() && this.slot != -1 && BlockUtil.getBlockRelativeToPlayer(0, -1, 0).getMaterial() != Material.air) {
+                        if (this.towerTimer.hasReached(130.0 / mc.timer.timerSpeed)) {
+                            MoveUtil.vertical(event, MoveUtil.jumpHeight(0.42));
+                            MoveUtil.setSpeed(MoveUtil.baseSpeed() * 0.8);
+                            this.towerTimer.reset();
+                        } else if (towerTimer.hasReached(120.0 / mc.timer.timerSpeed)) {
+                            MoveUtil.vertical(event, 0.0);
+                        }
+                    }
+                }
+
+                case VERUS -> {
+                    if (mc.gameSettings.keyBindJump.isKeyDown() && this.slot != -1 && BlockUtil.getBlockRelativeToPlayer(0, -1, 0).getMaterial() != Material.air && mc.thePlayer.ticksExisted % 2 == 0) {
+                        MoveUtil.vertical(event, 0.42);
+                    }
+                }
+
+                case LEGIT -> {
                     if (mc.gameSettings.keyBindJump.isKeyDown()) {
                         switch (this.towerStage) {
                             case 0 -> {
@@ -201,18 +289,16 @@ public class Scaffold extends Module {
                     }
                 }
 
-                case VERUS -> {
-                    if (mc.gameSettings.keyBindJump.isKeyDown() && this.slot != -1 && BlockUtil.getBlockRelativeToPlayer(0, -1, 0).getMaterial() != Material.air && mc.thePlayer.ticksExisted % 2 == 0) {
-                        MoveUtil.vertical(event, 0.42);
-                    }
-                }
-
             }
         }
 
     };
 
     public void placeBlock() {
+
+        if (this.blockData == null || this.hitVec == null) {
+            return;
+        }
 
         ItemStack item = this.swap.is(SwapMode.SPOOF) ? mc.thePlayer.inventory.mainInventory[this.slot] : mc.thePlayer.getHeldItem();
 
@@ -230,8 +316,13 @@ public class Scaffold extends Module {
     }
 
     private BlockData getBlockData() {
+
+        if (!this.sameY.get() || mc.thePlayer.onGround || mc.thePlayer.fallDistance >= 2.5F) {
+            this.playerY = mc.thePlayer.posY;
+        }
+
         double x = mc.thePlayer.posX;
-        double y = mc.thePlayer.posY;
+        double y = this.playerY;
         double z = mc.thePlayer.posZ;
 
         BlockPos playerPos = new BlockPos(x, y, z).down();
@@ -298,7 +389,7 @@ public class Scaffold extends Module {
         return false;
     }
 
-    private record BlockData(BlockPos blockPos, EnumFacing facing) {
+    public record BlockData(BlockPos blockPos, EnumFacing facing) {
     }
 
     private enum Mode {
@@ -312,13 +403,17 @@ public class Scaffold extends Module {
 
     private enum RotationsHitVec {
         CENTRE,
-        CLOSEST
+        CLOSEST,
+        RANDOM,
+        CORNER
     }
 
     private enum TowerMode {
         VANILLA,
         @DisplayName("NCP") NCP,
-        VERUS
+        VERUS,
+        LEGIT,
+
     }
 
     private enum SwapMode {

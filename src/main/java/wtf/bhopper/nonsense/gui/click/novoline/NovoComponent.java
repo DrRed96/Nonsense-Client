@@ -1,5 +1,6 @@
 package wtf.bhopper.nonsense.gui.click.novoline;
 
+import wtf.bhopper.nonsense.util.misc.InputUtil;
 import wtf.bhopper.nonsense.util.render.ColorUtil;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
 
@@ -50,7 +51,7 @@ public abstract class NovoComponent {
     }
 
     public boolean mouseIntersecting(float mouseX, float mouseY, float x, float y, float width, float height) {
-        return mouseX >= x && mouseX <= x + width && mouseY >= y && mouseY <= y + height;
+        return InputUtil.mouseIntersecting(mouseX, mouseY, x, y, width, height);
     }
 
     public void setToolTip(String toolTip) {

@@ -51,17 +51,17 @@ public class S2FPacketSetSlot implements Packet<INetHandlerPlayClient>
         buf.writeItemStackToBuffer(this.item);
     }
 
-    public int func_149175_c()
+    public int getWindowId()
     {
         return this.windowId;
     }
 
-    public int func_149173_d()
+    public int getSlot()
     {
         return this.slot;
     }
 
-    public ItemStack func_149174_e()
+    public ItemStack getItem()
     {
         return this.item;
     }

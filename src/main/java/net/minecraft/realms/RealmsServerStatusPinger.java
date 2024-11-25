@@ -32,7 +32,7 @@ public class RealmsServerStatusPinger
         if (p_pingServer_1_ != null && !p_pingServer_1_.startsWith("0.0.0.0") && !p_pingServer_1_.isEmpty())
         {
             RealmsServerAddress realmsserveraddress = RealmsServerAddress.parseString(p_pingServer_1_);
-            final NetworkManager networkmanager = NetworkManager.func_181124_a(InetAddress.getByName(realmsserveraddress.getHost()), realmsserveraddress.getPort(), false);
+            final NetworkManager networkmanager = NetworkManager.connect(InetAddress.getByName(realmsserveraddress.getHost()), realmsserveraddress.getPort(), false);
             this.connections.add(networkmanager);
             networkmanager.setNetHandler(new INetHandlerStatusClient()
             {

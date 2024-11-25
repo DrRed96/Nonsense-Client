@@ -31,10 +31,15 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 import org.lwjglx.opengl.GLContext;
 import org.lwjglx.util.glu.Project;
+import wtf.bhopper.nonsense.gui.screens.NonsenseMainMenu;
 import wtf.bhopper.nonsense.gui.screens.altmanager.GuiAltManager;
 
 public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
 {
+    public static GuiScreen newInstance() {
+        return new NonsenseMainMenu();
+    }
+
     private static final AtomicInteger field_175373_f = new AtomicInteger(0);
     private static final Logger logger = LogManager.getLogger();
     private static final Random RANDOM = new Random();
@@ -85,7 +90,7 @@ public class GuiMainMenu extends GuiScreen implements GuiYesNoCallback
     /** Minecraft Realms button. */
     private GuiButton realmsButton;
 
-    public GuiMainMenu()
+    private GuiMainMenu()
     {
         this.openGLWarning2 = field_96138_a;
         this.splashText = "missingno";

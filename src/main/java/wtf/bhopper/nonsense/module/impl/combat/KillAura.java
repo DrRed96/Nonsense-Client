@@ -10,6 +10,7 @@ import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
+import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
 import wtf.bhopper.nonsense.event.impl.EventPreMotion;
@@ -240,6 +241,10 @@ public class KillAura extends Module {
         }
 
         if (target.ticksExisted < this.existed.getInt()) {
+            return TargetValidity.INVALID;
+        }
+
+        if (Nonsense.module(AntiBot.class).isBot(target)) {
             return TargetValidity.INVALID;
         }
 

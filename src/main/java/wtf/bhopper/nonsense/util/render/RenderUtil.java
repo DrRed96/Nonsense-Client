@@ -1,25 +1,36 @@
 package wtf.bhopper.nonsense.util.render;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
+import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Timer;
+import org.lwjglx.opengl.Display;
+import org.lwjglx.util.glu.GLU;
 import wtf.bhopper.nonsense.util.minecraft.BlockUtil;
 import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
 
+import javax.vecmath.Vector3d;
 import java.awt.*;
+import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 import java.util.HashMap;
 import java.util.Map;
 
 import static org.lwjgl.opengl.GL11.*;
 
 public class RenderUtil implements MinecraftInstance {
+
+    private static final Frustum frustum = new Frustum();
 
     private static final Map<Integer, Boolean> glCapMap = new HashMap<>();
 
@@ -63,6 +74,20 @@ public class RenderUtil implements MinecraftInstance {
         } else {
             glDisable(cap);
         }
+    }
+
+    public static boolean isInViewFrustum(Entity entity) {
+        return isInViewFrustum(entity.getEntityBoundingBox()) || entity.ignoreFrustumCheck;
+    }
+
+    public static boolean isInViewFrustum(TileEntity tile) {
+        return isInViewFrustum(tile.getBlockType().getSelectedBoundingBox(mc.theWorld, tile.getPos()));
+    }
+
+    private static boolean isInViewFrustum(AxisAlignedBB bb) {
+        Entity current = mc.getRenderViewEntity();
+        frustum.setPosition(current.posX, current.posY, current.posZ);
+        return frustum.isBoundingBoxInFrustum(bb);
     }
 
     public static void drawAxisAlignedBB(final AxisAlignedBB axisAlignedBB, final Color color, final boolean outline, final boolean box, final float outlineWidth) {
@@ -310,6 +335,19 @@ public class RenderUtil implements MinecraftInstance {
         final float blue = (hex & 0xFF) / 255F;
 
         GlStateManager.color(red, green, blue, alpha);
+    }
+
+    private static final IntBuffer viewport = GLAllocation.createDirectIntBuffer(16);
+    private static final FloatBuffer modelView = GLAllocation.createDirectFloatBuffer(16);
+    private static final FloatBuffer projection = GLAllocation.createDirectFloatBuffer(16);
+    private static final FloatBuffer vector = GLAllocation.createDirectFloatBuffer(4);
+
+    public static javax.vecmath.Vector3d project2D(int scaleFactor, double x, double y, double z) {
+        glGetFloatv(GL_MODELVIEW_MATRIX, modelView);
+        glGetFloatv(GL_PROJECTION_MATRIX, projection);
+        glGetIntegerv(GL_VIEWPORT, viewport);
+        return GLU.gluProject((float) x, (float) y, (float) z, modelView, projection, viewport, vector) ?
+                new Vector3d(vector.get(0) / (float) scaleFactor, ((float) Display.getHeight() - vector.get(1)) / (float) scaleFactor, vector.get(2)) : null;
     }
 
 }

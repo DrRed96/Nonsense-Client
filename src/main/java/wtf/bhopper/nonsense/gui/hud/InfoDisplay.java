@@ -2,25 +2,32 @@ package wtf.bhopper.nonsense.gui.hud;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.potion.Potion;
+import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.MathHelper;
 import org.lwjglx.opengl.Display;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.module.impl.visual.HudMod;
 import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
-import wtf.bhopper.nonsense.util.minecraft.MoveUtil;
 import wtf.bhopper.nonsense.util.render.Fonts;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
-import static org.lwjgl.nanovg.NanoVG.*;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_BOTTOM;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
 
 public class InfoDisplay implements MinecraftInstance {
 
     private final List<Component> components = new ArrayList<>();
+    private final List<PotionComponent> potionComponents = new ArrayList<>();
 
-    public void draw() {
+    public void draw(ScaledResolution scaledRes) {
 
         if (!Hud.enabled() || mc.currentScreen instanceof GuiChat) {
             return;
@@ -31,6 +38,7 @@ public class InfoDisplay implements MinecraftInstance {
         HudMod mod = Hud.mod();
 
         this.components.clear();
+        this.potionComponents.clear();
 
         if (mod.coords.get()) {
             this.components.add(new Component("XYZ", String.format("%,.1f, %,.1f, %,.1f", mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ)));
@@ -51,7 +59,7 @@ public class InfoDisplay implements MinecraftInstance {
             this.components.add(new Component("Speed", switch (mod.speed.get()) {
                 case MPS -> String.format("%.2f m/s", speed * 20.0);
                 case KMPH -> String.format("%.2f Km/h", speed * 72.0);
-                case MPH -> String.format("%.2f mps", speed * 44.74);
+                case MPH -> String.format("%.2f mph", speed * 44.74);
                 default -> String.format("%.2f", speed);
             }));
         }
@@ -64,23 +72,86 @@ public class InfoDisplay implements MinecraftInstance {
             this.components.add(new Component("FPS", String.format("%d", Minecraft.getDebugFPS())));
         }
 
-        NVGHelper.begin();
+        if (mod.pots.get()) {
 
-        NVGHelper.fontFace(Fonts.ARIAL);
-        NVGHelper.fontSize(mod.fontSize.getFloat());
-        NVGHelper.textAlign(NVG_ALIGN_LEFT | NVG_ALIGN_BOTTOM);
+            Hud.WidthMethod getWidth = mod.font.is(HudMod.Font.MINECRAFT)
+                    ? text -> Fonts.mc().getStringWidthF(text) * 2.0F
+                    : NVGHelper::getStringWidth;
 
-        float yOff = height - 2.0F;
-        for (Component component : this.components) {
-            float valueX = NVGHelper.textBounds(2.0F, yOff, component.name, new float[4]) + 1.0F;
-            NVGHelper.drawText(component.name, 2.0F, yOff, mod.color.getRGB(), true);
-            NVGHelper.drawText(": " + component.value, valueX, yOff, 0xFFFFFFFF, true);
-            yOff -= mod.fontSize.getFloat() + 2.0F;
+            for (PotionEffect effect : mc.thePlayer.getActivePotionEffects()) {
+                String name = "TODO: FIX THIS FUCKING THING.";
+                int color = 0xFFAAAAAA;
+                try {
+                    name = I18n.format(Potion.potionTypes[effect.getPotionID()].getName());
+                    color = Potion.potionTypes[effect.getPotionID()].getLiquidColor() | 0xFF000000;
+                } catch (ArrayIndexOutOfBoundsException ignored) {}
+                String display = String.format("%s %d", name, effect.getAmplifier() + 1);
+                String time = Potion.getDurationString(effect);
+                float potWidth = getWidth.getWidth(display + " " + time);
+                int effectColor;
+                if (effect.getDuration() < 300) {
+                    effectColor = 0xFFFF5555;
+                } else if (effect.getDuration() < 600) {
+                    effectColor = 0xFFFFAA00;
+                } else {
+                    effectColor = 0xFFAAAAAA;
+                }
+                this.potionComponents.add(new PotionComponent(
+                        display,
+                        time,
+                        color,
+                        effectColor,
+                        potWidth,
+                        potWidth - getWidth.getWidth(time)
+                ));
+                this.potionComponents.sort(Comparator.<PotionComponent>comparingDouble(component -> component.width).reversed());
+            }
         }
 
-        NVGHelper.end();
+        if (mod.font.is(HudMod.Font.MINECRAFT)) {
+            GlStateManager.pushMatrix();
+            scaledRes.scaleToFactor(2.0F);
+            float yOff = height / 2.0F - 11.0F;
+            for (Component component : this.components) {
+                Fonts.mc().drawStringWithShadow(component.name + "\247f: " + component.value, 2.0F, yOff, mod.color.getRGB());
+                yOff -= 11.0F;
+            }
+
+            yOff = height / 2.0F - 11.0F;
+            for (PotionComponent component : this.potionComponents) {
+                Fonts.mc().drawStringWithShadow(component.name, (width - component.width - 2.0F) / 2.0F, yOff, component.potColor);
+                Fonts.mc().drawStringWithShadow(component.time, (width - component.width + component.timeOffset - 2.0F) / 2.0F, yOff, component.timeColor);
+                yOff -= 11.0F;
+            }
+
+            GlStateManager.popMatrix();
+        } else {
+            NVGHelper.begin();
+
+            Hud.bindFont();
+            NVGHelper.fontSize(mod.fontSize.getFloat());
+            NVGHelper.textAlign(NVG_ALIGN_LEFT | NVG_ALIGN_BOTTOM);
+
+            float yOff = height - 2.0F;
+            for (Component component : this.components) {
+                float valueX = NVGHelper.textBounds(2.0F, yOff, component.name, new float[4]) + 1.0F;
+                NVGHelper.drawText(component.name, 2.0F, yOff, mod.color.getRGB(), true);
+                NVGHelper.drawText(": " + component.value, valueX, yOff, 0xFFFFFFFF, true);
+                yOff -= mod.fontSize.getFloat() + 2.0F;
+            }
+
+            yOff = height - 2.0F;
+            for (PotionComponent component : this.potionComponents) {
+                NVGHelper.drawText(component.name, width - component.width - 2.0F, yOff, component.potColor, true);
+                NVGHelper.drawText(component.time, width - component.width + component.timeOffset - 2.0F, yOff, component.timeColor, true);
+                yOff -= mod.fontSize.getFloat() + 2.0F;
+            }
+
+            NVGHelper.end();
+        }
     }
 
     private record Component(String name, String value) {}
+    private record PotionComponent(String name, String time, int potColor, int timeColor, float width, float timeOffset) {}
 
 }

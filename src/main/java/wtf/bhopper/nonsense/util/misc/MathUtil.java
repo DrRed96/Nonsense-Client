@@ -37,6 +37,10 @@ public class MathUtil {
         return a + f * (b - a);
     }
 
+    public static double random(double min, double max) {
+        return Math.random() * (max - min) + min;
+    }
+
     public static int incrementTo(int current, int target, int speed) {
         if (current == target) {
             return current;

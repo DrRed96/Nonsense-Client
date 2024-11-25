@@ -9,12 +9,14 @@ import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.network.Account;
 
 public class ChatUtil implements MinecraftInstance {
 
     public static final String CHAT_PREFIX = "\2478\247l[\247c\247lNonsense\2478\247l] \247r\2477";
     public static final String CHAT_PREFIX_SHORT = "\247f> \2477";
     public static final String DEBUG_PREFIX = "\2478[\2473DEBUG\2478] \247r\247b";
+    public static final String IRC_PREFIX = "\2476[IRC] \247r";
 
     public static void raw(IChatComponent message) {
         mc.thePlayer.addChatMessage(message);
@@ -43,37 +45,60 @@ public class ChatUtil implements MinecraftInstance {
     }
 
     public static void debugTitle(String title) {
-        print("\247c\247l--- %s ---", title);
+        print("\247b\247l--- %s ---", title);
     }
 
     public static void debugItem(String name, Object value) {
-        Builder.of("%s\247c%s\2478: \2477%s", CHAT_PREFIX_SHORT, name, String.valueOf(value))
-                .setHoverEvent("Click to copy!")
+        Builder.of("%s\247b%s\2478: \2477%s", CHAT_PREFIX_SHORT, name, String.valueOf(value))
+                .setHoverEvent("Click to copy: " + name)
                 .setClickEvent(ClickEvent.Action.RUN_COMMAND, ".copy " + value)
                 .send();
     }
 
-//    public static void debug(String message, Object... args) {
-//
-////        if (!Nonsense.debug()) {
-////            return;
+    public static void debugItems(String name, Object... values) {
+        StringBuilder text = new StringBuilder(String.format("%s\247b%s\2478:\2477", CHAT_PREFIX_SHORT, name));
+        for (Object value : values) {
+            text.append(" ").append(value);
+        }
+        Builder.of(text.toString())
+                .setHoverEvent("Click to copy: " + name)
+//                .setClickEvent(ClickEvent.Action.RUN_COMMAND, ".copy " + value)
+                .send();
+    }
+
+    public static void debug(String message, Object... args) {
+
+//        if (!Nonsense.debug()) {
+//            return;
 //        }
-//
-//        Nonsense.LOGGER (String.format(message, args));
-//
-//        Builder.of("%s\247b%s", DEBUG_PREFIX, String.format(message, args))
-//                .setColor(EnumChatFormatting.AQUA)
-//                .send();
-//    }
+
+        Nonsense.LOGGER.debug(String.format(message, args));
+
+        Builder.of("%s\247b%s", DEBUG_PREFIX, String.format(message, args))
+                .setColor(EnumChatFormatting.AQUA)
+                .send();
+    }
 
     public static void debugList(String name, String... items) {
-        ChatUtil.print("\247c%s\2478:", name);
+        ChatUtil.print("\247b%s\2478:", name);
         for (String item : items) {
             if (item == null) {
                 continue;
             }
             ChatUtil.print("  \2477%s", item);
         }
+    }
+
+    public static void irc(String message, Account account) {
+        Builder.of("%s%s\2477: %s", IRC_PREFIX, account.getDisplayName(), message)
+                .setColor(EnumChatFormatting.GRAY)
+                .send();
+    }
+
+    public static void whisper(String message, Account account, boolean sending) {
+        Builder.of(sending ? "%s\247dYou whisper to %s\2477: %s" : "%s%s\247d whispers to you\2477: %s", IRC_PREFIX, account.getDisplayName(), message)
+                .setColor(EnumChatFormatting.GRAY)
+                .send();
     }
 
     public static void send(String message, Object... args) {
@@ -139,18 +164,11 @@ public class ChatUtil implements MinecraftInstance {
             this.text = text;
 
             switch (inheritance) {
-                case DEEP:
-                    this.style = parent != null ? parent.getChatStyle() : new ChatStyle();
-                    break;
-                default:
-                case SHALLOW:
-                    this.style = new ChatStyle();
-                    break;
-                case NONE:
-                    this.style = new ChatStyle().setColor(null).setBold(false).setItalic(false)
-                            .setStrikethrough(false).setUnderlined(false).setObfuscated(false)
-                            .setChatClickEvent(null).setChatHoverEvent(null).setInsertion(null);
-                    break;
+                case DEEP -> this.style = parent != null ? parent.getChatStyle() : new ChatStyle();
+                case NONE -> this.style = new ChatStyle().setColor(null).setBold(false).setItalic(false)
+                        .setStrikethrough(false).setUnderlined(false).setObfuscated(false)
+                        .setChatClickEvent(null).setChatHoverEvent(null).setInsertion(null);
+                default -> this.style = new ChatStyle();
             }
         }
 

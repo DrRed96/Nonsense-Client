@@ -100,34 +100,35 @@ public class CookieLoginThread extends LoginThread {
 
     private List<Cookie> parseCookies() throws IOException {
         List<Cookie> cookies = new ArrayList<>();
-        Scanner scanner = new Scanner(this.file);
-        while (scanner.hasNextLine()) {
-            String data = scanner.nextLine();
-            String[] parts = data.split("\t");
+        try (Scanner scanner = new Scanner(this.file)) {
+            while (scanner.hasNextLine()) {
+                String data = scanner.nextLine();
+                String[] parts = data.split("\t");
 
-            if (parts.length != 7 || parts[0].startsWith("#")) {
-                continue;
-            }
+                if (parts.length != 7 || parts[0].startsWith("#")) {
+                    continue;
+                }
 
-            String name = parts[5].trim();
-            String value = parts[6].trim().replace("\r", "");
-            String domain = parts[0].trim();
-            String path = parts[2].trim();
-            String sameSite = "Lax";
-            boolean secure = parts[3].trim().equalsIgnoreCase("true");
-            double expires = Double.parseDouble(parts[4].trim()) * 1000;
+                String name = parts[5].trim();
+                String value = parts[6].trim().replace("\r", "");
+                String domain = parts[0].trim();
+                String path = parts[2].trim();
+                String sameSite = "Lax";
+                boolean secure = parts[3].trim().equalsIgnoreCase("true");
+                double expires = Double.parseDouble(parts[4].trim()) * 1000;
 
-            if (domain.charAt(0) == '\ufeff') {
-                domain = domain.substring(1);
-            }
-            domain = domain.replaceAll("[^\\x20-\\x7E]", "");
+                if (domain.charAt(0) == '\ufeff') {
+                    domain = domain.substring(1);
+                }
+                domain = domain.replaceAll("[^\\x20-\\x7E]", "");
 
-            if (name.startsWith("__Host-")) {
-                secure = true;
-            }
+                if (name.startsWith("__Host-")) {
+                    secure = true;
+                }
 
-            if (name.contains("MS") && name.contains("AUTH")) {
-                cookies.add(new Cookie(name, value, domain, path, sameSite, secure, expires));
+                if (name.contains("MS") && name.contains("AUTH")) {
+                    cookies.add(new Cookie(name, value, domain, path, sameSite, secure, expires));
+                }
             }
         }
 

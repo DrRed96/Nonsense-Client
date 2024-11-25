@@ -52,6 +52,7 @@ import org.apache.logging.log4j.Marker;
 import org.apache.logging.log4j.MarkerManager;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.impl.EventReceivePacket;
+import wtf.bhopper.nonsense.module.impl.other.Debugger;
 
 public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
     private static final Logger logger = LogManager.getLogger();
@@ -63,7 +64,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
             return new NioEventLoopGroup(0, (new ThreadFactoryBuilder()).setNameFormat("Netty Client IO #%d").setDaemon(true).build());
         }
     };
-    public static final LazyLoadBase<EpollEventLoopGroup> field_181125_e = new LazyLoadBase<>() {
+    public static final LazyLoadBase<EpollEventLoopGroup> CLIENT_EPOLL_EVENTLOOP = new LazyLoadBase<>() {
         protected EpollEventLoopGroup load() {
             return new EpollEventLoopGroup(0, (new ThreadFactoryBuilder()).setNameFormat("Netty Epoll Client IO #%d").setDaemon(true).build());
         }
@@ -148,6 +149,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
                 if (!event.isCancelled()) {
                     event.packet.processPacket(this.packetListener);
                 }
+                Nonsense.getEventBus().post(new Debugger.EventPacketDebug(packet, event.isCancelled() ? Debugger.State.CANCELED : Debugger.State.NORMAL, Debugger.EventPacketDebug.Direction.INCOMING));
             } catch (ThreadQuickExitException ignored) {
 
             }
@@ -159,7 +161,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
      * connection state (protocol)
      */
     public void setNetHandler(INetHandler handler) {
-        Validate.notNull(handler, "packetListener", new Object[0]);
+        Validate.notNull(handler, "packetListener");
         logger.debug("Set listener of {} to {}", new Object[]{this, handler});
         this.packetListener = handler;
     }
@@ -292,14 +294,14 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
         return this.channel instanceof LocalChannel || this.channel instanceof LocalServerChannel;
     }
 
-    public static NetworkManager func_181124_a(InetAddress p_181124_0_, int p_181124_1_, boolean p_181124_2_) {
+    public static NetworkManager connect(InetAddress address, int port, boolean useEpoll) {
         final NetworkManager networkManager = new NetworkManager(EnumPacketDirection.CLIENTBOUND);
         Class<? extends SocketChannel> oclass;
         LazyLoadBase<? extends EventLoopGroup> lazyloadbase;
 
-        if (Epoll.isAvailable() && p_181124_2_) {
+        if (Epoll.isAvailable() && useEpoll) {
             oclass = EpollSocketChannel.class;
-            lazyloadbase = field_181125_e;
+            lazyloadbase = CLIENT_EPOLL_EVENTLOOP;
         } else {
             oclass = NioSocketChannel.class;
             lazyloadbase = CLIENT_NIO_EVENTLOOP;
@@ -311,14 +313,15 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
                     channel.config().setOption(ChannelOption.TCP_NODELAY, Boolean.TRUE);
                 } catch (ChannelException ignored) { }
 
-                channel.pipeline().addLast("timeout", new ReadTimeoutHandler(30))
+                channel.pipeline()
+                        .addLast("timeout", new ReadTimeoutHandler(30))
                         .addLast("splitter", new MessageDeserializer2())
                         .addLast("decoder", new MessageDeserializer(EnumPacketDirection.CLIENTBOUND))
                         .addLast("prepender", new MessageSerializer2())
                         .addLast("encoder", new MessageSerializer(EnumPacketDirection.SERVERBOUND))
                         .addLast("packet_handler", networkManager);
             }
-        }).channel(oclass).connect(p_181124_0_, p_181124_1_).syncUninterruptibly();
+        }).channel(oclass).connect(address, port).syncUninterruptibly();
         return networkManager;
     }
 
@@ -328,11 +331,11 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
      */
     public static NetworkManager provideLocalClient(SocketAddress address) {
         final NetworkManager networkmanager = new NetworkManager(EnumPacketDirection.CLIENTBOUND);
-        ((Bootstrap) ((Bootstrap) ((Bootstrap) (new Bootstrap()).group((EventLoopGroup) CLIENT_LOCAL_EVENTLOOP.getValue())).handler(new ChannelInitializer<Channel>() {
+        new Bootstrap().group(CLIENT_LOCAL_EVENTLOOP.getValue()).handler(new ChannelInitializer<>() {
             protected void initChannel(Channel p_initChannel_1_) throws Exception {
-                p_initChannel_1_.pipeline().addLast((String) "packet_handler", (ChannelHandler) networkmanager);
+                p_initChannel_1_.pipeline().addLast("packet_handler", networkmanager);
             }
-        })).channel(LocalChannel.class)).connect(address).syncUninterruptibly();
+        }).channel(LocalChannel.class).connect(address).syncUninterruptibly();
         return networkmanager;
     }
 

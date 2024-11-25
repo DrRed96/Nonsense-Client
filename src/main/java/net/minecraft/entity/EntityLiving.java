@@ -694,7 +694,7 @@ public abstract class EntityLiving extends EntityLivingBase
     }
 
     /**
-     * Changes pitch and yaw so that the entity calling the function is facing the entity provided as an argument.
+     * Changes pitch and yaw so that the entity calling the function is face the entity provided as an argument.
      */
     public void faceEntity(Entity entityIn, float p_70625_2_, float p_70625_3_)
     {

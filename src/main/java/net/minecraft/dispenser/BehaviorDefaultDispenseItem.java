@@ -66,7 +66,7 @@ public class BehaviorDefaultDispenseItem implements IBehaviorDispenseItem
     }
 
     /**
-     * Order clients to display dispense particles from the specified block and facing.
+     * Order clients to display dispense particles from the specified block and face.
      */
     protected void spawnDispenseParticles(IBlockSource source, EnumFacing facingIn)
     {

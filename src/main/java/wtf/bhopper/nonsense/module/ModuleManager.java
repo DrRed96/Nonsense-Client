@@ -5,18 +5,13 @@ import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
 import wtf.bhopper.nonsense.event.impl.EventKeyPress;
-import wtf.bhopper.nonsense.module.impl.combat.Criticals;
-import wtf.bhopper.nonsense.module.impl.combat.KillAura;
-import wtf.bhopper.nonsense.module.impl.combat.NoClickDelay;
-import wtf.bhopper.nonsense.module.impl.combat.Velocity;
+import wtf.bhopper.nonsense.module.impl.combat.*;
 import wtf.bhopper.nonsense.module.impl.exploit.Disabler;
 import wtf.bhopper.nonsense.module.impl.exploit.PingSpoofer;
 import wtf.bhopper.nonsense.module.impl.exploit.Plugins;
 import wtf.bhopper.nonsense.module.impl.exploit.ServerLagger;
 import wtf.bhopper.nonsense.module.impl.movement.*;
-import wtf.bhopper.nonsense.module.impl.other.AntiAim;
-import wtf.bhopper.nonsense.module.impl.other.DiscordRPCMod;
-import wtf.bhopper.nonsense.module.impl.other.PackSpoofer;
+import wtf.bhopper.nonsense.module.impl.other.*;
 import wtf.bhopper.nonsense.module.impl.player.AutoRespawn;
 import wtf.bhopper.nonsense.module.impl.player.GameSpeed;
 import wtf.bhopper.nonsense.module.impl.player.NoFall;
@@ -37,7 +32,9 @@ public class ModuleManager {
         this.modules = this.addModules(
                 // Combat
                 new KillAura(),
+                new AntiBot(),
                 new Velocity(),
+                new AutoBlock(),
                 new Criticals(),
                 new NoClickDelay(),
 
@@ -69,12 +66,18 @@ public class ModuleManager {
 
                 // Other
                 new AntiAim(),
+                new AntiDesync(),
                 new PackSpoofer(),
+                new AutoSpeedBuilders(),
+                new LightningDetector(),
                 new DiscordRPCMod(),
+                new Debugger(),
 
-                // Visual
                 new HudMod(),
+                // Visual
                 new ClickGui(),
+                new Esp(),
+                new FullBright(),
                 new BlockOverlay(),
                 new ItemAnimations(),
                 new NoRender(),

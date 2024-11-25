@@ -7,6 +7,7 @@ import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
+import wtf.bhopper.nonsense.util.minecraft.MoveUtil;
 
 @ModuleInfo(name = "Sprint",
         description = "Makes you sprint.",
@@ -20,14 +21,7 @@ public class Sprint extends Module {
     }
 
     @EventLink
-    public final Listener<EventPostMotion> onPost = event -> mc.thePlayer.setSprinting(this.canSprint());
-
-    private boolean canSprint() {
-        return mc.thePlayer.moveForward > 0.8F &&
-                !mc.thePlayer.isSneaking() &&
-                mc.thePlayer.getFoodStats().getFoodLevel() >= 6 &&
-                !mc.thePlayer.isCollidedHorizontally;
-    }
+    public final Listener<EventPostMotion> onPost = event -> mc.thePlayer.setSprinting(MoveUtil.canSprint(false));
     
     public boolean keepSprint() {
         return this.isToggled() && this.keepSprint.get();

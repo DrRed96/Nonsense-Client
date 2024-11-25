@@ -2,14 +2,14 @@ package wtf.bhopper.nonsense.gui.hud;
 
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
-import org.lwjgl.opengl.GL;
-import org.lwjglx.opengl.GLSync;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.gui.components.RenderComponent;
 import wtf.bhopper.nonsense.gui.hud.notification.NotificationManager;
 import wtf.bhopper.nonsense.module.impl.visual.HudMod;
 import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
 import wtf.bhopper.nonsense.util.misc.InputUtil;
+import wtf.bhopper.nonsense.util.render.Fonts;
+import wtf.bhopper.nonsense.util.render.NVGHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,12 +20,14 @@ public class Hud implements MinecraftInstance {
     // Separate variable for loading the components since the HUD won't have been loaded yet
     private static final List<RenderComponent> componentsToAdd = new ArrayList<>();
 
+    public final HudMod module;
     public final ModuleList moduleList = new ModuleList();
     public final InfoDisplay infoDisplay = new InfoDisplay();
     public final NotificationManager notifications = new NotificationManager();
     private final List<RenderComponent> components = new CopyOnWriteArrayList<>();
 
     public Hud() {
+        this.module = Nonsense.module(HudMod.class);
         this.moduleList.init();
         this.components.addAll(componentsToAdd);
         componentsToAdd.clear();
@@ -73,6 +75,9 @@ public class Hud implements MinecraftInstance {
     }
 
     public static HudMod mod() {
+        try {
+            return Nonsense.getHud().module;
+        } catch (NullPointerException ignored) {}
         return Nonsense.module(HudMod.class);
     }
 
@@ -82,6 +87,14 @@ public class Hud implements MinecraftInstance {
 
     public static boolean enabled() {
         return mod().isToggled() && (!mod().hideInF3.get() || !mc.gameSettings.showDebugInfo);
+    }
+
+    public static void bindFont() {
+        NVGHelper.fontFace(mod().font.get().font);
+    }
+
+    public interface WidthMethod {
+        float getWidth(String text);
     }
 
 }

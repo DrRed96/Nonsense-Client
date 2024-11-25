@@ -2,12 +2,11 @@ package net.minecraft.util;
 
 import java.util.concurrent.ExecutionException;
 import java.util.concurrent.FutureTask;
+
 import org.apache.logging.log4j.Logger;
 
-public class Util
-{
-    public static Util.EnumOS getOSType()
-    {
+public class Util {
+    public static Util.EnumOS getOSType() {
         String s = System.getProperty("os.name").toLowerCase();
         return s.contains("win") ? Util.EnumOS.WINDOWS
                 : (s.contains("mac") ? Util.EnumOS.OSX
@@ -19,23 +18,18 @@ public class Util
     }
 
     @SuppressWarnings("UnusedReturnValue")
-    public static <V> V executeFuture(FutureTask<V> task, Logger logger)
-    {
-        try
-        {
+    public static <V> V executeFuture(FutureTask<V> task, Logger logger) {
+        try {
             task.run();
             return task.get();
-        }
-        catch (ExecutionException | InterruptedException exception)
-        {
+        } catch (ExecutionException | InterruptedException exception) {
             logger.fatal("Error executing task", exception);
         }
 
         return null;
     }
 
-    public enum EnumOS
-    {
+    public enum EnumOS {
         LINUX,
         SOLARIS,
         WINDOWS,

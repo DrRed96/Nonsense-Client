@@ -173,6 +173,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
      */
     public FontRenderer fontRendererObj;
     public FontRenderer standardGalacticFontRenderer;
+    public FontRenderer bitFontRenderer;
 
     /**
      * The GuiScreen that's being displayed at the moment.
@@ -440,6 +441,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
         this.mcResourceManager.registerReloadListener(this.mcSoundHandler);
         this.mcMusicTicker = new MusicTicker(this);
         this.fontRendererObj = new FontRenderer(this.gameSettings, new ResourceLocation("textures/font/ascii.png"), this.renderEngine, false);
+        this.bitFontRenderer = new FontRenderer(this.gameSettings, new ResourceLocation("nonsense/bit.png"), this.renderEngine, false);
 
         if (this.gameSettings.language != null) {
             this.fontRendererObj.setUnicodeFlag(this.isUnicode());
@@ -449,6 +451,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
         this.standardGalacticFontRenderer = new FontRenderer(this.gameSettings, new ResourceLocation("textures/font/ascii_sga.png"), this.renderEngine, false);
         this.mcResourceManager.registerReloadListener(this.fontRendererObj);
         this.mcResourceManager.registerReloadListener(this.standardGalacticFontRenderer);
+        this.mcResourceManager.registerReloadListener(this.bitFontRenderer);
         this.mcResourceManager.registerReloadListener(new GrassColorReloadListener());
         this.mcResourceManager.registerReloadListener(new FoliageColorReloadListener());
         AchievementList.openInventory.setStatStringFormatter(p_74535_1_ -> {
@@ -498,9 +501,9 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
         Nonsense.INSTANCE.setup();
 
         if (this.serverName != null) {
-            this.displayGuiScreen(new GuiConnecting(new GuiMainMenu(), this, this.serverName, this.serverPort));
+            this.displayGuiScreen(new GuiConnecting(GuiMainMenu.newInstance(), this, this.serverName, this.serverPort));
         } else {
-            this.displayGuiScreen(new GuiMainMenu());
+            this.displayGuiScreen(GuiMainMenu.newInstance());
         }
 
         this.renderEngine.deleteTexture(this.mojangLogo);
@@ -814,7 +817,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
         }
 
         if (guiScreenIn == null && this.theWorld == null) {
-            guiScreenIn = new GuiMainMenu();
+            guiScreenIn = GuiMainMenu.newInstance();
         } else if (guiScreenIn == null && this.thePlayer.getHealth() <= 0.0F) {
             guiScreenIn = new GuiGameOver();
         }
@@ -1728,7 +1731,11 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
             if (!event.isCancelled()) {
                 if (this.thePlayer.isUsingItem()) {
                     if (!this.gameSettings.keyBindUseItem.isKeyDown()) {
-                        this.playerController.onStoppedUsingItem(this.thePlayer);
+                        EventReleaseItem eventRelease = new EventReleaseItem();
+                        Nonsense.getEventBus().post(eventRelease);
+                        if (!eventRelease.isCancelled()) {
+                            this.playerController.onStoppedUsingItem(this.thePlayer);
+                        }
                     }
 
                     while (this.gameSettings.keyBindAttack.isPressed()) {

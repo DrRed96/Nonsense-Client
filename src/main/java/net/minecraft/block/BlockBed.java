@@ -42,7 +42,7 @@ public class BlockBed extends BlockDirectional
         {
             if (state.getValue(PART) != BlockBed.EnumPartType.HEAD)
             {
-                pos = pos.offset((EnumFacing)state.getValue(FACING));
+                pos = pos.offset(state.getValue(FACING));
                 state = worldIn.getBlockState(pos);
 
                 if (state.getBlock() != this)
@@ -53,7 +53,7 @@ public class BlockBed extends BlockDirectional
 
             if (worldIn.provider.canRespawnHere() && worldIn.getBiomeGenForCoords(pos) != BiomeGenBase.hell)
             {
-                if (((Boolean)state.getValue(OCCUPIED)).booleanValue())
+                if ((Boolean) state.getValue(OCCUPIED))
                 {
                     EntityPlayer entityplayer = this.getPlayerInBed(worldIn, pos);
 

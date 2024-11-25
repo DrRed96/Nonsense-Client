@@ -18,7 +18,7 @@ import net.minecraft.world.World;
 
 public class BlockLever extends Block
 {
-    public static final PropertyEnum<BlockLever.EnumOrientation> FACING = PropertyEnum.<BlockLever.EnumOrientation>create("facing", BlockLever.EnumOrientation.class);
+    public static final PropertyEnum<BlockLever.EnumOrientation> FACING = PropertyEnum.create("facing", BlockLever.EnumOrientation.class);
     public static final PropertyBool POWERED = PropertyBool.create("powered");
 
     protected BlockLever()
@@ -67,7 +67,7 @@ public class BlockLever extends Block
         return false;
     }
 
-    protected static boolean func_181090_a(World p_181090_0_, BlockPos p_181090_1_, EnumFacing p_181090_2_)
+    public static boolean func_181090_a(World p_181090_0_, BlockPos p_181090_1_, EnumFacing p_181090_2_)
     {
         return BlockButton.func_181088_a(p_181090_0_, p_181090_1_, p_181090_2_);
     }
@@ -78,7 +78,7 @@ public class BlockLever extends Block
      */
     public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
     {
-        IBlockState iblockstate = this.getDefaultState().withProperty(POWERED, Boolean.valueOf(false));
+        IBlockState iblockstate = this.getDefaultState().withProperty(POWERED, Boolean.FALSE);
 
         if (func_181090_a(worldIn, pos, facing.getOpposite()))
         {
@@ -86,11 +86,11 @@ public class BlockLever extends Block
         }
         else
         {
-            for (Object enumfacing : EnumFacing.Plane.HORIZONTAL)
+            for (EnumFacing enumfacing : EnumFacing.Plane.HORIZONTAL)
             {
-                if (enumfacing != facing && func_181090_a(worldIn, pos, ((EnumFacing) enumfacing).getOpposite()))
+                if (enumfacing != facing && func_181090_a(worldIn, pos, enumfacing.getOpposite()))
                 {
-                    return iblockstate.withProperty(FACING, BlockLever.EnumOrientation.forFacings((EnumFacing) enumfacing, placer.getHorizontalFacing()));
+                    return iblockstate.withProperty(FACING, BlockLever.EnumOrientation.forFacings(enumfacing, placer.getHorizontalFacing()));
                 }
             }
 
@@ -107,29 +107,15 @@ public class BlockLever extends Block
 
     public static int getMetadataForFacing(EnumFacing facing)
     {
-        switch (facing)
-        {
-            case DOWN:
-                return 0;
-
-            case UP:
-                return 5;
-
-            case NORTH:
-                return 4;
-
-            case SOUTH:
-                return 3;
-
-            case WEST:
-                return 2;
-
-            case EAST:
-                return 1;
-
-            default:
-                return -1;
-        }
+        return switch (facing) {
+            case DOWN -> 0;
+            case UP -> 5;
+            case NORTH -> 4;
+            case SOUTH -> 3;
+            case WEST -> 2;
+            case EAST -> 1;
+            default -> -1;
+        };
     }
 
     /**

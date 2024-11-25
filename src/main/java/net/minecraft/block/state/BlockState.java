@@ -118,7 +118,7 @@ public class BlockState
 
         public Collection<IProperty> getPropertyNames()
         {
-            return Collections.<IProperty>unmodifiableCollection(this.properties.keySet());
+            return Collections.unmodifiableCollection(this.properties.keySet());
         }
 
         public <T extends Comparable<T>> T getValue(IProperty<T> property)
@@ -129,7 +129,7 @@ public class BlockState
             }
             else
             {
-                return (T)((Comparable)property.getValueClass().cast(this.properties.get(property)));
+                return property.getValueClass().cast(this.properties.get(property));
             }
         }
 

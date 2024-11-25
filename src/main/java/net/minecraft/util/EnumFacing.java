@@ -503,7 +503,7 @@ public enum EnumFacing implements IStringSerializable
         }
     }
 
-    public static enum Plane implements Predicate, Iterable {
+    public enum Plane implements Predicate<EnumFacing>, Iterable<EnumFacing> {
         HORIZONTAL("HORIZONTAL", 0),
         VERTICAL("VERTICAL", 1);
 
@@ -538,14 +538,10 @@ public enum EnumFacing implements IStringSerializable
             return p_apply_1_ != null && p_apply_1_.getAxis().getPlane() == this;
         }
 
-        public Iterator iterator()
+        public Iterator<EnumFacing> iterator()
         {
             return Iterators.forArray(this.facings());
         }
 
-        public boolean apply(Object p_apply_1_)
-        {
-            return this.apply((EnumFacing)p_apply_1_);
-        }
     }
 }

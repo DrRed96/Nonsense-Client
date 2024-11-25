@@ -202,7 +202,7 @@ public class TileEntityPiston extends TileEntity implements ITickable
     {
         super.readFromNBT(compound);
         this.pistonState = Block.getBlockById(compound.getInteger("blockId")).getStateFromMeta(compound.getInteger("blockData"));
-        this.pistonFacing = EnumFacing.getFront(compound.getInteger("facing"));
+        this.pistonFacing = EnumFacing.getFront(compound.getInteger("face"));
         this.lastProgress = this.progress = compound.getFloat("progress");
         this.extending = compound.getBoolean("extending");
     }
@@ -212,7 +212,7 @@ public class TileEntityPiston extends TileEntity implements ITickable
         super.writeToNBT(compound);
         compound.setInteger("blockId", Block.getIdFromBlock(this.pistonState.getBlock()));
         compound.setInteger("blockData", this.pistonState.getBlock().getMetaFromState(this.pistonState));
-        compound.setInteger("facing", this.pistonFacing.getIndex());
+        compound.setInteger("face", this.pistonFacing.getIndex());
         compound.setFloat("progress", this.lastProgress);
         compound.setBoolean("extending", this.extending);
     }

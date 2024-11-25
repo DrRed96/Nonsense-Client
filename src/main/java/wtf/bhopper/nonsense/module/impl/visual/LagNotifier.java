@@ -20,6 +20,7 @@ public class LagNotifier extends Module {
 
     public LagNotifier() {
         this.addProperties(this.threshold);
+        this.addProperties(render.getProperties());
     }
 
     @Override

@@ -58,6 +58,14 @@ public class BlockOverlay extends Module {
     public final Listener<EventRender3D> onRender3D = event -> {
 
         for (TileEntity tileEntity : mc.theWorld.loadedTileEntityList) {
+            try {
+                if (!RenderUtil.isInViewFrustum(tileEntity)) {
+                    continue;
+                }
+            } catch (IllegalArgumentException ignored) {
+                continue;
+            }
+
             Block type = tileEntity.getBlockType();
 
             if (type == Blocks.chest) {
@@ -108,7 +116,7 @@ public class BlockOverlay extends Module {
         }
 
         if (this.mouseOver.isEnabled()) {
-            if (mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+            if (mc.objectMouseOver != null && mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
                 this.mouseOver.draw(mc.objectMouseOver.getBlockPos());
             }
         }

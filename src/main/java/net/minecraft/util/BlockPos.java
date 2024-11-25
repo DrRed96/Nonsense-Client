@@ -183,7 +183,13 @@ public class BlockPos extends Vec3i
      */
     public BlockPos offset(EnumFacing facing, int n)
     {
-        return n == 0 ? this : new BlockPos(this.getX() + facing.getFrontOffsetX() * n, this.getY() + facing.getFrontOffsetY() * n, this.getZ() + facing.getFrontOffsetZ() * n);
+        return n == 0
+                ? this
+                : new BlockPos(
+                        this.getX() + facing.getFrontOffsetX() * n,
+                        this.getY() + facing.getFrontOffsetY() * n,
+                        this.getZ() + facing.getFrontOffsetZ() * n
+                );
     }
 
     /**

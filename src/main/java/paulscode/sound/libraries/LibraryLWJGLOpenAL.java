@@ -240,7 +240,7 @@ public class LibraryLWJGLOpenAL extends Library {
         else
             message("OpenAL initialized.");
 
-        // Listener is at the origin, facing along the z axis, no velocity:
+        // Listener is at the origin, face along the z axis, no velocity:
         listenerPositionAL = BufferUtils.createFloatBuffer(3).put(
                 new float[]{listener.position.x,
                         listener.position.y,

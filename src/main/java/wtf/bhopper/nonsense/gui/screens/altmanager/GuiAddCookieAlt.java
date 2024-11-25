@@ -4,6 +4,8 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
+import org.lwjgl.PointerBuffer;
+import org.lwjgl.system.MemoryStack;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.alt.Alt;
 import wtf.bhopper.nonsense.alt.AltManager;
@@ -11,12 +13,10 @@ import wtf.bhopper.nonsense.alt.loginthread.CookieLoginThread;
 import wtf.bhopper.nonsense.gui.hud.notification.Notification;
 import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
 
-import javax.swing.*;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import java.awt.*;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Path;
+
+import static org.lwjgl.util.tinyfd.TinyFileDialogs.tinyfd_openFileDialog;
 
 public class GuiAddCookieAlt extends GuiScreen {
 
@@ -61,20 +61,16 @@ public class GuiAddCookieAlt extends GuiScreen {
             });
             AltManager.loginThread.start();
         } else if (button.id == 2) {
+            try (MemoryStack stack = MemoryStack.stackPush()) {
+                PointerBuffer filterPattern = stack.mallocPointer(1);
+                filterPattern.put(stack.UTF8("*.txt"));
+                filterPattern.flip();
 
-//            JFileChooser chooser = new JFileChooser();
-//            chooser.setFileFilter(new FileNameExtensionFilter("Exported Cookie Files", "txt"));
-//            if (chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
-//                this.cookieFile.setText(chooser.getSelectedFile().getAbsolutePath());
-//            }
-
-            FileDialog dialog = new FileDialog((Frame)null, "Select Cookie File");
-            dialog.setMode(FileDialog.LOAD);
-            dialog.setFile("*.txt");
-            dialog.setVisible(true);
-            String file = new File(dialog.getDirectory(), dialog.getFile()).getAbsolutePath();
-            dialog.dispose();
-            this.cookieFile.setText(file);
+                String file = tinyfd_openFileDialog("Select Cookie File", null, filterPattern, "Cookie Files (*.txt)", false);
+                if (file != null) {
+                    this.cookieFile.setText(file);
+                }
+            }
 
         }
     }

@@ -35,16 +35,18 @@ public class LayerCape implements LayerRenderer
         CapeLocation cape = player.getLocationCape();
         if (player.hasPlayerInfo() && !player.isInvisible() && player.isWearing(EnumPlayerModelParts.CAPE) && cape != null)
         {
-            this.renderCape(player, cape.cape, partialTicks, Color.WHITE, false);
-            if (cape.overlay != null) {
-                GlStateManager.enableAlpha();
-                this.renderCape(player, cape.overlay, partialTicks, cape.overlayColor, true);
-                GlStateManager.disableAlpha();
-            }
+            try {
+                this.renderCape(player, cape.cape, partialTicks, Color.WHITE, false);
+                if (cape.overlay != null) {
+                    GlStateManager.enableAlpha();
+                    this.renderCape(player, cape.overlay, partialTicks, cape.overlayColor, true);
+                    GlStateManager.disableAlpha();
+                }
 
-            if (player.isClientPlayer() && module.isToggled() && module.glint.get()) {
-                this.renderEnchanted(player, partialTicks);
-            }
+                if (player.isClientPlayer() && module.isToggled() && module.glint.get()) {
+                    this.renderEnchanted(player, partialTicks);
+                }
+            } catch (Exception ignored) {}
         }
     }
 

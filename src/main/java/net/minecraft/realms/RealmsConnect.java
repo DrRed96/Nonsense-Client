@@ -42,7 +42,7 @@ public class RealmsConnect
                         return;
                     }
 
-                    RealmsConnect.this.connection = NetworkManager.func_181124_a(inetaddress, p_connect_2_, Minecraft.getMinecraft().gameSettings.func_181148_f());
+                    RealmsConnect.this.connection = NetworkManager.connect(inetaddress, p_connect_2_, Minecraft.getMinecraft().gameSettings.func_181148_f());
 
                     if (RealmsConnect.this.aborted)
                     {

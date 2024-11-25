@@ -69,17 +69,23 @@ public class Flight extends Module {
     @Override
     public void onDisable() {
 
-        if (this.mode.is(Mode.VANILLA)) {
-            mc.thePlayer.motionX = mc.thePlayer.motionZ = 0.0;
-        }
-
-        if (this.mode.is(Mode.BOOST)) {
-            if (this.useTimer.get()) {
-                mc.timer.timerSpeed = 1.0F;
-            }
-
-            if (this.quickStop.get()) {
+        switch (this.mode.get()) {
+            case VANILLA -> mc.thePlayer.motionX = mc.thePlayer.motionZ = 0.0;
+            case MINIBLOX -> {
                 mc.thePlayer.motionX = mc.thePlayer.motionZ = 0.0;
+                if (mc.thePlayer.motionY > 0.0) {
+                    mc.thePlayer.motionY = 0.0;
+                }
+            }
+            case BOOST -> {
+                if (this.useTimer.get()) {
+                    mc.timer.timerSpeed = 1.0F;
+                }
+
+                if (this.quickStop.get()) {
+                    mc.thePlayer.motionX = mc.thePlayer.motionZ = 0.0;
+                }
+
             }
 
         }
@@ -148,7 +154,7 @@ public class Flight extends Module {
                             if (start) {
                                 this.stage = 1;
                                 this.speed = this.speedSet.get();
-                                MoveUtil.vertical(event, 0.42);
+                                MoveUtil.vertical(event, MoveUtil.jumpHeight());
                             }
                         }
                     }
@@ -177,7 +183,7 @@ public class Flight extends Module {
                             }
                         }
 
-                        speed = lastDist - lastDist / 159.0;
+                        speed = lastDist - lastDist / MoveUtil.SLOWDOWN_FACTOR;
                         speed = Math.max(speed, MoveUtil.baseSpeed());
                         MoveUtil.setSpeed(event, speed);
                         MoveUtil.vertical(event, 0.0);

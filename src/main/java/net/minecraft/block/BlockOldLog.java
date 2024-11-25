@@ -13,13 +13,7 @@ import net.minecraft.item.ItemStack;
 
 public class BlockOldLog extends BlockLog
 {
-    public static final PropertyEnum<BlockPlanks.EnumType> VARIANT = PropertyEnum.<BlockPlanks.EnumType>create("variant", BlockPlanks.EnumType.class, new Predicate<BlockPlanks.EnumType>()
-    {
-        public boolean apply(BlockPlanks.EnumType p_apply_1_)
-        {
-            return p_apply_1_.getMetadata() < 4;
-        }
-    });
+    public static final PropertyEnum<BlockPlanks.EnumType> VARIANT = PropertyEnum.<BlockPlanks.EnumType>create("variant", BlockPlanks.EnumType.class, p_apply_1_ -> p_apply_1_.getMetadata() < 4);
 
     public BlockOldLog()
     {

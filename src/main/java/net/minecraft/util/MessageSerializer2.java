@@ -5,19 +5,14 @@ import io.netty.channel.ChannelHandlerContext;
 import io.netty.handler.codec.MessageToByteEncoder;
 import net.minecraft.network.PacketBuffer;
 
-public class MessageSerializer2 extends MessageToByteEncoder<ByteBuf>
-{
-    protected void encode(ChannelHandlerContext ctx, ByteBuf msg, ByteBuf out) throws Exception
-    {
+public class MessageSerializer2 extends MessageToByteEncoder<ByteBuf> {
+    protected void encode(ChannelHandlerContext ctx, ByteBuf msg, ByteBuf out) throws Exception {
         int i = msg.readableBytes();
         int j = PacketBuffer.getVarIntSize(i);
 
-        if (j > 3)
-        {
+        if (j > 3) {
             throw new IllegalArgumentException("unable to fit " + i + " into " + 3);
-        }
-        else
-        {
+        } else {
             PacketBuffer packetbuffer = new PacketBuffer(out);
             packetbuffer.ensureWritable(j + i);
             packetbuffer.writeVarIntToBuffer(i);

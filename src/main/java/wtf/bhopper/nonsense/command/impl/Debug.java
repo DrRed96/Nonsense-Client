@@ -1,6 +1,7 @@
 package wtf.bhopper.nonsense.command.impl;
 
 import net.minecraft.event.ClickEvent;
+import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
 import net.minecraft.util.EnumChatFormatting;
@@ -9,10 +10,10 @@ import wtf.bhopper.nonsense.command.Command;
 import wtf.bhopper.nonsense.command.CommandInfo;
 import wtf.bhopper.nonsense.gui.hud.notification.Notification;
 import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
+import wtf.bhopper.nonsense.module.impl.other.Debugger;
 import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
 
 import java.io.File;
-import java.io.IOException;
 
 @CommandInfo(name = "Debug", description = "Helps with debugging", syntax = ".debug <args>")
 public class Debug extends Command {
@@ -27,6 +28,23 @@ public class Debug extends Command {
         switch (args[1].toLowerCase()) {
             case "notification" -> Notification.send("test", "testing 123", NotificationType.INFO, 5000);
 
+            case "hotbar" -> {
+                for (int i = 0; i < 9; i++) {
+                    ItemStack item = mc.thePlayer.inventory.mainInventory[i];
+                    if (item == null) {
+                        ChatUtil.debugItem(String.valueOf(i + 1), "Empty");
+                        continue;
+                    }
+
+                    if (item.getItem() instanceof ItemBlock block) {
+                        ChatUtil.debugItems(String.valueOf(i + 1), item.getItem().getUnlocalizedName(), block.getBlock().getUnlocalizedName());
+                        continue;
+                    }
+
+                    ChatUtil.debugItem(String.valueOf(i + 1), item.getItem().getUnlocalizedName());
+                }
+            }
+
             case "iteminfo" -> {
                 if (mc.thePlayer.getHeldItem() == null) {
                     ChatUtil.error("No held item");
@@ -38,7 +56,7 @@ public class Debug extends Command {
                 ChatUtil.debugTitle("Item Info");
                 ChatUtil.debugItem("Item", stack.getItem().getUnlocalizedName());
                 ChatUtil.debugItem("Amount", stack.stackSize);
-                ChatUtil.debugItem("Metadata", String.format("%d | 0x%X", stack.getMetadata(), stack.getMetadata()));
+                ChatUtil.debugItem("Metadata", String.format("%d (0x%X)", stack.getMetadata(), stack.getMetadata()));
                 if (stack.hasDisplayName()) {
                     ChatUtil.debugItem("Display Name", stack.getDisplayName());
                 }
@@ -78,6 +96,30 @@ public class Debug extends Command {
 
 
             }
+
+            case "packet" -> {
+                if (args.length < 3) {
+                    ChatUtil.error("Invalid arguments");
+                    return;
+                }
+
+                try {
+                    int hash = Integer.parseInt(args[2]);
+                    Debugger.PacketInfo packet = Nonsense.module(Debugger.class).cachedPacket(hash);
+                    if (packet == null) {
+                        ChatUtil.error("That packet was not found");
+                        return;
+                    }
+                    packet.print();
+
+                } catch (NumberFormatException exception) {
+                    ChatUtil.error("'%s' is not a number", args[2]);
+                }
+            }
+
+            case "spb" -> ChatUtil.send("/play build_battle_speed_builders");
+
+            default -> ChatUtil.error("Unknown debugging command.");
 
         }
 

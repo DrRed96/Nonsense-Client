@@ -2,13 +2,11 @@ package wtf.bhopper.nonsense.module.impl.combat;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.util.MovingObjectPosition;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
 import wtf.bhopper.nonsense.event.impl.EventPreClick;
-import wtf.bhopper.nonsense.event.impl.EventSendPacket;
 import wtf.bhopper.nonsense.event.impl.EventTick;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
@@ -26,8 +24,8 @@ import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
 public class Criticals extends Module {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Criticals method.", Mode.PACKET);
-    private final NumberProperty delay = new NumberProperty("Delay", "delay between critical hits in ticks.", 15, 0, 20, 1);
-    private final BooleanProperty safe = new BooleanProperty("Safe", "Prevents you from doing a critical hit if that target has hurt resistant time.", false);
+    private final NumberProperty delay = new NumberProperty("Delay", "Delay between critical hits in ticks.", 15, 0, 20, 1);
+    private final BooleanProperty safe = new BooleanProperty("Safe", "Prevents you from doing a critical hit if the target is on damage cool-down.", false);
 
     private int ticks = 0;
 
@@ -66,16 +64,10 @@ public class Criticals extends Module {
             switch (this.mode.get()) {
                 case PACKET -> {
                     PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0625, mc.thePlayer.posZ, false));
-                    PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, false));
+                    PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.001, mc.thePlayer.posZ, false));
                 }
 
-                case NCP_PACKET -> {
-                    PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.11, mc.thePlayer.posZ, false));
-                    PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.1100013579, mc.thePlayer.posZ, false));
-                    PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.0000013579, mc.thePlayer.posZ, false));
-                }
-
-                case LOW -> {
+                case PACKET_LOW -> {
                     PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 1.0E-14, mc.thePlayer.posZ, false));
                     PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, false));
                 }
@@ -88,8 +80,7 @@ public class Criticals extends Module {
 
     private enum Mode {
         PACKET,
-        @DisplayName("NCP Packet") NCP_PACKET,
-        LOW
+        PACKET_LOW
     }
 
 }

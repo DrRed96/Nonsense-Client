@@ -15,6 +15,7 @@ import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
+import wtf.bhopper.nonsense.util.minecraft.MoveUtil;
 import wtf.bhopper.nonsense.util.minecraft.PacketUtil;
 
 @ModuleInfo(name = "Step", description = "Allows you to step up blocks", category = ModuleCategory.MOVEMENT)
@@ -28,11 +29,13 @@ public class Step extends Module {
     private final NumberProperty timerSpeed = new NumberProperty("Speed", "Timer speed", 0.55F, 0.1F, 1.0F, 0.05F);
     private final BooleanProperty speedDisable = new BooleanProperty("Speed Disable", "Disables step when using speed.", true);
 
+    private final NumberProperty packets = new NumberProperty("Offsets", "Number of offsets to send.", () -> this.mode.is(Mode.MOTION), 3, 2, 11, 1);
+
     private boolean resetTimer = false;
 
     public Step() {
         this.timerGroup.addProperties(this.timerEnable, this.timerSpeed);
-        this.addProperties(this.mode, this.height, this.timerGroup, this.speedDisable);
+        this.addProperties(this.mode, this.height, this.timerGroup, this.speedDisable, this.packets);
         this.setSuffix(this.mode::getDisplayValue);
     }
 
@@ -47,7 +50,7 @@ public class Step extends Module {
     @EventLink
     public final Listener<EventPreStep> onPreStep = event -> {
         if (!mc.thePlayer.movementInput.jump && mc.thePlayer.isCollidedVertically && (!this.speedDisable.get() || !Nonsense.module(Speed.class).isToggled())) {
-            event.height = mode.isAny(Mode.NCP, Mode.LEGIT) ? 1.0 : this.height.get();
+            event.height = mode.isAny(Mode.NCP, Mode.MOTION) ? 1.0 : this.height.get();
         }
     };
 
@@ -56,13 +59,14 @@ public class Step extends Module {
         if (event.realHeight >= 0.68) {
             switch (this.mode.get()) {
                 case NCP -> {
-                    PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.42, mc.thePlayer.posZ, mc.thePlayer.onGround));
-                    PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.75, mc.thePlayer.posZ, mc.thePlayer.onGround));
+                    for (int i = 1; i <= 2; i++) {
+                        PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + MoveUtil.getPosYForJumpTick(i), mc.thePlayer.posZ, mc.thePlayer.onGround));
+                    }
                 }
-                case LEGIT -> {
-                    PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.42, mc.thePlayer.posZ, mc.thePlayer.onGround));
-                    PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.75, mc.thePlayer.posZ, mc.thePlayer.onGround));
-                    PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 1.0, mc.thePlayer.posZ, mc.thePlayer.onGround));
+                case MOTION -> {
+                    for (int i = 1; i <= packets.getInt(); i++) {
+                        PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + MoveUtil.getPosYForJumpTick(i), mc.thePlayer.posZ, mc.thePlayer.onGround));
+                    }
                 }
             }
         }
@@ -76,7 +80,7 @@ public class Step extends Module {
     private enum Mode {
         VANILLA,
         @DisplayName("NCP") NCP,
-        LEGIT
+        MOTION
     }
 
 }

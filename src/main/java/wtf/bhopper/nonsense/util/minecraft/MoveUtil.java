@@ -1,23 +1,66 @@
 package wtf.bhopper.nonsense.util.minecraft;
 
 import net.minecraft.potion.Potion;
-import net.minecraft.util.MathHelper;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.impl.EventMove;
 import wtf.bhopper.nonsense.event.impl.EventSlowDown;
 import wtf.bhopper.nonsense.event.impl.EventSpeed;
+import wtf.bhopper.nonsense.module.impl.movement.NoSlow;
 
 public class MoveUtil implements MinecraftInstance {
 
-    public static final double BASE_SPEED = 2.873;
+    public static final double WALK_SPEED = 2.221;
+    public static final double SPRINT_MOD = 1.3;
+    public static final double SNEAK_MOD = 0.3;
+    public static final double ICE_MOD = 2.5;
+
+    public static final double AIR_FRICTION = 0.98;
+    public static final double WATER_FRICTION = 0.89;
+    public static final double LAVA_FRICTION = 0.535;
+
+    public static final double SLOWDOWN_FACTOR = 159.0;
+
     public static final double JUMP_HEIGHT = 0.42;
+
+    public static double getPosYForJumpTick(int tick) {
+        return switch (tick) {
+            case 1 -> 0.42;
+            case 2 -> 0.7532;
+            case 3 -> 1.00133597911214;
+            case 4 -> 1.16610926093821;
+            case 5, 6 -> 1.24918707874468;
+            case 7 -> 1.1707870772188;
+            case 8 -> 1.0155550727022;
+            case 9 -> 0.78502770378923;
+            case 10 -> 0.48071087633169;
+            case 11 -> 0.10408037809304;
+            default -> 0;
+        };
+    }
 
     public static boolean isMoving() {
         return mc.thePlayer.moveForward != 0.0F || mc.thePlayer.moveStrafing != 0.0F;
     }
 
+    public static boolean isMoving(float factor){
+        return mc.thePlayer.movementInput.moveForward > factor || mc.thePlayer.movementInput.moveForward < -factor ||
+                mc.thePlayer.movementInput.moveStrafe > factor || mc.thePlayer.movementInput.moveStrafe < -factor;
+    }
+
+    public static boolean canSprint(boolean omni) {
+        return (omni ? isMoving(0.8F) : mc.thePlayer.moveForward > 0.8F) &&
+                !mc.thePlayer.isSneaking() &&
+                (mc.thePlayer.getFoodStats().getFoodLevel() >= 6 || mc.thePlayer.capabilities.allowFlying) &&
+                !mc.thePlayer.isCollidedHorizontally &&
+                !mc.thePlayer.isPotionActive(Potion.moveSlowdown.id) &&
+                (!mc.thePlayer.isUsingItem() || Nonsense.module(NoSlow.class).canSprint());
+    }
+
     public static double baseSpeed() {
-        double baseSpeed = mc.thePlayer.capabilities.getWalkSpeed() * BASE_SPEED;
+        double baseSpeed = mc.thePlayer.capabilities.getWalkSpeed();
+
+        baseSpeed *= mc.thePlayer.isSneaking() ? WALK_SPEED * SNEAK_MOD : canSprint(true) ? WALK_SPEED * SPRINT_MOD : WALK_SPEED;
+
         if (mc.thePlayer.isPotionActive(Potion.moveSlowdown)) {
             baseSpeed /= 1.0 + 0.2 * (mc.thePlayer.getActivePotionEffect(Potion.moveSlowdown).getAmplifier() + 1);
         }
@@ -115,6 +158,10 @@ public class MoveUtil implements MinecraftInstance {
             return height + (amplifier + 1) * 0.1F;
         }
         return height;
+    }
+
+    public static double jumpHeight() {
+        return jumpHeight(JUMP_HEIGHT);
     }
 
     public static double lastDistance() {

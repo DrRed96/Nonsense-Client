@@ -169,7 +169,7 @@ public class BlockPart
 
             if (enumfacing == null)
             {
-                throw new JsonParseException("Unknown facing: " + name);
+                throw new JsonParseException("Unknown face: " + name);
             }
             else
             {

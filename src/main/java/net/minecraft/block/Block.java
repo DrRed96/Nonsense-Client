@@ -39,7 +39,7 @@ public class Block
 {
     /** ResourceLocation for the Air block */
     private static final ResourceLocation AIR_ID = new ResourceLocation("air");
-    public static final RegistryNamespacedDefaultedByKey<ResourceLocation, Block> blockRegistry = new RegistryNamespacedDefaultedByKey(AIR_ID);
+    public static final RegistryNamespacedDefaultedByKey<ResourceLocation, Block> blockRegistry = new RegistryNamespacedDefaultedByKey<>(AIR_ID);
     public static final ObjectIntIdentityMap BLOCK_STATE_IDS = new ObjectIntIdentityMap();
     private CreativeTabs displayOnCreativeTab;
     public static final Block.SoundType soundTypeStone = new Block.SoundType("stone", 1.0F, 1.0F);
@@ -173,7 +173,7 @@ public class Block
      */
     public static IBlockState getStateById(int id)
     {
-        int i = id & 4095;
+        int i = id & 0xfff;
         int j = id >> 12 & 15;
         return getBlockById(i).getStateFromMeta(j);
     }
@@ -266,7 +266,7 @@ public class Block
     {
         if (state != null && !state.getPropertyNames().isEmpty())
         {
-            throw new IllegalArgumentException("Don\'t know how to convert " + state + " back into data...");
+            throw new IllegalArgumentException("Don't know how to convert " + state + " back into data...");
         }
         else
         {
@@ -1502,7 +1502,7 @@ public class Block
         registerBlock(id, new ResourceLocation(textualID), block_);
     }
 
-    public static enum EnumOffsetType
+    public enum EnumOffsetType
     {
         NONE,
         XZ,

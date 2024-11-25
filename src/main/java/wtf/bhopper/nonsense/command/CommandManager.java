@@ -20,9 +20,11 @@ public class CommandManager {
 
         this.commands.add(new Bind());
         this.commands.add(new ConfigCmd());
+        this.commands.add(new Copy());
         this.commands.add(new Debug());
         this.commands.add(new Give());
         this.commands.add(new Help());
+        this.commands.add(new Hide());
         this.commands.add(new Say());
         this.commands.add(new Toggle());
         this.commands.add(new Vclip());

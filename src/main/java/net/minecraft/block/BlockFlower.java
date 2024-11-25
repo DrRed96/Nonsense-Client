@@ -30,7 +30,7 @@ public abstract class BlockFlower extends BlockBush
      */
     public int damageDropped(IBlockState state)
     {
-        return ((BlockFlower.EnumFlowerType)state.getValue(this.getTypeProperty())).getMeta();
+        return state.getValue(this.getTypeProperty()).getMeta();
     }
 
     /**

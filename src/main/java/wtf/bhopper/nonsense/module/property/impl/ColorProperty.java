@@ -88,6 +88,10 @@ public class ColorProperty extends Property<Color> {
         return String.format("#%08X", this.getRGB());
     }
 
+    public String getDisplayValueNoAlpha() {
+        return String.format("#%06X", this.getRGB() & 0xFFFFFF);
+    }
+
     @Override
     public JsonElement serialize() {
         JsonObject colorObject = new JsonObject();

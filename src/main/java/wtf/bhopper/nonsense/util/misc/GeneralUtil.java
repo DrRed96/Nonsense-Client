@@ -1,5 +1,6 @@
 package wtf.bhopper.nonsense.util.misc;
 
+import io.netty.util.internal.ThreadLocalRandom;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 
@@ -8,6 +9,7 @@ import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.Arrays;
+import java.util.Collection;
 
 public class GeneralUtil {
 
@@ -46,6 +48,17 @@ public class GeneralUtil {
             return path.substring(1);
         }
         return path;
+    }
+
+    public static <T> T randomElement(Collection<T> collection) {
+        return collection.stream()
+                .skip(ThreadLocalRandom.current().nextInt(0, collection.size()))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public static <T> T randomElement(T[] array) {
+        return array[ThreadLocalRandom.current().nextInt(0, array.length)];
     }
 
 }

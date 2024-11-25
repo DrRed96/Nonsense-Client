@@ -269,7 +269,8 @@ public class CrashReport {
             int j = astacktraceelement.length - i;
 
             if (j < 0) {
-                System.out.println("Negative index in crash report handler (" + astacktraceelement.length + "/" + i + ")");
+                // This annoyed me so I've commented it out
+//                System.out.println("Negative index in crash report handler (" + astacktraceelement.length + "/" + i + ")");
             }
 
             if (0 <= j && j < astacktraceelement.length) {

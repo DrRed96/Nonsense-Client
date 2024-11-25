@@ -52,7 +52,7 @@ public class OldServerPinger
     public void ping(final ServerData server) throws UnknownHostException
     {
         ServerAddress serveraddress = ServerAddress.func_78860_a(server.serverIP);
-        final NetworkManager networkmanager = NetworkManager.func_181124_a(InetAddress.getByName(serveraddress.getIP()), serveraddress.getPort(), false);
+        final NetworkManager networkmanager = NetworkManager.connect(InetAddress.getByName(serveraddress.getIP()), serveraddress.getPort(), false);
         this.pingDestinations.add(networkmanager);
         server.serverMOTD = "Pinging...";
         server.pingToServer = -1L;

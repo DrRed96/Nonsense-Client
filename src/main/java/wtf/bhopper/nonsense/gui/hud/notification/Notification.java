@@ -1,15 +1,20 @@
 package wtf.bhopper.nonsense.gui.hud.notification;
 
-import org.lwjglx.util.vector.Vector2f;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GlStateManager;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
+import wtf.bhopper.nonsense.gui.hud.Hud;
+import wtf.bhopper.nonsense.module.impl.visual.HudMod;
 import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
 import wtf.bhopper.nonsense.util.misc.Clock;
 import wtf.bhopper.nonsense.util.render.ColorUtil;
 import wtf.bhopper.nonsense.util.render.Fonts;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
+import wtf.bhopper.nonsense.util.render.RenderUtil;
 
-import static org.lwjgl.nanovg.NanoVG.*;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
+import static org.lwjgl.opengl.GL11.*;
 
 public class Notification implements MinecraftInstance {
 
@@ -42,12 +47,18 @@ public class Notification implements MinecraftInstance {
 
     public int draw(float delta, int offset, int right) {
 
-        NVGHelper.fontFace(Fonts.ARIAL);
+        HudMod mod = Hud.mod();
+
+        NVGHelper.begin();
+        NVGHelper.fontFace(mod.font.get().font);
         NVGHelper.fontSize(18.0F);
         NVGHelper.textAlign(NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
 
+        Hud.WidthMethod widthMethod = mod.font.is(HudMod.Font.MINECRAFT)
+                ? text -> mc.fontRendererObj.getStringWidthF(text) * 2.0F
+                : NVGHelper::getStringWidth;
 
-        float width = Math.max(NVGHelper.getStringWidth(this.title), NVGHelper.getStringWidth(message)) + HEIGHT + 8.0F;
+        float width = Math.max(widthMethod.getWidth(this.title), widthMethod.getWidth(message)) + HEIGHT + 8.0F;
 
         switch (this.stage) {
             case 0 -> {
@@ -80,17 +91,44 @@ public class Notification implements MinecraftInstance {
         float x = right - width * positionFactor - OFFSET;
         float y = offset - HEIGHT;
 
+        // Background
         NVGHelper.drawRect(x, y, width, HEIGHT, BG_COLOR);
-        NVGHelper.drawImage(x + 8.0F, y + 8.0F, 32.0F, 32.0F, 32.0F, 32.0F, this.type.getNvgImage());
-        NVGHelper.drawText(this.title, x + 48.0F, y + 14.0F, TITLE_COLOR, true);
-        NVGHelper.drawText(this.message, x + 48.0F, y + 30.0F, MSG_COLOR, true);
-        NVGHelper.drawRect(x, y + HEIGHT - BAR_HEIGHT, width, BAR_HEIGHT, ColorUtil.darken(this.type.color.getRGB(), 2));
-        NVGHelper.drawRect(x, y + HEIGHT - BAR_HEIGHT, width * Math.min((float)this.clock.getTime() / (float)this.displayTimeMS, 1.0F), BAR_HEIGHT, this.type.color.getRGB());
 
+        // NVG Text
+        if (!mod.font.is(HudMod.Font.MINECRAFT)) {
+            NVGHelper.drawText(this.title, x + 48.0F, y + 14.0F, TITLE_COLOR, true);
+            NVGHelper.drawText(this.message, x + 48.0F, y + 30.0F, MSG_COLOR, true);
+        }
+
+        // Bar
+        NVGHelper.drawRect(x, y + HEIGHT - BAR_HEIGHT, width, BAR_HEIGHT, ColorUtil.darken(this.type.color.getRGB(), 2));
+        NVGHelper.drawRect(x, y + HEIGHT - BAR_HEIGHT, width * this.doneFactor(), BAR_HEIGHT, this.type.color.getRGB());
+
+        // Outline
         NVGHelper.drawRect(x - 1.0F, y - 1.0F, width + 2.0F, 1.0F, OUTLINE_COLOR);
         NVGHelper.drawRect(x - 1.0F, y + HEIGHT, width + 2.0F, 1.0F, OUTLINE_COLOR);
         NVGHelper.drawRect(x - 1.0F, y - 1.0F, 1.0F, HEIGHT + 2.0F, OUTLINE_COLOR);
         NVGHelper.drawRect(x + width, y - 1.0F, 1.0F, HEIGHT + 2.0F, OUTLINE_COLOR);
+
+        NVGHelper.end();
+
+        if (mod.font.is(HudMod.Font.MINECRAFT)) {
+            GlStateManager.pushMatrix();
+            GlStateManager.scale(2.0F, 2.0F, 2.0F);
+            mc.fontRendererObj.drawStringWithShadow(this.title, x / 2.0F + 24.0F, y / 2.0F + 2.5F, TITLE_COLOR);
+            mc.fontRendererObj.drawStringWithShadow(this.message, x / 2.0F + 24.0F, y / 2.0F + 10.5F, MSG_COLOR);
+            GlStateManager.popMatrix();
+        }
+
+        // Rendering images with NanoVG is aids, so we're just doing it with OpenGL
+        mc.getTextureManager().bindTexture(this.type.icon);
+        glPushAttrib(GL_COLOR_BUFFER_BIT);
+        RenderUtil.glColor(ColorUtil.WHITE);
+        GlStateManager.enableBlend();
+        GlStateManager.tryBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
+        Gui.drawModalRectWithCustomSizedTexture((int)x + 8, (int)y + 6, 0.0F, 0.0F, 32, 32, 32.0F, 32.0F);
+        GlStateManager.disableBlend();
+        glPopAttrib();
 
         return offset - (int)((HEIGHT + 4) * this.positionFactor);
     }
@@ -100,7 +138,7 @@ public class Notification implements MinecraftInstance {
     }
 
     private float doneFactor() {
-        return 1.0F - Math.min((float)this.clock.getTime() / (float)this.displayTimeMS, 1.0F);
+        return Math.min((float)this.clock.getTime() / (float)this.displayTimeMS, 1.0F);
     }
 
     public static void send(String title, String message, NotificationType type, int displayTimeMS) {

@@ -104,7 +104,7 @@ public abstract class RenderComponent implements MinecraftInstance {
 
     }
 
-    public NumberProperty[] getSettings() {
+    public NumberProperty[] getProperties() {
         return new NumberProperty[]{ this.x, this.y };
     }
 

@@ -643,6 +643,10 @@ public class FontRenderer implements IResourceManagerReloadListener
         }
     }
 
+    public float getStringWidthF(String text) {
+        return (float)this.getStringWidth(text);
+    }
+
     /**
      * Returns the width of this string. Equivalent of FontMetrics.stringWidth(String s).
      */

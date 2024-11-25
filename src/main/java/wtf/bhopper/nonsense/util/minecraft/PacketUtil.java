@@ -7,6 +7,7 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.impl.EventPreClick;
+import wtf.bhopper.nonsense.module.impl.other.Debugger;
 
 public class PacketUtil implements MinecraftInstance {
 
@@ -16,6 +17,7 @@ public class PacketUtil implements MinecraftInstance {
 
     public static void sendNoEvent(Packet<?> packet) {
         mc.getNetHandler().addToSendQueue(packet);
+        Nonsense.getEventBus().post(new Debugger.EventPacketDebug(packet, Debugger.State.NO_EVENT, Debugger.EventPacketDebug.Direction.OUTGOING));
     }
 
     public static void leftClickPackets(MovingObjectPosition objectMouseOver, boolean swing) {

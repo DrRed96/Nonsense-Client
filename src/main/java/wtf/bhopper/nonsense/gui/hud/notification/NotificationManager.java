@@ -1,5 +1,7 @@
 package wtf.bhopper.nonsense.gui.hud.notification;
 
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import org.lwjglx.opengl.Display;
 import wtf.bhopper.nonsense.gui.hud.Hud;
 import wtf.bhopper.nonsense.module.impl.visual.HudMod;
@@ -31,20 +33,22 @@ public class NotificationManager implements MinecraftInstance {
         } catch (Exception ignored) {}
     }
 
-    public void draw(float delta) {
+    public void draw(ScaledResolution scaledRes, float delta) {
         if (!Hud.enabled() || !Hud.mod().notificationEnabled.get()) {
             return;
         }
 
         this.notifications.removeIf(Notification::isDone);
 
-        NVGHelper.begin();
+        GlStateManager.pushMatrix();
+        scaledRes.scaleToFactor(1.0F);
+
         int offset = Display.getHeight() - 72;
         int right = Display.getWidth();
         for (Notification notification : this.notifications) {
             offset = notification.draw(delta, offset, right);
         }
-        NVGHelper.end();
+        GlStateManager.popMatrix();
     }
 
 }

@@ -10,12 +10,12 @@ public class EntityLookHelper
     private EntityLiving entity;
 
     /**
-     * The amount of change that is made each update for an entity facing a direction.
+     * The amount of change that is made each update for an entity face a direction.
      */
     private float deltaLookYaw;
 
     /**
-     * The amount of change that is made each update for an entity facing a direction.
+     * The amount of change that is made each update for an entity face a direction.
      */
     private float deltaLookPitch;
 

@@ -486,7 +486,7 @@ class Render {
 
             dot = n[0] * norm[0] + n[1] * norm[1] + n[2] * norm[2];
             if (!check) {
-                /* Reverse the contribution of back-facing triangles to get
+                /* Reverse the contribution of back-face triangles to get
                  * a reasonable normal for self-intersecting polygons (see above)
                  */
                 if (dot >= 0) {

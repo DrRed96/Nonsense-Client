@@ -1,8 +1,11 @@
 package wtf.bhopper.nonsense.gui.hud;
 
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import org.lwjglx.opengl.Display;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.impl.visual.HudMod;
 import wtf.bhopper.nonsense.util.render.ColorUtil;
 import wtf.bhopper.nonsense.util.render.Fonts;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
@@ -11,7 +14,8 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import static org.lwjgl.nanovg.NanoVG.*;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_TOP;
 
 public class ModuleList {
 
@@ -23,7 +27,8 @@ public class ModuleList {
         Nonsense.getModuleManager().getModules().forEach(module -> slots.add(new Slot(module)));
     }
 
-    public int draw(float delta) {
+    public int draw(float delta, ScaledResolution scaledRes) {
+
         if (!Hud.enabled() || !Hud.mod().moduleListEnabled.get()) {
             return 0;
         }
@@ -32,14 +37,17 @@ public class ModuleList {
         float yOff = 0.0F;
 
         NVGHelper.begin();
-        NVGHelper.fontFace(Fonts.ARIAL);
-        NVGHelper.fontSize(Hud.mod().moduleListFontSize.getFloat());
-        NVGHelper.textAlign(NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+
+        if (!Hud.mod().font.is(HudMod.Font.MINECRAFT)) {
+            Hud.bindFont();
+            NVGHelper.fontSize(Hud.mod().moduleListFontSize.getFloat());
+            NVGHelper.textAlign(NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+        }
 
         this.updateSlots(delta);
 
         for (Slot slot : this.slots) {
-            yOff = slot.draw(yOff, right);
+            yOff = slot.draw(yOff, right, scaledRes);
         }
 
         NVGHelper.end();
@@ -79,22 +87,41 @@ public class ModuleList {
             this.updateText(1.0F);
         }
 
-        public float draw(float yOff, float right) {
+        public float draw(float yOff, float right, ScaledResolution scaledRes) {
 
             if (!this.shouldDisplay) {
                 return yOff;
             }
 
-            float textX = right - (this.width + Hud.mod().moduleListSpacing.getFloat()) * this.animateFactor;
-            float textY = yOff + Hud.mod().moduleListSpacing.getFloat();
-            float textHeight = Hud.mod().moduleListFontSize.getFloat() + Hud.mod().moduleListSpacing.getFloat() * 2.0F;
+            HudMod hudMod = Hud.mod();
 
-            if (Hud.mod().moduleListBackground.getInt() != 0) {
-                NVGHelper.drawRect(textX - 2.0F, yOff, right - textX + 2.0F, textHeight, ColorUtil.alpha(0, Hud.mod().moduleListBackground.getInt()));
+            float fontSize = hudMod.font.is(HudMod.Font.MINECRAFT) ? 18.0F : hudMod.moduleListFontSize.getFloat();
+            float textX = right - (this.width + hudMod.moduleListSpacing.getFloat()) * this.animateFactor;
+            float textY = yOff + hudMod.moduleListSpacing.getFloat();
+            float textHeight = fontSize + hudMod.moduleListSpacing.getFloat() * 2.0F;
+
+            if (hudMod.moduleListBackground.getInt() != 0) {
+                NVGHelper.drawRect(textX - 2.0F, yOff, right - textX + 2.0F, textHeight, ColorUtil.alpha(0, hudMod.moduleListBackground.getInt()));
             }
-            NVGHelper.drawText(this.name, textX, textY, this.color, true);
-            if (this.suffix != null) {
-                NVGHelper.drawText(this.suffix, textX + this.suffixOffset, textY, 0xFFAAAAAA, true);
+
+            if (hudMod.font.is(HudMod.Font.MINECRAFT)) {
+                NVGHelper.end();
+                GlStateManager.pushMatrix();
+                scaledRes.scaleToFactor(2.0F);
+
+                Fonts.mc().drawStringWithShadow(this.name, textX / 2.0F, textY / 2.0F, this.color);
+                if (this.suffix != null) {
+                    Fonts.mc().drawStringWithShadow(this.suffix, (textX + this.suffixOffset) / 2.0F, textY / 2.0F, hudMod.moduleListSuffixColor.getRGB());
+                }
+
+                GlStateManager.popMatrix();
+                NVGHelper.begin();
+            } else {
+                NVGHelper.drawText(this.name, textX, textY, this.color, true);
+                if (this.suffix != null) {
+                    NVGHelper.drawText(this.suffix, textX + this.suffixOffset, textY, hudMod.moduleListSuffixColor.getRGB(), true);
+                }
+
             }
 
             return yOff + textHeight * this.animateFactor;
@@ -108,7 +135,9 @@ public class ModuleList {
                 return;
             }
 
-            if (Hud.mod().moduleListAnimated.get()) {
+            HudMod hudMod = Hud.mod();
+
+            if (hudMod.moduleListAnimated.get()) {
                 if (this.module.isToggled()) {
                     if (this.animateFactor != 1.0F) {
                         this.animateFactor = Math.min(this.animateFactor + ANIMATION_FACTOR * delta, 1.0F);
@@ -130,21 +159,25 @@ public class ModuleList {
                 return;
             }
 
-            this.name = Hud.mod().moduleListDisplay.get() ? module.displayName : module.displayName.replace(" ", "");
-            this.suffix = module.getSuffix();
+            this.name = hudMod.moduleListDisplay.get() ? module.displayName : module.displayName.replace(" ", "");
+            this.suffix = hudMod.moduleListSuffix.get() ? module.getSuffix() : null;
 
-            if (Hud.mod().moduleListLowerCase.get()) {
+            if (hudMod.moduleListLowerCase.get()) {
                 this.name = this.name.toLowerCase();
                 if (this.suffix != null) {
                     this.suffix = this.suffix.toLowerCase();
                 }
             }
 
+            Hud.WidthMethod getWidth = hudMod.font.is(HudMod.Font.MINECRAFT)
+                    ? text -> Fonts.mc().getStringWidthF(text) * 2.0F
+                    : NVGHelper::getStringWidth;
+
             if (this.suffix != null) {
-                this.width = NVGHelper.getStringWidth(this.name + " " + this.suffix);
-                this.suffixOffset = this.width - NVGHelper.getStringWidth(this.suffix);
+                this.width = getWidth.getWidth(this.name + " " + this.suffix);
+                this.suffixOffset = this.width - getWidth.getWidth(this.suffix);
             } else {
-                this.width = NVGHelper.getStringWidth(this.name);
+                this.width = getWidth.getWidth(this.name);
                 this.suffixOffset = 0.0F;
             }
 
