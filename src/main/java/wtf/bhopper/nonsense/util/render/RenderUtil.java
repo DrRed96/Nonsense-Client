@@ -15,12 +15,14 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Timer;
+import net.minecraft.util.Vec3;
 import org.lwjglx.opengl.Display;
 import org.lwjglx.opengl.GLSync;
 import org.lwjglx.util.glu.GLU;
 import wtf.bhopper.nonsense.module.property.impl.ColorProperty;
 import wtf.bhopper.nonsense.util.minecraft.BlockUtil;
 import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
+import wtf.bhopper.nonsense.util.misc.MathUtil;
 
 import javax.vecmath.Vector3d;
 import java.awt.*;
@@ -356,6 +358,17 @@ public class RenderUtil implements MinecraftInstance {
         glColor(color.getRGB());
     }
 
+    public static Vec3 renderPos(float delta) {
+        return new Vec3(
+                -MathUtil.lerp(mc.thePlayer.lastTickPosX, mc.thePlayer.posX, delta),
+                -MathUtil.lerp(mc.thePlayer.lastTickPosY, mc.thePlayer.posY, delta),
+                -MathUtil.lerp(mc.thePlayer.lastTickPosZ, mc.thePlayer.posZ, delta)
+        );
+    }
+
+    public static Vec3 renderPos() {
+        return renderPos(mc.timer.renderPartialTicks);
+    }
 
     private static final IntBuffer viewport = GLAllocation.createDirectIntBuffer(16);
     private static final FloatBuffer modelView = GLAllocation.createDirectFloatBuffer(16);

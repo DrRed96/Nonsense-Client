@@ -11,6 +11,8 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.util.Vec3;
+import org.lwjgl.opengl.GL11;
 import org.lwjglx.opengl.Display;
 import org.lwjglx.opengl.GLSync;
 import wtf.bhopper.nonsense.Nonsense;
@@ -22,10 +24,7 @@ import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.impl.combat.AntiBot;
-import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
-import wtf.bhopper.nonsense.module.property.impl.ColorProperty;
-import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
-import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
+import wtf.bhopper.nonsense.module.property.impl.*;
 import wtf.bhopper.nonsense.util.misc.MathUtil;
 import wtf.bhopper.nonsense.util.render.ColorUtil;
 import wtf.bhopper.nonsense.util.render.RenderUtil;
@@ -46,55 +45,42 @@ public class Tracers extends Module {
 
     private final EnumProperty<ColorMode> colorMode = new EnumProperty<>("Color Mode", "What color to use for the tracers.", ColorMode.DISTANCE);
     private final ColorProperty color = new ColorProperty("Color", "Color of the tracers.", ColorUtil.RED, () -> this.colorMode.is(ColorMode.STATIC));
+    private final NumberProperty lineWidth = new NumberProperty("Line Width", "Width of the tracer lines", 1.5F, 0.5F, 3.0F, 0.5F);
 
     public Tracers() {
         this.targetsGroup.addProperties(this.players, this.mobs, this.animals, this.others, this.invis);
-        this.addProperties(this.targetsGroup, this.colorMode, this.color);
+        this.addProperties(this.targetsGroup, this.colorMode, this.color, this.lineWidth);
     }
 
     @EventLink
-    public final Listener<EventRenderGui> onRenderGui = event -> {
-        RenderManager renderManager = mc.getRenderManager();
-        EntityRenderer entityRenderer = mc.entityRenderer;
+    public final Listener<EventRender3D> onRender = event -> {
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer renderer = tessellator.getWorldRenderer();
 
+        Vec3 renderPos = RenderUtil.renderPos(event.delta);
+
         GlStateManager.pushMatrix();
-        event.scale.scaleToFactor(1.0F);
+        GlStateManager.enableBlend();
+        GlStateManager.disableTexture2D();
+        GlStateManager.tryBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
+        glEnable(GL_LINE_SMOOTH);
+        glLineWidth(this.lineWidth.getFloat());
 
         for (EntityLivingBase entity : mc.theWorld.getEntities(EntityLivingBase.class, this::isValidEntity)) {
-            double x = MathUtil.lerp(entity.posX, entity.lastTickPosX, event.delta) - renderManager.renderPosX;
-            double y = MathUtil.lerp(entity.posY, entity.lastTickPosY, event.delta) - renderManager.renderPosY;
-            double z = MathUtil.lerp(entity.posZ, entity.lastTickPosZ, event.delta) - renderManager.renderPosZ;
+            double x = MathUtil.lerp(entity.posX, entity.lastTickPosX, event.delta) + renderPos.xCoord;
+            double y = MathUtil.lerp(entity.posY, entity.lastTickPosY, event.delta) + renderPos.yCoord;
+            double z = MathUtil.lerp(entity.posZ, entity.lastTickPosZ, event.delta) + renderPos.zCoord;
 
-            entityRenderer.setupCameraTransform(event.delta, 0);
-
-            Vector3d projected = RenderUtil.project2D(1,
-                    x - renderManager.viewerPosX,
-                    y - renderManager.viewerPosY,
-                    z - renderManager.viewerPosZ);
-
-            if (projected == null) {
-                continue;
-            }
-
-            entityRenderer.setupOverlayRendering();
-
-            GlStateManager.enableBlend();
-            GlStateManager.disableTexture2D();
-            GlStateManager.tryBlendFuncSeparate(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA, GL_ONE, GL_ZERO);
             RenderUtil.glColor(this.color);
-
             renderer.begin(GL_LINES, DefaultVertexFormats.POSITION);
-            renderer.pos(Display.getWidth() / 2.0F, Display.getHeight() / 2.0F, 0.0F).endVertex();
-            renderer.pos(projected.x, projected.y, 0.0F).endVertex();
+            renderer.pos(0.0F, mc.thePlayer.getEyeHeight(), 0.0F).endVertex();
+            renderer.pos(x, y, z).endVertex();
             tessellator.draw();
-
-            GlStateManager.enableTexture2D();
-            GlStateManager.disableBlend();
 
         }
 
+        GlStateManager.enableTexture2D();
+        GlStateManager.disableBlend();
         GlStateManager.popMatrix();
     };
 

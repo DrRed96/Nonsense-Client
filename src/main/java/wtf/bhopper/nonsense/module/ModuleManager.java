@@ -55,6 +55,7 @@ public class ModuleManager {
                 new GameSpeed(),
                 new FastPlace(),
                 new AntiCactus(),
+                new HorseJump(),
 
                 // Exploit
                 new PingSpoofer(),
@@ -83,6 +84,7 @@ public class ModuleManager {
                 new Esp(),
                 new FullBright(),
                 new BlockOverlay(),
+                new Breadcrumbs(),
                 new ItemAnimations(),
                 new NoRender(),
                 new ScoreboardMod(),

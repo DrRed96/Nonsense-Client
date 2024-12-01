@@ -48,6 +48,7 @@ import net.minecraft.world.World;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.impl.*;
 import wtf.bhopper.nonsense.module.impl.movement.NoSlow;
+import wtf.bhopper.nonsense.module.impl.player.HorseJump;
 import wtf.bhopper.nonsense.util.minecraft.RotationUtil;
 
 public class EntityPlayerSP extends AbstractClientPlayer {
@@ -763,6 +764,11 @@ public class EntityPlayerSP extends AbstractClientPlayer {
                     this.horseJumpPower = 0.8F + 2.0F / (float) (this.horseJumpPowerCounter - 9) * 0.1F;
                 }
             }
+
+            if (Nonsense.module(HorseJump.class).isToggled()) {
+                this.horseJumpPower = 1.0F;
+            }
+
         } else {
             this.horseJumpPower = 0.0F;
         }
