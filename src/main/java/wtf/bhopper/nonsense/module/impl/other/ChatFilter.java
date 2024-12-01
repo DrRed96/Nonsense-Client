@@ -105,14 +105,16 @@ public class ChatFilter extends Module {
 
     private String applyAccent(String word) {
 
-        if (this.isLink(word)) {
-            return word.replace('.', '\u2025');
+        String result = word;
+
+        if (this.isLink(result)) {
+            result = result.replace('.', '\u2025');
         }
 
-        if (this.isBadWord(word) || !this.wordCheck.get()) {
+        if (this.isBadWord(result) || !this.wordCheck.get()) {
             boolean found = false;
             StringBuilder builder = new StringBuilder();
-            for (char c : word.toCharArray()) {
+            for (char c : result.toCharArray()) {
                 if (!found) {
                     char toAppend = switch (c) {
                         case 'a' -> '\u00E0';
@@ -141,7 +143,7 @@ public class ChatFilter extends Module {
             return builder.toString();
         }
 
-        return word;
+        return result;
     }
 
     private String applyMiniblox(String word) {
@@ -171,7 +173,7 @@ public class ChatFilter extends Module {
     }
 
     private boolean isLink(String word) {
-        return GeneralUtil.LINK_REGEX.matcher(word).matches() || word.toLowerCase().startsWith("discord.gg");
+        return GeneralUtil.LINK_REGEX.matcher(word).find() || word.toLowerCase().startsWith("discord.gg");
     }
 
     private enum Mode {

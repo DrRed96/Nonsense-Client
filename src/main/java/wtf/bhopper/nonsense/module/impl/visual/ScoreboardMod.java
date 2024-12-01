@@ -19,12 +19,13 @@ import java.util.List;
 @ModuleInfo(name = "Scoreboard", description = "Improves the scoreboard", category = ModuleCategory.VISUAL)
 public class ScoreboardMod extends Module {
 
-    private final BooleanProperty shadow = new BooleanProperty("Shadow", "Draws a drop shadow", true);
-    private final BooleanProperty noScore = new BooleanProperty("No Score", "Prevents the score (red numbers) from rendering", true);
-    private final BooleanProperty novoline = new BooleanProperty("Novoline", "Does the novoline thing lol", false);
+    private final BooleanProperty shadow = new BooleanProperty("Shadow", "Draws a drop shadow on the text.", true);
+    private final BooleanProperty noScore = new BooleanProperty("No Score", "Prevents the score (red numbers) from rendering.", true);
+    private final BooleanProperty noBackground = new BooleanProperty("No Background", "Prevents the background from rendering.", false);
+    private final BooleanProperty novoline = new BooleanProperty("Novoline", "Does the Novoline thing lol", false);
 
     public ScoreboardMod() {
-        this.addProperties(this.shadow, this.noScore, this.novoline);
+        this.addProperties(this.shadow, this.noScore, this.noBackground, this.novoline);
     }
 
     public void drawScoreboard(ScaledResolution scaledRes, ScoreObjective objective, Scoreboard scoreboard, List<Score> scores) {
@@ -67,14 +68,18 @@ public class ScoreboardMod extends Module {
 
             int yOff = k1 - scoreIndex * font.FONT_HEIGHT;
             int i1 = scaledRes.getScaledWidth() - b0 + 2;
-            Gui.drawRect(j - 2, yOff, i1, yOff + font.FONT_HEIGHT, 0x50000000);
+            if (!this.noBackground.get()) {
+                Gui.drawRect(j - 2, yOff, i1, yOff + font.FONT_HEIGHT, 0x50000000);
+            }
             font.drawString(renderTeam, j, yOff, teamColor, this.shadow.get());
             font.drawString(renderScore, i1 - font.getStringWidth(renderScore), yOff, 0x20ffffff, this.shadow.get());
 
             if (scoreIndex == scores.size()) {
                 String displayObjective = objective.getDisplayName();
-                Gui.drawRect(j - 2, yOff - font.FONT_HEIGHT - 1, i1, yOff - 1, 0x60000000);
-                Gui.drawRect(j - 2, yOff - 1, i1, yOff, 0x50000000);
+                if (!this.noBackground.get()) {
+                    Gui.drawRect(j - 2, yOff - font.FONT_HEIGHT - 1, i1, yOff - 1, 0x60000000);
+                    Gui.drawRect(j - 2, yOff - 1, i1, yOff, 0x50000000);
+                }
                 font.drawString(displayObjective, j + (float)(objectiveWidth / 2) - (float)(font.getStringWidth(displayObjective) / 2), yOff - font.FONT_HEIGHT, 0x20ffffff, this.shadow.get());
             }
         }

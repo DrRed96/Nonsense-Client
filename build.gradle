@@ -1,7 +1,9 @@
 import org.gradle.internal.os.OperatingSystem
+import org.jetbrains.gradle.ext.*
 
 plugins {
     id 'java'
+    id 'org.jetbrains.gradle.plugin.idea-ext' version '1.1.9'
 }
 
 group 'wtf.bhopper'
@@ -15,9 +17,9 @@ switch (os) {
         project.ext.lwjglNatives = "natives-linux"
         if (osArch.startsWith("arm") || osArch.startsWith("aarch64")) {
             project.ext.lwjglNatives += osArch.contains("64") || osArch.startsWith("armv8") ? "-arm64" : "-arm32"
-        } else if  (osArch.startsWith("ppc")) {
+        } else if (osArch.startsWith("ppc")) {
             project.ext.lwjglNatives += "-ppc64le"
-        } else if  (osArch.startsWith("riscv")) {
+        } else if (osArch.startsWith("riscv")) {
             project.ext.lwjglNatives += "-riscv64"
         }
         break
@@ -148,7 +150,7 @@ tasks.register('writeLibraryInfo') {
 
         file.text += '\t],\n\t"libraries": [\n'
 
-        project.configurations.library.dependencies.forEach {dependency ->
+        project.configurations.library.dependencies.forEach { dependency ->
             for (ArtifactRepository repository : project.repositories.asList()) {
                 def url = repository.properties.get('url')
                 def jar = String.format('%s/%s/%s/%s-%s.jar',
@@ -167,14 +169,15 @@ tasks.register('writeLibraryInfo') {
                         return
                     }
 
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
 
             }
         }
 
         file.text += '\t],\n\t"natvies": [\n'
 
-        project.configurations.nativeLib.dependencies.forEach {dependency ->
+        project.configurations.nativeLib.dependencies.forEach { dependency ->
             for (ArtifactRepository repository : project.repositories.asList()) {
                 def url = repository.properties.get('url')
                 def jar = String.format('%s/%s/%s/%s-%s.jar',
@@ -193,7 +196,8 @@ tasks.register('writeLibraryInfo') {
                         return
                     }
 
-                } catch (Exception ignored) {}
+                } catch (Exception ignored) {
+                }
 
             }
         }
@@ -213,3 +217,12 @@ tasks.register('copyAssets', Copy) {
 
 tasks.libraryJar.dependsOn(tasks.jar)
 tasks.processResources.dependsOn(tasks.extractNatives)
+
+idea.project.settings.runConfigurations {
+    "Start"(Application) {
+        mainClass = 'Start'
+        workingDirectory = "${project.rootDir}/run"
+        jvmArgs = "-Xmx4G -Xms512m -Djava.library.path=../build/libs/natives/${os.getFamilyName()}"
+        moduleName = "Nonsense-Client.test"
+    }
+}
