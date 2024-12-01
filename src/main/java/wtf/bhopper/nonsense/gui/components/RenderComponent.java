@@ -34,8 +34,12 @@ public abstract class RenderComponent implements MinecraftInstance {
 
     public void onClick(int x, int y, int button) {}
 
-    private void nvgTranslate() {
+    protected void nvgTranslate() {
         NVGHelper.translate(this.getX(), this.getY());
+    }
+
+    protected void nvgDrawBackground(int color) {
+        NVGHelper.drawRect(0.0F, 0.0F, this.width, this.height, color);
     }
 
     public String getName() {
@@ -79,6 +83,11 @@ public abstract class RenderComponent implements MinecraftInstance {
     }
 
     public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public void setSize(int width, int height) {
+        this.width = width;
         this.height = height;
     }
 

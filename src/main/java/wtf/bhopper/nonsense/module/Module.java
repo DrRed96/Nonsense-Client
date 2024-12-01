@@ -19,7 +19,7 @@ public abstract class Module implements PropertyContainer, MinecraftInstance {
     public final String description = this.getClass().getAnnotation(ModuleInfo.class).description();
     public final ModuleCategory category = this.getClass().getAnnotation(ModuleInfo.class).category();
 
-    private boolean toggled = false;
+    private boolean toggled = this.getClass().getAnnotation(ModuleInfo.class).toggled();
     private int bind = this.getClass().getAnnotation(ModuleInfo.class).bind();
     private boolean hidden = category == ModuleCategory.VISUAL;
     private final List<Property<?>> properties = new ArrayList<>();

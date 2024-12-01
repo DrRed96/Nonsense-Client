@@ -21,7 +21,7 @@ public class InventoryUtil implements MinecraftInstance {
         return mc.thePlayer.inventoryContainer.getSlot(slot).getStack();
     }
 
-    public static boolean placeStackInHotbar(ItemStack stack) {
+    public static boolean placeStackInInventory(ItemStack stack) {
 
         for (int i = 0; i < 36; i++) {
             int slot = i < 9 ? i + 36 : i;

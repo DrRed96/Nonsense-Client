@@ -12,7 +12,7 @@ import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
 import wtf.bhopper.nonsense.util.minecraft.InventoryUtil;
 
 @CommandInfo(name = "Give",
-        description = "Gives you any item (you must be in creative mode for it to work)",
+        description = "Gives you any item (Requires creative mode)",
         syntax = ".give <item> [amount] [meta] [nbt]")
 public class Give extends Command {
     @Override
@@ -47,7 +47,7 @@ public class Give extends Command {
         }
 
 
-        if (InventoryUtil.placeStackInHotbar(stack)) {
+        if (InventoryUtil.placeStackInInventory(stack)) {
             ChatUtil.info("Added item to inventory: %s", stack);
         } else {
             ChatUtil.error("No slot available");

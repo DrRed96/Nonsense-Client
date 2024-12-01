@@ -291,16 +291,17 @@ public class Scoreboard
     /**
      * Removes the team from the scoreboard, updates all player memberships and broadcasts the deletion to all players
      */
-    public void removeTeam(ScorePlayerTeam p_96511_1_)
+    public void removeTeam(ScorePlayerTeam team)
     {
-        this.teams.remove(p_96511_1_.getRegisteredName());
+        if (team != null) {
+            this.teams.remove(team.getRegisteredName());
 
-        for (String s : p_96511_1_.getMembershipCollection())
-        {
-            this.teamMemberships.remove(s);
+            for (String s : team.getMembershipCollection()) {
+                this.teamMemberships.remove(s);
+            }
+
+            this.func_96513_c(team);
         }
-
-        this.func_96513_c(p_96511_1_);
     }
 
     /**
@@ -376,9 +377,9 @@ public class Scoreboard
     /**
      * Gets the ScorePlayerTeam object for the given username.
      */
-    public ScorePlayerTeam getPlayersTeam(String p_96509_1_)
+    public ScorePlayerTeam getPlayersTeam(String player)
     {
-        return (ScorePlayerTeam)this.teamMemberships.get(p_96509_1_);
+        return this.teamMemberships.get(player);
     }
 
     /**

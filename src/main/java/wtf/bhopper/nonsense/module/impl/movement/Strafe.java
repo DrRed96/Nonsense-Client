@@ -13,6 +13,6 @@ import wtf.bhopper.nonsense.util.minecraft.MoveUtil;
 public class Strafe extends Module {
 
     @EventLink(EventPriorities.HIGH)
-    public final Listener<EventMove> onMove = event -> MoveUtil.setSpeed(event, MoveUtil.getSpeed());
+    public final Listener<EventMove> onMove = event -> MoveUtil.setSpeed(event, MoveUtil.getSpeed(event));
 
 }

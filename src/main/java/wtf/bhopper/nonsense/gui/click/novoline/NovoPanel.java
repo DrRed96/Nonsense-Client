@@ -1,15 +1,18 @@
 package wtf.bhopper.nonsense.gui.click.novoline;
 
+import org.lwjglx.input.Keyboard;
+import org.lwjglx.opengl.Display;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.util.render.Fonts;
-import wtf.bhopper.nonsense.util.render.NVGHelper;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
+import wtf.bhopper.nonsense.util.render.Fonts;
+import wtf.bhopper.nonsense.util.render.NVGHelper;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.lwjgl.nanovg.NanoVG.*;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
+import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 
 public class NovoPanel extends NovoComponent {
 
@@ -37,11 +40,11 @@ public class NovoPanel extends NovoComponent {
         for (Module module : Nonsense.getModuleManager().getInCategory(category)) {
             modules.add(new NovoModule(this, module));
         }
-
     }
 
     @Override
     public void draw(float mouseX, float mouseY, float delta) {
+
         NVGHelper.translate(x, y);
 
         NVGHelper.drawRect(0.0F, 0.0F, WIDTH, HEADER_HEIGHT, NovoComponent.OUTLINE_COLOR);
@@ -56,7 +59,7 @@ public class NovoPanel extends NovoComponent {
         NVGHelper.fontFace(Fonts.SEGOE);
 
         if (this.expanded) {
-            NVGHelper.scissor(0.0F, HEADER_HEIGHT, WIDTH, HEIGHT);
+            NVGHelper.scissor(0.0F, 0.0F, WIDTH, Display.getHeight());
             for (NovoModule module : this.modules) {
                 module.draw(mouseX, mouseY, delta);
             }
@@ -70,7 +73,6 @@ public class NovoPanel extends NovoComponent {
 
     @Override
     public void mouseClick(float mouseX, float mouseY, int button) {
-
         if (this.mouseIntersecting(mouseX, mouseY, 0.0F, HEADER_HEIGHT)) {
             if (button == 0) {
                 this.moving = true;
@@ -98,6 +100,14 @@ public class NovoPanel extends NovoComponent {
 
     @Override
     public void keyTyped(char typedChar, int keyCode) {
+
+        // TODO: temporary solution until I can find a way to get the scroll wheel to work
+        if (keyCode == Keyboard.KEY_UP) {
+            this.y += 20.0F;
+        } else if (keyCode == Keyboard.KEY_DOWN) {
+            this.y -= 20.0F;
+        }
+
         if (this.expanded) {
             for (NovoModule module : this.modules) {
                 module.keyTyped(typedChar, keyCode);

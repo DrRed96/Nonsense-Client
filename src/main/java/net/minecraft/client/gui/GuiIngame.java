@@ -33,14 +33,17 @@ import net.minecraft.util.*;
 import net.minecraft.world.border.WorldBorder;
 import optifine.Config;
 import optifine.CustomColors;
+import org.lwjgl.opengl.GL11;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.impl.EventRenderGui;
 import wtf.bhopper.nonsense.gui.screens.GuiMoveHudComponents;
+import wtf.bhopper.nonsense.module.impl.visual.ScoreboardMod;
 import wtf.bhopper.nonsense.util.minecraft.InventoryUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
+import java.util.stream.Collectors;
 
 public class GuiIngame extends Gui {
     private static final ResourceLocation vignetteTexPath = new ResourceLocation("textures/misc/vignette.png");
@@ -272,7 +275,7 @@ public class GuiIngame extends Gui {
                 GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
                 GlStateManager.pushMatrix();
                 GlStateManager.scale(4.0F, 4.0F, 4.0F);
-                int j2 = l1 << 24 & -16777216;
+                int j2 = l1 << 24 & 0xff000000;
                 this.getFontRenderer().drawString(this.field_175201_x, (float) (-this.getFontRenderer().getStringWidth(this.field_175201_x) / 2), -10.0F, 16777215 | j2, true);
                 GlStateManager.popMatrix();
                 GlStateManager.pushMatrix();
@@ -306,6 +309,7 @@ public class GuiIngame extends Gui {
             this.renderScoreboard(scoreobjective1, scaledRes);
         }
 
+        Nonsense.getHud().watermark.draw(scaledRes);
         Nonsense.getHud().infoDisplay.draw(scaledRes);
 
         if (mc.currentScreen == null) {
@@ -495,74 +499,71 @@ public class GuiIngame extends Gui {
         }
     }
 
-    private void renderScoreboard(ScoreObjective p_180475_1_, ScaledResolution p_180475_2_) {
-        Scoreboard scoreboard = p_180475_1_.getScoreboard();
-        Collection collection = scoreboard.getSortedScores(p_180475_1_);
-        ArrayList arraylist = Lists.newArrayList(Iterables.filter(collection, new Predicate() {
-            private static final String __OBFID = "CL_00001958";
+    private void renderScoreboard(ScoreObjective objective, ScaledResolution scaledRes) {
+        Scoreboard scoreboard = objective.getScoreboard();
+        Collection<Score> collection = scoreboard.getSortedScores(objective);
+        ArrayList<Score> unsortedScores = collection.stream()
+                .filter(score -> score.getPlayerName() != null && !score.getPlayerName().startsWith("#"))
+                .collect(Collectors.toCollection(Lists::newArrayList));
+        ArrayList<Score> scores;
 
-            public boolean apply(Score p_apply_1_) {
-                return p_apply_1_.getPlayerName() != null && !p_apply_1_.getPlayerName().startsWith("#");
-            }
-
-            public boolean apply(Object p_apply_1_) {
-                return this.apply((Score) p_apply_1_);
-            }
-        }));
-        ArrayList arraylist1;
-
-        if (arraylist.size() > 15) {
-            arraylist1 = Lists.newArrayList(Iterables.skip(arraylist, collection.size() - 15));
+        if (unsortedScores.size() > 15) {
+            scores = Lists.newArrayList(Iterables.skip(unsortedScores, collection.size() - 15));
         } else {
-            arraylist1 = arraylist;
+            scores = unsortedScores;
         }
 
-        int i = this.getFontRenderer().getStringWidth(p_180475_1_.getDisplayName());
-
-        for (Object score : arraylist1) {
-            ScorePlayerTeam scoreplayerteam = scoreboard.getPlayersTeam(((Score) score).getPlayerName());
-            String s = ScorePlayerTeam.formatPlayerName(scoreplayerteam, ((Score) score).getPlayerName()) + ": " + EnumChatFormatting.RED + ((Score) score).getScorePoints();
-            i = Math.max(i, this.getFontRenderer().getStringWidth(s));
+        ScoreboardMod mod = Nonsense.module(ScoreboardMod.class);
+        if (mod.isToggled()) {
+            mod.drawScoreboard(scaledRes, objective, scoreboard, scores);
+            return;
         }
 
-        int j1 = arraylist1.size() * this.getFontRenderer().FONT_HEIGHT;
-        int k1 = p_180475_2_.getScaledHeight() / 2 + j1 / 3;
+        int objectiveWidth = this.getFontRenderer().getStringWidth(objective.getDisplayName());
+
+        for (Score score : scores) {
+            ScorePlayerTeam scoreplayerteam = scoreboard.getPlayersTeam(score.getPlayerName());
+            String s = ScorePlayerTeam.formatPlayerName(scoreplayerteam, score.getPlayerName()) + ": " + EnumChatFormatting.RED + score.getScorePoints();
+            objectiveWidth = Math.max(objectiveWidth, this.getFontRenderer().getStringWidth(s));
+        }
+
+        int j1 = scores.size() * this.getFontRenderer().FONT_HEIGHT;
+        int k1 = scaledRes.getScaledHeight() / 2 + j1 / 3;
         byte b0 = 3;
-        int j = p_180475_2_.getScaledWidth() - i - b0;
-        int k = 0;
+        int j = scaledRes.getScaledWidth() - objectiveWidth - b0;
+        int scoreIndex = 0;
 
-        for (Object score1 : arraylist1) {
-            ++k;
-            ScorePlayerTeam scoreplayerteam1 = scoreboard.getPlayersTeam(((Score) score1).getPlayerName());
-            String s1 = ScorePlayerTeam.formatPlayerName(scoreplayerteam1, ((Score) score1).getPlayerName());
-            String s2 = EnumChatFormatting.RED + "" + ((Score) score1).getScorePoints();
-            int l = k1 - k * this.getFontRenderer().FONT_HEIGHT;
-            int i1 = p_180475_2_.getScaledWidth() - b0 + 2;
-            drawRect(j - 2, l, i1, l + this.getFontRenderer().FONT_HEIGHT, 1342177280);
-            this.getFontRenderer().drawString(s1, j, l, 553648127);
-            this.getFontRenderer().drawString(s2, i1 - this.getFontRenderer().getStringWidth(s2), l, 553648127);
+        for (Score score : scores) {
+            ++scoreIndex;
+            ScorePlayerTeam team = scoreboard.getPlayersTeam(score.getPlayerName());
+            String renderPlayer = ScorePlayerTeam.formatPlayerName(team, score.getPlayerName());
+            String renderScore = EnumChatFormatting.RED + "" + score.getScorePoints();
+            int yOff = k1 - scoreIndex * this.getFontRenderer().FONT_HEIGHT;
+            int i1 = scaledRes.getScaledWidth() - b0 + 2;
+            drawRect(j - 2, yOff, i1, yOff + this.getFontRenderer().FONT_HEIGHT, 0x50000000);
+            this.getFontRenderer().drawString(renderPlayer, j, yOff, 0x20ffffff);
+            this.getFontRenderer().drawString(renderScore, i1 - this.getFontRenderer().getStringWidth(renderScore), yOff, 0x20ffffff);
 
-            if (k == arraylist1.size()) {
-                String s3 = p_180475_1_.getDisplayName();
-                drawRect(j - 2, l - this.getFontRenderer().FONT_HEIGHT - 1, i1, l - 1, 1610612736);
-                drawRect(j - 2, l - 1, i1, l, 1342177280);
-                this.getFontRenderer().drawString(s3, j + i / 2 - this.getFontRenderer().getStringWidth(s3) / 2, l - this.getFontRenderer().FONT_HEIGHT, 553648127);
+            if (scoreIndex == scores.size()) {
+                String displayObjective = objective.getDisplayName();
+                drawRect(j - 2, yOff - this.getFontRenderer().FONT_HEIGHT - 1, i1, yOff - 1, 0x60000000);
+                drawRect(j - 2, yOff - 1, i1, yOff, 0x50000000);
+                this.getFontRenderer().drawString(displayObjective, j + objectiveWidth / 2 - this.getFontRenderer().getStringWidth(displayObjective) / 2, yOff - this.getFontRenderer().FONT_HEIGHT, 0x20ffffff);
             }
         }
     }
 
     private void renderPlayerStats(ScaledResolution p_180477_1_) {
-        if (this.mc.getRenderViewEntity() instanceof EntityPlayer) {
-            EntityPlayer entityplayer = (EntityPlayer) this.mc.getRenderViewEntity();
+        if (this.mc.getRenderViewEntity() instanceof EntityPlayer entityplayer) {
             int i = MathHelper.ceiling_float_int(entityplayer.getHealth());
             boolean flag = this.healthUpdateCounter > (long) this.updateCounter && (this.healthUpdateCounter - (long) this.updateCounter) / 3L % 2L == 1L;
 
             if (i < this.playerHealth && entityplayer.hurtResistantTime > 0) {
                 this.lastSystemTime = Minecraft.getSystemTime();
-                this.healthUpdateCounter = (long) (this.updateCounter + 20);
+                this.healthUpdateCounter = this.updateCounter + 20;
             } else if (i > this.playerHealth && entityplayer.hurtResistantTime > 0) {
                 this.lastSystemTime = Minecraft.getSystemTime();
-                this.healthUpdateCounter = (long) (this.updateCounter + 10);
+                this.healthUpdateCounter = this.updateCounter + 10;
             }
 
             if (Minecraft.getSystemTime() - this.lastSystemTime > 1000L) {
@@ -573,7 +574,7 @@ public class GuiIngame extends Gui {
 
             this.playerHealth = i;
             int j = this.lastPlayerHealth;
-            this.rand.setSeed((long) (this.updateCounter * 312871));
+            this.rand.setSeed(this.updateCounter * 0x4c627L);
             boolean flag1 = false;
             FoodStats foodstats = entityplayer.getFoodStats();
             int k = foodstats.getFoodLevel();
@@ -888,32 +889,36 @@ public class GuiIngame extends Gui {
         }
     }
 
-    private void func_180474_b(float p_180474_1_, ScaledResolution p_180474_2_) {
-        if (p_180474_1_ < 1.0F) {
-            p_180474_1_ = p_180474_1_ * p_180474_1_;
-            p_180474_1_ = p_180474_1_ * p_180474_1_;
-            p_180474_1_ = p_180474_1_ * 0.8F + 0.2F;
+    private void func_180474_b(float alpha, ScaledResolution scaledRes) {
+        if (alpha < 1.0F) {
+            alpha = alpha * alpha;
+            alpha = alpha * alpha;
+            alpha = alpha * 0.8F + 0.2F;
         }
 
         GlStateManager.disableAlpha();
         GlStateManager.disableDepth();
         GlStateManager.depthMask(false);
-        GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-        GlStateManager.color(1.0F, 1.0F, 1.0F, p_180474_1_);
+        GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, GL11.GL_ONE, GL11.GL_ZERO);
+        GlStateManager.color(1.0F, 1.0F, 1.0F, alpha);
+
         this.mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
         TextureAtlasSprite textureatlassprite = this.mc.getBlockRendererDispatcher().getBlockModelShapes().getTexture(Blocks.portal.getDefaultState());
-        float f = textureatlassprite.getMinU();
-        float f1 = textureatlassprite.getMinV();
-        float f2 = textureatlassprite.getMaxU();
-        float f3 = textureatlassprite.getMaxV();
+
+        float minU = textureatlassprite.getMinU();
+        float minV = textureatlassprite.getMinV();
+        float maxU = textureatlassprite.getMaxU();
+        float maxV = textureatlassprite.getMaxV();
+
         Tessellator tessellator = Tessellator.getInstance();
-        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-        worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
-        worldrenderer.pos(0.0D, (double) p_180474_2_.getScaledHeight(), -90.0D).tex((double) f, (double) f3).endVertex();
-        worldrenderer.pos((double) p_180474_2_.getScaledWidth(), (double) p_180474_2_.getScaledHeight(), -90.0D).tex((double) f2, (double) f3).endVertex();
-        worldrenderer.pos((double) p_180474_2_.getScaledWidth(), 0.0D, -90.0D).tex((double) f2, (double) f1).endVertex();
-        worldrenderer.pos(0.0D, 0.0D, -90.0D).tex((double) f, (double) f1).endVertex();
+        WorldRenderer renderer = tessellator.getWorldRenderer();
+        renderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        renderer.pos(0.0, scaledRes.getScaledHeight(), -90.0).tex(minU, maxV).endVertex();
+        renderer.pos(scaledRes.getScaledWidth(), scaledRes.getScaledHeight(), -90.0).tex(maxU, maxV).endVertex();
+        renderer.pos(scaledRes.getScaledWidth(), 0.0, -90.0).tex(maxU, minV).endVertex();
+        renderer.pos(0.0, 0.0, -90.0).tex(minU, minV).endVertex();
         tessellator.draw();
+
         GlStateManager.depthMask(true);
         GlStateManager.enableDepth();
         GlStateManager.enableAlpha();

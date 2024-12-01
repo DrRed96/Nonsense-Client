@@ -19,19 +19,23 @@ import wtf.bhopper.nonsense.event.impl.*;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
+import wtf.bhopper.nonsense.module.property.annotations.Description;
 import wtf.bhopper.nonsense.module.property.annotations.DisplayName;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
+import wtf.bhopper.nonsense.util.minecraft.BlinkUtil;
 import wtf.bhopper.nonsense.util.minecraft.PacketUtil;
 import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
 import wtf.bhopper.nonsense.util.minecraft.RotationUtil;
 
+
+
 @ModuleInfo(name = "Auto Block", description = "Automatically blocks your sword", category = ModuleCategory.COMBAT)
 public class AutoBlock extends Module {
 
-    private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Autoblock method", Mode.VANILLA);
+    private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Autoblock method", Mode.BLOCK);
 
     private final GroupProperty targetsGroup = new GroupProperty("Targets", "What entities Kill Aura should target");
     private final BooleanProperty players = new BooleanProperty("Players", "Target Players.", true);
@@ -45,13 +49,14 @@ public class AutoBlock extends Module {
     private final NumberProperty range = new NumberProperty("Range", "Auto block range", 7.0, 0.0, 16.0, 0.05, NumberProperty.FORMAT_DISTANCE);
     private final BooleanProperty noSlow = new BooleanProperty("No Slow", "Applies No Slow to the sword blocking", true);
     private final BooleanProperty auraOnly = new BooleanProperty("Kill Aura Only", "Only blocks when Kill Aura is enabled", true);
+    private final EnumProperty<BlockPacket> blockPacket = new EnumProperty<>("Block Packet", "When to send the block packet.", BlockPacket.PRE, () -> false);
 
     private boolean blocking = false;
     private MovingObjectPosition mouseOver = null;
 
     public AutoBlock() {
         this.targetsGroup.addProperties(this.players, this.mobs, this.animals, this.others, this.invis, this.dead, this.teams);
-        this.addProperties(this.mode, this.targetsGroup, this.range, this.noSlow, this.auraOnly);
+        this.addProperties(this.mode, this.targetsGroup, this.range, this.noSlow, this.auraOnly, this.blockPacket);
         this.setSuffix(this.mode::getDisplayValue);
     }
 
@@ -68,7 +73,7 @@ public class AutoBlock extends Module {
     }
 
     @EventLink
-    public final Listener<EventPreClick> onClick = event -> {
+    public final Listener<EventPreClick> onPreClick = event -> {
 
         if (this.canBlock() && event.button == EventPreClick.Button.RIGHT && !event.artificial) {
             event.cancel();
@@ -85,8 +90,26 @@ public class AutoBlock extends Module {
                     }
                 }
             }
-            case POST -> {
+
+            case PACKET -> {
                 if (event.button == EventPreClick.Button.LEFT && this.blocking && this.blockItem()) {
+                    if (event.mouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
+                        this.mouseOver = event.mouseOver;
+                    }
+                }
+            }
+
+            case BLINK -> {
+                if (event.button == EventPreClick.Button.LEFT && this.blocking && this.blockItem()) {
+
+                    if (this.canBlock()) {
+                        BlinkUtil.enableBlink();
+                    }
+
+                    PacketUtil.send(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
+                    event.cancel();
+                    this.blocking = false;
+
                     if (event.mouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
                         this.mouseOver = event.mouseOver;
                     }
@@ -96,22 +119,65 @@ public class AutoBlock extends Module {
     };
 
     @EventLink
+    public final Listener<EventPostClick> onPostClick = event -> {
+
+        switch (this.mode.get()) {
+
+            case PACKET -> {
+                if (event.button == EventPostClick.Button.LEFT && this.canBlock() && this.blockPacket.is(BlockPacket.PRE)) {
+
+                    if (event.mouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
+                        if (this.mouseOver != null) {
+                            PacketUtil.send(new C02PacketUseEntity(this.mouseOver.entityHit, this.mouseOver.hitVec));
+                            PacketUtil.send(new C02PacketUseEntity(this.mouseOver.entityHit, C02PacketUseEntity.Action.INTERACT));
+                            this.mouseOver = null;
+                        }
+
+                        PacketUtil.send(new C08PacketPlayerBlockPlacement(mc.thePlayer.getHeldItem()));
+                    }
+                }
+            }
+
+            case BLINK -> {
+                if (event.button == EventPostClick.Button.LEFT && this.canBlock()) {
+
+                    if (event.mouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && !this.blocking) {
+
+                        BlinkUtil.disableBlink();
+
+                        if (this.mouseOver != null) {
+                            PacketUtil.send(new C02PacketUseEntity(this.mouseOver.entityHit, this.mouseOver.hitVec));
+                            PacketUtil.send(new C02PacketUseEntity(this.mouseOver.entityHit, C02PacketUseEntity.Action.INTERACT));
+                            this.mouseOver = null;
+                        }
+
+                        PacketUtil.send(new C08PacketPlayerBlockPlacement(mc.thePlayer.getHeldItem()));
+                        this.blocking = true;
+                    }
+                }
+            }
+
+        }
+    };
+
+    @EventLink
     public final Listener<EventUpdate> onUpdate = event -> {
 
         if (this.canBlock()) {
-            // Creates the client side blocking animation
+            // Creates the client side blocking animation, will also apply slow-down
             mc.thePlayer.setItemInUse(mc.thePlayer.getHeldItem(), 72000);
         } else {
             this.mouseOver = null;
         }
 
         switch (this.mode.get()) {
-            case VANILLA -> {
+            case BLOCK -> {
                 if (this.canBlock()) {
                     PacketUtil.send(new C08PacketPlayerBlockPlacement(mc.thePlayer.getHeldItem()));
                     this.blocking = true;
                 }
             }
+
             case NCP -> {
                 if (this.blocking && this.blockItem()) {
                     PacketUtil.send(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
@@ -124,7 +190,23 @@ public class AutoBlock extends Module {
     @EventLink
     public final Listener<EventPostMotion> onPost = event -> {
         switch (this.mode.get()) {
-            case NCP, POST -> {
+
+            case PACKET -> {
+                if (this.canBlock() && this.blockPacket.is(BlockPacket.POST)) {
+
+                    if (this.mouseOver != null) {
+                        PacketUtil.send(new C02PacketUseEntity(this.mouseOver.entityHit, this.mouseOver.hitVec));
+                        PacketUtil.send(new C02PacketUseEntity(this.mouseOver.entityHit, C02PacketUseEntity.Action.INTERACT));
+                        this.mouseOver = null;
+                    }
+
+                    PacketUtil.send(new C08PacketPlayerBlockPlacement(mc.thePlayer.getHeldItem()));
+                    this.blocking = true;
+                }
+            }
+
+
+            case NCP -> {
                 if (!this.blocking && this.canBlock()) {
 
                     if (this.mouseOver != null) {
@@ -212,10 +294,16 @@ public class AutoBlock extends Module {
     }
 
     private enum Mode {
-        VANILLA,
+        BLOCK,
+        PACKET,
         @DisplayName("NCP") NCP,
-        POST,
-        BLINK
+        BLINK,
+        @Description("Enable the 'No Slow' option with this") FAKE
+    }
+
+    private enum BlockPacket {
+        PRE,
+        POST
     }
 
 }

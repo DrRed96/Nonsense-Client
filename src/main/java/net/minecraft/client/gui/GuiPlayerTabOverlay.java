@@ -70,7 +70,7 @@ public class GuiPlayerTabOverlay extends Gui
     public void renderPlayerlist(int width, Scoreboard scoreboardIn, ScoreObjective scoreObjectiveIn)
     {
         NetHandlerPlayClient nethandlerplayclient = this.mc.thePlayer.sendQueue;
-        List<NetworkPlayerInfo> list = field_175252_a.<NetworkPlayerInfo>sortedCopy(nethandlerplayclient.getPlayerInfoMap());
+        List<NetworkPlayerInfo> list = field_175252_a.sortedCopy(nethandlerplayclient.getPlayerInfoMap());
         int i = 0;
         int j = 0;
 
@@ -164,7 +164,7 @@ public class GuiPlayerTabOverlay extends Gui
             int i5 = k4 % i4;
             int j2 = j1 + l4 * i1 + l4 * 5;
             int k2 = k1 + i5 * 9;
-            drawRect(j2, k2, j2 + i1, k2 + 8, 553648127);
+            drawRect(j2, k2, j2 + i1, k2 + 8, 0x20ffffff);
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             GlStateManager.enableAlpha();
             GlStateManager.enableBlend();

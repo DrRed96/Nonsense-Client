@@ -43,20 +43,19 @@ public class ChatComponentText extends ChatComponentStyle
         return chatcomponenttext;
     }
 
-    public boolean equals(Object p_equals_1_)
+    public boolean equals(Object other)
     {
-        if (this == p_equals_1_)
+        if (this == other)
         {
             return true;
         }
-        else if (!(p_equals_1_ instanceof ChatComponentText))
+        else if (!(other instanceof ChatComponentText chatcomponenttext))
         {
             return false;
         }
         else
         {
-            ChatComponentText chatcomponenttext = (ChatComponentText)p_equals_1_;
-            return this.text.equals(chatcomponenttext.getChatComponentText_TextValue()) && super.equals(p_equals_1_);
+            return this.text.equals(chatcomponenttext.getChatComponentText_TextValue()) && super.equals(other);
         }
     }
 

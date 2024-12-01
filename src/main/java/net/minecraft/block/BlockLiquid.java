@@ -19,8 +19,6 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeColorHelper;
-import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.event.impl.EventBlockCollide;
 
 public abstract class BlockLiquid extends Block
 {
@@ -122,9 +120,7 @@ public abstract class BlockLiquid extends Block
 
     public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state)
     {
-        EventBlockCollide event = new EventBlockCollide(this, pos, null);
-        Nonsense.getEventBus().post(event);
-        return event.bounds;
+        return null;
     }
 
     /**

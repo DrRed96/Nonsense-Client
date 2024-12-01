@@ -1,5 +1,6 @@
 package wtf.bhopper.nonsense.gui.click.novoline;
 
+import net.minecraft.client.Minecraft;
 import wtf.bhopper.nonsense.module.property.Property;
 import wtf.bhopper.nonsense.module.property.impl.*;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
@@ -24,6 +25,7 @@ public class NovoGroup extends NovoComponent {
             if (p instanceof BooleanProperty booleanProperty) components.add(new NovoSwitch(this.panel, booleanProperty, this.indention + 1));
             else if (p instanceof NumberProperty numberProperty) components.add(new NovoSlider(this.panel, numberProperty, this.indention + 1));
             else if (p instanceof EnumProperty<?> enumProperty) components.add(new NovoSelector(this.panel, enumProperty, this.indention + 1));
+            else if (p instanceof StringProperty stringProperty) components.add(new NovoTextBox(this.panel, stringProperty, this.indention + 1));
             else if (p instanceof ColorProperty colorProperty) components.add(new NovoColorPicker(this.panel, colorProperty, this.indention + 1));
             else if (p instanceof GroupProperty groupProperty) components.add(new NovoGroup(this.panel, groupProperty, this.indention + 1));
             else if (p instanceof ButtonProperty buttonProperty) components.add(new NovoButton(this.panel, buttonProperty, this.indention + 1));
@@ -71,6 +73,12 @@ public class NovoGroup extends NovoComponent {
         if (this.mouseIntersecting(mouseX, mouseY, MOD_HEIGHT)) {
             if (button == 0) {
                 this.expanded = !this.expanded;
+                if (!this.expanded) {
+                    for (NovoComponent component : this.components) {
+                        component.onHidden();
+                    }
+                }
+                this.panel.gui.mod.sound.get().playSound(Minecraft.getMinecraft().getSoundHandler());
             }
         } else if (this.expanded) {
             for (NovoComponent component : this.components) {
@@ -90,6 +98,13 @@ public class NovoGroup extends NovoComponent {
     public void keyTyped(char typedChar, int keyCode) {
         for (NovoComponent component : this.components) {
             component.keyTyped(typedChar, keyCode);
+        }
+    }
+
+    @Override
+    public void onHidden() {
+        for (NovoComponent component : this.components) {
+            component.onHidden();
         }
     }
 }

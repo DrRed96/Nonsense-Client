@@ -23,6 +23,7 @@ public class DiscordRPCMod extends Module {
                 .build();
 
         DiscordRPC.discordInitialize(APPLICATION_ID, handlers, true);
+
         Runtime.getRuntime().addShutdownHook(new Thread(DiscordRPC::discordShutdown));
     }
 
@@ -36,6 +37,7 @@ public class DiscordRPCMod extends Module {
         DiscordRichPresence presence = new DiscordRichPresence
                 .Builder(String.format("%d/%d modules enabled", Nonsense.getModuleManager().amountEnabled(), Nonsense.getModuleManager().size()))
                 .setStartTimestamps(Nonsense.getStartTime())
+                .setBigImage("icon", "https://bhopper.wtf")
                 .build();
 
         DiscordRPC.discordUpdatePresence(presence);

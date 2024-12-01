@@ -6,16 +6,10 @@ import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
 import wtf.bhopper.nonsense.event.impl.EventKeyPress;
 import wtf.bhopper.nonsense.module.impl.combat.*;
-import wtf.bhopper.nonsense.module.impl.exploit.Disabler;
-import wtf.bhopper.nonsense.module.impl.exploit.PingSpoofer;
-import wtf.bhopper.nonsense.module.impl.exploit.Plugins;
-import wtf.bhopper.nonsense.module.impl.exploit.ServerLagger;
+import wtf.bhopper.nonsense.module.impl.exploit.*;
 import wtf.bhopper.nonsense.module.impl.movement.*;
 import wtf.bhopper.nonsense.module.impl.other.*;
-import wtf.bhopper.nonsense.module.impl.player.AutoRespawn;
-import wtf.bhopper.nonsense.module.impl.player.GameSpeed;
-import wtf.bhopper.nonsense.module.impl.player.NoFall;
-import wtf.bhopper.nonsense.module.impl.player.NoRotate;
+import wtf.bhopper.nonsense.module.impl.player.*;
 import wtf.bhopper.nonsense.module.impl.movement.Scaffold;
 import wtf.bhopper.nonsense.module.impl.visual.*;
 
@@ -36,6 +30,7 @@ public class ModuleManager {
                 new Velocity(),
                 new AutoBlock(),
                 new Criticals(),
+                new FastBow(),
                 new NoClickDelay(),
 
                 // Movement
@@ -50,6 +45,7 @@ public class ModuleManager {
                 new Jesus(),
                 new Phase(),
                 new Strafe(),
+                new NoJumpDelay(),
                 new MovementFix(),
 
                 // Player
@@ -57,30 +53,42 @@ public class ModuleManager {
                 new NoRotate(),
                 new AutoRespawn(),
                 new GameSpeed(),
+                new FastPlace(),
+                new AntiCactus(),
 
                 // Exploit
                 new PingSpoofer(),
                 new Disabler(),
                 new ServerLagger(),
+                new ClientSpoofer(),
                 new Plugins(),
+                new Popbob(),
 
                 // Other
+                new ChatFilter(),
                 new AntiAim(),
                 new AntiDesync(),
                 new PackSpoofer(),
+                new PartySpammer(),
+                new AutoHypixel(),
                 new AutoSpeedBuilders(),
+                new AutoPixelParty(),
                 new LightningDetector(),
                 new DiscordRPCMod(),
                 new Debugger(),
 
-                new HudMod(),
                 // Visual
+                new HudMod(),
                 new ClickGui(),
                 new Esp(),
                 new FullBright(),
                 new BlockOverlay(),
                 new ItemAnimations(),
                 new NoRender(),
+                new ScoreboardMod(),
+                new BetterChat(),
+                new Tweaks(),
+                new Tracers(),
                 new LagNotifier(),
                 new Capes(),
                 new ItemPhysics(),

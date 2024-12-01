@@ -6,6 +6,7 @@ import com.mojang.util.UUIDTypeAdapter;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.Session;
+import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.alt.loginthread.CookieLoginThread;
 import wtf.bhopper.nonsense.alt.loginthread.LoginDataCallback;
 import wtf.bhopper.nonsense.alt.mslogin.LoginData;
@@ -122,6 +123,7 @@ public class Alt {
                     this.uuid = loginData.uuid;
                     this.username = loginData.username;
                     Notification.send("Alt Manager", "Refreshed account: " + loginData.username, NotificationType.SUCCESS, 3000);
+                    Nonsense.getAltManager().trySave();
                 }, error -> {
                     GuiAltManager.lastError = error;
                     Notification.send("Alt Manager", "Failed to refresh account: " + error.getMessage(), NotificationType.ERROR, 3000);

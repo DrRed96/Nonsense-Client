@@ -1,5 +1,6 @@
 package wtf.bhopper.nonsense.util.render;
 
+import net.minecraft.util.MathHelper;
 import wtf.bhopper.nonsense.util.misc.MathUtil;
 
 import java.awt.*;
@@ -10,6 +11,7 @@ public class ColorUtil {
     public static final int WHITE = 0xFFFFFFFF;
     public static final int BLACK = 0xFF000000;
     public static final int GRAY = 0xFFAAAAAA;
+    public static final int RED = 0xFFFF0000;
 
     public static int dropShadowColor(int color) {
         return (color & 0xFCFCFC) >> 2 | color & 0xFF000000;
@@ -64,6 +66,14 @@ public class ColorUtil {
             awt = awt.darker();
         }
         return awt.getRGB();
+    }
+
+    public static int multiplySatBri(int color, float s, float b) {
+        Color awt = new Color(color, true);
+        float[] hsb = Color.RGBtoHSB(awt.getRed(), awt.getGreen(), awt.getBlue(), null);
+        hsb[1] = MathHelper.clamp_float(hsb[1] * s, 0.0F, 1.0F);
+        hsb[2] = MathHelper.clamp_float(hsb[2] * b, 0.0F, 1.0F);
+        return alpha(Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]), awt.getAlpha());
     }
 
 

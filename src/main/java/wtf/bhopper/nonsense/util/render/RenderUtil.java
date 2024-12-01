@@ -1,6 +1,7 @@
 package wtf.bhopper.nonsense.util.render;
 
 import net.minecraft.block.Block;
+import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.GLAllocation;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -15,7 +16,9 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.Timer;
 import org.lwjglx.opengl.Display;
+import org.lwjglx.opengl.GLSync;
 import org.lwjglx.util.glu.GLU;
+import wtf.bhopper.nonsense.module.property.impl.ColorProperty;
 import wtf.bhopper.nonsense.util.minecraft.BlockUtil;
 import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
 
@@ -287,6 +290,18 @@ public class RenderUtil implements MinecraftInstance {
         );
     }
 
+    public static void drawScaledString(FontRenderer font, String text, float x, float y, int color, boolean shadow, float scale) {
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x, y, 0.0F);
+        GlStateManager.scale(scale, scale, scale);
+        font.drawString(text, 0.0F, 0.0F, color, shadow);
+        GlStateManager.popMatrix();
+    }
+
+    public static void drawScaledString(String text, float x, float y, int color, boolean shadow, float scale) {
+        drawScaledString(mc.fontRendererObj, text, x, y, color, shadow, scale);
+    }
+
     public static void glColor(final int red, final int green, final int blue, final int alpha) {
         GlStateManager.color(red / 255F, green / 255F, blue / 255F, alpha / 255F);
     }
@@ -336,6 +351,11 @@ public class RenderUtil implements MinecraftInstance {
 
         GlStateManager.color(red, green, blue, alpha);
     }
+
+    public static void glColor(ColorProperty color) {
+        glColor(color.getRGB());
+    }
+
 
     private static final IntBuffer viewport = GLAllocation.createDirectIntBuffer(16);
     private static final FloatBuffer modelView = GLAllocation.createDirectFloatBuffer(16);

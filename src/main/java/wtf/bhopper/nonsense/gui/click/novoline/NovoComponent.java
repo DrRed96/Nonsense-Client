@@ -33,6 +33,8 @@ public abstract class NovoComponent {
     public abstract void mouseRelease(float mouseX, float mouseY, int button);
     public abstract void keyTyped(char typedChar, int keyCode);
 
+    public void onHidden() {}
+
     public void drawBackground(float yOff, float height, int color) {
         NVGHelper.drawRect(0.0F, yOff, WIDTH, height, OUTLINE_COLOR);
         NVGHelper.drawRect(1.0F, yOff, WIDTH - 2.0F, height, color);

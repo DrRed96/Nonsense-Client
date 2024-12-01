@@ -205,6 +205,7 @@ public class PlayerControllerMP {
         if (!this.mc.theWorld.getWorldBorder().contains(loc)) {
             return false;
         } else {
+
             if (this.currentGameType.isCreative()) {
                 this.netClientHandler.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.START_DESTROY_BLOCK, loc, face));
                 clickBlockCreative(this.mc, this, loc, face);

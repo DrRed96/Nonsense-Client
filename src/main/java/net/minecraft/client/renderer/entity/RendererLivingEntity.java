@@ -30,6 +30,8 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 import shadersmod.client.Shaders;
+import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.event.impl.EventRenderNameTag;
 
 public abstract class RendererLivingEntity<T extends EntityLivingBase> extends Render<T>
 {
@@ -551,6 +553,13 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
 
                     if (entity.isSneaking())
                     {
+                        EventRenderNameTag event = new EventRenderNameTag(entity, s);
+                        Nonsense.getEventBus().post(event);
+                        if (event.isCancelled()) {
+                            return;
+                        }
+                        s = event.name;
+
                         FontRenderer fontrenderer = this.getFontRendererFromRenderManager();
                         GlStateManager.pushMatrix();
                         GlStateManager.translate((float)x, (float)y + entity.height + 0.5F - (entity.isChild() ? entity.height / 2.0F : 0.0F), (float)z);

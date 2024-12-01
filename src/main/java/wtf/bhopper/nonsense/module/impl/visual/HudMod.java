@@ -3,6 +3,7 @@ package wtf.bhopper.nonsense.module.impl.visual;
 import net.minecraft.client.audio.ISound;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.util.ResourceLocation;
+import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.gui.screens.GuiMoveHudComponents;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
@@ -12,22 +13,28 @@ import wtf.bhopper.nonsense.module.property.impl.*;
 import wtf.bhopper.nonsense.util.render.ColorUtil;
 import wtf.bhopper.nonsense.util.render.Fonts;
 
-@ModuleInfo(name = "HUD", description = "Heads Up Display.", category = ModuleCategory.VISUAL)
+@SuppressWarnings("FieldCanBeLocal")
+@ModuleInfo(name = "HUD", description = "Heads Up Display.", category = ModuleCategory.VISUAL, toggled = true)
 public class HudMod extends Module {
 
     private final GroupProperty moduleListGroup = new GroupProperty("Module List", "Displays what modules are enabled");
     public final BooleanProperty moduleListEnabled = new BooleanProperty("Enable", "Enable the module list.", true);
-    public final EnumProperty<ModuleListColor> moduleListColorMode = new EnumProperty<>("Color Mode", "Color mode for the module list.", ModuleListColor.STATIC);
-    public final ColorProperty moduleListColor = new ColorProperty("Color", "Color of the module list.", ColorUtil.NONSENSE, () -> this.moduleListColorMode.isAny(ModuleListColor.STATIC, ModuleListColor.WAVY));
+    public final EnumProperty<ModuleListColor> moduleListColor = new EnumProperty<>("Color", "Color mode for the module list.", ModuleListColor.STATIC);
     public final BooleanProperty moduleListDisplay = new BooleanProperty("Display Names", "Uses display names.", true);
-    public final BooleanProperty moduleListSuffix = new BooleanProperty("Suffixes", "Displays module suffixes", true);
-    public final ColorProperty moduleListSuffixColor = new ColorProperty("Suffix Color", "Color for the suffixes", ColorUtil.GRAY, this.moduleListSuffix::get);
+    public final EnumProperty<ModuleListSuffix> moduleListSuffix = new EnumProperty<>("Suffixes", "Displays module suffixes", ModuleListSuffix.NORMAL);
+    public final ColorProperty moduleListSuffixColor = new ColorProperty("Suffix Color", "Color for the suffixes", ColorUtil.GRAY, () -> !this.moduleListSuffix.is(ModuleListSuffix.NONE));
     public final BooleanProperty moduleListLowerCase = new BooleanProperty("Lower Case", "Converts the module list to lower case.", false);
     public final NumberProperty moduleListFontSize = new NumberProperty("Font Size", "Font size for the module list", () -> !this.font.is(Font.MINECRAFT), 18.0, 11.0, 24.0, 1.0, NumberProperty.FORMAT_PIXELS);
     public final BooleanProperty moduleListAnimated = new BooleanProperty("Animated", "Animate the module list.", true);
     public final NumberProperty moduleListSpacing = new NumberProperty("Spacing", "Space between modules", 1.0, 0.0, 2.0, 1.0, NumberProperty.FORMAT_INT);
     public final NumberProperty moduleListBackground = new NumberProperty("Background", "Background transparency.", 120.0, 0.0, 255.0, 1.0, NumberProperty.FORMAT_INT);
     public final EnumProperty<ModuleListSorting> moduleListSorting = new EnumProperty<>("Sorting", "How the module list should be sorted", ModuleListSorting.LENGTH);
+
+    private final GroupProperty watermarkGroup = new GroupProperty("Watermark", "Client Watermark");
+    public final BooleanProperty watermarkEnabled = new BooleanProperty("Enabled", "Enables the water mark", true);
+    public final EnumProperty<WatermarkMode> watermarkMode = new EnumProperty<>("Mode", "Watermark mode.", WatermarkMode.EXHIBITION);
+    public final EnumProperty<WatermarkColorMode> watermarkColorMode = new EnumProperty<>("Color Mode", "Watermark color mode.", WatermarkColorMode.STATIC);
+    public final StringProperty watermarkText = new StringProperty("Text", "Oh look mom, I can rename a client!", Nonsense.NAME);
 
     private final GroupProperty information = new GroupProperty("Information", "HUD Information");
     public final BooleanProperty coords = new BooleanProperty("Coordinates", "Displays your coordinates.", true);
@@ -41,15 +48,18 @@ public class HudMod extends Module {
     public final BooleanProperty notificationEnabled = new BooleanProperty("Enabled", "Enables notifications.", true);
     public final EnumProperty<NotificationSound> notificationSound = new EnumProperty<>("Sound", "Sound that gets played when you get a notification.", NotificationSound.POP);
 
+    private final GroupProperty targetHudGroup = new GroupProperty("Target HUD", "Displays your current target.");
+    public final BooleanProperty targetHudEnabled = new BooleanProperty("Enabled", "Enables Target HUD", true);
+    public final EnumProperty<TargetHud> targetHudMode = new EnumProperty<>("Mode", "Target HUD mode", TargetHud.ASTOLFO);
+
     public final ColorProperty color = new ColorProperty("Color", "HUD color.", ColorUtil.NONSENSE);
     public final EnumProperty<Font> font = new EnumProperty<>("Font", "Which font to use for the HUD", Font.ARIAL);
     public final NumberProperty fontSize = new NumberProperty("Font Size", "Size of the custom font", () -> !this.font.is(Font.MINECRAFT), 18.0, 11.0, 24.0, 1.0, NumberProperty.FORMAT_PIXELS);
     public final ButtonProperty moveComponents = new ButtonProperty("Move Components", "Click to move the HUD components.", () -> mc.displayGuiScreen(new GuiMoveHudComponents()));
     public final BooleanProperty hideInF3 = new BooleanProperty("Hide In F3", "Hides the HUD while in F3", true);
-
+    
     public HudMod() {
         this.moduleListGroup.addProperties(this.moduleListEnabled,
-                this.moduleListColorMode,
                 this.moduleListColor,
                 this.moduleListDisplay,
                 this.moduleListSuffix,
@@ -60,10 +70,11 @@ public class HudMod extends Module {
                 this.moduleListSpacing,
                 this.moduleListBackground,
                 this.moduleListSorting);
+        this.watermarkGroup.addProperties(this.watermarkEnabled, this.watermarkMode, this.watermarkColorMode, this.watermarkText);
         this.information.addProperties(this.coords, this.angles, this.speed, this.tps, this.pots, this.fps);
         this.notificationGroup.addProperties(this.notificationEnabled, this.notificationSound);
-        this.addProperties(this.moduleListGroup, this.information, this.notificationGroup, this.color, this.font, this.fontSize, this.moveComponents, this.hideInF3);
-        this.toggle(true);
+        this.targetHudGroup.addProperties(this.targetHudEnabled, this.targetHudMode);
+        this.addProperties(this.moduleListGroup, this.watermarkGroup, this.information, this.notificationGroup, this.targetHudGroup, this.color, this.font, this.fontSize, this.moveComponents, this.hideInF3);
     }
 
     public enum ModuleListColor {
@@ -78,9 +89,32 @@ public class HudMod extends Module {
         TRANS
     }
 
+    public enum ModuleListSuffix {
+        NORMAL,
+        HYPHEN,
+        BRACKET,
+        SQUARE,
+        ANGLE,
+        CURLY,
+        NONE
+    }
+
     public enum ModuleListSorting {
         LENGTH,
         ALPHABETICAL
+    }
+
+    public enum WatermarkMode {
+        EXHIBITION
+    }
+
+    public enum WatermarkColorMode {
+        WHITE,
+        STATIC,
+        BREATHING,
+        SOLID,
+        RAINBOW,
+        RAINBOW_2
     }
 
     public enum Speed {
@@ -107,6 +141,11 @@ public class HudMod extends Module {
         public ISound createSoundRecord()  {
             return PositionedSoundRecord.create(this.sound, this.pitch);
         }
+    }
+
+    public enum TargetHud {
+        ASTOLFO,
+        RAVEN
     }
 
     public enum Font {

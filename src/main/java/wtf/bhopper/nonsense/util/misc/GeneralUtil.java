@@ -10,11 +10,13 @@ import java.nio.charset.StandardCharsets;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
+import java.util.regex.Pattern;
 
 public class GeneralUtil {
 
     public static final String ALPHABET = "abcdefghijklmnopqrstuvwxyz";
     public static final String CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+    public static final Pattern LINK_REGEX = Pattern.compile("^(?:(ftp|http|https)://)?(?:[\\w-]+\\.)+[a-z]{2,6}$");
 
     public static String capitalize(String str) {
         char prevChar = ' ';

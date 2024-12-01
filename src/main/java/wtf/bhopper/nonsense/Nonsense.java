@@ -7,13 +7,12 @@ import org.apache.logging.log4j.Logger;
 import wtf.bhopper.nonsense.alt.AltManager;
 import wtf.bhopper.nonsense.command.CommandManager;
 import wtf.bhopper.nonsense.config.ConfigManager;
-import wtf.bhopper.nonsense.event.Event;
 import wtf.bhopper.nonsense.event.bus.EventBus;
-import wtf.bhopper.nonsense.gui.click.novoline.NovoGui;
 import wtf.bhopper.nonsense.gui.hud.Hud;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleManager;
 import wtf.bhopper.nonsense.module.impl.visual.ClickGui;
+import wtf.bhopper.nonsense.util.minecraft.BlinkUtil;
 import wtf.bhopper.nonsense.util.minecraft.TickRate;
 import wtf.bhopper.nonsense.util.render.Fonts;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
@@ -30,7 +29,7 @@ public enum Nonsense {
     public static final Gson GSON = new Gson();
 
     // Event Bus
-    private EventBus<Event> eventBus;
+    private EventBus eventBus;
 
     // Managers
     private ModuleManager moduleManager;
@@ -42,9 +41,9 @@ public enum Nonsense {
     private Hud hud;
 
     // Util
+    private long startTime;
     private File dataDir;
     private TickRate tickRate;
-    private long startTime;
 
     public void setup() {
         LOGGER.info("Loading {} {}", NAME, VERSION);
@@ -55,7 +54,7 @@ public enum Nonsense {
             this.dataDir.mkdirs();
         }
 
-        this.eventBus = new EventBus<>();
+        this.eventBus = new EventBus();
         this.moduleManager = new ModuleManager();
         this.commandManager = new CommandManager();
         this.configManager = new ConfigManager();
@@ -68,11 +67,12 @@ public enum Nonsense {
         module(ClickGui.class).initGuis();
 
         this.tickRate = new TickRate();
+        BlinkUtil.init();
 
         this.configManager.loadDefaultConfig();
     }
 
-    public static EventBus<Event> getEventBus() {
+    public static EventBus getEventBus() {
         return INSTANCE.eventBus;
     }
 
@@ -100,16 +100,16 @@ public enum Nonsense {
         return INSTANCE.hud;
     }
 
+    public static long getStartTime() {
+        return INSTANCE.startTime;
+    }
+
     public static File getDataDir() {
         return INSTANCE.dataDir;
     }
 
     public static TickRate getTickRate() {
         return INSTANCE.tickRate;
-    }
-
-    public static long getStartTime() {
-        return INSTANCE.startTime;
     }
 
 }

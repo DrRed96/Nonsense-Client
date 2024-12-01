@@ -16,11 +16,13 @@ import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
 
 public class NovoGui extends GuiScreen {
 
+    public final ClickGui mod;
     private final List<NovoPanel> panels = new ArrayList<>();
 
     protected String toolTip = null;
 
     public NovoGui() {
+        this.mod = Nonsense.module(ClickGui.class);
         for (ModuleCategory category : ModuleCategory.values()) {
             panels.add(new NovoPanel(this, category, 10 + category.ordinal() * (NovoComponent.WIDTH + 10)));
         }

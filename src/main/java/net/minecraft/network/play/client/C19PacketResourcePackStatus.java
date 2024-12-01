@@ -51,6 +51,14 @@ public class C19PacketResourcePackStatus implements Packet<INetHandlerPlayServer
         handler.handleResourcePackStatus(this);
     }
 
+    public String getHash() {
+        return this.hash;
+    }
+
+    public Action getStatus() {
+        return this.status;
+    }
+
     public enum Action
     {
         SUCCESSFULLY_LOADED,

@@ -1,5 +1,6 @@
 package wtf.bhopper.nonsense.gui.click.novoline;
 
+import net.minecraft.client.Minecraft;
 import org.lwjglx.opengl.Display;
 import org.lwjglx.util.vector.Vector2f;
 import wtf.bhopper.nonsense.module.impl.visual.ClickGui;
@@ -46,6 +47,7 @@ public class NovoButton extends NovoComponent {
             return;
         }
         if (this.mouseIntersecting(mouseX, mouseY, MOD_HEIGHT) && button == 0) {
+            this.panel.gui.mod.sound.get().playSound(Minecraft.getMinecraft().getSoundHandler());
             this.property.execute();
         }
     }

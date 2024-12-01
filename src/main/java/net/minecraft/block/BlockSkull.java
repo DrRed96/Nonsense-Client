@@ -37,20 +37,14 @@ public class BlockSkull extends BlockContainer
 {
     public static final PropertyDirection FACING = PropertyDirection.create("facing");
     public static final PropertyBool NODROP = PropertyBool.create("nodrop");
-    private static final Predicate<BlockWorldState> IS_WITHER_SKELETON = new Predicate<BlockWorldState>()
-    {
-        public boolean apply(BlockWorldState p_apply_1_)
-        {
-            return p_apply_1_.getBlockState() != null && p_apply_1_.getBlockState().getBlock() == Blocks.skull && p_apply_1_.getTileEntity() instanceof TileEntitySkull && ((TileEntitySkull)p_apply_1_.getTileEntity()).getSkullType() == 1;
-        }
-    };
+    private static final Predicate<BlockWorldState> IS_WITHER_SKELETON = state -> state.getBlockState() != null && state.getBlockState().getBlock() == Blocks.skull && state.getTileEntity() instanceof TileEntitySkull && ((TileEntitySkull)state.getTileEntity()).getSkullType() == 1;
     private BlockPattern witherBasePattern;
     private BlockPattern witherPattern;
 
     protected BlockSkull()
     {
         super(Material.circuits);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(NODROP, Boolean.valueOf(false)));
+        this.setDefaultState(this.blockState.getBaseState().withProperty(FACING, EnumFacing.NORTH).withProperty(NODROP, Boolean.FALSE));
         this.setBlockBounds(0.25F, 0.0F, 0.25F, 0.75F, 0.5F, 0.75F);
     }
 
@@ -77,27 +71,12 @@ public class BlockSkull extends BlockContainer
 
     public void setBlockBoundsBasedOnState(IBlockAccess worldIn, BlockPos pos)
     {
-        switch ((EnumFacing)worldIn.getBlockState(pos).getValue(FACING))
-        {
-            case UP:
-            default:
-                this.setBlockBounds(0.25F, 0.0F, 0.25F, 0.75F, 0.5F, 0.75F);
-                break;
-
-            case NORTH:
-                this.setBlockBounds(0.25F, 0.25F, 0.5F, 0.75F, 0.75F, 1.0F);
-                break;
-
-            case SOUTH:
-                this.setBlockBounds(0.25F, 0.25F, 0.0F, 0.75F, 0.75F, 0.5F);
-                break;
-
-            case WEST:
-                this.setBlockBounds(0.5F, 0.25F, 0.25F, 1.0F, 0.75F, 0.75F);
-                break;
-
-            case EAST:
-                this.setBlockBounds(0.0F, 0.25F, 0.25F, 0.5F, 0.75F, 0.75F);
+        switch (worldIn.getBlockState(pos).getValue(FACING)) {
+            default -> this.setBlockBounds(0.25F, 0.0F, 0.25F, 0.75F, 0.5F, 0.75F);
+            case NORTH -> this.setBlockBounds(0.25F, 0.25F, 0.5F, 0.75F, 0.75F, 1.0F);
+            case SOUTH -> this.setBlockBounds(0.25F, 0.25F, 0.0F, 0.75F, 0.75F, 0.5F);
+            case WEST -> this.setBlockBounds(0.5F, 0.25F, 0.25F, 1.0F, 0.75F, 0.75F);
+            case EAST -> this.setBlockBounds(0.0F, 0.25F, 0.25F, 0.5F, 0.75F, 0.75F);
         }
     }
 
@@ -113,7 +92,7 @@ public class BlockSkull extends BlockContainer
      */
     public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ, int meta, EntityLivingBase placer)
     {
-        return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing()).withProperty(NODROP, Boolean.valueOf(false));
+        return this.getDefaultState().withProperty(FACING, placer.getHorizontalFacing()).withProperty(NODROP, Boolean.FALSE);
     }
 
     /**
@@ -146,7 +125,7 @@ public class BlockSkull extends BlockContainer
     {
         if (player.capabilities.isCreativeMode)
         {
-            state = state.withProperty(NODROP, Boolean.valueOf(true));
+            state = state.withProperty(NODROP, Boolean.TRUE);
             worldIn.setBlockState(pos, state, 4);
         }
 

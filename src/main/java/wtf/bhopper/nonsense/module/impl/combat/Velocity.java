@@ -1,6 +1,7 @@
 package wtf.bhopper.nonsense.module.impl.combat;
 
 import net.minecraft.network.play.server.S12PacketEntityVelocity;
+import net.minecraft.network.play.server.S27PacketExplosion;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
 import wtf.bhopper.nonsense.event.impl.EventReceivePacket;
@@ -13,7 +14,7 @@ import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
 import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
 
 @ModuleInfo(name = "Velocity",
-        description = "Reduces/removes knockback.",
+        description = "Reduces/removes knock-back.",
         category = ModuleCategory.COMBAT)
 public class Velocity extends Module {
 
@@ -90,6 +91,20 @@ public class Velocity extends Module {
                         mc.thePlayer.motionY = (double)packet.getMotionY() / 8000.0;
                     }
                 }
+            }
+        } else if (event.packet instanceof S27PacketExplosion packet) {
+            switch (this.mode.get()) {
+                case PACKET -> packet.setMotion(
+                        packet.getMotionX() * this.horizontal.getFloat(),
+                        packet.getMotionY() * this.vertical.getFloat(),
+                        packet.getMotionZ() * this.horizontal.getFloat()
+                );
+
+                case AIR -> packet.setMotion(
+                        packet.getMotionX() * this.horizontal.getFloat(),
+                        packet.getMotionY(),
+                        packet.getMotionZ() * this.horizontal.getFloat()
+                );
             }
         }
 

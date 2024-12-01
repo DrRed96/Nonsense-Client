@@ -11,13 +11,15 @@ import java.io.IOException;
 public class JsonUtil {
 
     public static void writeToFile(JsonObject object, File file) throws IOException {
-        FileWriter writer = new FileWriter(file);
-        writer.write(object.toString());
-        writer.close();
+        try (FileWriter writer = new FileWriter(file)) {
+            writer.write(object.toString());
+        }
     }
 
     public static JsonObject readFromFile(File file) throws IOException {
-        return new JsonParser().parse(new FileReader(file)).getAsJsonObject();
+        try (FileReader reader = new FileReader(file)) {
+            return new JsonParser().parse(reader).getAsJsonObject();
+        }
     }
 
 }

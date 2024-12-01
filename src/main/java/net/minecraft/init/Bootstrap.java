@@ -136,7 +136,7 @@ public class Bootstrap
             {
                 EnumFacing enumfacing = BlockDispenser.getFacing(source.getBlockMetadata());
                 double d0 = source.getX() + (double)enumfacing.getFrontOffsetX();
-                double d1 = (double)((float)source.getBlockPos().getY() + 0.2F);
+                double d1 = (float)source.getBlockPos().getY() + 0.2F;
                 double d2 = source.getZ() + (double)enumfacing.getFrontOffsetZ();
                 Entity entity = ItemMonsterPlacer.spawnCreature(source.getWorld(), stack.getMetadata(), d0, d1, d2);
 

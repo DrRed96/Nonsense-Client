@@ -1,11 +1,14 @@
 package wtf.bhopper.nonsense.util.minecraft;
 
+import io.netty.buffer.Unpooled;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.Packet;
+import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.event.impl.EventPostClick;
 import wtf.bhopper.nonsense.event.impl.EventPreClick;
 import wtf.bhopper.nonsense.module.impl.other.Debugger;
 
@@ -58,6 +61,8 @@ public class PacketUtil implements MinecraftInstance {
                         mc.leftClickCounter = 10;
                     }
             }
+
+            Nonsense.getEventBus().post(new EventPostClick(EventPostClick.Button.LEFT, true, event.mouseOver));
 
         }
     }
@@ -118,7 +123,17 @@ public class PacketUtil implements MinecraftInstance {
                     mc.entityRenderer.itemRenderer.resetEquippedProgress2();
                 }
             }
+
+            Nonsense.getEventBus().post(new EventPostClick(EventPostClick.Button.RIGHT, true, event.mouseOver));
         }
+    }
+
+    public static PacketBuffer createStringBuffer(String data) {
+        return new PacketBuffer(Unpooled.buffer()).writeString(data);
+    }
+
+    public static PacketBuffer createByteBuffer(String data) {
+        return new PacketBuffer(Unpooled.wrappedBuffer(data.getBytes()));
     }
 
 }

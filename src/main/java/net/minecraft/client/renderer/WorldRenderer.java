@@ -38,9 +38,8 @@ public class WorldRenderer
     private double zOffset;
     private VertexFormat vertexFormat;
     private boolean isDrawing;
-    private static final String __OBFID = "CL_00000942";
     private EnumWorldBlockLayer blockLayer = null;
-    private boolean[] drawnIcons = new boolean[256];
+    private boolean[] drawnIcons = new boolean[0x100];
     private TextureAtlasSprite[] quadSprites = null;
     private TextureAtlasSprite[] quadSpritesPrev = null;
     private TextureAtlasSprite quadSprite = null;

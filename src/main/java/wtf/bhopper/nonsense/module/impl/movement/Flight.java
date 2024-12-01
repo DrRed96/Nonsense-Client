@@ -1,5 +1,6 @@
 package wtf.bhopper.nonsense.module.impl.movement;
 
+import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C0BPacketEntityAction;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import wtf.bhopper.nonsense.event.bus.EventLink;
@@ -12,6 +13,7 @@ import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.annotations.Description;
+import wtf.bhopper.nonsense.module.property.annotations.DisplayName;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
@@ -33,12 +35,13 @@ public class Flight extends Module {
     private final NumberProperty vSpeed = new NumberProperty("Vertical", "Horizontal Speed", () -> this.mode.isAny(Mode.VANILLA, Mode.MINIBLOX), 0.5, 0.1, 10.0, 0.01);
 
     private final GroupProperty boostGroup = new GroupProperty("Boost", "Boost settings", () -> this.mode.isAny(Mode.BOOST));
-    private final BooleanProperty quickStop = new BooleanProperty("Quick Stop", "Set motion to 0 when you stop flying", true);
-    private final BooleanProperty useTimer = new BooleanProperty("Timer", "Use timer to increase speed", false);
-    private final NumberProperty timerFactor = new NumberProperty("Timer Factor", "Timer speed", useTimer::get, 1.5, 0.1, 3.0, 0.05);
-    private final NumberProperty timerTime = new NumberProperty("Timer Time", "How long to use timer for", useTimer::get, 500, 1, 3000, 1, NumberProperty.FORMAT_MS);
-    private final NumberProperty timerStart = new NumberProperty("Timer Start", "Timer start factor", useTimer::get, 1.0, 0.1, 3.0, 0.05);
+    private final BooleanProperty useBoost = new BooleanProperty("Enable", "Enables boost fly.", false, () -> false);
+    private final EnumProperty<Timer> useTimer = new EnumProperty<>("Timer", "Use timer to increase speed", Timer.NONE);
+    private final NumberProperty timerFactor = new NumberProperty("Timer Factor", "Timer speed", () -> !useTimer.is(Timer.NONE), 1.5, 0.1, 5.0, 0.05);
+    private final NumberProperty timerTime = new NumberProperty("Timer Time", "How long to use timer for", () -> useTimer.is(Timer.ON_BOOST), 500, 1, 3000, 1, NumberProperty.FORMAT_MS);
     private final EnumProperty<Damage> damage = new EnumProperty<>("Damage", "Causes damage which can disable speed checks", Damage.PACKET);
+    private final NumberProperty timerStart = new NumberProperty("Timer Start", "Timer start factor.\nCan be set lower to help bypass timer checks when using damage.", 1.0, 0.1, 3.0, 0.05);
+    private final BooleanProperty quickStop = new BooleanProperty("Quick Stop", "Set motion to 0 when you stop flying", true);
 
     private final NumberProperty viewBobbing = new NumberProperty("View Bobbing", "View bobbing while flying", 0.0, 0.0, 1.0, 0.05);
 
@@ -53,7 +56,7 @@ public class Flight extends Module {
     private final Clock timerClock = new Clock();
 
     public Flight() {
-        this.boostGroup.addProperties(this.quickStop, this.useTimer, this.timerFactor, this.timerTime, this.timerStart, this.damage);
+        this.boostGroup.addProperties(this.useBoost, this.useTimer, this.timerFactor, this.timerTime, this.damage, this.timerStart, this.quickStop);
         this.addProperties(this.mode, this.speedSet, this.hSpeed, this.vSpeed, this.boostGroup, this.viewBobbing);
         this.setSuffix(this.mode::getDisplayValue);
     }
@@ -78,9 +81,7 @@ public class Flight extends Module {
                 }
             }
             case BOOST -> {
-                if (this.useTimer.get()) {
-                    mc.timer.timerSpeed = 1.0F;
-                }
+                mc.timer.timerSpeed = 1.0F;
 
                 if (this.quickStop.get()) {
                     mc.thePlayer.motionX = mc.thePlayer.motionZ = 0.0;
@@ -121,6 +122,18 @@ public class Flight extends Module {
                 }
             }
 
+            case NCP_GLIDE -> {
+                MoveUtil.vertical(event, -0.0222);
+                PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(
+                        mc.thePlayer.posX + mc.thePlayer.motionX,
+                        mc.thePlayer.posY + mc.thePlayer.motionY,
+                        mc.thePlayer.posZ + mc.thePlayer.motionZ,
+                        false
+                ));
+                PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, false));
+                PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, true));
+            }
+
             case MINIBLOX -> {
                 if (this.ticks >= 6) {
                     MoveUtil.setSpeed(event, 0.0);
@@ -141,29 +154,26 @@ public class Flight extends Module {
                 switch (this.stage) {
                     case 0 -> {
                         if (MoveUtil.isMoving()) {
-                            if (this.useTimer.get()) {
-                                mc.timer.timerSpeed = this.timerStart.getFloat();
-                            }
-
-                            boolean start = switch (this.damage.get()) {
+                            if (switch (this.damage.get()) {
                                 case PACKET -> PlayerUtil.selfDamage(0.0625, true, true);
                                 case LOW -> PlayerUtil.selfDamageLow();
                                 case NONE -> mc.thePlayer.onGround;
-                            };
-
-                            if (start) {
+                            }) {
                                 this.stage = 1;
                                 this.speed = this.speedSet.get();
                                 MoveUtil.vertical(event, MoveUtil.jumpHeight());
+                                mc.timer.timerSpeed = this.timerStart.getFloat();
                             }
                         }
                     }
 
                     case 1 -> {
-                        if (this.useTimer.get()) {
+                        if (this.useTimer.isAny(Timer.ON_BOOST, Timer.ALWAYS)) {
                             this.timerClock.reset();
                             this.stopTimer = false;
                             mc.timer.timerSpeed = this.timerFactor.getFloat();
+                        } else {
+                            mc.timer.timerSpeed = 1.0F;
                         }
 
                         MoveUtil.setSpeed(event, speed);
@@ -172,8 +182,8 @@ public class Flight extends Module {
                     }
 
                     case 2 -> {
-                        if (this.useTimer.get()) {
-                            if (this.timerClock.hasReached(this.timerTime.getInt())) {
+                        if (this.useTimer.isAny(Timer.ON_BOOST, Timer.ALWAYS)) {
+                            if (this.timerClock.hasReached(this.timerTime.getInt()) && !this.useTimer.is(Timer.ALWAYS)) {
                                 if (!this.stopTimer) {
                                     this.stopTimer = true;
                                     mc.timer.timerSpeed = 1.0F;
@@ -195,6 +205,13 @@ public class Flight extends Module {
 
     @EventLink
     public final Listener<EventPreMotion> onPre = event -> {
+
+        switch (this.mode.get()) {
+            case NCP_GLIDE -> {
+                event.onGround = true;
+            }
+        }
+
         this.lastDist = MoveUtil.lastDistance();
 
         if (this.viewBobbing.getFloat() != 0.0F && MoveUtil.isMoving()) {
@@ -216,9 +233,17 @@ public class Flight extends Module {
 
     private enum Mode {
         VANILLA,
+        @DisplayName("NCP Glide") NCP_GLIDE,
         MINIBLOX,
         @Description("\"Wow arithmo i like how flokcks go ZOOM make me ZOOOM.\" - Brain dead Kid") BOOST
     }
+
+    enum Timer {
+        ON_BOOST,
+        ALWAYS,
+        NONE
+    }
+
 
     enum Damage {
         PACKET,

@@ -22,6 +22,8 @@ import optifine.Config;
 
 import org.lwjgl.opengl.GL11;
 import shadersmod.client.Shaders;
+import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.event.impl.EventRenderNameTag;
 
 public abstract class Render<T extends Entity>
 {
@@ -339,8 +341,15 @@ public abstract class Render<T extends Entity>
     /**
      * Renders an entity's name above its head
      */
-    protected void renderLivingLabel(T entityIn, String str, double x, double y, double z, int maxDistance)
+    protected void renderLivingLabel(T entityIn, String strIn, double x, double y, double z, int maxDistance)
     {
+        EventRenderNameTag event = new EventRenderNameTag(entityIn, strIn);
+        Nonsense.getEventBus().post(event);
+        if (event.isCancelled()) {
+            return;
+        }
+
+        String str = event.name;
         double d0 = entityIn.getDistanceSqToEntity(this.renderManager.livingPlayer);
 
         if (d0 <= (double)(maxDistance * maxDistance))

@@ -1,5 +1,6 @@
 package wtf.bhopper.nonsense.gui.click.novoline;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import org.lwjglx.opengl.Display;
 import wtf.bhopper.nonsense.module.property.impl.ColorProperty;
@@ -116,6 +117,7 @@ public class NovoColorPicker extends NovoComponent {
         }
         if (this.mouseIntersecting(mouseX, mouseY, MOD_HEIGHT) && button == 0) {
             this.expanded = !this.expanded;
+            this.panel.gui.mod.sound.get().playSound(Minecraft.getMinecraft().getSoundHandler());
         } else {
 
             if (this.mouseIntersecting(mouseX, mouseY, PICKER_OFFSET, this.yOff + MOD_HEIGHT + 7.0F, 120.0F, 120.0F)) {

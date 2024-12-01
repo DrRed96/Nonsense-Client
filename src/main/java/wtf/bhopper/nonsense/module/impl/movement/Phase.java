@@ -23,11 +23,12 @@ public class Phase extends Module {
 
     @EventLink
     public final Listener<EventBlockCollide> onCollide = event -> {
-
         switch (this.mode.get()) {
-            case VANILLA -> event.bounds = null;
+            case VANILLA -> {
+                mc.thePlayer.noClip = true;
+                event.bounds = null;
+            }
         }
-
     };
 
     @EventLink

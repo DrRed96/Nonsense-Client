@@ -220,35 +220,35 @@ public class EnchantmentHelper
         return enchantmentModifierLiving.livingModifier;
     }
 
-    public static void applyThornEnchantments(EntityLivingBase p_151384_0_, Entity p_151384_1_)
+    public static void applyThornEnchantments(EntityLivingBase user, Entity attacker)
     {
-        ENCHANTMENT_ITERATOR_HURT.attacker = p_151384_1_;
-        ENCHANTMENT_ITERATOR_HURT.user = p_151384_0_;
+        ENCHANTMENT_ITERATOR_HURT.attacker = attacker;
+        ENCHANTMENT_ITERATOR_HURT.user = user;
 
-        if (p_151384_0_ != null)
+        if (user != null)
         {
-            applyEnchantmentModifierArray(ENCHANTMENT_ITERATOR_HURT, p_151384_0_.getInventory());
+            applyEnchantmentModifierArray(ENCHANTMENT_ITERATOR_HURT, user.getInventory());
         }
 
-        if (p_151384_1_ instanceof EntityPlayer)
+        if (attacker instanceof EntityPlayer)
         {
-            applyEnchantmentModifier(ENCHANTMENT_ITERATOR_HURT, p_151384_0_.getHeldItem());
+            applyEnchantmentModifier(ENCHANTMENT_ITERATOR_HURT, user.getHeldItem());
         }
     }
 
-    public static void applyArthropodEnchantments(EntityLivingBase p_151385_0_, Entity p_151385_1_)
+    public static void applyArthropodEnchantments(EntityLivingBase user, Entity target)
     {
-        ENCHANTMENT_ITERATOR_DAMAGE.user = p_151385_0_;
-        ENCHANTMENT_ITERATOR_DAMAGE.target = p_151385_1_;
+        ENCHANTMENT_ITERATOR_DAMAGE.user = user;
+        ENCHANTMENT_ITERATOR_DAMAGE.target = target;
 
-        if (p_151385_0_ != null)
+        if (user != null)
         {
-            applyEnchantmentModifierArray(ENCHANTMENT_ITERATOR_DAMAGE, p_151385_0_.getInventory());
+            applyEnchantmentModifierArray(ENCHANTMENT_ITERATOR_DAMAGE, user.getInventory());
         }
 
-        if (p_151385_0_ instanceof EntityPlayer)
+        if (user instanceof EntityPlayer)
         {
-            applyEnchantmentModifier(ENCHANTMENT_ITERATOR_DAMAGE, p_151385_0_.getHeldItem());
+            applyEnchantmentModifier(ENCHANTMENT_ITERATOR_DAMAGE, user.getHeldItem());
         }
     }
 

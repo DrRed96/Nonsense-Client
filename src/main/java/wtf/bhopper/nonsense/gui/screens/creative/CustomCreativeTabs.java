@@ -209,6 +209,83 @@ public class CustomCreativeTabs extends CreativeTabs implements MinecraftInstanc
                 .addEnchantment(Enchantment.looting, 10)
                 .build());
 
+        items.add(ItemBuilder.of(Items.diamond_pickaxe)
+                .addEnchantment(Enchantment.efficiency)
+                .addEnchantment(Enchantment.fortune)
+                .addEnchantment(Enchantment.unbreaking)
+                .build());
+
+        items.add(ItemBuilder.of(Items.diamond_pickaxe)
+                .addEnchantment(Enchantment.efficiency)
+                .addEnchantment(Enchantment.silkTouch)
+                .addEnchantment(Enchantment.unbreaking)
+                .build());
+
+        items.add(ItemBuilder.of(Items.diamond_axe)
+                .addEnchantment(Enchantment.efficiency)
+                .addEnchantment(Enchantment.silkTouch)
+                .addEnchantment(Enchantment.unbreaking)
+                .build());
+
+        items.add(ItemBuilder.of(Items.diamond_shovel)
+                .addEnchantment(Enchantment.efficiency)
+                .addEnchantment(Enchantment.silkTouch)
+                .addEnchantment(Enchantment.unbreaking)
+                .build());
+
+        items.add(ItemBuilder.of(Items.diamond_hoe)
+                .addEnchantment(Enchantment.efficiency)
+                .addEnchantment(Enchantment.silkTouch)
+                .addEnchantment(Enchantment.unbreaking)
+                .build());
+
+        items.add(ItemBuilder.of(Items.diamond_helmet)
+                .addEnchantment(Enchantment.protection)
+                .addEnchantment(Enchantment.thorns)
+                .addEnchantment(Enchantment.unbreaking)
+                .addEnchantment(Enchantment.respiration)
+                .addEnchantment(Enchantment.aquaAffinity)
+                .build());
+
+        items.add(ItemBuilder.of(Items.diamond_chestplate)
+                .addEnchantment(Enchantment.protection)
+                .addEnchantment(Enchantment.thorns)
+                .addEnchantment(Enchantment.unbreaking)
+                .build());
+
+        items.add(ItemBuilder.of(Items.diamond_leggings)
+                .addEnchantment(Enchantment.protection)
+                .addEnchantment(Enchantment.thorns)
+                .addEnchantment(Enchantment.unbreaking)
+                .build());
+
+        items.add(ItemBuilder.of(Items.diamond_boots)
+                .addEnchantment(Enchantment.protection)
+                .addEnchantment(Enchantment.thorns)
+                .addEnchantment(Enchantment.unbreaking)
+                .addEnchantment(Enchantment.featherFalling)
+                .addEnchantment(Enchantment.depthStrider)
+                .build());
+
+        items.add(ItemBuilder.of(Items.bow)
+                .addEnchantment(Enchantment.power)
+                .addEnchantment(Enchantment.unbreaking)
+                .addEnchantment(Enchantment.punch)
+                .addEnchantment(Enchantment.flame)
+                .addEnchantment(Enchantment.infinity)
+                .build());
+
+        items.add(ItemBuilder.of(Items.fishing_rod)
+                .addEnchantment(Enchantment.unbreaking)
+                .addEnchantment(Enchantment.lure)
+                .addEnchantment(Enchantment.luckOfTheSea)
+                .addEnchantment(Enchantment.knockback)
+                .build());
+
+        items.add(ItemBuilder.of(Items.flint_and_steel)
+                .addEnchantment(Enchantment.unbreaking)
+                .build());
+
     });
 
     public static final CustomCreativeTabs tabPotions = new CustomCreativeTabs(3, "Potions", Items.potionitem, items -> {
@@ -515,13 +592,12 @@ public class CustomCreativeTabs extends CreativeTabs implements MinecraftInstanc
         ItemBuilder bigBook = ItemBuilder.of(Items.enchanted_book).setDisplayName("BIG BOOK");
         for (Enchantment enchantment : Enchantment.enchantmentsList) {
             if (enchantment != null) {
-                bigBook.addStoredEnchantment(enchantment, enchantment.getMaxLevel());
+                bigBook.addStoredEnchantment(enchantment);
             }
         }
         items.add(bigBook.build());
 
         ItemBuilder biggerBook = ItemBuilder.of(Items.enchanted_book).setDisplayName("BIGGER BOOK");
-
         for (Enchantment enchantment : Enchantment.enchantmentsList) {
             if (enchantment != null) {
                 biggerBook.addStoredEnchantment(enchantment, 10);
@@ -530,7 +606,6 @@ public class CustomCreativeTabs extends CreativeTabs implements MinecraftInstanc
         items.add(biggerBook.build());
 
         ItemBuilder biggestBook = ItemBuilder.of(Items.enchanted_book).setDisplayName("BIGGEST BOOK");
-
         for (Enchantment enchantment : Enchantment.enchantmentsList) {
             if (enchantment != null) {
                 biggestBook.addStoredEnchantment(enchantment, Short.MAX_VALUE);
@@ -548,7 +623,6 @@ public class CustomCreativeTabs extends CreativeTabs implements MinecraftInstanc
 
         items.add(ItemBuilder.of(Blocks.deadbush)
                 .setHideFlags(1)
-
                 .addEnchantment(Enchantment.infinity)
                 .build());
 

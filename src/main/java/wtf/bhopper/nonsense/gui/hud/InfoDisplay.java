@@ -134,7 +134,7 @@ public class InfoDisplay implements MinecraftInstance {
 
             float yOff = height - 2.0F;
             for (Component component : this.components) {
-                float valueX = NVGHelper.textBounds(2.0F, yOff, component.name, new float[4]) + 1.0F;
+                float valueX = 2.0F + NVGHelper.getStringWidth(component.name);
                 NVGHelper.drawText(component.name, 2.0F, yOff, mod.color.getRGB(), true);
                 NVGHelper.drawText(": " + component.value, valueX, yOff, 0xFFFFFFFF, true);
                 yOff -= mod.fontSize.getFloat() + 2.0F;

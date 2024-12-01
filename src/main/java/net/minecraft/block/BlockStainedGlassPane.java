@@ -17,12 +17,17 @@ import net.minecraft.world.World;
 
 public class BlockStainedGlassPane extends BlockPane
 {
-    public static final PropertyEnum<EnumDyeColor> COLOR = PropertyEnum.<EnumDyeColor>create("color", EnumDyeColor.class);
+    public static final PropertyEnum<EnumDyeColor> COLOR = PropertyEnum.create("color", EnumDyeColor.class);
 
     public BlockStainedGlassPane()
     {
         super(Material.glass, false);
-        this.setDefaultState(this.blockState.getBaseState().withProperty(NORTH, Boolean.valueOf(false)).withProperty(EAST, Boolean.valueOf(false)).withProperty(SOUTH, Boolean.valueOf(false)).withProperty(WEST, Boolean.valueOf(false)).withProperty(COLOR, EnumDyeColor.WHITE));
+        this.setDefaultState(this.blockState.getBaseState()
+                .withProperty(NORTH, false)
+                .withProperty(EAST, false)
+                .withProperty(SOUTH, false)
+                .withProperty(WEST, false)
+                .withProperty(COLOR, EnumDyeColor.WHITE));
         this.setCreativeTab(CreativeTabs.tabDecorations);
     }
 
@@ -32,7 +37,7 @@ public class BlockStainedGlassPane extends BlockPane
      */
     public int damageDropped(IBlockState state)
     {
-        return ((EnumDyeColor)state.getValue(COLOR)).getMetadata();
+        return state.getValue(COLOR).getMetadata();
     }
 
     /**

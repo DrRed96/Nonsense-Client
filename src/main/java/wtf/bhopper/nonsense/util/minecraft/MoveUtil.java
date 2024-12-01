@@ -74,6 +74,10 @@ public class MoveUtil implements MinecraftInstance {
         return Math.hypot(mc.thePlayer.motionX, mc.thePlayer.motionZ);
     }
 
+    public static double getSpeed(EventMove event) {
+        return Math.hypot(event.x, event.z);
+    }
+
     public static void setSpeed(double speed) {
         setSpeed(null, speed);
     }

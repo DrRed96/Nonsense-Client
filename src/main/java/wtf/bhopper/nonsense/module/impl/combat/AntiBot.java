@@ -3,6 +3,7 @@ package wtf.bhopper.nonsense.module.impl.combat;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
+import wtf.bhopper.nonsense.event.EventPriorities;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
 import wtf.bhopper.nonsense.event.impl.EventTick;
@@ -30,7 +31,7 @@ public class AntiBot extends Module {
         this.setSuffix(this.mode::getDisplayValue);
     }
 
-    @EventLink
+    @EventLink(EventPriorities.VERY_LOW)
     public final Listener<EventTick> onTick = event -> {
         if (!PlayerUtil.canUpdate()) {
             this.bots.clear();
@@ -40,11 +41,7 @@ public class AntiBot extends Module {
         switch (this.mode.get()) {
             case TAB -> {
                 this.bots.clear();
-                for (EntityPlayer player : mc.theWorld.getEntities(EntityPlayer.class, input -> true)) {
-                    if (!ServerUtil.isInTab(player)) {
-                        this.bots.add(player);
-                    }
-                }
+                this.bots.addAll(mc.theWorld.getEntities(EntityPlayer.class, input -> !ServerUtil.isInTab(input)));
             }
             case HYPIXEL -> {
                 this.bots.clear();

@@ -27,9 +27,9 @@ public class Hide extends Command {
             return;
         }
 
-        Module module = Nonsense.getModuleManager().get(args[2]);
+        Module module = Nonsense.getModuleManager().get(args[1]);
         if (module == null) {
-            ChatUtil.error("'%s' is not a valid module", args[2].toLowerCase());
+            ChatUtil.error("'%s' is not a valid module", args[1].toLowerCase());
             return;
         }
 

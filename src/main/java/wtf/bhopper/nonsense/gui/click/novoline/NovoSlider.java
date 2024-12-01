@@ -1,5 +1,6 @@
 package wtf.bhopper.nonsense.gui.click.novoline;
 
+import net.minecraft.client.Minecraft;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
 
@@ -63,6 +64,7 @@ public class NovoSlider extends NovoComponent {
 
         if (this.mouseIntersecting(mouseX, mouseY, MOD_HEIGHT) && button == 0) {
             this.selected = true;
+            this.panel.gui.mod.sound.get().playSound(Minecraft.getMinecraft().getSoundHandler());
         }
     }
 

@@ -30,7 +30,7 @@ public class GuiChat extends GuiScreen {
     private boolean playerNamesFound;
     private boolean waitingOnAutocomplete;
     private int autocompleteIndex;
-    private List<String> foundPlayerNames = Lists.<String>newArrayList();
+    private List<String> foundPlayerNames = Lists.newArrayList();
 
     /**
      * Chat entry field

@@ -10,6 +10,7 @@ public class Help extends Command {
 
     @Override
     public void execute(String[] args, String rawCommand) throws Exception {
+        ChatUtil.print("\247c\247l--- Commands ---");
         for (Command command : Nonsense.getCommandManager().getCommands()) {
             ChatUtil.print("\247c%s\2477: %s", command.name, command.description);
         }

@@ -28,8 +28,9 @@ public class ModuleList {
     }
 
     public int draw(float delta, ScaledResolution scaledRes) {
+        HudMod mod = Hud.mod();
 
-        if (!Hud.enabled() || !Hud.mod().moduleListEnabled.get()) {
+        if (!Hud.enabled() || !mod.moduleListEnabled.get()) {
             return 0;
         }
 
@@ -38,7 +39,7 @@ public class ModuleList {
 
         NVGHelper.begin();
 
-        if (!Hud.mod().font.is(HudMod.Font.MINECRAFT)) {
+        if (!mod.font.is(HudMod.Font.MINECRAFT)) {
             Hud.bindFont();
             NVGHelper.fontSize(Hud.mod().moduleListFontSize.getFloat());
             NVGHelper.textAlign(NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
@@ -96,7 +97,7 @@ public class ModuleList {
             HudMod hudMod = Hud.mod();
 
             float fontSize = hudMod.font.is(HudMod.Font.MINECRAFT) ? 18.0F : hudMod.moduleListFontSize.getFloat();
-            float textX = right - (this.width + hudMod.moduleListSpacing.getFloat()) * this.animateFactor;
+            float textX = right - (this.width + 2.0F + hudMod.moduleListSpacing.getFloat()) * this.animateFactor;
             float textY = yOff + hudMod.moduleListSpacing.getFloat();
             float textHeight = fontSize + hudMod.moduleListSpacing.getFloat() * 2.0F;
 
@@ -159,8 +160,21 @@ public class ModuleList {
                 return;
             }
 
+            String rawSuffix = module.getSuffix();
             this.name = hudMod.moduleListDisplay.get() ? module.displayName : module.displayName.replace(" ", "");
-            this.suffix = hudMod.moduleListSuffix.get() ? module.getSuffix() : null;
+            if (rawSuffix != null) {
+                this.suffix = switch (hudMod.moduleListSuffix.get()) {
+                    case NORMAL -> module.getSuffix();
+                    case HYPHEN -> "- " + module.getSuffix();
+                    case BRACKET -> "(" + module.getSuffix() + ")";
+                    case SQUARE -> "[" + module.getSuffix() + "]";
+                    case ANGLE -> "<" + module.getSuffix() + ">";
+                    case CURLY -> "{" + module.getSuffix() + "}";
+                    case NONE -> null;
+                };
+            } else {
+                this.suffix = null;
+            }
 
             if (hudMod.moduleListLowerCase.get()) {
                 this.name = this.name.toLowerCase();
@@ -175,7 +189,7 @@ public class ModuleList {
 
             if (this.suffix != null) {
                 this.width = getWidth.getWidth(this.name + " " + this.suffix);
-                this.suffixOffset = this.width - getWidth.getWidth(this.suffix);
+                this.suffixOffset = getWidth.getWidth(this.name + " ");
             } else {
                 this.width = getWidth.getWidth(this.name);
                 this.suffixOffset = 0.0F;
@@ -184,9 +198,9 @@ public class ModuleList {
         }
 
         public void updateColor(long timeMS, int count) {
-            this.color = switch (Hud.mod().moduleListColorMode.get()) {
-                case STATIC -> Hud.mod().moduleListColor.getRGB();
-                case WAVY -> ColorUtil.wave(Hud.mod().moduleListColor.getRGB(), timeMS, count);
+            this.color = switch (Hud.mod().moduleListColor.get()) {
+                case STATIC -> Hud.mod().color.getRGB();
+                case WAVY -> ColorUtil.wave(Hud.mod().color.getRGB(), timeMS, count);
                 case RAINBOW -> ColorUtil.rainbow(timeMS, count, 0.5F, 1.0F);
                 case RAINBOW_2 -> ColorUtil.rainbow(timeMS, count, 1.0F, 1.0F);
                 case RAINBOW_3 -> ColorUtil.rainbow(timeMS, count, 0.55F, 0.9F);
@@ -194,7 +208,7 @@ public class ModuleList {
                 case ASTOLFO -> ColorUtil.astolfo(timeMS, count);
                 case RANDOM -> this.module.hashCode() | 0xFF000000;
                 case TRANS -> switch (count % 3) {
-                    case 0 -> 0xFF5BCEFA;
+                    case 0 -> 0xFF5BCEFA; // I legit Googled the exact RGB values XD
                     case 1 -> 0xFFF5A9B8;
                     default -> 0xFFFFFFFF;
                 };

@@ -1,5 +1,7 @@
 package wtf.bhopper.nonsense.module.impl.visual;
 
+import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.EntityRenderer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.entity.RenderManager;
@@ -8,36 +10,39 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.potion.Potion;
 import net.minecraft.util.AxisAlignedBB;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.EventPriorities;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
 import wtf.bhopper.nonsense.event.impl.EventRenderGui;
+import wtf.bhopper.nonsense.event.impl.EventRenderNameTag;
 import wtf.bhopper.nonsense.event.impl.EventTick;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.impl.combat.AntiBot;
-import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
-import wtf.bhopper.nonsense.module.property.impl.ColorProperty;
-import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
-import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
+import wtf.bhopper.nonsense.module.property.impl.*;
 import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
 import wtf.bhopper.nonsense.util.misc.MathUtil;
 import wtf.bhopper.nonsense.util.render.ColorUtil;
+import wtf.bhopper.nonsense.util.render.Fonts;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
 import wtf.bhopper.nonsense.util.render.RenderUtil;
 
 import javax.vecmath.Vector3d;
 import javax.vecmath.Vector4d;
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
 import java.util.*;
-import java.util.function.BiConsumer;
 
 @ModuleInfo(name = "ESP", description = "Gives you extrasensory perception", category = ModuleCategory.VISUAL)
 public class Esp extends Module {
 
-    private final GroupProperty targetsGroup = new GroupProperty("Targets", "What entities Kill Aura should target");
+    private static final NumberFormat HEALTH_FORMAT = new DecimalFormat("#0.#");
+
+    private final GroupProperty targetsGroup = new GroupProperty("Targets", "What entities ESP should render");
     private final BooleanProperty players = new BooleanProperty("Players", "Target Players.", true);
     private final BooleanProperty mobs = new BooleanProperty("Mobs", "Target Mobs (Zombies, Skeletons, etc.)", false);
     private final BooleanProperty animals = new BooleanProperty("Animals", "Target Animals (Pigs, Cows, etc.)", false);
@@ -47,13 +52,15 @@ public class Esp extends Module {
     private final GroupProperty boxGroup = new GroupProperty("Box", "Boxes");
     private final BooleanProperty boxEnable = new BooleanProperty("Enable", "Enable boxes", true);
     private final BooleanProperty boxCorners = new BooleanProperty("Corners", "Only render corners", false);
+    private final NumberProperty boxCornerFactor = new NumberProperty("Corner Factor", "Corner factor.", this.boxCorners::get, 50.0, 1.0, 100.0, 1.0, NumberProperty.FORMAT_PERCENT);
     private final BooleanProperty boxOutline = new BooleanProperty("Outline", "Box outline", true);
     private final ColorProperty boxColor = new ColorProperty("Color", "color", 0xFFFFFFFF);
 
     private final GroupProperty nameGroup = new GroupProperty("Names", "Names");
-    private final BooleanProperty nameEnable = new BooleanProperty("Enable", "Enable names", true);
+    private final BooleanProperty nameEnable = new BooleanProperty("Enable", "Enable name tags", true);
+    private final ColorProperty nameColor = new ColorProperty("Color", "Color of the name tags", 0xFFFFFFFF);
     private final BooleanProperty displayNames = new BooleanProperty("Display Names", "Render display names", true);
-    private final BooleanProperty nameHealth = new BooleanProperty("Health", "Display health in names", true);
+    private final BooleanProperty nameHealth = new BooleanProperty("Health", "Display health in name tags", true);
     private final BooleanProperty nameBackground = new BooleanProperty("Background", "Display background", true);
 
     private final GroupProperty barGroup = new GroupProperty("Health Bar", "Health bars");
@@ -65,8 +72,8 @@ public class Esp extends Module {
 
     public Esp() {
         this.targetsGroup.addProperties(this.players, this.mobs, this.animals, this.others, this.invis);
-        this.boxGroup.addProperties(this.boxEnable, this.boxCorners, this.boxOutline, this.boxColor);
-        this.nameGroup.addProperties(this.nameEnable, this.displayNames, this.nameHealth,this.nameBackground);
+        this.boxGroup.addProperties(this.boxEnable, this.boxCorners, this.boxOutline, this.boxCornerFactor, this.boxColor);
+        this.nameGroup.addProperties(this.nameEnable, this.nameColor, this.displayNames, this.nameHealth, this.nameBackground);
         this.barGroup.addProperties(this.barEnable, this.barColorMode, this.barColor);
         this.addProperties(this.targetsGroup, this.boxGroup, this.nameGroup, this.barGroup);
     }
@@ -101,6 +108,16 @@ public class Esp extends Module {
         }
 
         GlStateManager.popMatrix();
+    };
+
+    @EventLink
+    public final Listener<EventRenderNameTag> onRenderNameTag = event -> {
+        for (RenderEntity renderEntity : this.renderEntities) {
+            if (renderEntity.entity == event.entity) {
+                event.cancel();
+                break;
+            }
+        }
     };
 
     private boolean isValidEntity(EntityLivingBase entity) {
@@ -220,6 +237,8 @@ public class Esp extends Module {
             this.height = this.endY - this.startY;
 
             this.drawBox();
+            this.drawHealthBar();
+            this.drawName(event.scale);
         }
 
         public void drawBox() {
@@ -234,6 +253,45 @@ public class Esp extends Module {
 
             if (boxCorners.get()) {
 
+                float w = this.width * boxCornerFactor.getFloat() / 200.0F;
+                float h = this.height * boxCornerFactor.getFloat() / 200.0F;
+                float iw = this.width - w + 1.0F;
+                float ih = this.height - h + 1.0F;
+
+                if (boxOutline.get()) {
+                    // Top Left
+                    NVGHelper.drawRect(-1.0F, -1.0F, w + 2.0F, 3.0F, ColorUtil.BLACK);
+                    NVGHelper.drawRect(-1.0F, -1.0F, 3.0F, h + 2.0F, ColorUtil.BLACK);
+
+                    // Top Right
+                    NVGHelper.drawRect(iw - 1.0F, -1.0F, w + 2.0F, 3.0F, ColorUtil.BLACK);
+                    NVGHelper.drawRect(this.width - 1.0F, -1.0F, 3.0F, h + 2.0F, ColorUtil.BLACK);
+
+                    // Bottom Left
+                    NVGHelper.drawRect(-1.0F, this.height - 1.0F, w + 2.0F, 3.0F, ColorUtil.BLACK);
+                    NVGHelper.drawRect(-1.0F, ih - 1.0F, 3.0F, h + 2.0F, ColorUtil.BLACK);
+
+                    // Bottom Right
+                    NVGHelper.drawRect(iw - 1.0F, this.height  - 1.0F, w + 2.0F, 3.0F, ColorUtil.BLACK);
+                    NVGHelper.drawRect(this.width - 1.0F, ih - 1.0F, 3.0F, h + 2.0F, ColorUtil.BLACK);
+                }
+
+                // Top Left
+                NVGHelper.drawRect(0.0F, 0.0F, w, 1.0F, color);
+                NVGHelper.drawRect(0.0F, 0.0F, 1.0F, h, color);
+
+                // Top Right
+                NVGHelper.drawRect(iw, 0.0F, w, 1.0F, color);
+                NVGHelper.drawRect(this.width, 0.0F, 1.0F, h, color);
+
+                // Bottom Left
+                NVGHelper.drawRect(0.0F, this.height, w, 1.0F, color);
+                NVGHelper.drawRect(0.0F, ih, 1.0F, h, color);
+
+                // Bottom Right
+                NVGHelper.drawRect(iw, this.height, w, 1.0F, color);
+                NVGHelper.drawRect(this.width, ih, 1.0F, h, color);
+
             } else {
                 if (boxOutline.get()) {
                     NVGHelper.drawRectOutline(-1.0F, -1.0F, this.width + 2.0F, this.height + 2.0F, ColorUtil.BLACK);
@@ -245,6 +303,62 @@ public class Esp extends Module {
 
             NVGHelper.end();
 
+        }
+
+        public void drawHealthBar() {
+            if (!barEnable.get()) {
+                return;
+            }
+
+            int color = switch (barColorMode.get()) {
+                case HEALTH -> ColorUtil.health(this.healthFactor);
+                case CUSTOM -> barColor.getRGB();
+            };
+
+            NVGHelper.begin();
+            NVGHelper.translate(this.startX, this.startY);
+
+            NVGHelper.drawRect(-5.0F, 0.0F, 3.0F, this.height + 1.0F, 0x80000000);
+            if (this.healthFactor > 0.0F) {
+                NVGHelper.drawRect(-5.0F, this.height - (this.height * this.healthFactor), 3.0F, this.height * this.healthFactor + 1.0F, color);
+                if (this.absorbFactor > 0.0F) {
+                    NVGHelper.drawRect(-5.0F, this.height - (this.height * this.absorbFactor), 3.0F, this.height * this.absorbFactor + 1.0F, Potion.absorption.getLiquidColor() | 0xFF00000);
+                }
+            }
+
+            NVGHelper.drawRectOutline(-6.0F, -1.0F, 3.0F, this.height + 2.0F, 0xFF000000);
+
+            NVGHelper.end();
+        }
+
+        public void drawName(ScaledResolution scaledRes) {
+            if (!nameEnable.get()) {
+                return;
+            }
+
+            FontRenderer font = Fonts.bit();
+
+            String display = this.name;
+
+            if (nameHealth.get()) {
+                display += " \2477[\247f" + HEALTH_FORMAT.format(this.health) + "\247c\u2764\2477]";
+            }
+
+            float w = this.width / 2.0F;
+            float textWidth = font.getStringWidthF(display);
+            float tagX = this.startX + w - textWidth / 2.0F;
+            float tagY = startY - 10.0F;
+
+            if (nameBackground.get()) {
+                NVGHelper.begin();
+                NVGHelper.drawRect(tagX - 2.0F, tagY - 3.0F, textWidth + 2.0F, 11.0F, 0x80000000);
+                NVGHelper.end();
+            }
+
+            GlStateManager.pushMatrix();
+            scaledRes.scaleToFactor(1.0F);
+            font.drawStringWithShadow(display, tagX, tagY - 1.0F, nameColor.getRGB());
+            GlStateManager.popMatrix();
         }
 
     }

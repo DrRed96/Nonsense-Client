@@ -12,7 +12,7 @@ import java.util.List;
 
 public class CommandManager {
 
-    private static final String PREFIX = ".";
+    public static final String PREFIX = ".";
 
     private final List<Command> commands = new ArrayList<>();
 

@@ -6,6 +6,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraft.network.play.server.S45PacketTitle;
 import net.minecraft.util.BlockPos;
@@ -23,6 +24,7 @@ import wtf.bhopper.nonsense.module.property.impl.ColorProperty;
 import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
 import wtf.bhopper.nonsense.util.minecraft.BlockUtil;
+import wtf.bhopper.nonsense.util.minecraft.PacketUtil;
 import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
 import wtf.bhopper.nonsense.util.minecraft.RotationUtil;
 import wtf.bhopper.nonsense.util.misc.Clock;
@@ -32,6 +34,7 @@ import java.awt.*;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@SuppressWarnings("FieldCanBeLocal")
 @ModuleInfo(name = "Auto Speed Builders", description = "Plays speed builders for you.", category = ModuleCategory.OTHER)
 public class AutoSpeedBuilders extends Module {
 
@@ -45,7 +48,11 @@ public class AutoSpeedBuilders extends Module {
     };
 
     private final NumberProperty delay = new NumberProperty("Delay", "Delay between placing blocks.", 100.0, 0.0, 1000.0, 25.0, NumberProperty.FORMAT_MS);
-    private final BooleanProperty stop = new BooleanProperty("Stop", "Stop building once completed", false);
+    private final BooleanProperty disconnectedFix = new BooleanProperty("Disconnected Fix", "Tries to fix disconnected blocks.", true);
+
+    private final GroupProperty silent = new GroupProperty("Silent", "Do things silently.");
+    private final BooleanProperty silentSwing = new BooleanProperty("Swing", "Swing silently.", false);
+    private final BooleanProperty silentSwap = new BooleanProperty("Swap", "Swap silently", false);
 
     private final GroupProperty render = new GroupProperty("Render", "Rendering options");
     private final BooleanProperty renderBuild = new BooleanProperty("Build", "Renders the build.", true);
@@ -68,7 +75,8 @@ public class AutoSpeedBuilders extends Module {
 
     public AutoSpeedBuilders() {
         this.render.addProperties(this.renderBuild, this.validBlock, this.invalidBlock, this.renderData, this.clickBlock, this.placeBlock);
-        this.addProperties(this.delay, this.stop, this.render);
+        this.silent.addProperties(this.silentSwing, this.silentSwap);
+        this.addProperties(this.delay, this.disconnectedFix, this.silent, this.render);
     }
 
     @EventLink
@@ -116,12 +124,23 @@ public class AutoSpeedBuilders extends Module {
         } catch (NullPointerException ignored) {
             this.blockData = null;
         }
+
+        if (this.blockData == null) {
+            this.blockData = this.getBreakData();
+        }
+
+        if (this.disconnectedFix.get()) {
+            if (this.blockData == null) {
+                this.blockData = this.getBlockDataFix();
+            }
+        }
     };
 
     @EventLink
     public final Listener<EventSelectItem> onSelect = event -> {
-        if (this.blockData != null) {
+        if (this.blockData != null && this.blockData.slot >= 0 && this.blockData.slot <= 8) {
             event.slot = this.blockData.slot;
+            event.silent = this.silentSwap.get();
         }
     };
 
@@ -133,19 +152,27 @@ public class AutoSpeedBuilders extends Module {
             return;
         }
 
-        this.hitVec = this.blockData.hitVec;
+        if (this.blockData.hitVec == null) {
+            this.hitVec = RotationUtil.getHitVec(this.blockData.pos, this.blockData.face);
 
-        if (mc.thePlayer.getHeldItem() != null) {
             if (this.timer.hasReached(this.delay.getInt())) {
-                if (mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, mc.thePlayer.getHeldItem(), this.blockData.pos, this.blockData.face, this.hitVec)) {
-                    PlayerUtil.swing(false);
-                }
+                PlayerUtil.swing(this.silentSwing.get());
+                PacketUtil.send(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.START_DESTROY_BLOCK, this.blockData.pos, this.blockData.face));
+                PacketUtil.send(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.ABORT_DESTROY_BLOCK, this.blockData.pos, EnumFacing.DOWN));
                 this.timer.reset();
             }
-        }
 
-        if (this.isBuildComplete() && this.stop.get()) {
-            this.canBuild = false;
+        } else {
+            this.hitVec = this.blockData.hitVec;
+
+            if (mc.thePlayer.getHeldItem() != null) {
+                if (this.timer.hasReached(this.delay.getInt())) {
+                    if (mc.playerController.onPlayerRightClick(mc.thePlayer, mc.theWorld, mc.thePlayer.getHeldItem(), this.blockData.pos, this.blockData.face, this.hitVec)) {
+                        PlayerUtil.swing(this.silentSwing.get());
+                    }
+                    this.timer.reset();
+                }
+            }
         }
 
     };
@@ -191,11 +218,85 @@ public class AutoSpeedBuilders extends Module {
                     }
 
 
-                    CheckResult check = this.compareStates(this.build.get(pos), itemState, true, new BlockData(offset, facing, null, 0, null));
+                    CheckResult check = this.compareStates(this.build.get(pos), itemState, true, new BlockData(offset, facing, null, 0));
                     if (check.result) {
-                        return new BlockData(offset, facing, check.hitVec != null ? check.hitVec : RotationUtil.getHitVec(offset, facing), slot, itemState);
+                        return new BlockData(offset, facing, check.hitVec != null ? check.hitVec : RotationUtil.getHitVec(offset, facing), slot);
                     }
 
+                }
+            }
+        }
+
+        return null;
+    }
+
+    private BlockData getBreakData() {
+        for (int x = -3; x <= 3; x++) {
+            for (int y = 1; y <= this.maxY; y++) {
+                for (int z = -3; z <= 3; z++) {
+                    BlockPos pos = this.centrePos.add(x, y, z);
+                    IBlockState block = BlockUtil.getState(pos);
+                    IBlockState target = this.build.get(pos);
+
+                    if (block.getBlock() == Blocks.air || block.getBlock() instanceof BlockLiquid) {
+                        continue;
+                    }
+
+                    if (!this.compareStates(target, block, true, null).result) {
+                        for (EnumFacing facing : OPTIMAL_PLACE_DIRECTIONS) {
+                            if (this.validateFace(pos, facing, null)) {
+                                return new BlockData(pos, facing, null, -1);
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return null;
+    }
+
+    private BlockData getBlockDataFix() {
+        for (Map.Entry<BlockPos, IBlockState> entry : this.build.entrySet()) {
+            BlockPos targetPos = entry.getKey();
+            IBlockState targetState = entry.getValue();
+            Block targetBlock = targetState.getBlock();
+            if (BlockUtil.getBlock(targetPos) == Blocks.air &&
+                    targetBlock != Blocks.air &&
+                    targetBlock != Blocks.carpet &&
+                    targetBlock != Blocks.stone_button &&
+                    targetBlock != Blocks.wooden_button &&
+                    targetBlock != Blocks.lever &&
+                    targetBlock != Blocks.trapdoor &&
+                    targetBlock != Blocks.iron_trapdoor) {
+                boolean surrounding = false;
+                for (EnumFacing facing : OPTIMAL_PLACE_DIRECTIONS) {
+                    if (BlockUtil.getBlock(targetPos.offset(facing)) != Blocks.air) {
+                        surrounding = true;
+                        break;
+                    }
+                }
+
+                if (!surrounding) {
+                    for (EnumFacing blankFace : OPTIMAL_PLACE_DIRECTIONS) {
+                        BlockPos blank = targetPos.offset(blankFace);
+                        if (this.validateFace(targetPos, blankFace, targetBlock)) {
+                            for (EnumFacing facing : OPTIMAL_PLACE_DIRECTIONS) {
+                                BlockPos offset = blank.offset(facing.getOpposite());
+                                Block block = BlockUtil.getBlock(offset);
+                                if (this.validateFace(offset, facing.getOpposite(), block)) {
+                                    for (int i = 0; i < 9; i++) {
+                                        ItemStack stack = mc.thePlayer.inventory.mainInventory[i];
+                                        if (stack != null && stack.getItem() instanceof ItemBlock itemBlock) {
+                                            if (itemBlock.getBlock().isNormalCube()) {
+                                                return new BlockData(offset, facing, RotationUtil.getHitVec(offset, facing), i);
+                                            }
+                                        }
+                                    }
+                                    return null;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }
@@ -265,7 +366,8 @@ public class AutoSpeedBuilders extends Module {
                 block instanceof BlockDoor ||
                 block instanceof BlockTrapDoor ||
                 block instanceof BlockBush ||
-                block instanceof BlockBasePressurePlate) {
+                block instanceof BlockBasePressurePlate ||
+                block instanceof BlockLiquid) {
             return false;
         }
 
@@ -470,7 +572,11 @@ public class AutoSpeedBuilders extends Module {
             return CheckResult.of(BlockUtil.compareProperties(state1, state2, BlockStainedGlass.COLOR));
 
         } else if (block1 instanceof BlockCarpet) {
-            return CheckResult.of(BlockUtil.compareProperties(state1, state2, BlockCarpet.COLOR));
+            if (data != null) {
+                return CheckResult.of(BlockUtil.compareProperties(state1, state2, BlockCarpet.COLOR) && data.face == EnumFacing.UP);
+            } else {
+                return CheckResult.of(BlockUtil.compareProperties(state1, state2, BlockCarpet.COLOR));
+            }
         } else if (block1 instanceof BlockTrapDoor) {
             if (data != null) {
                 if (state1.getValue(BlockTrapDoor.FACING) != data.face) {
@@ -478,8 +584,8 @@ public class AutoSpeedBuilders extends Module {
                 }
 
                 hitVec = hitVec.addVector(0.0, switch (state1.getValue(BlockTrapDoor.HALF)) {
-                    case TOP -> 0.25;
-                    case BOTTOM -> -0.25;
+                    case TOP -> -0.25;
+                    case BOTTOM -> 0.25;
                 }, 0.0);
                 return new CheckResult(true, hitVec);
             } else if (place) {
@@ -492,6 +598,16 @@ public class AutoSpeedBuilders extends Module {
                 return CheckResult.of(data.face == state1.getValue(BlockLadder.FACING));
             } else if (place) {
                 return CheckResult.of(BlockUtil.compareProperties(state1, state2, BlockLadder.FACING));
+            } else {
+                return CheckResult.TRUE;
+            }
+        } else if (block1 instanceof BlockStone) {
+            return CheckResult.of(BlockUtil.compareProperties(state1, state2, BlockStone.VARIANT));
+        } else if (block1 instanceof BlockSkull) {
+            if (data != null) {
+                return CheckResult.of(mc.thePlayer.getHorizontalFacing() == state1.getValue(BlockSkull.FACING) && data.face == EnumFacing.UP);
+            } else if (place) {
+                return CheckResult.of(BlockUtil.compareProperties(state1, state2, BlockSkull.FACING));
             } else {
                 return CheckResult.TRUE;
             }
@@ -524,8 +640,7 @@ public class AutoSpeedBuilders extends Module {
                 } else if (message.equalsIgnoreCase("View Time Over!")) {
                     this.canBuild = true;
                 }
-            } catch (NullPointerException ignored) {
-            }
+            } catch (NullPointerException ignored) { }
         }
     };
 
@@ -547,6 +662,7 @@ public class AutoSpeedBuilders extends Module {
     @EventLink
     public final Listener<EventJoinGame> onJoin = event -> {
         this.build.clear();
+        this.blockData = null;
         this.centrePos = null;
         this.canBuild = false;
     };
@@ -554,12 +670,13 @@ public class AutoSpeedBuilders extends Module {
     @Override
     public void onEnable() {
         this.build.clear();
+        this.blockData = null;
         this.centrePos = null;
         this.canBuild = false;
     }
 
 
-    private record BlockData(BlockPos pos, EnumFacing face, Vec3 hitVec, int slot, IBlockState block) {
+    private record BlockData(BlockPos pos, EnumFacing face, Vec3 hitVec, int slot) {
         @Override
         public String toString() {
             return Objects.toStringHelper(this)
@@ -567,7 +684,6 @@ public class AutoSpeedBuilders extends Module {
                     .add("face", this.face)
                     .add("hitVec", this.hitVec)
                     .add("slot", this.slot)
-                    .add("block", this.block)
                     .toString();
         }
     }

@@ -165,7 +165,7 @@ public class Block
 
     public static Block getBlockById(int id)
     {
-        return (Block)blockRegistry.getObjectById(id);
+        return blockRegistry.getObjectById(id);
     }
 
     /**
@@ -189,13 +189,13 @@ public class Block
 
         if (blockRegistry.containsKey(resourcelocation))
         {
-            return (Block)blockRegistry.getObject(resourcelocation);
+            return blockRegistry.getObject(resourcelocation);
         }
         else
         {
             try
             {
-                return (Block)blockRegistry.getObjectById(Integer.parseInt(name));
+                return blockRegistry.getObjectById(Integer.parseInt(name));
             }
             catch (NumberFormatException var3)
             {
@@ -491,7 +491,9 @@ public class Block
         AxisAlignedBB bounds = this.getCollisionBoundingBox(worldIn, pos, state);
 
         EventBlockCollide event = new EventBlockCollide(this, pos, bounds);
-        Nonsense.getEventBus().post(event);
+        if (collidingEntity != null && collidingEntity.isClientPlayer()) {
+            Nonsense.getEventBus().post(event);
+        }
 
         if (!event.isCancelled() && event.bounds != null && mask.intersectsWith(event.bounds))
         {

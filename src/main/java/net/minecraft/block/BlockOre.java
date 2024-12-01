@@ -20,9 +20,9 @@ public class BlockOre extends Block
         this(Material.rock.getMaterialMapColor());
     }
 
-    public BlockOre(MapColor p_i46390_1_)
+    public BlockOre(MapColor mapColor)
     {
-        super(Material.rock, p_i46390_1_);
+        super(Material.rock, mapColor);
         this.setCreativeTab(CreativeTabs.tabBlock);
     }
 

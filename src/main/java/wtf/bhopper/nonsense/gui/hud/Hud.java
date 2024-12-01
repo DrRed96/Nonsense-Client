@@ -3,12 +3,14 @@ package wtf.bhopper.nonsense.gui.hud;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.event.bus.EventLink;
+import wtf.bhopper.nonsense.event.bus.Listener;
+import wtf.bhopper.nonsense.event.impl.EventRenderGui;
 import wtf.bhopper.nonsense.gui.components.RenderComponent;
 import wtf.bhopper.nonsense.gui.hud.notification.NotificationManager;
 import wtf.bhopper.nonsense.module.impl.visual.HudMod;
 import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
 import wtf.bhopper.nonsense.util.misc.InputUtil;
-import wtf.bhopper.nonsense.util.render.Fonts;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
 
 import java.util.ArrayList;
@@ -22,8 +24,10 @@ public class Hud implements MinecraftInstance {
 
     public final HudMod module;
     public final ModuleList moduleList = new ModuleList();
+    public final Watermark watermark = new Watermark();
     public final InfoDisplay infoDisplay = new InfoDisplay();
     public final NotificationManager notifications = new NotificationManager();
+    public final TargetHud targetHud = new TargetHud();
     private final List<RenderComponent> components = new CopyOnWriteArrayList<>();
 
     public Hud() {
@@ -31,7 +35,14 @@ public class Hud implements MinecraftInstance {
         this.moduleList.init();
         this.components.addAll(componentsToAdd);
         componentsToAdd.clear();
+        this.components.add(this.targetHud);
+        Nonsense.getEventBus().subscribe(this);
     }
+
+    @EventLink
+    public final Listener<EventRenderGui> onRenderGui = event -> {
+        this.targetHud.setEnabled(enabled() && mod().targetHudEnabled.get());
+    };
 
     public static void addComponent(RenderComponent component) {
         if (Nonsense.getHud() == null) {

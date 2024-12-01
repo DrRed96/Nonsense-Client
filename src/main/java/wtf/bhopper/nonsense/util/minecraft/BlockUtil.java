@@ -1,8 +1,7 @@
 package wtf.bhopper.nonsense.util.minecraft;
 
 import io.netty.util.internal.ThreadLocalRandom;
-import net.minecraft.block.Block;
-import net.minecraft.block.BlockLever;
+import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.properties.PropertyDirection;
@@ -73,6 +72,54 @@ public class BlockUtil implements MinecraftInstance {
         }
 
         return null;
+    }
+
+    public static boolean blockPosEqual(BlockPos blockPosA, BlockPos blockPosB) {
+
+        if (blockPosA == null || blockPosB == null) {
+            return false;
+        }
+
+        return blockPosA.toLong() == blockPosB.toLong();
+    }
+
+    public static boolean compareStatesBasic(IBlockState state1, IBlockState state2) {
+
+        Block block = state1.getBlock();
+
+        if (block != state2.getBlock()) {
+            return false;
+        }
+
+        if (block instanceof BlockColored) {
+            return compareProperties(state1, state2, BlockColored.COLOR);
+        }
+
+        if (block instanceof BlockNewLog) {
+            return compareProperties(state1, state2, BlockNewLog.VARIANT);
+        }
+
+        if (block instanceof BlockOldLog) {
+            return compareProperties(state1, state2, BlockOldLog.VARIANT);
+        }
+
+        if (block instanceof BlockPlanks) {
+            return compareProperties(state1, state2, BlockPlanks.VARIANT);
+        }
+
+        if (block instanceof BlockStainedGlass) {
+            return compareProperties(state1, state2, BlockStainedGlass.COLOR);
+        }
+
+        if (block instanceof BlockStainedGlassPane) {
+            return compareProperties(state1, state2, BlockStainedGlassPane.COLOR);
+        }
+
+        if (block instanceof BlockStone) {
+            return compareProperties(state1, state2, BlockStone.VARIANT);
+        }
+
+        return true;
     }
 
 }

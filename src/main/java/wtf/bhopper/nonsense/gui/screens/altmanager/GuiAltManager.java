@@ -102,7 +102,6 @@ public class GuiAltManager extends GuiScreen {
             if (entry != null) {
                 Notification.send("Alt Manager", "Refreshing: " + entry.account.getUsername(), NotificationType.INFO, 3000);
                 entry.account.refreshAccount();
-                Nonsense.getAltManager().trySave();
             }
         } else if (button.id == 3) {
             this.mc.displayGuiScreen(new GuiAddAlt(this));

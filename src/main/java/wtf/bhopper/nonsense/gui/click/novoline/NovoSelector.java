@@ -1,5 +1,6 @@
 package wtf.bhopper.nonsense.gui.click.novoline;
 
+import net.minecraft.client.Minecraft;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
 
@@ -34,7 +35,7 @@ public class NovoSelector extends NovoComponent {
 
         NVGHelper.fontSize(14.0F);
         NVGHelper.textAlign(NVG_ALIGN_RIGHT | NVG_ALIGN_MIDDLE);
-        NVGHelper.drawText(this.property.getDisplayValue(), WIDTH - this.getIndentionOffset(), yOff + MOD_HEIGHT / 2.0F, 0xFFFFFFFF);
+        NVGHelper.drawText(this.property.getDisplayValue(), WIDTH - this.getIndentionOffset(), yOff + MOD_HEIGHT / 2.0F, 0xFFDDDDDD);
 
         this.panel.yOff += MOD_HEIGHT;
     }
@@ -49,8 +50,10 @@ public class NovoSelector extends NovoComponent {
         if (this.mouseIntersecting(mouseX, mouseY, MOD_HEIGHT)) {
             if (button == 0) {
                 this.property.cycleForwards();
+                this.panel.gui.mod.sound.get().playSound(Minecraft.getMinecraft().getSoundHandler());
             } else if (button == 1) {
                 this.property.cycleBackwards();
+                this.panel.gui.mod.sound.get().playSound(Minecraft.getMinecraft().getSoundHandler());
             }
         }
     }

@@ -12,7 +12,7 @@ import net.minecraft.world.World;
 
 public abstract class BlockLog extends BlockRotatedPillar
 {
-    public static final PropertyEnum<BlockLog.EnumAxis> LOG_AXIS = PropertyEnum.<BlockLog.EnumAxis>create("axis", BlockLog.EnumAxis.class);
+    public static final PropertyEnum<BlockLog.EnumAxis> LOG_AXIS = PropertyEnum.create("axis", BlockLog.EnumAxis.class);
 
     public BlockLog()
     {
@@ -33,9 +33,9 @@ public abstract class BlockLog extends BlockRotatedPillar
             {
                 IBlockState iblockstate = worldIn.getBlockState(blockpos);
 
-                if (iblockstate.getBlock().getMaterial() == Material.leaves && !((Boolean)iblockstate.getValue(BlockLeaves.CHECK_DECAY)).booleanValue())
+                if (iblockstate.getBlock().getMaterial() == Material.leaves && !iblockstate.getValue(BlockLeaves.CHECK_DECAY))
                 {
-                    worldIn.setBlockState(blockpos, iblockstate.withProperty(BlockLeaves.CHECK_DECAY, Boolean.valueOf(true)), 4);
+                    worldIn.setBlockState(blockpos, iblockstate.withProperty(BlockLeaves.CHECK_DECAY, Boolean.TRUE), 4);
                 }
             }
         }
@@ -50,7 +50,7 @@ public abstract class BlockLog extends BlockRotatedPillar
         return super.onBlockPlaced(worldIn, pos, facing, hitX, hitY, hitZ, meta, placer).withProperty(LOG_AXIS, BlockLog.EnumAxis.fromFacingAxis(facing.getAxis()));
     }
 
-    public static enum EnumAxis implements IStringSerializable
+    public enum EnumAxis implements IStringSerializable
     {
         X("x"),
         Y("y"),
@@ -59,7 +59,7 @@ public abstract class BlockLog extends BlockRotatedPillar
 
         private final String name;
 
-        private EnumAxis(String name)
+        EnumAxis(String name)
         {
             this.name = name;
         }
@@ -71,20 +71,11 @@ public abstract class BlockLog extends BlockRotatedPillar
 
         public static BlockLog.EnumAxis fromFacingAxis(EnumFacing.Axis axis)
         {
-            switch (axis)
-            {
-                case X:
-                    return X;
-
-                case Y:
-                    return Y;
-
-                case Z:
-                    return Z;
-
-                default:
-                    return NONE;
-            }
+            return switch (axis) {
+                case X -> X;
+                case Y -> Y;
+                case Z -> Z;
+            };
         }
 
         public String getName()

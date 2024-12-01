@@ -8,13 +8,7 @@ public class PacketThreadUtil
     {
         if (!p_180031_2_.isCallingFromMinecraftThread())
         {
-            p_180031_2_.addScheduledTask(new Runnable()
-            {
-                public void run()
-                {
-                    p_180031_0_.processPacket(p_180031_1_);
-                }
-            });
+            p_180031_2_.addScheduledTask(() -> p_180031_0_.processPacket(p_180031_1_));
             throw ThreadQuickExitException.field_179886_a;
         }
     }

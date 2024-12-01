@@ -7,11 +7,19 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 import java.lang.annotation.Target;
 
+// Apparently doing the modules this way messes up obfuscation...
+// Oh well, good thing I'm not obfuscating!
+
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ModuleInfo {
     String name();
+
     ModuleCategory category();
+
     String description();
+
+    boolean toggled() default false;
+
     int bind() default Keyboard.KEY_NONE;
 }

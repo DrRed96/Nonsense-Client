@@ -13,7 +13,7 @@ import net.minecraft.item.ItemStack;
 
 public class BlockNewLog extends BlockLog
 {
-    public static final PropertyEnum<BlockPlanks.EnumType> VARIANT = PropertyEnum.<BlockPlanks.EnumType>create("variant", BlockPlanks.EnumType.class, p_apply_1_ -> p_apply_1_.getMetadata() >= 4);
+    public static final PropertyEnum<BlockPlanks.EnumType> VARIANT = PropertyEnum.create("variant", BlockPlanks.EnumType.class, type -> type.getMetadata() >= 4);
 
     public BlockNewLog()
     {
@@ -27,21 +27,16 @@ public class BlockNewLog extends BlockLog
     {
         BlockPlanks.EnumType blockplanks$enumtype = (BlockPlanks.EnumType)state.getValue(VARIANT);
 
-        switch ((BlockLog.EnumAxis)state.getValue(LOG_AXIS))
+        switch (state.getValue(LOG_AXIS))
         {
             case X:
             case Z:
             case NONE:
             default:
-                switch (blockplanks$enumtype)
-                {
-                    case ACACIA:
-                    default:
-                        return MapColor.stoneColor;
-
-                    case DARK_OAK:
-                        return BlockPlanks.EnumType.DARK_OAK.func_181070_c();
-                }
+                return switch (blockplanks$enumtype) {
+                    default -> MapColor.stoneColor;
+                    case DARK_OAK -> BlockPlanks.EnumType.DARK_OAK.func_181070_c();
+                };
 
             case Y:
                 return blockplanks$enumtype.func_181070_c();

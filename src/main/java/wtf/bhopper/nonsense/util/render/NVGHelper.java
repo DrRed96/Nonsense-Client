@@ -1,7 +1,5 @@
 package wtf.bhopper.nonsense.util.render;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.ITextureObject;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.nanovg.NVGColor;
@@ -128,6 +126,10 @@ public class NVGHelper implements MinecraftInstance {
         return nvgTextBounds(context, x, y, string, bounds);
     }
 
+    public static float textBounds(float x, float y, String string) {
+        return nvgTextBounds(context, x, y, string, new float[4]);
+    }
+
     public static NVGPaint linearGradient(float sx, float sy, float ex, float ey, int icol, int ocol) {
         return nvgLinearGradient(context, sx, sy, ex, ey, getColor(icol), getColor(ocol, color2), paint);
     }
@@ -251,9 +253,7 @@ public class NVGHelper implements MinecraftInstance {
     }
 
     public static float getStringWidth(String text) {
-        float[] bounds = new float[4];
-        NVGHelper.textBounds(0.0F, 0.0F, text, bounds);
-        return bounds[2] - bounds[0];
+        return textBounds(0.0F, 0.0F, text);
     }
 
     public static void drawGraidentRect(float x, float y, float width, float height, int startColor, int endColor) {

@@ -224,7 +224,7 @@ public abstract class EntityLivingBase extends Entity {
     /**
      * Number of ticks since last jump
      */
-    private int jumpTicks;
+    public int jumpTicks;
     private float absorptionAmount;
 
     /**

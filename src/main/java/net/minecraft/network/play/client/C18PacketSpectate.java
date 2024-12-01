@@ -45,6 +45,10 @@ public class C18PacketSpectate implements Packet<INetHandlerPlayServer>
         handler.handleSpectate(this);
     }
 
+    public UUID getId() {
+        return this.id;
+    }
+
     public Entity getEntity(WorldServer worldIn)
     {
         return worldIn.getEntityFromUuid(this.id);

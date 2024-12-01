@@ -6,7 +6,6 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
@@ -37,6 +36,7 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
+@SuppressWarnings("FieldCanBeLocal")
 @ModuleInfo(name = "Kill Aura",
         description = "Automatically attacks nearby entities",
         category = ModuleCategory.COMBAT)
@@ -304,6 +304,10 @@ public class KillAura extends Module {
         this.invalidTargets.clear();
         this.target = null;
         this.nextDelay = -1;
+    }
+
+    public EntityLivingBase getTarget() {
+        return this.target;
     }
 
     private enum Mode {

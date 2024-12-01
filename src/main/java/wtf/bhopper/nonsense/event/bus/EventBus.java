@@ -1,5 +1,7 @@
 package wtf.bhopper.nonsense.event.bus;
 
+import wtf.bhopper.nonsense.event.Event;
+
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -7,7 +9,7 @@ import java.lang.reflect.Type;
 import java.util.*;
 
 @SuppressWarnings("unchecked")
-public class EventBus<Event> {
+public class EventBus {
 
     private final Map<Type, List<CallSite<Event>>> callSiteMap;
     private final Map<Type, List<Listener<Event>>> listenerCache;

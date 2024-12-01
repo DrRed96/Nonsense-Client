@@ -17,6 +17,7 @@ import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
 import wtf.bhopper.nonsense.event.impl.EventPostMotion;
 import wtf.bhopper.nonsense.event.impl.EventPreMotion;
+import wtf.bhopper.nonsense.event.impl.EventTick;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
@@ -24,6 +25,8 @@ import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
 import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
+import wtf.bhopper.nonsense.util.minecraft.PacketUtil;
+import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -36,9 +39,11 @@ import java.util.Queue;
 public class Debugger extends Module {
 
     private final GroupProperty loggingGroup = new GroupProperty("Logging", "Logs things in chat");
+    private final BooleanProperty tick = new BooleanProperty("Tick", "Log the start of a tick", false);
     private final GroupProperty packetDebuggerClient = new GroupProperty("Client Packets", "Client packet debugger");
     private final GroupProperty packetDebuggerServer = new GroupProperty("Server Packets", "Server packet debugger");
     private final BooleanProperty logPosition = new BooleanProperty("Position", "Logs your position", false);
+    private final BooleanProperty hideCancelled = new BooleanProperty("Hide Cancelled", "Hides cancelled packets", false);
 
     private final Map<Class<? extends Packet>, BooleanProperty> clientPacketSettings = new HashMap<>();
     private final Map<Class<? extends Packet>, BooleanProperty> serverPacketSettings = new HashMap<>();
@@ -77,13 +82,29 @@ public class Debugger extends Module {
             } catch (IllegalAccessException | InstantiationException ignored) {}
         }
 
-        this.loggingGroup.addProperties(this.packetDebuggerClient, this.packetDebuggerServer, this.logPosition);
+        this.loggingGroup.addProperties(this.tick, this.packetDebuggerClient, this.packetDebuggerServer, this.logPosition, this.hideCancelled);
         this.addProperties(this.loggingGroup);
     }
 
     @EventLink
+    public final Listener<EventTick> onTick = event -> {
+        if (!PlayerUtil.canUpdate()) {
+            return;
+        }
+
+        if (this.tick.get()) {
+            ChatUtil.debug("Tick: %d", mc.thePlayer.ticksExisted);
+        }
+
+    };
+
+    @EventLink
     public final Listener<EventPacketDebug> onPacketDebug = event -> {
         try {
+
+            if (event.state == State.CANCELED && this.hideCancelled.get()) {
+                return;
+            }
 
             if (event.direction == EventPacketDebug.Direction.OUTGOING) {
                 try {
@@ -156,11 +177,11 @@ public class Debugger extends Module {
 
     public String getPacketMainValue(Packet<?> packet) {
         if (packet instanceof C02PacketUseEntity c02) {
-            return c02.getAction().name();
+            return String.valueOf(c02.getAction());
         }
 
         if (packet instanceof C07PacketPlayerDigging c07) {
-            return c07.getStatus().name();
+            return String.valueOf(c07.getStatus());
         }
 
         if (packet instanceof C08PacketPlayerBlockPlacement c08) {
@@ -172,11 +193,35 @@ public class Debugger extends Module {
         }
 
         if (packet instanceof C0BPacketEntityAction c0b) {
-            return c0b.getAction().name();
+            return String.valueOf(c0b.getAction());
         }
 
         if (packet instanceof C0EPacketClickWindow c0e) {
             return Integer.toString(c0e.getSlotId());
+        }
+
+        if (packet instanceof C0FPacketConfirmTransaction c0f) {
+            return Short.toString(c0f.getUid());
+        }
+
+        if (packet instanceof C10PacketCreativeInventoryAction c10) {
+            return String.valueOf(c10.getStack());
+        }
+
+        if (packet instanceof C12PacketUpdateSign c12) {
+            return String.valueOf(c12.getPosition());
+        }
+
+        if (packet instanceof C17PacketCustomPayload c17) {
+            return c17.getChannelName();
+        }
+
+        if (packet instanceof C18PacketSpectate c18) {
+            return String.valueOf(c18.getId());
+        }
+
+        if (packet instanceof C19PacketResourcePackStatus c19) {
+            return String.valueOf(c19.getStatus());
         }
 
         if (packet instanceof S2FPacketSetSlot s2f) {

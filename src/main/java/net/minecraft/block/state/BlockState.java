@@ -144,7 +144,7 @@ public class BlockState
                     return this.properties.get(property) == value ? this : this.propertyValueTable.get(property, value);
                 }
             } catch (IllegalArgumentException exception) {
-                Nonsense.LOGGER.error("Caught BLockState property exception", exception);
+                Nonsense.LOGGER.error("Caught BlockState property exception", exception);
                 return this;
             }
         }

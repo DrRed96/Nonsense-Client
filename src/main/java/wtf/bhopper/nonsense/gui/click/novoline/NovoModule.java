@@ -1,5 +1,6 @@
 package wtf.bhopper.nonsense.gui.click.novoline;
 
+import net.minecraft.client.Minecraft;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.property.Property;
 import wtf.bhopper.nonsense.module.property.impl.*;
@@ -25,6 +26,7 @@ public class NovoModule extends NovoComponent {
             if (p instanceof BooleanProperty booleanProperty) components.add(new NovoSwitch(this.panel, booleanProperty, 0));
             else if (p instanceof NumberProperty numberProperty) components.add(new NovoSlider(this.panel, numberProperty, 0));
             else if (p instanceof EnumProperty<?> enumProperty) components.add(new NovoSelector(this.panel, enumProperty, 0));
+            else if (p instanceof StringProperty stringProperty) components.add(new NovoTextBox(this.panel, stringProperty, 0));
             else if (p instanceof ColorProperty colorProperty) components.add(new NovoColorPicker(this.panel, colorProperty, 0));
             else if (p instanceof GroupProperty groupProperty) components.add(new NovoGroup(this.panel, groupProperty, 0));
             else if (p instanceof ButtonProperty buttonProperty) components.add(new NovoButton(this.panel, buttonProperty, 0));
@@ -53,15 +55,14 @@ public class NovoModule extends NovoComponent {
 
         this.drawBackground(MOD_HEIGHT, color);
 
-        // TODO: fix text positioning
         NVGHelper.fontSize(16.0F);
         NVGHelper.textAlign(NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
         NVGHelper.drawText(this.module.displayName, 8.0F, yOff + MOD_HEIGHT / 2.0F + 1.0F, 0xFFFFFFFF);
 
         if (!this.components.isEmpty()) {
-            NVGHelper.drawLine(WIDTH - 20.0F, yOff + MOD_HEIGHT / 2.0F, WIDTH - 8.0F, yOff + MOD_HEIGHT / 2.0F, 1.0F, 0xFFDDDDDD);
+            NVGHelper.drawLine(WIDTH - 20.0F, yOff + MOD_HEIGHT / 2.0F, WIDTH - 8.0F, yOff + MOD_HEIGHT / 2.0F, 2.0F, 0xFFDDDDDD);
             if (!this.expanded) {
-                NVGHelper.drawLine(WIDTH - 14.0F, yOff + MOD_HEIGHT / 2.0F - 6.0F, WIDTH - 14.0F, yOff + MOD_HEIGHT / 2.0F + 6.0F, 1.0F, 0xFFDDDDDD);
+                NVGHelper.drawLine(WIDTH - 14.0F, yOff + MOD_HEIGHT / 2.0F - 6.0F, WIDTH - 14.0F, yOff + MOD_HEIGHT / 2.0F + 6.0F, 2.0F, 0xFFDDDDDD);
             }
         }
 
@@ -86,8 +87,14 @@ public class NovoModule extends NovoComponent {
         if (this.mouseIntersecting(mouseX, mouseY, MOD_HEIGHT)) {
             if (button == 0) {
                 this.module.toggle();
+                this.panel.gui.mod.sound.get().playSound(Minecraft.getMinecraft().getSoundHandler());
             } else if (button == 1) {
                 this.expanded = !this.expanded;
+                if (!this.expanded) {
+                    for (NovoComponent component : this.components) {
+                        component.onHidden();
+                    }
+                }
             }
         } else if (this.expanded) {
             for (NovoComponent component : this.components) {

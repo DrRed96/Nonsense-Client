@@ -886,7 +886,7 @@ public class FontRenderer implements IResourceManagerReloadListener
     /**
      * Breaks a string into a list of pieces that will fit a specified width.
      */
-    public List listFormattedStringToWidth(String str, int wrapWidth)
+    public List<String> listFormattedStringToWidth(String str, int wrapWidth)
     {
         return Arrays.asList(this.wrapFormattedStringToWidth(str, wrapWidth).split("\n"));
     }

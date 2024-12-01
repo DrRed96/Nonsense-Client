@@ -17,7 +17,7 @@ public enum Fonts implements MinecraftInstance {
     SANS_SERIF("sansserif", "micross.ttf"),
     SEGOE("segoe","segoeui.ttf"),
     SEGOE_BOLD("segoebold", "segoeuib.ttf"),
-    TAHOMA("tahoma", "tahoma.ttf"),
+    TAHOMA("tahoma", "tahoma.ttf"), // Same font that Exhibition uses
     TIMES_NEW_ROMAN("timesnewroman", "times.ttf");
 
     public final String name;

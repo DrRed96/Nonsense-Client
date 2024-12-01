@@ -27,10 +27,10 @@ public class NonsenseConnection extends SimpleChannelInboundHandler<NonsensePack
     private SocketAddress socketAddress;
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, NonsensePacket msg) throws Exception {
+    protected void channelRead0(ChannelHandlerContext ctx, NonsensePacket packet) throws Exception {
         if (this.channel.isOpen()) {
             try {
-                msg.processPacket(this.handler);
+                packet.processPacket(this.handler);
             } catch (Exception ignored) {}
         }
     }

@@ -1,5 +1,6 @@
 package wtf.bhopper.nonsense.gui.click.novoline;
 
+import net.minecraft.client.Minecraft;
 import org.lwjglx.util.vector.Vector2f;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
@@ -55,6 +56,7 @@ public class NovoSwitch extends NovoComponent {
         }
         if (this.mouseIntersecting(mouseX, mouseY, MOD_HEIGHT) && button == 0) {
             this.property.toggle();
+            this.panel.gui.mod.sound.get().playSound(Minecraft.getMinecraft().getSoundHandler());
         }
     }
 

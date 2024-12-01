@@ -28,6 +28,10 @@ public class NumberProperty extends Property<Double> {
     public NumberProperty(String displayName, String description, Supplier<Boolean> dependency, double value, double min, double max, double increment, NumberFormat format) {
         super(displayName, description, value, dependency);
 
+        if (min > max) {
+            throw new IllegalArgumentException("min must be smaller than max");
+        }
+
         this.min = min;
         this.max = max;
         this.increment = increment;
