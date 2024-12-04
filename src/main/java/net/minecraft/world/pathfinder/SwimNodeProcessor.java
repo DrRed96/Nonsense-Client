@@ -78,7 +78,7 @@ public class SwimNodeProcessor extends NodeProcessor
             {
                 for (int k = z; k < z + this.entitySizeZ; ++k)
                 {
-                    Block block = this.blockaccess.getBlockState(blockpos$mutableblockpos.func_181079_c(i, j, k)).getBlock();
+                    Block block = this.blockaccess.getBlockState(blockpos$mutableblockpos.setPos(i, j, k)).getBlock();
 
                     if (block.getMaterial() != Material.water)
                     {

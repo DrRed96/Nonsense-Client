@@ -3,7 +3,7 @@ package net.minecraft.client.multiplayer;
 import com.google.common.collect.Sets;
 import java.util.Random;
 import java.util.Set;
-import java.util.concurrent.Callable;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -18,7 +18,6 @@ import net.minecraft.entity.item.EntityMinecart;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.profiler.Profiler;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
@@ -63,9 +62,9 @@ public class WorldClient extends World
     private BlockPosM randomTickPosM = new BlockPosM(0, 0, 0, 3);
     private boolean playerUpdate = false;
 
-    public WorldClient(NetHandlerPlayClient p_i45063_1_, WorldSettings p_i45063_2_, int p_i45063_3_, EnumDifficulty p_i45063_4_, Profiler p_i45063_5_)
+    public WorldClient(NetHandlerPlayClient p_i45063_1_, WorldSettings p_i45063_2_, int p_i45063_3_, EnumDifficulty p_i45063_4_)
     {
-        super(new SaveHandlerMP(), new WorldInfo(p_i45063_2_, "MpServer"), WorldProvider.getProviderForDimension(p_i45063_3_), p_i45063_5_, true);
+        super(new SaveHandlerMP(), new WorldInfo(p_i45063_2_, "MpServer"), WorldProvider.getProviderForDimension(p_i45063_3_), true);
         this.sendQueue = p_i45063_1_;
         this.getWorldInfo().setDifficulty(p_i45063_4_);
         this.provider.registerWorld(this);
@@ -95,7 +94,6 @@ public class WorldClient extends World
             this.setWorldTime(this.getWorldTime() + 1L);
         }
 
-        this.theProfiler.startSection("reEntryProcessing");
 
         for (int i = 0; i < 10 && !this.entitySpawnQueue.isEmpty(); ++i)
         {
@@ -108,11 +106,8 @@ public class WorldClient extends World
             }
         }
 
-        this.theProfiler.endStartSection("chunkCache");
         this.clientChunkProvider.unloadQueuedChunks();
-        this.theProfiler.endStartSection("blocks");
         this.updateBlocks();
-        this.theProfiler.endSection();
     }
 
     /**
@@ -150,10 +145,8 @@ public class WorldClient extends World
             {
                 int j = chunkcoordintpair.chunkXPos * 16;
                 int k = chunkcoordintpair.chunkZPos * 16;
-                this.theProfiler.startSection("getChunk");
                 Chunk chunk = this.getChunkFromChunkCoords(chunkcoordintpair.chunkXPos, chunkcoordintpair.chunkZPos);
                 this.playMoodSoundAndCheckLight(j, k, chunk);
-                this.theProfiler.endSection();
                 this.previousActiveChunkSet.add(chunkcoordintpair);
                 ++i;
 

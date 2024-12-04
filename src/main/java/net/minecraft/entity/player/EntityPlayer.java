@@ -899,9 +899,9 @@ public abstract class EntityPlayer extends EntityLivingBase
     /**
      * Block hardness will be further counted in net/minecraft/block/Block.getPlayerRelativeBlockHardness
      */
-    public float getToolDigEfficiency(Block p_180471_1_)
+    public float getToolDigEfficiency(Block block)
     {
-        float f = this.inventory.getStrVsBlock(p_180471_1_);
+        float f = this.inventory.getStrVsBlock(block);
 
         if (f > 1.0F)
         {
@@ -921,26 +921,12 @@ public abstract class EntityPlayer extends EntityLivingBase
 
         if (this.isPotionActive(Potion.digSlowdown))
         {
-            float f1 = 1.0F;
-
-            switch (this.getActivePotionEffect(Potion.digSlowdown).getAmplifier())
-            {
-                case 0:
-                    f1 = 0.3F;
-                    break;
-
-                case 1:
-                    f1 = 0.09F;
-                    break;
-
-                case 2:
-                    f1 = 0.0027F;
-                    break;
-
-                case 3:
-                default:
-                    f1 = 8.1E-4F;
-            }
+            float f1 = switch (this.getActivePotionEffect(Potion.digSlowdown).getAmplifier()) {
+                case 0 -> 0.3F;
+                case 1 -> 0.09F;
+                case 2 -> 0.0027F;
+                default -> 8.1E-4F;
+            };
 
             f *= f1;
         }
@@ -2063,19 +2049,21 @@ public abstract class EntityPlayer extends EntityLivingBase
      */
     public int xpBarCap()
     {
-        return this.experienceLevel >= 30 ? 112 + (this.experienceLevel - 30) * 9 : (this.experienceLevel >= 15 ? 37 + (this.experienceLevel - 15) * 5 : 7 + this.experienceLevel * 2);
+        return this.experienceLevel >= 30 ? 112 + (this.experienceLevel - 30) * 9
+                : (this.experienceLevel >= 15 ? 37 + (this.experienceLevel - 15) * 5
+                : 7 + this.experienceLevel * 2);
     }
 
     /**
      * increases exhaustion level by supplied amount
      */
-    public void addExhaustion(float p_71020_1_)
+    public void addExhaustion(float amount)
     {
         if (!this.capabilities.disableDamage)
         {
             if (!this.worldObj.isRemote)
             {
-                this.foodStats.addExhaustion(p_71020_1_);
+                this.foodStats.addExhaustion(amount);
             }
         }
     }

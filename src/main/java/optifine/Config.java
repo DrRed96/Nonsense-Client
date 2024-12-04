@@ -532,17 +532,17 @@ public class Config
 
     public static void dbg(String msg)
     {
-        LOGGER.info("[OptiFine] " + msg);
+        LOGGER.info("[OptiFine] {}", msg);
     }
 
     public static void warn(String msg)
     {
-        LOGGER.warn("[OptiFine] " + msg);
+        LOGGER.warn("[OptiFine] {}", msg);
     }
 
     public static void error(String msg)
     {
-        LOGGER.error("[OptiFine] " + msg);
+        LOGGER.error("[OptiFine] {}", msg);
     }
 
     public static void log(String msg)

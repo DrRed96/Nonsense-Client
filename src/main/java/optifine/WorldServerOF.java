@@ -1,7 +1,6 @@
 package optifine;
 
 import net.minecraft.network.play.server.S2BPacketChangeGameState;
-import net.minecraft.profiler.Profiler;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.WorldServer;
 import net.minecraft.world.storage.ISaveHandler;
@@ -11,9 +10,9 @@ public class WorldServerOF extends WorldServer
 {
     private MinecraftServer mcServer;
 
-    public WorldServerOF(MinecraftServer p_i98_1_, ISaveHandler p_i98_2_, WorldInfo p_i98_3_, int p_i98_4_, Profiler p_i98_5_)
+    public WorldServerOF(MinecraftServer p_i98_1_, ISaveHandler p_i98_2_, WorldInfo p_i98_3_, int p_i98_4_)
     {
-        super(p_i98_1_, p_i98_2_, p_i98_3_, p_i98_4_, p_i98_5_);
+        super(p_i98_1_, p_i98_2_, p_i98_3_, p_i98_4_);
         this.mcServer = p_i98_1_;
     }
 

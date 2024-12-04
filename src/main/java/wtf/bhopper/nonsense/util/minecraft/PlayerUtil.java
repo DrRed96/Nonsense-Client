@@ -8,10 +8,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.potion.Potion;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.MathHelper;
-import net.minecraft.util.Vec3;
+import net.minecraft.util.*;
+
+import java.util.List;
 
 public class PlayerUtil implements MinecraftInstance {
 
@@ -28,6 +27,12 @@ public class PlayerUtil implements MinecraftInstance {
             PacketUtil.send(new C0APacketAnimation());
         } else {
             mc.thePlayer.swingItem();
+        }
+    }
+
+    public static void swingConditional(boolean silent, MovingObjectPosition mop) {
+        if (mop != null && mop.typeOfHit != MovingObjectPosition.MovingObjectType.ENTITY) {
+            swing(silent);
         }
     }
 
@@ -163,6 +168,29 @@ public class PlayerUtil implements MinecraftInstance {
             PacketUtil.sendNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(x, y + 0.0601, z, false));
             PacketUtil.sendNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(x, y + 5.0E-4, z, false));
             PacketUtil.sendNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(x, y + 0.005 + 6.01E-8, z, false));
+        }
+
+        PacketUtil.sendNoEvent(new C03PacketPlayer(true));
+
+        return true;
+    }
+
+    public static boolean selfDamageJump() {
+
+        if (!mc.thePlayer.onGround || mc.thePlayer.hurtTime > 0) {
+            return false;
+        }
+
+        double x = mc.thePlayer.posX;
+        double y = mc.thePlayer.posY;
+        double z = mc.thePlayer.posZ;
+
+        MoveUtil.JumpOffsets jumpOffsets = MoveUtil.getJumpOffsets(0.42);
+
+        for (int i = 0; (double)i < getMaxFallDist() / jumpOffsets.maxHeight(); ++i) {
+            for (double offset : jumpOffsets.offsets()) {
+                PacketUtil.sendNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(x, y + offset, z, false));
+            }
         }
 
         PacketUtil.sendNoEvent(new C03PacketPlayer(true));

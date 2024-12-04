@@ -316,7 +316,6 @@ public class Chunk
 
     private void recheckGaps(boolean p_150803_1_)
     {
-        this.worldObj.theProfiler.startSection("recheckGaps");
 
         if (this.worldObj.isAreaLoaded(new BlockPos(this.xPosition * 16 + 8, 0, this.zPosition * 16 + 8), 16))
         {
@@ -346,7 +345,6 @@ public class Chunk
 
                         if (p_150803_1_)
                         {
-                            this.worldObj.theProfiler.endSection();
                             return;
                         }
                     }
@@ -356,7 +354,6 @@ public class Chunk
             this.isGapLightingUpdated = false;
         }
 
-        this.worldObj.theProfiler.endSection();
     }
 
     /**
@@ -1539,7 +1536,7 @@ public class Chunk
 
         for (int j = i + 16 - 1; j > this.worldObj.func_181545_F() || j > 0 && !flag1; --j)
         {
-            blockpos$mutableblockpos.func_181079_c(blockpos$mutableblockpos.getX(), j, blockpos$mutableblockpos.getZ());
+            blockpos$mutableblockpos.setPos(blockpos$mutableblockpos.getX(), j, blockpos$mutableblockpos.getZ());
             int k = this.getBlockLightOpacity(blockpos$mutableblockpos);
 
             if (k == 255 && blockpos$mutableblockpos.getY() < this.worldObj.func_181545_F())
@@ -1559,7 +1556,7 @@ public class Chunk
 
         for (int l = blockpos$mutableblockpos.getY(); l > 0; --l)
         {
-            blockpos$mutableblockpos.func_181079_c(blockpos$mutableblockpos.getX(), l, blockpos$mutableblockpos.getZ());
+            blockpos$mutableblockpos.setPos(blockpos$mutableblockpos.getX(), l, blockpos$mutableblockpos.getZ());
 
             if (this.getBlock(blockpos$mutableblockpos).getLightValue() > 0)
             {

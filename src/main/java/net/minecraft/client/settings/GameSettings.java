@@ -110,7 +110,7 @@ public class GameSettings
 
     /** Whether to pause when the game loses focus, toggled by F3+P */
     public boolean pauseOnLostFocus = true;
-    private final Set setModelParts = Sets.newHashSet(EnumPlayerModelParts.values());
+    private final Set<EnumPlayerModelParts> setModelParts = Sets.newHashSet(EnumPlayerModelParts.values());
     public boolean touchscreen;
     public int overrideWidth;
     public int overrideHeight;
@@ -1345,7 +1345,7 @@ public class GameSettings
         }
     }
 
-    public Set getModelParts()
+    public Set<EnumPlayerModelParts> getModelParts()
     {
         return ImmutableSet.copyOf(this.setModelParts);
     }

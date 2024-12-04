@@ -31,6 +31,8 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 import shadersmod.client.Shaders;
 import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.event.impl.EventPostRenderEntity;
+import wtf.bhopper.nonsense.event.impl.EventPreRenderEntity;
 import wtf.bhopper.nonsense.event.impl.EventRenderNameTag;
 
 public abstract class RendererLivingEntity<T extends EntityLivingBase> extends Render<T>
@@ -101,6 +103,8 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
      */
     public void doRender(T entity, double x, double y, double z, float entityYaw, float partialTicks)
     {
+        EventPreRenderEntity event = null;
+
         if (!Reflector.RenderLivingEvent_Pre_Constructor.exists() || !Reflector.postForgeBusEvent(Reflector.RenderLivingEvent_Pre_Constructor, new Object[] {entity, this, Double.valueOf(x), Double.valueOf(y), Double.valueOf(z)}))
         {
             GlStateManager.pushMatrix();
@@ -117,16 +121,16 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
 
             try
             {
-                float f = this.interpolateRotation(entity.prevRenderYawOffset, entity.renderYawOffset, partialTicks);
+                float chestRot = this.interpolateRotation(entity.prevRenderYawOffset, entity.renderYawOffset, partialTicks);
                 float f1 = this.interpolateRotation(entity.prevRotationYawHead, entity.rotationYawHead, partialTicks);
-                float f2 = f1 - f;
+                float rotationYawHead = f1 - chestRot;
 
                 if (this.mainModel.isRiding && entity.ridingEntity instanceof EntityLivingBase)
                 {
                     EntityLivingBase entitylivingbase = (EntityLivingBase)entity.ridingEntity;
-                    f = this.interpolateRotation(entitylivingbase.prevRenderYawOffset, entitylivingbase.renderYawOffset, partialTicks);
-                    f2 = f1 - f;
-                    float f3 = MathHelper.wrapAngleTo180_float(f2);
+                    chestRot = this.interpolateRotation(entitylivingbase.prevRenderYawOffset, entitylivingbase.renderYawOffset, partialTicks);
+                    rotationYawHead = f1 - chestRot;
+                    float f3 = MathHelper.wrapAngleTo180_float(rotationYawHead);
 
                     if (f3 < -85.0F)
                     {
@@ -138,47 +142,53 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
                         f3 = 85.0F;
                     }
 
-                    f = f1 - f3;
+                    chestRot = f1 - f3;
 
                     if (f3 * f3 > 2500.0F)
                     {
-                        f += f3 * 0.2F;
+                        chestRot += f3 * 0.2F;
                     }
                 }
 
-                float f8 = entity == renderManager.livingPlayer
+                float rotationPitch = entity == renderManager.livingPlayer
                         ? entity.prevRotationPitchHead + (entity.rotationPitchHead - entity.prevRotationPitchHead) * partialTicks
                         : entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks;
 
                 this.renderLivingAt(entity, x, y, z);
-                float f7 = this.handleRotationFloat(entity, partialTicks);
-                this.rotateCorpse(entity, f7, f, partialTicks);
+                float ageInTicks = this.handleRotationFloat(entity, partialTicks);
+                this.rotateCorpse(entity, ageInTicks, chestRot, partialTicks);
                 GlStateManager.enableRescaleNormal();
                 GlStateManager.scale(-1.0F, -1.0F, 1.0F);
                 this.preRenderCallback(entity, partialTicks);
-                float f4 = 0.0625F;
+                float offset = 0.0625F;
                 GlStateManager.translate(0.0F, -1.5078125F, 0.0F);
-                float f5 = entity.prevLimbSwingAmount + (entity.limbSwingAmount - entity.prevLimbSwingAmount) * partialTicks;
-                float f6 = entity.limbSwing - entity.limbSwingAmount * (1.0F - partialTicks);
+                float limbSwingAmount = entity.prevLimbSwingAmount + (entity.limbSwingAmount - entity.prevLimbSwingAmount) * partialTicks;
+                float limbSwing = entity.limbSwing - entity.limbSwingAmount * (1.0F - partialTicks);
+
+                event = new EventPreRenderEntity(entity, limbSwing, limbSwingAmount, ageInTicks, rotationYawHead, rotationPitch, chestRot, offset);
+                Nonsense.getEventBus().post(event);
+                if (event.isCancelled()) {
+                    return;
+                }
 
                 if (entity.isChild())
                 {
-                    f6 *= 3.0F;
+                    limbSwing *= 3.0F;
                 }
 
-                if (f5 > 1.0F)
+                if (limbSwingAmount > 1.0F)
                 {
-                    f5 = 1.0F;
+                    limbSwingAmount = 1.0F;
                 }
 
                 GlStateManager.enableAlpha();
-                this.mainModel.setLivingAnimations(entity, f6, f5, partialTicks);
-                this.mainModel.setRotationAngles(f6, f5, f7, f2, f8, 0.0625F, entity);
+                this.mainModel.setLivingAnimations(entity, limbSwing, limbSwingAmount, partialTicks);
+                this.mainModel.setRotationAngles(limbSwing, limbSwingAmount, ageInTicks, rotationYawHead, rotationPitch, 0.0625F, entity);
 
                 if (this.renderOutlines)
                 {
                     boolean flag1 = this.setScoreTeamColor(entity);
-                    this.renderModel(entity, f6, f5, f7, f2, f8, 0.0625F);
+                    this.renderModel(entity, limbSwing, limbSwingAmount, ageInTicks, rotationYawHead, rotationPitch, 0.0625F);
 
                     if (flag1)
                     {
@@ -188,7 +198,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
                 else
                 {
                     boolean flag = this.setDoRenderBrightness(entity, partialTicks);
-                    this.renderModel(entity, f6, f5, f7, f2, f8, 0.0625F);
+                    this.renderModel(entity, limbSwing, limbSwingAmount, ageInTicks, rotationYawHead, rotationPitch, 0.0625F);
 
                     if (flag)
                     {
@@ -199,7 +209,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
 
                     if (!(entity instanceof EntityPlayer) || !((EntityPlayer)entity).isSpectator())
                     {
-                        this.renderLayers(entity, f6, f5, partialTicks, f7, f2, f8, 0.0625F);
+                        this.renderLayers(entity, limbSwing, limbSwingAmount, partialTicks, ageInTicks, rotationYawHead, rotationPitch, 0.0625F);
                     }
                 }
 
@@ -219,6 +229,10 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
             if (!this.renderOutlines)
             {
                 super.doRender(entity, x, y, z, entityYaw, partialTicks);
+            }
+
+            if (event != null) {
+                Nonsense.getEventBus().post(new EventPostRenderEntity(event));
             }
 
             if (!Reflector.RenderLivingEvent_Post_Constructor.exists() || !Reflector.postForgeBusEvent(Reflector.RenderLivingEvent_Post_Constructor, new Object[] {entity, this, Double.valueOf(x), Double.valueOf(y), Double.valueOf(z)}))
@@ -273,7 +287,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
     /**
      * Renders the model in RenderLiving
      */
-    protected void renderModel(T entitylivingbaseIn, float p_77036_2_, float p_77036_3_, float p_77036_4_, float p_77036_5_, float p_77036_6_, float p_77036_7_)
+    public void renderModel(T entitylivingbaseIn, float limbSwing, float p_77036_3_, float p_77036_4_, float p_77036_5_, float p_77036_6_, float p_77036_7_)
     {
         boolean flag = !entitylivingbaseIn.isInvisible();
         boolean flag1 = !flag && !entitylivingbaseIn.isInvisibleToPlayer(Minecraft.getMinecraft().thePlayer);
@@ -295,7 +309,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
                 GlStateManager.alphaFunc(516, 0.003921569F);
             }
 
-            this.mainModel.render(entitylivingbaseIn, p_77036_2_, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, p_77036_7_);
+            this.mainModel.render(entitylivingbaseIn, limbSwing, p_77036_3_, p_77036_4_, p_77036_5_, p_77036_6_, p_77036_7_);
 
             if (flag1)
             {
@@ -501,7 +515,7 @@ public abstract class RendererLivingEntity<T extends EntityLivingBase> extends R
         return (float)livingBase.ticksExisted + partialTicks;
     }
 
-    protected void renderLayers(T entitylivingbaseIn, float p_177093_2_, float p_177093_3_, float partialTicks, float p_177093_5_, float p_177093_6_, float p_177093_7_, float p_177093_8_)
+    public void renderLayers(T entitylivingbaseIn, float p_177093_2_, float p_177093_3_, float partialTicks, float p_177093_5_, float p_177093_6_, float p_177093_7_, float p_177093_8_)
     {
         for (LayerRenderer<T> layerrenderer : this.layerRenderers)
         {

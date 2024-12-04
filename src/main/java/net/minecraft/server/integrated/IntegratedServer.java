@@ -81,7 +81,7 @@ public class IntegratedServer extends MinecraftServer
 
         if (Reflector.DimensionManager.exists())
         {
-            WorldServer worldserver = this.isDemo() ? (WorldServer)((WorldServer)(new DemoWorldServer(this, isavehandler, worldinfo, 0, this.theProfiler)).init()) : (WorldServer)(new WorldServerOF(this, isavehandler, worldinfo, 0, this.theProfiler)).init();
+            WorldServer worldserver = this.isDemo() ? (WorldServer)((WorldServer)(new DemoWorldServer(this, isavehandler, worldinfo, 0)).init()) : (WorldServer)(new WorldServerOF(this, isavehandler, worldinfo, 0)).init();
             worldserver.initialize(this.theWorldSettings);
             Integer[] ainteger = (Integer[])((Integer[])Reflector.call(Reflector.DimensionManager_getStaticDimensionIDs, new Object[0]));
             Integer[] ainteger1 = ainteger;
@@ -90,7 +90,7 @@ public class IntegratedServer extends MinecraftServer
             for (int j = 0; j < i; ++j)
             {
                 int k = ainteger1[j].intValue();
-                WorldServer worldserver1 = k == 0 ? worldserver : (WorldServer)((WorldServer)(new WorldServerMulti(this, isavehandler, k, worldserver, this.theProfiler)).init());
+                WorldServer worldserver1 = k == 0 ? worldserver : (WorldServer)((WorldServer)(new WorldServerMulti(this, isavehandler, k, worldserver)).init());
                 worldserver1.addWorldAccess(new WorldManager(this, worldserver1));
 
                 if (!this.isSinglePlayer())
@@ -144,18 +144,18 @@ public class IntegratedServer extends MinecraftServer
                 {
                     if (this.isDemo())
                     {
-                        this.worldServers[l] = (WorldServer)(new DemoWorldServer(this, isavehandler, worldinfo, b0, this.theProfiler)).init();
+                        this.worldServers[l] = (WorldServer)(new DemoWorldServer(this, isavehandler, worldinfo, b0)).init();
                     }
                     else
                     {
-                        this.worldServers[l] = (WorldServer)(new WorldServerOF(this, isavehandler, worldinfo, b0, this.theProfiler)).init();
+                        this.worldServers[l] = (WorldServer)(new WorldServerOF(this, isavehandler, worldinfo, b0)).init();
                     }
 
                     this.worldServers[l].initialize(this.theWorldSettings);
                 }
                 else
                 {
-                    this.worldServers[l] = (WorldServer)(new WorldServerMulti(this, isavehandler, b0, this.worldServers[0], this.theProfiler)).init();
+                    this.worldServers[l] = (WorldServer)(new WorldServerMulti(this, isavehandler, b0, this.worldServers[0])).init();
                 }
 
                 this.worldServers[l].addWorldAccess(new WorldManager(this, this.worldServers[l]));

@@ -1,13 +1,15 @@
 package wtf.bhopper.nonsense.command;
 
+import org.reflections.Reflections;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.command.impl.*;
+import wtf.bhopper.nonsense.command.impl.Help;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
 import wtf.bhopper.nonsense.event.impl.EventChat;
 import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 public class CommandManager {
@@ -18,16 +20,17 @@ public class CommandManager {
 
     public CommandManager() {
 
-        this.commands.add(new Bind());
-        this.commands.add(new ConfigCmd());
-        this.commands.add(new Copy());
-        this.commands.add(new Debug());
-        this.commands.add(new Give());
-        this.commands.add(new Help());
-        this.commands.add(new Hide());
-        this.commands.add(new Say());
-        this.commands.add(new Toggle());
-        this.commands.add(new Vclip());
+        new Reflections(Help.class.getPackage().getName())
+                .getSubTypesOf(Command.class)
+                .stream()
+                .sorted(Comparator.comparing(Class::getSimpleName))
+                .forEach(command -> {
+                    try {
+                        this.commands.add(command.getConstructor().newInstance());
+                    } catch (ReflectiveOperationException e) {
+                        throw new RuntimeException(e);
+                    }
+                });
 
         Nonsense.getEventBus().subscribe(this);
     }

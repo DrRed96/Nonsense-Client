@@ -44,6 +44,11 @@ public class StringProperty extends Property<String> {
     }
 
     @Override
+    public void parseString(String str) {
+        this.set(str);
+    }
+
+    @Override
     public JsonElement serialize() {
         return new JsonPrimitive(this.get());
     }

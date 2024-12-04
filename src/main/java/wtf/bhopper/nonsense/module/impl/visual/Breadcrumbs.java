@@ -12,6 +12,7 @@ import wtf.bhopper.nonsense.event.impl.EventTick;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
+import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.ColorProperty;
 import wtf.bhopper.nonsense.util.minecraft.MoveUtil;
 import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
@@ -47,7 +48,7 @@ public class Breadcrumbs extends Module {
     }
 
     @EventLink
-    public final Listener<EventTick> onTick = event -> {
+    public final Listener<EventTick> onTick = _ -> {
         if (!PlayerUtil.canUpdate()) {
             return;
         }
@@ -77,7 +78,7 @@ public class Breadcrumbs extends Module {
 
         renderer.begin(GL_LINE_STRIP, DefaultVertexFormats.POSITION);
         for (Vec3 pos : this.path) {
-            Vec3 render = pos.add(renderPos);
+            Vec3 render = pos.subtract(renderPos);
             renderer.pos(render.xCoord, render.yCoord, render.zCoord).endVertex();
         }
         tessellator.draw();

@@ -1,6 +1,7 @@
 package wtf.bhopper.nonsense.module.impl.other;
 
 import net.minecraft.network.play.server.S02PacketChat;
+import net.minecraft.util.EnumChatFormatting;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
 import wtf.bhopper.nonsense.event.impl.EventJoinGame;
@@ -60,7 +61,7 @@ public class PartySpammer extends Module {
     public final Listener<EventReceivePacket>  onReceivePacket = event -> {
         if (event.packet instanceof S02PacketChat packet) {
 
-            String text = packet.getChatComponent().getUnformattedText();
+            String text = EnumChatFormatting.getTextWithoutFormattingCodes(packet.getChatComponent().getUnformattedText());
 
             if (text.equals("You cannot invite that player since they have blocked you.")) {
                 toggle(false);

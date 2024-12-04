@@ -32,7 +32,7 @@ public class WorldGenSpikes extends WorldGenerator
                     int i1 = k - position.getX();
                     int j1 = l - position.getZ();
 
-                    if (i1 * i1 + j1 * j1 <= j * j + 1 && worldIn.getBlockState(blockpos$mutableblockpos.func_181079_c(k, position.getY() - 1, l)).getBlock() != this.baseBlockRequired)
+                    if (i1 * i1 + j1 * j1 <= j * j + 1 && worldIn.getBlockState(blockpos$mutableblockpos.setPos(k, position.getY() - 1, l)).getBlock() != this.baseBlockRequired)
                     {
                         return false;
                     }

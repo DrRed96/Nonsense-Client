@@ -21,7 +21,7 @@ public class AntiFall extends Module {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Anti Fall method", Mode.PACKET);
     private final NumberProperty height = new NumberProperty("Height", "Fall height", 2.0F, 1.0F, 10.0F, 0.5F);
-    private final BooleanProperty voidOnly = new BooleanProperty("Void Only", "Only prevents you from falling if you fall into the void", true);
+    private final BooleanProperty voidOnly = new BooleanProperty("Void Only", "Only prevents you from falling if you're going to fall into the void", true);
     private final BooleanProperty scaffold = new BooleanProperty("Scaffold", "Enables scaffold upon saving", false);
 
     private BlockPos lastGroundPos = null;
@@ -47,7 +47,7 @@ public class AntiFall extends Module {
                     }
                 }
 
-                // Will cause a set back on certain anticheats (such as NCP) which prevents you from falling into the void
+                // Will cause a setback on certain anticheats (such as NCP) which prevents you from falling into the void
                 case PACKET -> PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(event.x, event.y + 11.0F + StrictMath.random(), event.z, false));
 
                 case BOUNCE -> {

@@ -66,7 +66,7 @@ public class NovoPanel extends NovoComponent {
             NVGHelper.resetScissor();
         }
 
-        NVGHelper.drawRect(0.0F, Math.min(this.yOff, HEADER_HEIGHT + NovoComponent.HEIGHT), WIDTH, 1.0F, NovoComponent.OUTLINE_COLOR);
+        NVGHelper.drawRect(0.0F, this.yOff, WIDTH, 1.0F, NovoComponent.OUTLINE_COLOR);
 
         NVGHelper.resetTransform();
     }

@@ -43,19 +43,18 @@ public class BlockOverlay extends Module {
     private final BlockOverlayProperty dropper = new BlockOverlayProperty("Dropper", false, 0x55FF55);
     private final BlockOverlayProperty bedSet = new BlockOverlayProperty("Bed", true, 0x55AAFF);
     private final BlockOverlayProperty jukeBox = new BlockOverlayProperty("Juke Box", false, 0xFF55FF);
-    private final NumberProperty bedRange = new NumberProperty("Search Range", "Search range for non tile blocks", 10, 2, 50, 1);
+    private final NumberProperty searchRange = new NumberProperty("Search Range", "Search range for non tile blocks", 10, 2, 50, 1);
 
     private final Clock searchTimer = new Clock();
     private final List<AxisAlignedBB> beds = new ArrayList<>();
     private final List<BlockPos> jukeBoxes = new ArrayList<>();
 
     public BlockOverlay() {
-        this.bedSet.addProperties(this.bedRange);
-        this.addProperties(this.mouseOver, this.chests, this.enderChests, this.hopper, this.dispenser, this.dropper, this.bedSet, this.jukeBox);
+        this.addProperties(this.mouseOver, this.chests, this.enderChests, this.hopper, this.dispenser, this.dropper, this.bedSet, this.jukeBox, this.searchRange);
     }
 
     @EventLink
-    public final Listener<EventRender3D> onRender3D = event -> {
+    public final Listener<EventRender3D> onRender3D = _ -> {
 
         for (TileEntity tileEntity : mc.theWorld.loadedTileEntityList) {
             try {
@@ -124,7 +123,7 @@ public class BlockOverlay extends Module {
     };
 
     @EventLink
-    public final Listener<EventTick> onTick = event -> {
+    public final Listener<EventTick> onTick = _ -> {
 
         if (!PlayerUtil.canUpdate()) {
             return;
@@ -133,9 +132,9 @@ public class BlockOverlay extends Module {
         if (this.bedSet.isEnabled() || this.jukeBox.isEnabled()) {
             if (searchTimer.hasReached(1000)) { // Only search every 1000ms (or 1 second)
                 this.beds.clear();
-                for (int x = -bedRange.getInt(); x <= bedRange.getInt(); x++) {
-                    for (int y = -bedRange.getInt(); y <= bedRange.getInt(); y++) {
-                        for (int z = -bedRange.getInt(); z <= bedRange.getInt(); z++) {
+                for (int x = -searchRange.getInt(); x <= searchRange.getInt(); x++) {
+                    for (int y = -searchRange.getInt(); y <= searchRange.getInt(); y++) {
+                        for (int z = -searchRange.getInt(); z <= searchRange.getInt(); z++) {
 
                             BlockPos pos = mc.thePlayer.getPosition().add(x, y, z);
                             IBlockState foot = mc.theWorld.getBlockState(pos);

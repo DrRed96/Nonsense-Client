@@ -47,26 +47,26 @@ public class Main {
         OptionSpec<String> optionAssetIndex = parser.accepts("assetIndex").withRequiredArg();
         OptionSpec<String> optionUserType = parser.accepts("userType").withRequiredArg().defaultsTo("legacy");
         OptionSpec<String> nonOptions = parser.nonOptions();
-        OptionSet optionset = parser.parse(args);
+        OptionSet options = parser.parse(args);
 
-        List<String> ignoredArgs = optionset.valuesOf(nonOptions);
+        List<String> ignoredArgs = options.valuesOf(nonOptions);
         if (!ignoredArgs.isEmpty()) {
             System.out.println("Completely ignored arguments: " + ignoredArgs);
         }
 
-        String proxyHost = optionset.valueOf(optionProxyHost);
+        String proxyHost = options.valueOf(optionProxyHost);
         Proxy proxy = Proxy.NO_PROXY;
 
         if (proxyHost != null) {
             try {
-                proxy = new Proxy(Type.SOCKS, new InetSocketAddress(proxyHost, optionset.valueOf(optionProxyPort)));
+                proxy = new Proxy(Type.SOCKS, new InetSocketAddress(proxyHost, options.valueOf(optionProxyPort)));
             } catch (Exception ignored) {
 
             }
         }
 
-        final String proxyUser = optionset.valueOf(optionProxyUser);
-        final String proxyPass = optionset.valueOf(optionProxyPass);
+        final String proxyUser = options.valueOf(optionProxyUser);
+        final String proxyPass = options.valueOf(optionProxyPass);
 
         if (!proxy.equals(Proxy.NO_PROXY) && isNullOrEmpty(proxyUser) && isNullOrEmpty(proxyPass)) {
             Authenticator.setDefault(new Authenticator() {
@@ -81,30 +81,30 @@ public class Main {
                 .create();
 
         // User Info
-        String playerID = optionset.has(optionUuid) ? optionUuid.value(optionset) : optionUsername.value(optionset);
-        Session session = new Session(optionUsername.value(optionset), playerID, optionAccessToken.value(optionset), optionUserType.value(optionset));
-        PropertyMap userProperties = gson.fromJson(optionset.valueOf(optionUserProperties), PropertyMap.class);
-        PropertyMap profileProperties = gson.fromJson(optionset.valueOf(optionProfileProperties), PropertyMap.class);
+        String playerID = options.has(optionUuid) ? optionUuid.value(options) : optionUsername.value(options);
+        Session session = new Session(optionUsername.value(options), playerID, optionAccessToken.value(options), optionUserType.value(options));
+        PropertyMap userProperties = gson.fromJson(options.valueOf(optionUserProperties), PropertyMap.class);
+        PropertyMap profileProperties = gson.fromJson(options.valueOf(optionProfileProperties), PropertyMap.class);
 
         // Display Info
-        int width = optionset.valueOf(optionWidth);
-        int height = optionset.valueOf(optionHeight);
-        boolean fullscreen = optionset.has("fullscreen");
-        boolean checkGlErrors = optionset.has("checkGlErrors");
+        int width = options.valueOf(optionWidth);
+        int height = options.valueOf(optionHeight);
+        boolean fullscreen = options.has("fullscreen");
+        boolean checkGlErrors = options.has("checkGlErrors");
 
         // Folder Info
-        File gameDir = optionset.valueOf(optionGameDir);
-        File assetsDir = optionset.has(optionAssetsDir) ? optionset.valueOf(optionAssetsDir) : new File(gameDir, "assets/");
-        File resourcePackDir = optionset.has(optionResourcePackDir) ? optionset.valueOf(optionResourcePackDir) : new File(gameDir, "resourcepacks/");
-        String assetIndex = optionset.has(optionAssetIndex) ? optionAssetIndex.value(optionset) : null;
+        File gameDir = options.valueOf(optionGameDir);
+        File assetsDir = options.has(optionAssetsDir) ? options.valueOf(optionAssetsDir) : new File(gameDir, "assets/");
+        File resourcePackDir = options.has(optionResourcePackDir) ? options.valueOf(optionResourcePackDir) : new File(gameDir, "resourcepacks/");
+        String assetIndex = options.has(optionAssetIndex) ? optionAssetIndex.value(options) : null;
 
         // Version Info
-        boolean demo = optionset.has("demo");
-        String version = optionset.valueOf(optionVersion);
+        boolean demo = options.has("demo");
+        String version = options.valueOf(optionVersion);
 
         // Server Info
-        String server = optionset.valueOf(optionServer);
-        Integer port = optionset.valueOf(optionPort);
+        String server = options.valueOf(optionServer);
+        Integer port = options.valueOf(optionPort);
 
         GameConfiguration gameconfiguration = new GameConfiguration(
                 new GameConfiguration.UserInformation(session, userProperties, profileProperties, proxy),

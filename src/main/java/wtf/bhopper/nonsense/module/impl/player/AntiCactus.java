@@ -4,7 +4,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.util.AxisAlignedBB;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
-import wtf.bhopper.nonsense.event.impl.EventBlockCollide;
+import wtf.bhopper.nonsense.event.impl.EventBlockBounds;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
@@ -13,9 +13,9 @@ import wtf.bhopper.nonsense.module.ModuleInfo;
 public class AntiCactus extends Module {
 
     @EventLink
-    public final Listener<EventBlockCollide> onBlockCollide = event -> {
+    public final Listener<EventBlockBounds> onBlockCollide = event -> {
         if (event.block == Blocks.cactus) {
-            event.bounds = new AxisAlignedBB(event.pos.getX(), event.pos.getY(), event.pos.getZ(), event.pos.getX() + 1, event.pos.getY() + 1, event.pos.getZ() + 1);
+            event.bounds = new AxisAlignedBB(event.pos, event.pos.add(1, 1, 1));
         }
     };
 

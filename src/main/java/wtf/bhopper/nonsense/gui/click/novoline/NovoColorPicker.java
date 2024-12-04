@@ -4,15 +4,19 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 import org.lwjglx.opengl.Display;
 import wtf.bhopper.nonsense.module.property.impl.ColorProperty;
+import wtf.bhopper.nonsense.util.misc.ResourceUtil;
 import wtf.bhopper.nonsense.util.render.ColorUtil;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
 
 import java.awt.*;
+import java.io.IOException;
+import java.nio.ByteBuffer;
 
 import static org.lwjgl.nanovg.NanoVG.*;
 
 public class NovoColorPicker extends NovoComponent {
 
+    private static ByteBuffer transparentData = null;
     private static int transparent = -1;
 
     private final ColorProperty property;
@@ -27,7 +31,12 @@ public class NovoColorPicker extends NovoComponent {
         this.property = property;
 
         if (transparent == -1) {
-            transparent = NVGHelper.createImage(new ResourceLocation("nonsense/transparent.jpg"), 0);
+            try {
+                transparentData = ResourceUtil.loadResource(new ResourceLocation("nonsense/transparent.jpg"));
+                transparent = NVGHelper.createImage(0, transparentData);
+            } catch (IOException exception) {
+                throw new RuntimeException(exception);
+            }
         }
     }
 

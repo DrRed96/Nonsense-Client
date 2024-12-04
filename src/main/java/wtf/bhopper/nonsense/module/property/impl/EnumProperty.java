@@ -64,6 +64,16 @@ public class EnumProperty<T extends Enum<T>> extends Property<T> {
     }
 
     @Override
+    public void parseString(String str) {
+        for (T value : this.values) {
+            if (value.name().equalsIgnoreCase(str)) {
+                this.set(value);
+                break;
+            }
+        }
+    }
+
+    @Override
     public JsonElement serialize() {
         return new JsonPrimitive(this.get().name());
     }

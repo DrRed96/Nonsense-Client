@@ -13,13 +13,17 @@ import java.lang.annotation.Target;
 @Target(ElementType.TYPE)
 @Retention(RetentionPolicy.RUNTIME)
 public @interface ModuleInfo {
+
     String name();
 
-    ModuleCategory category();
-
     String description();
+
+    ModuleCategory category();
 
     boolean toggled() default false;
 
     int bind() default Keyboard.KEY_NONE;
+
+    boolean hidden() default false;
+
 }

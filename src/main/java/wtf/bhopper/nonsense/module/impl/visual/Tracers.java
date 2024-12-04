@@ -67,14 +67,13 @@ public class Tracers extends Module {
         glLineWidth(this.lineWidth.getFloat());
 
         for (EntityLivingBase entity : mc.theWorld.getEntities(EntityLivingBase.class, this::isValidEntity)) {
-            double x = MathUtil.lerp(entity.posX, entity.lastTickPosX, event.delta) + renderPos.xCoord;
-            double y = MathUtil.lerp(entity.posY, entity.lastTickPosY, event.delta) + renderPos.yCoord;
-            double z = MathUtil.lerp(entity.posZ, entity.lastTickPosZ, event.delta) + renderPos.zCoord;
+
+            Vec3 pos = RenderUtil.renderPos(entity, event.delta).subtract(renderPos);
 
             RenderUtil.glColor(this.color);
             renderer.begin(GL_LINES, DefaultVertexFormats.POSITION);
             renderer.pos(0.0F, mc.thePlayer.getEyeHeight(), 0.0F).endVertex();
-            renderer.pos(x, y, z).endVertex();
+            renderer.pos(pos.xCoord, pos.yCoord, pos.zCoord).endVertex();
             tessellator.draw();
 
         }

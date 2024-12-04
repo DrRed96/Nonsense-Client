@@ -87,6 +87,11 @@ public class NumberProperty extends Property<Double> {
     }
 
     @Override
+    public void parseString(String str) {
+        this.set(Double.parseDouble(str));
+    }
+
+    @Override
     public JsonElement serialize() {
         return new JsonPrimitive(this.get());
     }

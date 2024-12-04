@@ -91,26 +91,26 @@ public class FoodStats
     /**
      * Reads the food data for the player.
      */
-    public void readNBT(NBTTagCompound p_75112_1_)
+    public void readNBT(NBTTagCompound nbt)
     {
-        if (p_75112_1_.hasKey("foodLevel", 99))
+        if (nbt.hasKey("foodLevel", 99))
         {
-            this.foodLevel = p_75112_1_.getInteger("foodLevel");
-            this.foodTimer = p_75112_1_.getInteger("foodTickTimer");
-            this.foodSaturationLevel = p_75112_1_.getFloat("foodSaturationLevel");
-            this.foodExhaustionLevel = p_75112_1_.getFloat("foodExhaustionLevel");
+            this.foodLevel = nbt.getInteger("foodLevel");
+            this.foodTimer = nbt.getInteger("foodTickTimer");
+            this.foodSaturationLevel = nbt.getFloat("foodSaturationLevel");
+            this.foodExhaustionLevel = nbt.getFloat("foodExhaustionLevel");
         }
     }
 
     /**
      * Writes the food data for the player.
      */
-    public void writeNBT(NBTTagCompound p_75117_1_)
+    public void writeNBT(NBTTagCompound nbt)
     {
-        p_75117_1_.setInteger("foodLevel", this.foodLevel);
-        p_75117_1_.setInteger("foodTickTimer", this.foodTimer);
-        p_75117_1_.setFloat("foodSaturationLevel", this.foodSaturationLevel);
-        p_75117_1_.setFloat("foodExhaustionLevel", this.foodExhaustionLevel);
+        nbt.setInteger("foodLevel", this.foodLevel);
+        nbt.setInteger("foodTickTimer", this.foodTimer);
+        nbt.setFloat("foodSaturationLevel", this.foodSaturationLevel);
+        nbt.setFloat("foodExhaustionLevel", this.foodExhaustionLevel);
     }
 
     /**
@@ -137,9 +137,9 @@ public class FoodStats
     /**
      * adds input to foodExhaustionLevel to a max of 40
      */
-    public void addExhaustion(float p_75113_1_)
+    public void addExhaustion(float amount)
     {
-        this.foodExhaustionLevel = Math.min(this.foodExhaustionLevel + p_75113_1_, 40.0F);
+        this.foodExhaustionLevel = Math.min(this.foodExhaustionLevel + amount, 40.0F);
     }
 
     /**

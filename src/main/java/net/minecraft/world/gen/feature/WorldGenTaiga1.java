@@ -53,7 +53,7 @@ public class WorldGenTaiga1 extends WorldGenAbstractTree
                     {
                         if (i1 >= 0 && i1 < 256)
                         {
-                            if (!this.func_150523_a(worldIn.getBlockState(blockpos$mutableblockpos.func_181079_c(k1, i1, l1)).getBlock()))
+                            if (!this.func_150523_a(worldIn.getBlockState(blockpos$mutableblockpos.setPos(k1, i1, l1)).getBlock()))
                             {
                                 flag = false;
                             }

@@ -28,6 +28,11 @@ public class ButtonProperty extends Property<Void> {
     }
 
     @Override
+    public void parseString(String str) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public JsonElement serialize() {
         throw new UnsupportedOperationException();
     }

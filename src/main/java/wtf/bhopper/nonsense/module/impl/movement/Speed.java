@@ -25,6 +25,7 @@ public class Speed extends Module {
     private final NumberProperty speedSet = new NumberProperty("Speed", "Move speed.", () -> this.mode.is(Mode.VANILLA), 1.0, 0.1, 3.0, 0.01);
     private final BooleanProperty jump = new BooleanProperty("Jump", "Automatically Jumps", false, () -> this.mode.isAny(Mode.VANILLA, Mode.MINIBLOX));
     private final NumberProperty bhopSpeed = new NumberProperty("Bhop Speed", "Speed for Bhop Mode.\n1.6 will bypass NCP", () -> this.mode.is(Mode.BHOP), 1.6, 0.0, 3.0, 0.01);
+    private final NumberProperty jumpHeight = new NumberProperty("Jump Height", "Bhop jump height", () -> this.mode.is(Mode.BHOP), 0.4, 0.1, 1.0, 0.01);
     private final BooleanProperty bhopSlow = new BooleanProperty("Slow", "Slows you down more to help bypass", false, () -> this.mode.is(Mode.BHOP));
     private final BooleanProperty limit = new BooleanProperty("Limit Speed", "Limits your speed, useful for servers with strict anti-cheats.", false, () -> this.mode.is(Mode.BHOP));
 
@@ -35,7 +36,7 @@ public class Speed extends Module {
     private final Clock timer = new Clock();
 
     public Speed() {
-        this.addProperties(this.mode, this.speedSet, this.jump, this.bhopSpeed, this.bhopSlow, this.limit);
+        this.addProperties(this.mode, this.speedSet, this.jump, this.bhopSpeed, this.jumpHeight, this.bhopSlow, this.limit);
         this.setSuffix(() -> {
             if (this.mode.is(Mode.BHOP) && this.bhopSlow.get()) {
                 return "Bhop Slow";
@@ -81,7 +82,7 @@ public class Speed extends Module {
 
                     case 1 -> {
                         if (MoveUtil.isMoving() && mc.thePlayer.onGround) {
-                            MoveUtil.vertical(event, MoveUtil.jumpHeight(0.4));
+                            MoveUtil.vertical(event, MoveUtil.jumpHeight(this.jumpHeight.getDouble()));
                             this.speed *= this.bhopSpeed.getDouble();
                             this.stage = 2;
                         }

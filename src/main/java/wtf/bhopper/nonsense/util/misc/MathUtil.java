@@ -37,6 +37,14 @@ public class MathUtil {
         return a + f * (b - a);
     }
 
+    public static float lerpTo(float a, float b, float f, float i) {
+        float v = lerp(a, b, f);
+        if (Math.abs(v - b) < i) {
+            return b;
+        }
+        return v;
+    }
+
     public static double random(double min, double max) {
         return Math.random() * (max - min) + min;
     }

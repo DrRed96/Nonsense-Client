@@ -7,6 +7,7 @@ import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.gui.components.RenderComponent;
 import wtf.bhopper.nonsense.module.impl.combat.KillAura;
 import wtf.bhopper.nonsense.module.impl.visual.HudMod;
+import wtf.bhopper.nonsense.util.misc.MathUtil;
 import wtf.bhopper.nonsense.util.render.ColorUtil;
 import wtf.bhopper.nonsense.util.render.Fonts;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
@@ -37,32 +38,32 @@ public class TargetHud extends RenderComponent {
         }
 
         switch (mod.targetHudMode.get()) {
-            case ASTOLFO -> this.drawAstolfoHud(target);
+            case ASTOLFO -> this.drawAstolfoHud(target, mod);
             case RAVEN -> this.drawRavenHud(target, mod);
         }
 
     }
 
-    private void drawAstolfoHud(EntityLivingBase target) {
+    private void drawAstolfoHud(EntityLivingBase target, HudMod mod) {
 
         float health = target.getHealth() + target.getAbsorptionAmount();
         float maxHealth = target.getMaxHealth() + target.getAbsorptionAmount();
-        int healthColor = target.getAbsorptionAmount() != 0.0F ? 0xFFFFAA00 : ColorUtil.health(health, maxHealth);
+        int color = this.getColor(target, mod);
 
         this.setSize(300, 100);
 
         NVGHelper.begin();
         this.nvgTranslate();
         this.nvgDrawBackground(0x80000000);
-        NVGHelper.drawRect(72.0F, 72.0F, 220.0F, 18.0F, ColorUtil.darken(healthColor, 2));
-        NVGHelper.drawRect(72.0F, 72.0F,  (health / maxHealth) * 220.0F, 18.0F, healthColor);
+        NVGHelper.drawRect(72.0F, 72.0F, 220.0F, 18.0F, ColorUtil.darken(color, 2));
+        NVGHelper.drawRect(72.0F, 72.0F,  (health / maxHealth) * 220.0F, 18.0F, color);
         NVGHelper.end();
 
         RenderUtil.glColor(ColorUtil.WHITE);
         GuiInventory.drawEntityOnScreen(32, 90, 40, -80, 0, target);
 
         RenderUtil.drawScaledString(target.getName(), 72.0F, 10.0F, ColorUtil.WHITE, true, 2.0F);
-        RenderUtil.drawScaledString(ASTOLFO_FORMAT.format(health), 70.0F, 34.0F, healthColor, true, 4.0F);
+        RenderUtil.drawScaledString(ASTOLFO_FORMAT.format(health), 70.0F, 34.0F, color, true, 4.0F);
 
     }
 
@@ -89,7 +90,7 @@ public class TargetHud extends RenderComponent {
         this.setSize(Fonts.mc().getStringWidth(text) * 2 + 40, 80);
 
         float healthWidth = (this.getWidth() - 50.0F) * (target.getHealth() / target.getMaxHealth());
-        int color = mod.color.getRGB();
+        int color = this.getColor(target, mod);
         int color2 = ColorUtil.multiplySatBri(color, 0.5F, 2.0F);
 
         NVGHelper.begin();
@@ -117,6 +118,12 @@ public class TargetHud extends RenderComponent {
         NVGHelper.end();
 
         RenderUtil.drawScaledString(text, 20.0F, 20.0F, ColorUtil.WHITE, true, 2.0F);
+    }
 
+    private int getColor(EntityLivingBase target, HudMod mod) {
+        return switch (mod.targetHudColorMode.get()) {
+            case STATIC -> mod.color.getRGB();
+            case HEALTH -> target.getAbsorptionAmount() != 0.0F ? 0xFFFFAA00 : ColorUtil.health(target);
+        };
     }
 }

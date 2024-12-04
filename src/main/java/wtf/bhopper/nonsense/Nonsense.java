@@ -1,6 +1,9 @@
 package wtf.bhopper.nonsense;
 
 import com.google.gson.Gson;
+import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
+import de.florianmichael.vialoadingbase.ViaLoadingBase;
+import de.florianmichael.viamcp.ViaMCP;
 import net.minecraft.client.Minecraft;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -25,7 +28,7 @@ public enum Nonsense {
     public static final String NAME = "Nonsense";
     public static final String VERSION = "241116";
 
-    public static final Logger LOGGER = LogManager.getLogger(NAME);
+    public static final Logger LOGGER = LogManager.getLogger();
     public static final Gson GSON = new Gson();
 
     // Event Bus
@@ -48,6 +51,10 @@ public enum Nonsense {
     public void setup() {
         LOGGER.info("Loading {} {}", NAME, VERSION);
         this.startTime = System.currentTimeMillis();
+
+        ViaMCP.create();
+        ViaMCP.INSTANCE.initAsyncSlider();
+        ViaLoadingBase.getInstance().reload(ProtocolVersion.v1_8);
 
         this.dataDir = new File(Minecraft.getMinecraft().mcDataDir, NAME);
         if (!this.dataDir.exists()) {

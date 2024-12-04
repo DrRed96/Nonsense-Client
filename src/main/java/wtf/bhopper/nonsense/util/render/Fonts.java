@@ -4,8 +4,13 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.ResourceLocation;
 import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
 import wtf.bhopper.nonsense.util.misc.GeneralUtil;
+import wtf.bhopper.nonsense.util.misc.ResourceUtil;
+
+import java.io.IOException;
+import java.nio.ByteBuffer;
 
 import static org.lwjgl.nanovg.NanoVG.nvgCreateFont;
+import static org.lwjgl.nanovg.NanoVG.nvgCreateFontMem;
 
 public enum Fonts implements MinecraftInstance {
     ARIAL("arial", "arial.ttf"),
@@ -23,6 +28,7 @@ public enum Fonts implements MinecraftInstance {
     public final String name;
     private final ResourceLocation location;
     private int vgFont;
+    private ByteBuffer buffer;
 
     Fonts(String name, String resource) {
         this.name = name;
@@ -35,11 +41,15 @@ public enum Fonts implements MinecraftInstance {
 
     public static void init() {
         for (Fonts font : values()) {
-            String path = GeneralUtil.getResourcePathString(font.location);
-            font.vgFont = nvgCreateFont(NVGHelper.ctx(), font.name, path);
+            try {
+                font.buffer = ResourceUtil.loadResource(font.location);
+                font.vgFont = NVGHelper.createFontMem(font.name, font.buffer, false);
 
-            if (font.vgFont == -1) {
-                throw new RuntimeException("Failed to load font: " + path);
+                if (font.vgFont == -1) {
+                    throw new RuntimeException("Failed to load font: " + font.name);
+                }
+            } catch (IOException exception) {
+                throw new RuntimeException(exception);
             }
         }
     }

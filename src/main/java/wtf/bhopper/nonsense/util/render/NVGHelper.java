@@ -10,6 +10,7 @@ import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
 import wtf.bhopper.nonsense.util.misc.GeneralUtil;
 
 import java.awt.*;
+import java.nio.ByteBuffer;
 
 import static org.lwjgl.nanovg.NanoVG.*;
 import static org.lwjgl.nanovg.NanoVGGL3.*;
@@ -138,8 +139,12 @@ public class NVGHelper implements MinecraftInstance {
         return nvgLinearGradient(context, sx, sy, ex, ey, getColor(icol), getColor(ocol, color2), paint);
     }
 
-    public static int createImage(String path, int flags) {
-        return nvgCreateImage(context, path, flags);
+    public static int createImage(int flags, ByteBuffer data) {
+        return nvgCreateImageMem(context, flags, data);
+    }
+
+    public static int createFontMem(String name, ByteBuffer data, boolean freeData) {
+        return nvgCreateFontMem(context, name, data, freeData);
     }
 
     public static void translate(float x, float y) {
@@ -160,10 +165,6 @@ public class NVGHelper implements MinecraftInstance {
 
     public static void reset() {
         nvgReset(context);
-    }
-
-    public static int createImage(ResourceLocation location, int flags) {
-        return nvgCreateImage(context, GeneralUtil.getResourcePathString(location), flags);
     }
 
     public static NVGPaint imagePattern(float ox, float oy, float ex, float ey, float angle, int image, float alpha) {

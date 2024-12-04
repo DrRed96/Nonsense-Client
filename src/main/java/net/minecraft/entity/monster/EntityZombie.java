@@ -733,7 +733,7 @@ public class EntityZombie extends EntityMob
                 {
                     for (int i1 = (int)this.posZ - 4; i1 < (int)this.posZ + 4 && j < 14; ++i1)
                     {
-                        Block block = this.worldObj.getBlockState(blockpos$mutableblockpos.func_181079_c(k, l, i1)).getBlock();
+                        Block block = this.worldObj.getBlockState(blockpos$mutableblockpos.setPos(k, l, i1)).getBlock();
 
                         if (block == Blocks.iron_bars || block == Blocks.bed)
                         {

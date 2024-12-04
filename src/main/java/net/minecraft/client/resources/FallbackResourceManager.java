@@ -16,7 +16,7 @@ import org.apache.logging.log4j.Logger;
 public class FallbackResourceManager implements IResourceManager
 {
     private static final Logger logger = LogManager.getLogger();
-    protected final List<IResourcePack> resourcePacks = Lists.<IResourcePack>newArrayList();
+    protected final List<IResourcePack> resourcePacks = Lists.newArrayList();
     private final IMetadataSerializer frmMetadataSerializer;
 
     public FallbackResourceManager(IMetadataSerializer frmMetadataSerializerIn)
@@ -41,7 +41,7 @@ public class FallbackResourceManager implements IResourceManager
 
         for (int i = this.resourcePacks.size() - 1; i >= 0; --i)
         {
-            IResourcePack iresourcepack1 = (IResourcePack)this.resourcePacks.get(i);
+            IResourcePack iresourcepack1 = this.resourcePacks.get(i);
 
             if (iresourcepack == null && iresourcepack1.resourceExists(resourcelocation))
             {
@@ -67,7 +67,7 @@ public class FallbackResourceManager implements IResourceManager
     protected InputStream getInputStream(ResourceLocation location, IResourcePack resourcePack) throws IOException
     {
         InputStream inputstream = resourcePack.getInputStream(location);
-        return (InputStream)(logger.isDebugEnabled() ? new FallbackResourceManager.InputStreamLeakedResourceLogger(inputstream, location, resourcePack.getPackName()) : inputstream);
+        return logger.isDebugEnabled() ? new InputStreamLeakedResourceLogger(inputstream, location, resourcePack.getPackName()) : inputstream;
     }
 
     public List<IResource> getAllResources(ResourceLocation location) throws IOException

@@ -7,6 +7,9 @@ import wtf.bhopper.nonsense.event.impl.EventSlowDown;
 import wtf.bhopper.nonsense.event.impl.EventSpeed;
 import wtf.bhopper.nonsense.module.impl.movement.NoSlow;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class MoveUtil implements MinecraftInstance {
 
     public static final double WALK_SPEED = 2.221;
@@ -34,7 +37,7 @@ public class MoveUtil implements MinecraftInstance {
             case 9 -> 0.78502770378923;
             case 10 -> 0.48071087633169;
             case 11 -> 0.10408037809304;
-            default -> 0;
+            default -> 0.0;
         };
     }
 
@@ -174,5 +177,43 @@ public class MoveUtil implements MinecraftInstance {
 
         return Math.sqrt(diffX * diffX + diffZ * diffZ);
     }
+
+    public static boolean onGround() {
+        return mc.thePlayer.onGround && mc.thePlayer.isCollidedVertically;
+    }
+
+    public static JumpOffsets getJumpOffsets(double jumpHeight) {
+        List<Double> result = new ArrayList<>();
+
+        double motion = jumpHeight;
+        if (mc.thePlayer.isPotionActive(Potion.jump)) {
+            motion += (float) (mc.thePlayer.getActivePotionEffect(Potion.jump).getAmplifier() + 1) * 0.1F;
+        }
+        double y = motion;
+
+        result.add(y);
+
+        double maxHeight = 0.0;
+
+        for (;;) {
+            motion = (motion - 0.08) * 0.98;
+            y += motion;
+
+            if (y > maxHeight) {
+                maxHeight = y;
+            }
+
+            if (y <= 0.0) {
+                result.add(0.0);
+                break;
+            }
+
+            result.add(y);
+        }
+
+        return new JumpOffsets(result, maxHeight);
+    }
+
+    public record JumpOffsets(List<Double> offsets, double maxHeight) {}
 
 }

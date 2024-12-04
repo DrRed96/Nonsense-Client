@@ -7,7 +7,7 @@ import wtf.bhopper.nonsense.util.render.NVGHelper;
 public abstract class NovoComponent {
 
     public static final int WIDTH = 200;
-    public static final int HEIGHT = 800;
+    public static final int HEIGHT = 800; // TODO: scrolling and shit
     public static final int HEADER_HEIGHT = 30;
     public static final int MOD_HEIGHT = 24;
     public static final int PICKER_HEIGHT = 140;

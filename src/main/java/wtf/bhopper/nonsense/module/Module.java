@@ -3,13 +3,18 @@ package wtf.bhopper.nonsense.module;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.gui.hud.Hud;
+import wtf.bhopper.nonsense.gui.hud.notification.Notification;
+import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
 import wtf.bhopper.nonsense.module.property.Property;
 import wtf.bhopper.nonsense.module.property.PropertyContainer;
 import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
 
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public abstract class Module implements PropertyContainer, MinecraftInstance {
@@ -21,10 +26,25 @@ public abstract class Module implements PropertyContainer, MinecraftInstance {
 
     private boolean toggled = this.getClass().getAnnotation(ModuleInfo.class).toggled();
     private int bind = this.getClass().getAnnotation(ModuleInfo.class).bind();
-    private boolean hidden = category == ModuleCategory.VISUAL;
+    private boolean hidden = this.getClass().getAnnotation(ModuleInfo.class).hidden() || category == ModuleCategory.VISUAL;
     private final List<Property<?>> properties = new ArrayList<>();
 
     private Supplier<String> suffix = () -> null;
+
+    protected void autoAddProperties() {
+        for (Field field : this.getClass().getDeclaredFields()) {
+            if (!field.canAccess(this)) {
+                field.setAccessible(true);
+            }
+
+            try {
+                Object property = field.get(this);
+                if (property instanceof Property<?>) {
+                    this.properties.add((Property<?>)property);
+                }
+            } catch (IllegalAccessException ignored) {}
+        }
+    }
 
     public void toggle(boolean toggled) {
         if (this.toggled == toggled) {
@@ -39,6 +59,9 @@ public abstract class Module implements PropertyContainer, MinecraftInstance {
         } else {
             Nonsense.getEventBus().unsubscribe(this);
             this.onDisable();
+        }
+        if (Hud.mod().toggleNotify.get()) {
+            Notification.send("Toggle", (this.toggled ? "Enabled " : "Disabled ") + this.displayName, NotificationType.INFO, 3000);
         }
     }
 
@@ -74,6 +97,14 @@ public abstract class Module implements PropertyContainer, MinecraftInstance {
     @Override
     public List<Property<?>> getProperties() {
         return this.properties;
+    }
+
+    public Property<?> getProperty(String name) {
+        return this.properties
+                .stream()
+                .filter(property -> property.name.equalsIgnoreCase(name))
+                .findFirst()
+                .orElse(null);
     }
 
     public void setSuffix(Supplier<String> suffix) {

@@ -4,7 +4,7 @@ import net.minecraft.block.BlockLiquid;
 import net.minecraft.util.AxisAlignedBB;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
-import wtf.bhopper.nonsense.event.impl.EventBlockCollide;
+import wtf.bhopper.nonsense.event.impl.EventBlockBounds;
 import wtf.bhopper.nonsense.event.impl.EventMove;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
@@ -26,7 +26,7 @@ public class Jesus extends Module {
     }
 
     @EventLink
-    public final Listener<EventBlockCollide> onCollide = event -> {
+    public final Listener<EventBlockBounds> onCollide = event -> {
         if (!PlayerUtil.canUpdate()) {
             return;
         }

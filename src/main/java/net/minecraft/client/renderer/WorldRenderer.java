@@ -634,37 +634,37 @@ public class WorldRenderer
         }
     }
 
-    public WorldRenderer normal(float p_181663_1_, float p_181663_2_, float p_181663_3_)
+    public WorldRenderer normal(float nx, float ny, float nz)
     {
         int i = this.vertexCount * this.vertexFormat.getNextOffset() + this.vertexFormat.func_181720_d(this.field_181678_g);
 
         switch (WorldRenderer.WorldRenderer$2.field_181661_a[this.field_181677_f.getType().ordinal()])
         {
             case 1:
-                this.byteBuffer.putFloat(i, p_181663_1_);
-                this.byteBuffer.putFloat(i + 4, p_181663_2_);
-                this.byteBuffer.putFloat(i + 8, p_181663_3_);
+                this.byteBuffer.putFloat(i, nx);
+                this.byteBuffer.putFloat(i + 4, ny);
+                this.byteBuffer.putFloat(i + 8, nz);
                 break;
 
             case 2:
             case 3:
-                this.byteBuffer.putInt(i, (int)p_181663_1_);
-                this.byteBuffer.putInt(i + 4, (int)p_181663_2_);
-                this.byteBuffer.putInt(i + 8, (int)p_181663_3_);
+                this.byteBuffer.putInt(i, (int)nx);
+                this.byteBuffer.putInt(i + 4, (int)ny);
+                this.byteBuffer.putInt(i + 8, (int)nz);
                 break;
 
             case 4:
             case 5:
-                this.byteBuffer.putShort(i, (short)((int)(p_181663_1_ * 32767.0F) & 65535));
-                this.byteBuffer.putShort(i + 2, (short)((int)(p_181663_2_ * 32767.0F) & 65535));
-                this.byteBuffer.putShort(i + 4, (short)((int)(p_181663_3_ * 32767.0F) & 65535));
+                this.byteBuffer.putShort(i, (short)((int)(nx * 32767.0F) & 65535));
+                this.byteBuffer.putShort(i + 2, (short)((int)(ny * 32767.0F) & 65535));
+                this.byteBuffer.putShort(i + 4, (short)((int)(nz * 32767.0F) & 65535));
                 break;
 
             case 6:
             case 7:
-                this.byteBuffer.put(i, (byte)((int)(p_181663_1_ * 127.0F) & 255));
-                this.byteBuffer.put(i + 1, (byte)((int)(p_181663_2_ * 127.0F) & 255));
-                this.byteBuffer.put(i + 2, (byte)((int)(p_181663_3_ * 127.0F) & 255));
+                this.byteBuffer.put(i, (byte)((int)(nx * 127.0F) & 255));
+                this.byteBuffer.put(i + 1, (byte)((int)(ny * 127.0F) & 255));
+                this.byteBuffer.put(i + 2, (byte)((int)(nz * 127.0F) & 255));
         }
 
         this.func_181667_k();

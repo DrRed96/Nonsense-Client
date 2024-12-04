@@ -187,15 +187,15 @@ public class Gui
      */
     public static void drawModalRectWithCustomSizedTexture(int x, int y, float u, float v, int width, int height, float textureWidth, float textureHeight)
     {
-        float f = 1.0F / textureWidth;
-        float f1 = 1.0F / textureHeight;
+        float inverseWidth = 1.0F / textureWidth;
+        float inverseHeight = 1.0F / textureHeight;
         Tessellator tessellator = Tessellator.getInstance();
         WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-        worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
-        worldrenderer.pos(x, (double)(y + height), 0.0D).tex((double)(u * f), (double)((v + (float)height) * f1)).endVertex();
-        worldrenderer.pos(x + width, (double)(y + height), 0.0D).tex((double)((u + (float)width) * f), (double)((v + (float)height) * f1)).endVertex();
-        worldrenderer.pos(x + width, (double)y, 0.0D).tex((double)((u + (float)width) * f), (double)(v * f1)).endVertex();
-        worldrenderer.pos((double)x, (double)y, 0.0D).tex((double)(u * f), (double)(v * f1)).endVertex();
+        worldrenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        worldrenderer.pos(x, y + height, 0.0D).tex(u * inverseWidth, (v + (float)height) * inverseHeight).endVertex();
+        worldrenderer.pos(x + width, y + height, 0.0D).tex((u + (float)width) * inverseWidth, (v + (float)height) * inverseHeight).endVertex();
+        worldrenderer.pos(x + width, y, 0.0D).tex((u + (float)width) * inverseWidth, v * inverseHeight).endVertex();
+        worldrenderer.pos(x, y, 0.0D).tex(u * inverseWidth, v * inverseHeight).endVertex();
         tessellator.draw();
     }
 

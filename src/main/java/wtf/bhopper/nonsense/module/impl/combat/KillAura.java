@@ -150,7 +150,7 @@ public class KillAura extends Module {
             this.target = this.targets.get(this.targetIndex);
             this.isTargetValid = true;
         } else if (!this.invalidTargets.isEmpty()) {
-            this.target = this.invalidTargets.get(0);
+            this.target = this.invalidTargets.getFirst();
             this.isTargetValid = false;
         } else {
             this.target = null;

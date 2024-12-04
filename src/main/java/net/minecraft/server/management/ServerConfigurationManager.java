@@ -552,7 +552,6 @@ public abstract class ServerConfigurationManager
         double d1 = entityIn.posZ;
         double d2 = 8.0D;
         float f = entityIn.rotationYaw;
-        p_82448_3_.theProfiler.startSection("moving");
 
         if (entityIn.dimension == -1)
         {
@@ -600,11 +599,9 @@ public abstract class ServerConfigurationManager
             }
         }
 
-        p_82448_3_.theProfiler.endSection();
 
         if (p_82448_2_ != 1)
         {
-            p_82448_3_.theProfiler.startSection("placing");
             d0 = (double)MathHelper.clamp_int((int)d0, -29999872, 29999872);
             d1 = (double)MathHelper.clamp_int((int)d1, -29999872, 29999872);
 
@@ -616,7 +613,6 @@ public abstract class ServerConfigurationManager
                 p_82448_4_.updateEntityWithOptionalForce(entityIn, false);
             }
 
-            p_82448_3_.theProfiler.endSection();
         }
 
         entityIn.setWorld(p_82448_4_);

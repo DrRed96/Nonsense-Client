@@ -37,9 +37,4 @@ public enum NotificationType {
         return this.nvgImage;
     }
 
-    public static void createImages() {
-        for (NotificationType type : values()) {
-            type.nvgImage = NVGHelper.createImage(type.icon, 0);
-        }
-    }
 }

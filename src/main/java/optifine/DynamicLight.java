@@ -67,7 +67,7 @@ public class DynamicLight
 
             if (world != null)
             {
-                this.blockPosMutable.func_181079_c(MathHelper.floor_double(d6), MathHelper.floor_double(d0), MathHelper.floor_double(d1));
+                this.blockPosMutable.setPos(MathHelper.floor_double(d6), MathHelper.floor_double(d0), MathHelper.floor_double(d1));
                 IBlockState iblockstate = world.getBlockState(this.blockPosMutable);
                 Block block = iblockstate.getBlock();
                 this.underwater = block == Blocks.water;

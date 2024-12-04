@@ -47,10 +47,12 @@ public class HudMod extends Module {
     private final GroupProperty notificationGroup = new GroupProperty("Notifications", "Notifications");
     public final BooleanProperty notificationEnabled = new BooleanProperty("Enabled", "Enables notifications.", true);
     public final EnumProperty<NotificationSound> notificationSound = new EnumProperty<>("Sound", "Sound that gets played when you get a notification.", NotificationSound.POP);
+    public final BooleanProperty toggleNotify = new BooleanProperty("Toggle Notification", "Sends a notification when you toggle a module.", false);
 
     private final GroupProperty targetHudGroup = new GroupProperty("Target HUD", "Displays your current target.");
     public final BooleanProperty targetHudEnabled = new BooleanProperty("Enabled", "Enables Target HUD", true);
     public final EnumProperty<TargetHud> targetHudMode = new EnumProperty<>("Mode", "Target HUD mode", TargetHud.ASTOLFO);
+    public final EnumProperty<TargetColor> targetHudColorMode = new EnumProperty<>("Color Mode", "Target HUD color mode", TargetColor.STATIC);
 
     public final ColorProperty color = new ColorProperty("Color", "HUD color.", ColorUtil.NONSENSE);
     public final EnumProperty<Font> font = new EnumProperty<>("Font", "Which font to use for the HUD", Font.ARIAL);
@@ -72,8 +74,8 @@ public class HudMod extends Module {
                 this.moduleListSorting);
         this.watermarkGroup.addProperties(this.watermarkEnabled, this.watermarkMode, this.watermarkColorMode, this.watermarkText);
         this.information.addProperties(this.coords, this.angles, this.speed, this.tps, this.pots, this.fps);
-        this.notificationGroup.addProperties(this.notificationEnabled, this.notificationSound);
-        this.targetHudGroup.addProperties(this.targetHudEnabled, this.targetHudMode);
+        this.notificationGroup.addProperties(this.notificationEnabled, this.notificationSound, this.toggleNotify);
+        this.targetHudGroup.addProperties(this.targetHudEnabled, this.targetHudMode, this.targetHudColorMode);
         this.addProperties(this.moduleListGroup, this.watermarkGroup, this.information, this.notificationGroup, this.targetHudGroup, this.color, this.font, this.fontSize, this.moveComponents, this.hideInF3);
     }
 
@@ -145,7 +147,12 @@ public class HudMod extends Module {
 
     public enum TargetHud {
         ASTOLFO,
-        RAVEN
+        RAVEN,
+    }
+
+    public enum TargetColor {
+        STATIC,
+        HEALTH
     }
 
     public enum Font {

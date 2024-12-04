@@ -49,10 +49,11 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.event.impl.EventBlockCollision;
 import wtf.bhopper.nonsense.event.impl.EventPostStep;
 import wtf.bhopper.nonsense.event.impl.EventPreStep;
 import wtf.bhopper.nonsense.event.impl.EventStrafe;
-import wtf.bhopper.nonsense.util.minecraft.Rotation;
+import wtf.bhopper.nonsense.module.impl.movement.Terrain;
 import wtf.bhopper.nonsense.util.minecraft.RotationUtil;
 
 public abstract class Entity implements ICommandSender {
@@ -317,11 +318,11 @@ public abstract class Entity implements ICommandSender {
         }
 
         this.dataWatcher = new DataWatcher(this);
-        this.dataWatcher.addObject(0, Byte.valueOf((byte) 0));
-        this.dataWatcher.addObject(1, Short.valueOf((short) 300));
-        this.dataWatcher.addObject(3, Byte.valueOf((byte) 0));
+        this.dataWatcher.addObject(0, (byte) 0);
+        this.dataWatcher.addObject(1, (short) 300);
+        this.dataWatcher.addObject(3, (byte) 0);
         this.dataWatcher.addObject(2, "");
-        this.dataWatcher.addObject(4, Byte.valueOf((byte) 0));
+        this.dataWatcher.addObject(4, (byte) 0);
         this.entityInit();
     }
 
@@ -332,7 +333,7 @@ public abstract class Entity implements ICommandSender {
     }
 
     public boolean equals(Object p_equals_1_) {
-        return p_equals_1_ instanceof Entity ? ((Entity) p_equals_1_).entityId == this.entityId : false;
+        return p_equals_1_ instanceof Entity && ((Entity) p_equals_1_).entityId == this.entityId;
     }
 
     public int hashCode() {
@@ -428,7 +429,6 @@ public abstract class Entity implements ICommandSender {
      * Gets called every tick from main Entity class
      */
     public void onEntityUpdate() {
-        this.worldObj.theProfiler.startSection("entityBaseTick");
 
         if (this.ridingEntity != null && this.ridingEntity.isDead) {
             this.ridingEntity = null;
@@ -442,7 +442,6 @@ public abstract class Entity implements ICommandSender {
         this.prevRotationYaw = this.rotationYaw;
 
         if (!this.worldObj.isRemote && this.worldObj instanceof WorldServer) {
-            this.worldObj.theProfiler.startSection("portal");
             MinecraftServer minecraftserver = ((WorldServer) this.worldObj).getMinecraftServer();
             int i = this.getMaxInPortalTime();
 
@@ -478,7 +477,6 @@ public abstract class Entity implements ICommandSender {
                 --this.timeUntilPortal;
             }
 
-            this.worldObj.theProfiler.endSection();
         }
 
         this.spawnRunningParticles();
@@ -516,7 +514,6 @@ public abstract class Entity implements ICommandSender {
         }
 
         this.firstUpdate = false;
-        this.worldObj.theProfiler.endSection();
     }
 
     /**
@@ -585,19 +582,21 @@ public abstract class Entity implements ICommandSender {
             this.setEntityBoundingBox(this.getEntityBoundingBox().offset(x, y, z));
             this.resetPositionToBB();
         } else {
-            this.worldObj.theProfiler.startSection("move");
             double d0 = this.posX;
             double d1 = this.posY;
             double d2 = this.posZ;
 
             if (this.isInWeb) {
-                this.isInWeb = false;
-                x *= 0.25;
-                y *= 0.05;
-                z *= 0.25;
-                this.motionX = 0.0D;
-                this.motionY = 0.0D;
-                this.motionZ = 0.0D;
+
+                if (!this.isClientPlayer() || !Nonsense.module(Terrain.class).cobwebs()) {
+                    this.isInWeb = false;
+                    x *= 0.25;
+                    y *= 0.05;
+                    z *= 0.25;
+                    this.motionX = 0.0;
+                    this.motionY = 0.0;
+                    this.motionZ = 0.0;
+                }
             }
 
             double d3 = x;
@@ -760,8 +759,6 @@ public abstract class Entity implements ICommandSender {
                 }
             }
 
-            this.worldObj.theProfiler.endSection();
-            this.worldObj.theProfiler.startSection("rest");
             this.resetPositionToBB();
             this.isCollidedHorizontally = d3 != x || d5 != z;
             this.isCollidedVertically = d4 != y;
@@ -859,7 +856,6 @@ public abstract class Entity implements ICommandSender {
                 this.fire = -this.fireResistance;
             }
 
-            this.worldObj.theProfiler.endSection();
         }
     }
 
@@ -888,7 +884,16 @@ public abstract class Entity implements ICommandSender {
                         IBlockState iblockstate = this.worldObj.getBlockState(blockpos2);
 
                         try {
-                            iblockstate.getBlock().onEntityCollidedWithBlock(this.worldObj, blockpos2, iblockstate, this);
+
+                            if (this.isClientPlayer()) {
+                                EventBlockCollision event = new EventBlockCollision(blockpos2, iblockstate);
+                                Nonsense.getEventBus().post(event);
+                                if (!event.isCancelled()) {
+                                    iblockstate.getBlock().onEntityCollidedWithBlock(this.worldObj, blockpos2, iblockstate, this);
+                                }
+                            } else {
+                                iblockstate.getBlock().onEntityCollidedWithBlock(this.worldObj, blockpos2, iblockstate, this);
+                            }
                         } catch (Throwable throwable) {
                             CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Colliding entity with block");
                             CrashReportCategory crashreportcategory = crashreport.makeCategory("Block being collided with");
@@ -1002,7 +1007,7 @@ public abstract class Entity implements ICommandSender {
      * Returns if this entity is in water and will end up adding the waters velocity to the entity
      */
     public boolean handleWaterMovement() {
-        if (this.worldObj.handleMaterialAcceleration(this.getEntityBoundingBox().expand(0.0D, -0.4, 0.0D).contract(0.001D, 0.001D, 0.001D), Material.water, this)) {
+        if (this.worldObj.handleMaterialAcceleration(this.getEntityBoundingBox().expand(0.0D, -0.4, 0.0).contract(0.001, 0.001, 0.001), Material.water, this)) {
             if (!this.inWater && !this.firstUpdate) {
                 this.resetHeight();
             }
@@ -1632,7 +1637,7 @@ public abstract class Entity implements ICommandSender {
                 int l = MathHelper.floor_double(this.posZ + (double) (((float) ((i >> 2) % 2) - 0.5F) * this.width * 0.8F));
 
                 if (blockpos$mutableblockpos.getX() != k || blockpos$mutableblockpos.getY() != j || blockpos$mutableblockpos.getZ() != l) {
-                    blockpos$mutableblockpos.func_181079_c(k, j, l);
+                    blockpos$mutableblockpos.setPos(k, j, l);
 
                     if (this.worldObj.getBlockState(blockpos$mutableblockpos).getBlock().isVisuallyOpaque()) {
                         return true;
@@ -2135,7 +2140,6 @@ public abstract class Entity implements ICommandSender {
      */
     public void travelToDimension(int dimensionId) {
         if (!this.worldObj.isRemote && !this.isDead) {
-            this.worldObj.theProfiler.startSection("changeDimension");
             MinecraftServer minecraftserver = MinecraftServer.getServer();
             int i = this.dimension;
             WorldServer worldserver = minecraftserver.worldServerForDimension(i);
@@ -2149,9 +2153,7 @@ public abstract class Entity implements ICommandSender {
 
             this.worldObj.removeEntity(this);
             this.isDead = false;
-            this.worldObj.theProfiler.startSection("reposition");
             minecraftserver.getConfigurationManager().transferEntityToWorld(this, i, worldserver, worldserver1);
-            this.worldObj.theProfiler.endStartSection("reloading");
             Entity entity = EntityList.createEntityByName(EntityList.getEntityString(this), worldserver1);
 
             if (entity != null) {
@@ -2166,10 +2168,8 @@ public abstract class Entity implements ICommandSender {
             }
 
             this.isDead = true;
-            this.worldObj.theProfiler.endSection();
             worldserver.resetUpdateEntityTick();
             worldserver1.resetUpdateEntityTick();
-            this.worldObj.theProfiler.endSection();
         }
     }
 

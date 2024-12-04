@@ -45,6 +45,10 @@ repositories {
         url 'https://libraries.minecraft.net/'
     }
     maven {
+        name 'ViaVersion'
+        url 'https://repo.viaversion.com/'
+    }
+    maven {
         name 'JitPack'
         url 'https://jitpack.io/'
     }
@@ -104,12 +108,42 @@ dependencies {
     library 'oshi-project:oshi-core:1.1'
     library 'javax.vecmath:vecmath:1.5.2'
 
+    library 'org.reflections:reflections:0.10.2'
     library 'com.github.Vatuu:discord-rpc:1.6.2'
+
+    // Via Version
+    library 'com.viaversion:viabackwards:5.0.2-SNAPSHOT'
+    library 'com.viaversion:viarewind:4.0.1-SNAPSHOT'
+    library 'com.viaversion:viaversion:5.0.2-SNAPSHOT'
+    library 'org.yaml:snakeyaml:2.2'
 
 }
 
 jar {
     archiveFileName.set('client.jar')
+
+    manifest {
+        attributes(
+                'Main-Class': 'net.minecraft.client.main.Main',
+                'Multi-Release': 'true'
+        )
+    }
+}
+
+tasks.register('allJar', Jar) {
+    setGroup('client')
+
+    archiveFileName.set('all.jar')
+    from sourceSets.main.output
+    from configurations.library.collect { zipTree(it) }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+
+    manifest {
+        attributes(
+                'Main-Class': 'net.minecraft.client.main.Main',
+                'Multi-Release': 'true'
+        )
+    }
 }
 
 tasks.register('libraryJar', Jar) {
@@ -117,7 +151,6 @@ tasks.register('libraryJar', Jar) {
 
     archiveFileName.set('libs.jar')
     from configurations.library.collect { zipTree(it) }
-    exclude('*.dll', '*.dylib', '*.so')
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
@@ -136,77 +169,6 @@ tasks.register('extractNatives', Copy) {
     into "${layout.buildDirectory.getAsFile().get()}/libs/natives/${os.getFamilyName()}"
 }
 
-tasks.register('writeLibraryInfo') {
-    setGroup('client')
-    doFirst {
-        def file = new File("${layout.buildDirectory.getAsFile().get()}/libs/libraries.json")
-        file.createNewFile()
-        file.text = '{\n\t"repositories": [\n'
-
-        project.repositories.forEach { repository ->
-            def url = repository.properties.get('url')
-            file.text += String.format('\t\t{ "name": "%s", "url": "%s" },\n', repository.name, url)
-        }
-
-        file.text += '\t],\n\t"libraries": [\n'
-
-        project.configurations.library.dependencies.forEach { dependency ->
-            for (ArtifactRepository repository : project.repositories.asList()) {
-                def url = repository.properties.get('url')
-                def jar = String.format('%s/%s/%s/%s-%s.jar',
-                        dependency.group.replace('.', '/'), dependency.name, dependency.version,
-                        dependency.name, dependency.version)
-
-                def jarUrl = String.format('%s%s', url, jar)
-
-                try {
-                    def jarFile = new URL(jarUrl)
-                    def inStream = jarFile.openStream()
-                    if (inStream != null) {
-                        file.text += String.format('\t\t{ "name": "%s:%s:%s", "path": "%s", "repo": "%s" },\n',
-                                dependency.group, dependency.name, dependency.version, jar, url)
-                        inStream.close()
-                        return
-                    }
-
-                } catch (Exception ignored) {
-                }
-
-            }
-        }
-
-        file.text += '\t],\n\t"natvies": [\n'
-
-        project.configurations.nativeLib.dependencies.forEach { dependency ->
-            for (ArtifactRepository repository : project.repositories.asList()) {
-                def url = repository.properties.get('url')
-                def jar = String.format('%s/%s/%s/%s-%s.jar',
-                        dependency.group.replace('.', '/'), dependency.name, dependency.version,
-                        dependency.name, dependency.version)
-
-                def jarUrl = String.format('%s%s', url, jar)
-
-                try {
-                    def jarFile = new URL(jarUrl)
-                    def inStream = jarFile.openStream()
-                    if (inStream != null) {
-                        file.text += String.format('\t\t{ "name": "%s:%s:%s", "path": "%s", "repo": "%s" },\n',
-                                dependency.group, dependency.name, dependency.version, jar, url)
-                        inStream.close()
-                        return
-                    }
-
-                } catch (Exception ignored) {
-                }
-
-            }
-        }
-
-        file.text += "\t]\n}"
-
-    }
-}
-
 tasks.register('copyAssets', Copy) {
     setGroup('client')
 
@@ -215,7 +177,18 @@ tasks.register('copyAssets', Copy) {
     into "${rootDir}/run/assets"
 }
 
-tasks.libraryJar.dependsOn(tasks.jar)
+tasks.register('nativeImage', Exec) {
+    setGroup('client')
+
+    commandLine 'native-image -jar build/libs/all.jar release/Nonsense'
+    doFirst {
+        println 'Starting native-image...'
+    }
+    dependsOn tasks.build
+}
+
+tasks.build.dependsOn(tasks.allJar)
+tasks.build.dependsOn(tasks.libraryJar)
 tasks.processResources.dependsOn(tasks.extractNatives)
 
 idea.project.settings.runConfigurations {

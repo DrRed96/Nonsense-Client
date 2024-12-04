@@ -9,6 +9,7 @@ import wtf.bhopper.nonsense.module.impl.visual.HudMod;
 import wtf.bhopper.nonsense.util.render.ColorUtil;
 import wtf.bhopper.nonsense.util.render.Fonts;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
+import wtf.bhopper.nonsense.util.render.RenderUtil;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -48,7 +49,7 @@ public class ModuleList {
         this.updateSlots(delta);
 
         for (Slot slot : this.slots) {
-            yOff = slot.draw(yOff, right, scaledRes);
+            yOff = slot.draw(yOff, right, scaledRes, mod);
         }
 
         NVGHelper.end();
@@ -88,13 +89,11 @@ public class ModuleList {
             this.updateText(1.0F);
         }
 
-        public float draw(float yOff, float right, ScaledResolution scaledRes) {
+        public float draw(float yOff, float right, ScaledResolution scaledRes, HudMod hudMod) {
 
             if (!this.shouldDisplay) {
                 return yOff;
             }
-
-            HudMod hudMod = Hud.mod();
 
             float fontSize = hudMod.font.is(HudMod.Font.MINECRAFT) ? 18.0F : hudMod.moduleListFontSize.getFloat();
             float textX = right - (this.width + 2.0F + hudMod.moduleListSpacing.getFloat()) * this.animateFactor;
@@ -108,11 +107,11 @@ public class ModuleList {
             if (hudMod.font.is(HudMod.Font.MINECRAFT)) {
                 NVGHelper.end();
                 GlStateManager.pushMatrix();
-                scaledRes.scaleToFactor(2.0F);
+                scaledRes.scaleToFactor(1.0F);
 
-                Fonts.mc().drawStringWithShadow(this.name, textX / 2.0F, textY / 2.0F, this.color);
+                RenderUtil.drawScaledString(this.name, textX, textY, this.color, true, 2.0F);
                 if (this.suffix != null) {
-                    Fonts.mc().drawStringWithShadow(this.suffix, (textX + this.suffixOffset) / 2.0F, textY / 2.0F, hudMod.moduleListSuffixColor.getRGB());
+                    RenderUtil.drawScaledString(this.suffix, textX + this.suffixOffset, textY, hudMod.moduleListSuffixColor.getRGB(), true, 2.0F);
                 }
 
                 GlStateManager.popMatrix();
@@ -122,7 +121,6 @@ public class ModuleList {
                 if (this.suffix != null) {
                     NVGHelper.drawText(this.suffix, textX + this.suffixOffset, textY, hudMod.moduleListSuffixColor.getRGB(), true);
                 }
-
             }
 
             return yOff + textHeight * this.animateFactor;

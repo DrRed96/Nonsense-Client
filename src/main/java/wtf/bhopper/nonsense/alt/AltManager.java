@@ -44,7 +44,7 @@ public class AltManager {
     public void load() throws IOException {
         alts.clear();
 
-        File file = Nonsense.getDataDir().toPath().resolve("alts.json").toFile();
+        File file = new File(Nonsense.getDataDir(), "alts.json");
         JsonObject json = JsonUtil.readFromFile(file);
 
         JsonArray alts = json.getAsJsonArray("alts");

@@ -1,5 +1,6 @@
 package wtf.bhopper.nonsense.util.render;
 
+import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.MathHelper;
 import wtf.bhopper.nonsense.util.misc.MathUtil;
 
@@ -49,6 +50,10 @@ public class ColorUtil {
 
     public static int health(float health, float maxHealth) {
         return health(health / maxHealth);
+    }
+
+    public static int health(EntityLivingBase entity) {
+        return health(entity.getHealth(), entity.getMaxHealth());
     }
 
     public static Color interpolate(Color current, Color target, int speed, float delta) {

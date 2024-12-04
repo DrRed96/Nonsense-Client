@@ -37,10 +37,11 @@ public class Flight extends Module {
     private final GroupProperty boostGroup = new GroupProperty("Boost", "Boost settings", () -> this.mode.isAny(Mode.BOOST));
     private final BooleanProperty useBoost = new BooleanProperty("Enable", "Enables boost fly.", false, () -> false);
     private final EnumProperty<Timer> useTimer = new EnumProperty<>("Timer", "Use timer to increase speed", Timer.NONE);
-    private final NumberProperty timerFactor = new NumberProperty("Timer Factor", "Timer speed", () -> !useTimer.is(Timer.NONE), 1.5, 0.1, 5.0, 0.05);
+    private final NumberProperty timerFactor = new NumberProperty("Timer Factor", "Timer speed", () -> !useTimer.is(Timer.NONE), 1.5, 0.05, 5.0, 0.05);
     private final NumberProperty timerTime = new NumberProperty("Timer Time", "How long to use timer for", () -> useTimer.is(Timer.ON_BOOST), 500, 1, 3000, 1, NumberProperty.FORMAT_MS);
     private final EnumProperty<Damage> damage = new EnumProperty<>("Damage", "Causes damage which can disable speed checks", Damage.PACKET);
-    private final NumberProperty timerStart = new NumberProperty("Timer Start", "Timer start factor.\nCan be set lower to help bypass timer checks when using damage.", 1.0, 0.1, 3.0, 0.05);
+    private final NumberProperty timerStart = new NumberProperty("Timer Start", "Timer start factor.\nCan be set lower to help bypass timer checks when using damage.", 1.0, 0.01, 3.0, 0.01);
+    private final BooleanProperty pushUp = new BooleanProperty("Push Up", "Pushes you up when you start flying", true);
     private final BooleanProperty quickStop = new BooleanProperty("Quick Stop", "Set motion to 0 when you stop flying", true);
 
     private final NumberProperty viewBobbing = new NumberProperty("View Bobbing", "View bobbing while flying", 0.0, 0.0, 1.0, 0.05);
@@ -56,7 +57,7 @@ public class Flight extends Module {
     private final Clock timerClock = new Clock();
 
     public Flight() {
-        this.boostGroup.addProperties(this.useBoost, this.useTimer, this.timerFactor, this.timerTime, this.damage, this.timerStart, this.quickStop);
+        this.boostGroup.addProperties(this.useBoost, this.useTimer, this.timerFactor, this.timerTime, this.damage, this.timerStart, this.pushUp, this.quickStop);
         this.addProperties(this.mode, this.speedSet, this.hSpeed, this.vSpeed, this.boostGroup, this.viewBobbing);
         this.setSuffix(this.mode::getDisplayValue);
     }
@@ -157,11 +158,14 @@ public class Flight extends Module {
                             if (switch (this.damage.get()) {
                                 case PACKET -> PlayerUtil.selfDamage(0.0625, true, true);
                                 case LOW -> PlayerUtil.selfDamageLow();
+                                case JUMP_PACKET -> PlayerUtil.selfDamageJump();
                                 case NONE -> mc.thePlayer.onGround;
                             }) {
                                 this.stage = 1;
                                 this.speed = this.speedSet.get();
-                                MoveUtil.vertical(event, MoveUtil.jumpHeight());
+                                if (this.pushUp.get()) {
+                                    MoveUtil.vertical(event, MoveUtil.jumpHeight());
+                                }
                                 mc.timer.timerSpeed = this.timerStart.getFloat();
                             }
                         }
@@ -207,9 +211,7 @@ public class Flight extends Module {
     public final Listener<EventPreMotion> onPre = event -> {
 
         switch (this.mode.get()) {
-            case NCP_GLIDE -> {
-                event.onGround = true;
-            }
+            case NCP_GLIDE -> event.onGround = true;
         }
 
         this.lastDist = MoveUtil.lastDistance();
@@ -248,6 +250,7 @@ public class Flight extends Module {
     enum Damage {
         PACKET,
         LOW,
+        JUMP_PACKET,
         NONE
     }
 

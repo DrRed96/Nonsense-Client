@@ -74,13 +74,13 @@ public class AutoSpeedBuilders extends Module {
     private final Clock timer = new Clock();
 
     public AutoSpeedBuilders() {
-        this.render.addProperties(this.renderBuild, this.validBlock, this.invalidBlock, this.renderData, this.clickBlock, this.placeBlock);
         this.silent.addProperties(this.silentSwing, this.silentSwap);
+        this.render.addProperties(this.renderBuild, this.validBlock, this.invalidBlock, this.renderData, this.clickBlock, this.placeBlock);
         this.addProperties(this.delay, this.disconnectedFix, this.silent, this.render);
     }
 
     @EventLink
-    public final Listener<EventTick> onTick = event -> {
+    public final Listener<EventTick> onTick = _ -> {
 
         if (!PlayerUtil.canUpdate()) {
             return;
@@ -145,7 +145,7 @@ public class AutoSpeedBuilders extends Module {
     };
 
     @EventLink
-    public final Listener<EventUpdate> onUpdate = event -> {
+    public final Listener<EventUpdate> onUpdate = _ -> {
 
         if (!this.canBuild || this.blockData == null) {
             this.hitVec = null;
@@ -213,10 +213,10 @@ public class AutoSpeedBuilders extends Module {
                             }
                         }
                     }
+
                     if (stack == null || itemState == null || slot == -1) {
                         continue;
                     }
-
 
                     CheckResult check = this.compareStates(this.build.get(pos), itemState, true, new BlockData(offset, facing, null, 0));
                     if (check.result) {
@@ -304,6 +304,7 @@ public class AutoSpeedBuilders extends Module {
         return null;
     }
 
+    @SuppressWarnings("unused")
     private boolean isBuildComplete() {
         for (int x = -3; x <= 3; x++) {
             for (int y = 1; y <= this.maxY; y++) {
@@ -645,7 +646,7 @@ public class AutoSpeedBuilders extends Module {
     };
 
     @EventLink
-    public final Listener<EventRender3D> onRender3D = event -> {
+    public final Listener<EventRender3D> onRender3D = _ -> {
 
         if (this.renderBuild.get() && !this.build.isEmpty()) {
             for (Map.Entry<BlockPos, IBlockState> entry : this.build.entrySet()) {
@@ -660,7 +661,7 @@ public class AutoSpeedBuilders extends Module {
     };
 
     @EventLink
-    public final Listener<EventJoinGame> onJoin = event -> {
+    public final Listener<EventJoinGame> onJoin = _ -> {
         this.build.clear();
         this.blockData = null;
         this.centrePos = null;

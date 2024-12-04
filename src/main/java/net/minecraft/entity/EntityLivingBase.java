@@ -59,7 +59,7 @@ public abstract class EntityLivingBase extends Entity {
     private static final AttributeModifier sprintingSpeedBoostModifier = (new AttributeModifier(sprintingSpeedBoostModifierUUID, "Sprinting speed boost", 0.30000001192092896D, 2)).setSaved(false);
     private BaseAttributeMap attributeMap;
     private final CombatTracker _combatTracker = new CombatTracker(this);
-    private final Map<Integer, PotionEffect> activePotionsMap = Maps.<Integer, PotionEffect>newHashMap();
+    private final Map<Integer, PotionEffect> activePotionsMap = Maps.newHashMap();
 
     /**
      * The equipment this mob was previously wearing, used for syncing.
@@ -296,7 +296,6 @@ public abstract class EntityLivingBase extends Entity {
     public void onEntityUpdate() {
         this.prevSwingProgress = this.swingProgress;
         super.onEntityUpdate();
-        this.worldObj.theProfiler.startSection("livingEntityBaseTick");
         boolean flag = this instanceof EntityPlayer;
 
         if (this.isEntityAlive()) {
@@ -387,7 +386,6 @@ public abstract class EntityLivingBase extends Entity {
         this.prevRotationPitchHead = this.rotationPitchHead;
         this.prevRotationYaw = this.rotationYaw;
         this.prevRotationPitch = this.rotationPitch;
-        this.worldObj.theProfiler.endSection();
     }
 
     /**
@@ -1353,16 +1351,16 @@ public abstract class EntityLivingBase extends Entity {
      * Causes this entity to do an upwards motion (jumping).
      */
     protected void jump() {
-        this.motionY = (double) this.getJumpUpwardsMotion();
+        this.motionY = this.getJumpUpwardsMotion();
 
         if (this.isPotionActive(Potion.jump)) {
-            this.motionY += (double) ((float) (this.getActivePotionEffect(Potion.jump).getAmplifier() + 1) * 0.1F);
+            this.motionY += (float) (this.getActivePotionEffect(Potion.jump).getAmplifier() + 1) * 0.1F;
         }
 
         if (this.isSprinting()) {
             float f = this.rotationYaw * 0.017453292F;
-            this.motionX -= (double) (MathHelper.sin(f) * 0.2F);
-            this.motionZ += (double) (MathHelper.cos(f) * 0.2F);
+            this.motionX -= MathHelper.sin(f) * 0.2F;
+            this.motionZ += MathHelper.cos(f) * 0.2F;
         }
 
         this.isAirBorne = true;
@@ -1372,11 +1370,11 @@ public abstract class EntityLivingBase extends Entity {
      * main AI tick function, replaces updateEntityActionState
      */
     protected void updateAITick() {
-        this.motionY += 0.03999999910593033D;
+        this.motionY += 0.04;
     }
 
     protected void handleJumpLava() {
-        this.motionY += 0.03999999910593033D;
+        this.motionY += 0.04;
     }
 
     /**
@@ -1393,15 +1391,15 @@ public abstract class EntityLivingBase extends Entity {
                     }
 
                     float f = 0.16277136F / (f4 * f4 * f4);
-                    float f5;
+                    float friction;
 
                     if (this.onGround) {
-                        f5 = this.getAIMoveSpeed() * f;
+                        friction = this.getAIMoveSpeed() * f;
                     } else {
-                        f5 = this.jumpMovementFactor;
+                        friction = this.jumpMovementFactor;
                     }
 
-                    this.moveFlying(strafe, forward, f5);
+                    this.moveFlying(strafe, forward, friction);
                     f4 = 0.91F;
 
                     if (this.onGround) {
@@ -1597,10 +1595,7 @@ public abstract class EntityLivingBase extends Entity {
         }
 
         this.onGroundSpeedFactor += (f3 - this.onGroundSpeedFactor) * 0.3F;
-        this.worldObj.theProfiler.startSection("headTurn");
         f2 = this.func_110146_f(f1, f2);
-        this.worldObj.theProfiler.endSection();
-        this.worldObj.theProfiler.startSection("rangeChecks");
 
         while (this.rotationYaw - this.prevRotationYaw < -180.0F) {
             this.prevRotationYaw -= 360.0F;
@@ -1634,7 +1629,6 @@ public abstract class EntityLivingBase extends Entity {
             this.prevRotationYawHead += 360.0F;
         }
 
-        this.worldObj.theProfiler.endSection();
         this.movedDistance += f2;
     }
 
@@ -1702,7 +1696,6 @@ public abstract class EntityLivingBase extends Entity {
             this.motionZ = 0.0D;
         }
 
-        this.worldObj.theProfiler.startSection("ai");
 
         if (this.isMovementBlocked()) {
             this.isJumping = false;
@@ -1710,13 +1703,9 @@ public abstract class EntityLivingBase extends Entity {
             this.moveForward = 0.0F;
             this.randomYawVelocity = 0.0F;
         } else if (this.isServerWorld()) {
-            this.worldObj.theProfiler.startSection("newAi");
             this.updateEntityActionState();
-            this.worldObj.theProfiler.endSection();
         }
 
-        this.worldObj.theProfiler.endSection();
-        this.worldObj.theProfiler.startSection("jump");
 
         if (this.isJumping) {
             if (this.isInWater()) {
@@ -1731,20 +1720,15 @@ public abstract class EntityLivingBase extends Entity {
             this.jumpTicks = 0;
         }
 
-        this.worldObj.theProfiler.endSection();
-        this.worldObj.theProfiler.startSection("travel");
         this.moveStrafing *= 0.98F;
         this.moveForward *= 0.98F;
         this.randomYawVelocity *= 0.9F;
         this.moveEntityWithHeading(this.moveStrafing, this.moveForward);
-        this.worldObj.theProfiler.endSection();
-        this.worldObj.theProfiler.startSection("push");
 
         if (!this.worldObj.isRemote) {
             this.collideWithNearbyEntities();
         }
 
-        this.worldObj.theProfiler.endSection();
     }
 
     protected void updateEntityActionState() {

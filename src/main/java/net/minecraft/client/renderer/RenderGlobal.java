@@ -641,7 +641,6 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
             double d0 = renderViewEntity.prevPosX + (renderViewEntity.posX - renderViewEntity.prevPosX) * (double)partialTicks;
             double d1 = renderViewEntity.prevPosY + (renderViewEntity.posY - renderViewEntity.prevPosY) * (double)partialTicks;
             double d2 = renderViewEntity.prevPosZ + (renderViewEntity.posZ - renderViewEntity.prevPosZ) * (double)partialTicks;
-            this.theWorld.theProfiler.startSection("prepare");
             TileEntityRendererDispatcher.instance.cacheActiveRenderInfo(this.theWorld, this.mc.getTextureManager(), this.mc.fontRendererObj, this.mc.getRenderViewEntity(), partialTicks);
             this.renderManager.cacheActiveRenderInfo(this.theWorld, this.mc.fontRendererObj, this.mc.getRenderViewEntity(), this.mc.pointedEntity, this.mc.gameSettings, partialTicks);
 
@@ -662,7 +661,6 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
             TileEntityRendererDispatcher.staticPlayerZ = d5;
             this.renderManager.setRenderPosition(d3, d4, d5);
             this.mc.entityRenderer.enableLightmap();
-            this.theWorld.theProfiler.endStartSection("global");
             List list = this.theWorld.getLoadedEntityList();
 
             if (i == 0)
@@ -699,7 +697,6 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
                 GlStateManager.disableFog();
                 this.entityOutlineFramebuffer.framebufferClear();
                 this.entityOutlineFramebuffer.bindFramebuffer(false);
-                this.theWorld.theProfiler.endStartSection("entityOutlines");
                 RenderHelper.disableStandardItemLighting();
                 this.renderManager.setRenderOutlines(true);
 
@@ -734,7 +731,6 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
                 GlStateManager.enableAlpha();
             }
 
-            this.theWorld.theProfiler.endStartSection("entities");
             boolean flag7 = Config.isShaders();
 
             if (flag7)
@@ -827,7 +823,6 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
                 Shaders.beginBlockEntities();
             }
 
-            this.theWorld.theProfiler.endStartSection("blockentities");
             RenderHelper.enableStandardItemLighting();
 
             if (Reflector.ForgeTileEntityRendererDispatcher_preDrawBatch.exists())
@@ -1007,7 +1002,6 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
 
             this.postRenderDamagedBlocks();
             this.mc.entityRenderer.disableLightmap();
-            this.mc.mcProfiler.endSection();
         }
     }
 
@@ -1048,7 +1042,6 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
             this.loadRenderers();
         }
 
-        this.theWorld.theProfiler.startSection("camera");
         double d0 = viewEntity.posX - this.frustumUpdatePosX;
         double d1 = viewEntity.posY - this.frustumUpdatePosY;
         double d2 = viewEntity.posZ - this.frustumUpdatePosZ;
@@ -1069,12 +1062,10 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
             DynamicLights.update(this);
         }
 
-        this.theWorld.theProfiler.endStartSection("renderlistcamera");
         double d3 = viewEntity.lastTickPosX + (viewEntity.posX - viewEntity.lastTickPosX) * partialTicks;
         double d4 = viewEntity.lastTickPosY + (viewEntity.posY - viewEntity.lastTickPosY) * partialTicks;
         double d5 = viewEntity.lastTickPosZ + (viewEntity.posZ - viewEntity.lastTickPosZ) * partialTicks;
         this.renderContainer.initialize(d3, d4, d5);
-        this.theWorld.theProfiler.endStartSection("cull");
 
         if (this.debugFixedClippingHelper != null)
         {
@@ -1083,7 +1074,6 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
             camera = frustum;
         }
 
-        this.mc.mcProfiler.endStartSection("culling");
         BlockPos blockpos2 = new BlockPos(d3, d4 + (double)viewEntity.getEyeHeight(), d5);
         RenderChunk renderchunk = this.viewFrustum.getRenderChunk(blockpos2);
         BlockPos blockpos = new BlockPos(MathHelper.floor_double(d3 / 16.0D) * 16, MathHelper.floor_double(d4 / 16.0D) * 16, MathHelper.floor_double(d5 / 16.0D) * 16);
@@ -1289,10 +1279,8 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
                         }
                         else
                         {
-                            this.mc.mcProfiler.startSection("build near");
                             this.renderDispatcher.updateChunkNow(renderchunk5);
                             renderchunk5.setNeedsUpdate(false);
-                            this.mc.mcProfiler.endSection();
                         }
                     }
                     else
@@ -1304,7 +1292,6 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
 
             Lagometer.timerChunkUpdate.end();
             this.chunksToUpdate.addAll(set);
-            this.mc.mcProfiler.endSection();
         }
     }
 
@@ -1420,7 +1407,6 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
 
         if (blockLayerIn == EnumWorldBlockLayer.TRANSLUCENT)
         {
-            this.mc.mcProfiler.startSection("translucent_sort");
             double d0 = entityIn.posX - this.prevRenderSortX;
             double d1 = entityIn.posY - this.prevRenderSortY;
             double d2 = entityIn.posZ - this.prevRenderSortZ;
@@ -1445,10 +1431,8 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
                 }
             }
 
-            this.mc.mcProfiler.endSection();
         }
 
-        this.mc.mcProfiler.startSection("filterempty");
         int l = 0;
         boolean flag = blockLayerIn == EnumWorldBlockLayer.TRANSLUCENT;
         int i1 = flag ? this.renderInfos.size() - 1 : 0;
@@ -1468,7 +1452,6 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
 
         if (l == 0)
         {
-            this.mc.mcProfiler.endSection();
             return l;
         }
         else
@@ -1478,9 +1461,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
                 GlStateManager.disableFog();
             }
 
-            this.mc.mcProfiler.endStartSection("render_" + blockLayerIn);
             this.renderBlockLayer(blockLayerIn);
-            this.mc.mcProfiler.endSection();
             return l;
         }
     }

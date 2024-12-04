@@ -12,27 +12,26 @@ import shadersmod.client.SVertexBuilder;
 
 public class WorldVertexBufferUploader
 {
-    private static final String __OBFID = "CL_00002567";
 
-    public void func_181679_a(WorldRenderer p_181679_1_)
+    public void func_181679_a(WorldRenderer renderer)
     {
-        if (p_181679_1_.getVertexCount() > 0)
+        if (renderer.getVertexCount() > 0)
         {
-            VertexFormat vertexformat = p_181679_1_.getVertexFormat();
+            VertexFormat vertexformat = renderer.getVertexFormat();
             int i = vertexformat.getNextOffset();
-            ByteBuffer bytebuffer = p_181679_1_.getByteBuffer();
-            List list = vertexformat.getElements();
+            ByteBuffer bytebuffer = renderer.getByteBuffer();
+            List<VertexFormatElement> list = vertexformat.getElements();
             boolean flag = Reflector.ForgeVertexFormatElementEnumUseage_preDraw.exists();
             boolean flag1 = Reflector.ForgeVertexFormatElementEnumUseage_postDraw.exists();
 
             for (int j = 0; j < list.size(); ++j)
             {
-                VertexFormatElement vertexformatelement = (VertexFormatElement)list.get(j);
+                VertexFormatElement vertexformatelement = list.get(j);
                 VertexFormatElement.EnumUsage vertexformatelement$enumusage = vertexformatelement.getUsage();
 
                 if (flag)
                 {
-                    Reflector.callVoid(vertexformatelement$enumusage, Reflector.ForgeVertexFormatElementEnumUseage_preDraw, new Object[] {vertexformat, Integer.valueOf(j), Integer.valueOf(i), bytebuffer});
+                    Reflector.callVoid(vertexformatelement$enumusage, Reflector.ForgeVertexFormatElementEnumUseage_preDraw, vertexformat, j, i, bytebuffer);
                 }
                 else
                 {
@@ -66,24 +65,24 @@ public class WorldVertexBufferUploader
                 }
             }
 
-            if (p_181679_1_.isMultiTexture())
+            if (renderer.isMultiTexture())
             {
-                p_181679_1_.drawMultiTexture();
+                renderer.drawMultiTexture();
             }
             else if (Config.isShaders())
             {
-                SVertexBuilder.drawArrays(p_181679_1_.getDrawMode(), 0, p_181679_1_.getVertexCount(), p_181679_1_);
+                SVertexBuilder.drawArrays(renderer.getDrawMode(), 0, renderer.getVertexCount(), renderer);
             }
             else
             {
-                GL11.glDrawArrays(p_181679_1_.getDrawMode(), 0, p_181679_1_.getVertexCount());
+                GL11.glDrawArrays(renderer.getDrawMode(), 0, renderer.getVertexCount());
             }
 
             int i1 = 0;
 
             for (int k1 = list.size(); i1 < k1; ++i1)
             {
-                VertexFormatElement vertexformatelement1 = (VertexFormatElement)list.get(i1);
+                VertexFormatElement vertexformatelement1 = list.get(i1);
                 VertexFormatElement.EnumUsage vertexformatelement$enumusage1 = vertexformatelement1.getUsage();
 
                 if (flag1)
@@ -118,7 +117,7 @@ public class WorldVertexBufferUploader
             }
         }
 
-        p_181679_1_.reset();
+        renderer.reset();
     }
 
     static final class WorldVertexBufferUploader$1

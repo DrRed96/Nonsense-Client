@@ -358,12 +358,16 @@ public class RenderUtil implements MinecraftInstance {
         glColor(color.getRGB());
     }
 
-    public static Vec3 renderPos(float delta) {
+    public static Vec3 renderPos(Entity entity, float delta) {
         return new Vec3(
-                -MathUtil.lerp(mc.thePlayer.lastTickPosX, mc.thePlayer.posX, delta),
-                -MathUtil.lerp(mc.thePlayer.lastTickPosY, mc.thePlayer.posY, delta),
-                -MathUtil.lerp(mc.thePlayer.lastTickPosZ, mc.thePlayer.posZ, delta)
+                MathUtil.lerp(entity.lastTickPosX, entity.posX, delta),
+                MathUtil.lerp(entity.lastTickPosY, entity.posY, delta),
+                MathUtil.lerp(entity.lastTickPosZ, entity.posZ, delta)
         );
+    }
+
+    public static Vec3 renderPos(float delta) {
+        return renderPos(mc.thePlayer, delta);
     }
 
     public static Vec3 renderPos() {

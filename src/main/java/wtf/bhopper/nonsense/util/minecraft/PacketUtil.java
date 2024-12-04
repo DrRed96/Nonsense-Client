@@ -1,5 +1,6 @@
 package wtf.bhopper.nonsense.util.minecraft;
 
+import de.florianmichael.viamcp.fixes.AttackOrder;
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
@@ -33,7 +34,7 @@ public class PacketUtil implements MinecraftInstance {
 
         if (mc.leftClickCounter <= 0) {
 
-            PlayerUtil.swing(!swing);
+            PlayerUtil.swingConditional(!swing, objectMouseOver);
 
             if (event.mouseOver == null) {
                 if (mc.playerController.isNotCreative()) {
@@ -44,7 +45,7 @@ public class PacketUtil implements MinecraftInstance {
 
             switch (event.mouseOver.typeOfHit) {
                 case ENTITY:
-                    mc.playerController.attackEntity(mc.thePlayer, event.mouseOver.entityHit);
+                    AttackOrder.sendFixedAttack(mc.thePlayer, event.mouseOver.entityHit);
                     break;
 
                 case BLOCK:

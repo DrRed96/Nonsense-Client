@@ -31,6 +31,7 @@ import net.minecraft.world.WorldSettings;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.module.ModuleManager;
 import wtf.bhopper.nonsense.module.impl.other.AntiDesync;
+import wtf.bhopper.nonsense.module.impl.player.FastMine;
 import wtf.bhopper.nonsense.util.minecraft.InventoryUtil;
 
 public class PlayerControllerMP {
@@ -81,9 +82,9 @@ public class PlayerControllerMP {
         this.netClientHandler = p_i45062_2_;
     }
 
-    public static void clickBlockCreative(Minecraft mcIn, PlayerControllerMP p_178891_1_, BlockPos p_178891_2_, EnumFacing p_178891_3_) {
-        if (!mcIn.theWorld.extinguishFire(mcIn.thePlayer, p_178891_2_, p_178891_3_)) {
-            p_178891_1_.onPlayerDestroyBlock(p_178891_2_, p_178891_3_);
+    public static void clickBlockCreative(Minecraft mcIn, PlayerControllerMP playerController, BlockPos pos, EnumFacing side) {
+        if (!mcIn.theWorld.extinguishFire(mcIn.thePlayer, pos, side)) {
+            playerController.onPlayerDestroyBlock(pos, side);
         }
     }
 
@@ -252,6 +253,7 @@ public class PlayerControllerMP {
     }
 
     public boolean onPlayerDamageBlock(BlockPos posBlock, EnumFacing directionFacing) {
+        FastMine fastMine = Nonsense.module(FastMine.class);
         this.syncCurrentPlayItem();
 
         if (this.blockHitDelay > 0) {
@@ -277,7 +279,7 @@ public class PlayerControllerMP {
 
                 ++this.stepSoundTickCounter;
 
-                if (this.curBlockDamageMP >= 1.0F) {
+                if (this.curBlockDamageMP >= fastMine.getBreakRequirement()) {
                     this.isHittingBlock = false;
                     this.netClientHandler.addToSendQueue(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.STOP_DESTROY_BLOCK, posBlock, directionFacing));
                     if (!Nonsense.module(AntiDesync.class).breaking()) {
@@ -285,7 +287,7 @@ public class PlayerControllerMP {
                     }
                     this.curBlockDamageMP = 0.0F;
                     this.stepSoundTickCounter = 0.0F;
-                    this.blockHitDelay = 5;
+                    this.blockHitDelay = fastMine.getHitDelay();
                 }
 
                 this.mc.theWorld.sendBlockBreakProgress(this.mc.thePlayer.getEntityId(), this.currentBlock, (int) (this.curBlockDamageMP * 10.0F) - 1);

@@ -26,6 +26,11 @@ public class BooleanProperty extends Property<Boolean> {
     }
 
     @Override
+    public void parseString(String str) {
+        this.set(str.equalsIgnoreCase("true") || str.equalsIgnoreCase("1") || str.equalsIgnoreCase("yes"));
+    }
+
+    @Override
     public JsonElement serialize() {
         return new JsonPrimitive(this.get());
     }

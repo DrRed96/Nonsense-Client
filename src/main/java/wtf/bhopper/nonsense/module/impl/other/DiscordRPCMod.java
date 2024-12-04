@@ -12,7 +12,7 @@ import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 
 
-@ModuleInfo(name = "Discord RPC", description = "Discord Rich Presence.", category = ModuleCategory.OTHER)
+@ModuleInfo(name = "Discord RPC", description = "Discord Rich Presence.", category = ModuleCategory.OTHER, hidden = true)
 public class DiscordRPCMod extends Module {
 
     private static final String APPLICATION_ID = "1294195120781922305";

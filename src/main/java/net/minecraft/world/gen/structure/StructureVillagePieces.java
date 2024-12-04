@@ -1572,7 +1572,7 @@ public class StructureVillagePieces
             {
                 for (int l = this.boundingBox.minX; l <= this.boundingBox.maxX; ++l)
                 {
-                    blockpos$mutableblockpos.func_181079_c(l, 64, k);
+                    blockpos$mutableblockpos.setPos(l, 64, k);
 
                     if (p_74889_2_.isVecInside(blockpos$mutableblockpos))
                     {

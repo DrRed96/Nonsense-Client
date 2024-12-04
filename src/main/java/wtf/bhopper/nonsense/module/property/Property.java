@@ -49,7 +49,10 @@ public abstract class Property<T> {
         }
     }
 
+
     public abstract String getDisplayValue();
+
+    public abstract void parseString(String str);
 
     public abstract JsonElement serialize();
     public abstract void deserialize(JsonElement element);

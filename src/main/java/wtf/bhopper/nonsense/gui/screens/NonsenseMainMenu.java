@@ -85,7 +85,8 @@ public class NonsenseMainMenu extends GuiScreen {
             "LOOOOOOOL jd lost to dewier",
             "Free + Open Source!",
             "Logos by Ciyuna",
-            "erm... what the sigma?"
+            "erm... what the sigma?",
+            "acquired by Alan Wood Industries LLC in 2077"
     };
 
     private ResourceLocation backgroundTexture;
@@ -155,6 +156,7 @@ public class NonsenseMainMenu extends GuiScreen {
         GlStateManager.popMatrix();
 
         NVGHelper.begin();
+
         NVGHelper.translate(width / 2.0F, height / 2.0F);
         NVGHelper.fontFace(Fonts.ARIAL);
         NVGHelper.fontSize(20.0F);

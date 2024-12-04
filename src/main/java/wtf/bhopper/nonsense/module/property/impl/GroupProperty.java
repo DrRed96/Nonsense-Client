@@ -26,6 +26,11 @@ public class GroupProperty extends Property<List<Property<?>>> implements Proper
     }
 
     @Override
+    public void parseString(String str) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public JsonElement serialize() {
         JsonObject object = new JsonObject();
         for (Property<?> property : this.getProperties()) {
@@ -58,5 +63,13 @@ public class GroupProperty extends Property<List<Property<?>>> implements Proper
     @Override
     public List<Property<?>> getProperties() {
         return this.value;
+    }
+
+    public Property<?> getProperty(String name) {
+        return this.get()
+                .stream()
+                .filter(property -> property.name.equalsIgnoreCase(name))
+                .findFirst()
+                .orElse(null);
     }
 }

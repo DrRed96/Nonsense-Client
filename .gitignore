@@ -48,6 +48,8 @@ Thumbs.db
 */build
 /run
 */run
+/release
+*/release
 
 # IntelliJ specific files/directories
 out

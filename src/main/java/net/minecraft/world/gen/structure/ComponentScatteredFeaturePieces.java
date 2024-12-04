@@ -331,7 +331,7 @@ public class ComponentScatteredFeaturePieces
                 {
                     for (int l = this.boundingBox.minX; l <= this.boundingBox.maxX; ++l)
                     {
-                        blockpos$mutableblockpos.func_181079_c(l, 64, k);
+                        blockpos$mutableblockpos.setPos(l, 64, k);
 
                         if (p_74935_2_.isVecInside(blockpos$mutableblockpos))
                         {

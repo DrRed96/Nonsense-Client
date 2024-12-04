@@ -4,9 +4,12 @@ import io.netty.util.internal.ThreadLocalRandom;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.Util;
 
+import java.io.File;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
+import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.Arrays;
 import java.util.Collection;
@@ -38,18 +41,6 @@ public class GeneralUtil {
         T[] result = Arrays.copyOf(first, first.length + second.length);
         System.arraycopy(second, 0, result, first.length, second.length);
         return result;
-    }
-
-    public static URL getResourcePath(ResourceLocation location) {
-        return GeneralUtil.class.getResource("/assets/" + location.getResourceDomain() + "/" + location.getResourcePath());
-    }
-
-    public static String getResourcePathString(ResourceLocation location) {
-        String path = URLDecoder.decode(getResourcePath(location).getFile(), StandardCharsets.UTF_8);
-        if (Util.getOSType() == Util.EnumOS.WINDOWS && path.startsWith("/")) {
-            return path.substring(1);
-        }
-        return path;
     }
 
     public static <T> T randomElement(Collection<T> collection) {

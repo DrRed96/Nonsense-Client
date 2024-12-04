@@ -76,7 +76,7 @@ public class WorldGenTrees extends WorldGenAbstractTree
                     {
                         if (j >= 0 && j < 256)
                         {
-                            if (!this.func_150523_a(worldIn.getBlockState(blockpos$mutableblockpos.func_181079_c(l, j, i1)).getBlock()))
+                            if (!this.func_150523_a(worldIn.getBlockState(blockpos$mutableblockpos.setPos(l, j, i1)).getBlock()))
                             {
                                 flag = false;
                             }
@@ -175,7 +175,7 @@ public class WorldGenTrees extends WorldGenAbstractTree
                             {
                                 for (int i5 = position.getZ() - k4; i5 <= position.getZ() + k4; ++i5)
                                 {
-                                    blockpos$mutableblockpos1.func_181079_c(l4, k3, i5);
+                                    blockpos$mutableblockpos1.setPos(l4, k3, i5);
 
                                     if (worldIn.getBlockState(blockpos$mutableblockpos1).getBlock().getMaterial() == Material.leaves)
                                     {
