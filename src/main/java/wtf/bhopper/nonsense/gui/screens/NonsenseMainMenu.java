@@ -86,7 +86,8 @@ public class NonsenseMainMenu extends GuiScreen {
             "Free + Open Source!",
             "Logos by Ciyuna",
             "erm... what the sigma?",
-            "acquired by Alan Wood Industries LLC in 2077"
+            "acquired by Alan Wood Industries LLC in 2077",
+            "help!"
     };
 
     private ResourceLocation backgroundTexture;
