@@ -18,9 +18,9 @@ public final class MemoryUtil {
 	private static final Charset utf16;
 
 	static {
-		ascii = Charset.forName("ISO-8859-1");
-		utf8 = Charset.forName("UTF-8");
-		utf16 = Charset.forName("UTF-16LE");
+		ascii = StandardCharsets.ISO_8859_1;
+		utf8 = StandardCharsets.UTF_8;
+		utf16 = StandardCharsets.UTF_16LE;
 	}
 
 	private static final Accessor memUtil;

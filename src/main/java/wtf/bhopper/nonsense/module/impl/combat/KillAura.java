@@ -65,7 +65,10 @@ public class KillAura extends Module {
     private final NumberProperty fov = new NumberProperty("FOV", "Targets must be in FOV.", 360.0, 0.0, 360.0, 1.0, NumberProperty.FORMAT_ANGLE);
 
     private final GroupProperty rotsGroup = new GroupProperty("Rotations", "Kill Aura Rotations");
+    private final EnumProperty<RotationMode> rotationMode = new EnumProperty<>("Mode", "Rotations method", RotationMode.INSTANT);
     private final EnumProperty<HitVecMode> hitVecMode = new EnumProperty<>("Hit Vector", "Hit vector of the entity", HitVecMode.CLOSEST);
+    private final BooleanProperty rayCast = new BooleanProperty("Ray Cast", "Performs a ray-cast check", false);
+    private final NumberProperty linear = new NumberProperty("Linear Amount", "Amount to change by with linear rotations", () -> this.rotationMode.is(RotationMode.LINEAR), 80.0, 1.0, 100.0, 1.0, NumberProperty.FORMAT_PERCENT);
 
     private final EnumProperty<Swing> swingMode = new EnumProperty<>("Swing", "Swinging", Swing.CLIENT);
     private final BooleanProperty autoDisable = new BooleanProperty("Auto Disable", "Automatically disabled Kill Aura in certain situations", true);
@@ -84,10 +87,14 @@ public class KillAura extends Module {
     private final Clock attackTimer = new Clock();
     private final Clock switchTimer = new Clock();
 
+    private Vec3 hitVec = null;
+    private Rotation targetRotations = null;
+    private Rotation rotations = null;
+
     public KillAura() {
         this.targetsGroup.addProperties(this.players, this.mobs, this.animals, this.others, this.invis, this.dead, this.teams, this.existed);
         this.rangeGroup.addProperties(this.playerRange, this.otherRange, this.rotRange, this.swingRange, this.fov);
-        this.rotsGroup.addProperties(this.hitVecMode);
+        this.rotsGroup.addProperties(this.rotationMode, this.hitVecMode, this.rayCast, this.linear);
         this.addProperties(this.mode, this.sorting, this.minAps, this.maxAps, this.targetsGroup, this.rangeGroup, this.rotsGroup, this.swingMode, this.autoDisable, this.switchDelay, this.maxTargets);
         this.setSuffix(this.mode::getDisplayValue);
 
@@ -115,7 +122,7 @@ public class KillAura extends Module {
     }
 
     @EventLink
-    public final Listener<EventTick> onTick = event -> {
+    public final Listener<EventTick> onTick = _ -> {
 
         if (!PlayerUtil.canUpdate()) {
             return;
@@ -159,12 +166,30 @@ public class KillAura extends Module {
     };
 
     @EventLink
-    public final Listener<EventUpdate> onUpdate = event -> {
+    public final Listener<EventUpdate> onUpdate = _ -> {
         if (this.target == null) {
+            this.rotations = new Rotation(mc.thePlayer);
             return;
         }
 
-        Vec3 hitVec = this.getHitVec(this.target);
+        this.hitVec = this.getHitVec(this.target);
+        this.targetRotations = RotationUtil.getRotations(this.hitVec);
+
+        this.rotations = switch (this.rotationMode.get()) {
+            case INSTANT -> this.targetRotations;
+            case LINEAR -> RotationUtil.lerp(this.rotations, this.targetRotations, this.linear.getFloat() / 100.0F);
+        };
+
+        if (this.rayCast.get()) {
+            float range = this.target instanceof EntityPlayer ? this.playerRange.getFloat() : this.otherRange.getFloat();
+            Vec3 start = mc.thePlayer.getPositionEyes(1.0F);
+            Vec3 look = RotationUtil.getRotationVec(this.rotations);
+            Vec3 end = start.addVector(look.xCoord * range, look.yCoord * range, look.zCoord * range);
+            MovingObjectPosition intercept = this.target.getEntityBoundingBox().calculateIntercept(start, end);
+            if (intercept == null) {
+                this.isTargetValid = false;
+            }
+        }
 
         boolean canSwing = hitVec.distanceTo(PlayerUtil.eyesPos()) <= this.swingRange.getDouble();
 
@@ -187,14 +212,12 @@ public class KillAura extends Module {
 
     @EventLink
     public final Listener<EventPreMotion> onPre = event -> {
-        if (this.target == null) {
+        if (this.target == null || this.rotations == null) {
             return;
         }
 
-        Vec3 hitVec = this.getHitVec(this.target);
         if (hitVec.distanceTo(PlayerUtil.eyesPos()) <= this.rotRange.getDouble()) {
-            Rotation rotation = RotationUtil.getRotations(hitVec);
-            event.setRotations(rotation);
+            event.setRotations(this.rotations);
         }
 
 
@@ -313,6 +336,11 @@ public class KillAura extends Module {
     private enum Mode {
         SINGLE,
         SWITCH
+    }
+
+    private enum RotationMode {
+        INSTANT,
+        LINEAR
     }
 
     private enum HitVecMode {

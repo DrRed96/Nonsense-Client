@@ -1,11 +1,12 @@
 package wtf.bhopper.nonsense.util.misc;
 
-import org.apache.commons.io.IOUtils;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.system.MemoryUtil;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
+import java.net.URISyntaxException;
 import java.net.URL;
 import java.nio.ByteBuffer;
 import java.nio.channels.Channels;
@@ -17,13 +18,14 @@ import java.nio.file.Paths;
 
 public class IOUtil {
 
-    public static ByteBuffer ioResourceToByteBuffer(String resource) throws IOException {
+    // Stolen from the LWJGL3 examples xd
+    public static ByteBuffer ioResourceToByteBuffer(String resource) throws IOException, URISyntaxException {
         ByteBuffer buffer;
 
         Path path = resource.startsWith("http") ? null : Paths.get(resource);
         if (path != null && Files.isReadable(path)) {
             try (SeekableByteChannel fc = Files.newByteChannel(path)) {
-                buffer = BufferUtils.createByteBuffer((int)fc.size() + 1);
+                buffer = BufferUtils.createByteBuffer((int) fc.size() + 1);
                 while (fc.read(buffer) != -1) {
                     ;
                 }
@@ -31,7 +33,7 @@ public class IOUtil {
         } else {
             try (
                     InputStream source = resource.startsWith("http")
-                            ? new URL(resource).openStream()
+                            ? new URI(resource).toURL().openStream()
                             : ResourceUtil.class.getClassLoader().getResourceAsStream(resource);
                     ReadableByteChannel rbc = Channels.newChannel(source)
             ) {
@@ -53,21 +55,19 @@ public class IOUtil {
         return MemoryUtil.memSlice(buffer);
     }
 
-    public static ByteBuffer ioResourceToByteBuffer(String resource, int bufferSize) throws IOException {
+    public static ByteBuffer ioResourceToByteBuffer(String resource, int bufferSize) throws IOException, URISyntaxException {
         ByteBuffer buffer;
 
         Path path = resource.startsWith("http") ? null : Paths.get(resource);
         if (path != null && Files.isReadable(path)) {
             try (SeekableByteChannel fc = Files.newByteChannel(path)) {
-                buffer = BufferUtils.createByteBuffer((int)fc.size() + 1);
-                while (fc.read(buffer) != -1) {
-                    ;
-                }
+                buffer = BufferUtils.createByteBuffer((int) fc.size() + 1);
+                while (fc.read(buffer) != -1) { }
             }
         } else {
             try (
                     InputStream source = resource.startsWith("http")
-                            ? new URL(resource).openStream()
+                            ? new URI(resource).toURL().openStream()
                             : ResourceUtil.class.getClassLoader().getResourceAsStream(resource);
                     ReadableByteChannel rbc = Channels.newChannel(source)
             ) {

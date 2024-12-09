@@ -6,7 +6,8 @@ public enum ModuleCategory {
     PLAYER("Player", 0xAA55AA),
     EXPLOIT("Exploit", 0x55AAFF),
     OTHER("Other", 0xFFAA00),
-    VISUAL("Visual", 0x0000AA);
+    VISUAL("Visual", 0x0000AA),
+    SCRIPT("Script", 0xFFFF55);
 
     public final String name;
     public final int color;

@@ -1,6 +1,8 @@
 package wtf.bhopper.nonsense.gui.click.novoline;
 
 import net.minecraft.client.gui.GuiScreen;
+import org.lwjglx.input.Keyboard;
+import org.lwjglx.input.Mouse;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.impl.visual.ClickGui;
@@ -106,8 +108,18 @@ public class NovoGui extends GuiScreen {
     @Override
     protected void keyTyped(char typedChar, int keyCode) throws IOException {
         super.keyTyped(typedChar, keyCode);
-        for (NovoPanel dropdown : this.panels) {
-            dropdown.keyTyped(typedChar, keyCode);
+
+        if (isCtrlKeyDown() && keyCode == Keyboard.KEY_R) {
+            int count = 0;
+            for (NovoPanel panel : this.panels) {
+                panel.x = 10 + count * (NovoComponent.WIDTH + 10);
+                panel.y = 10;
+                count++;
+            }
+        }
+
+        for (NovoPanel panel : this.panels) {
+            panel.keyTyped(typedChar, keyCode);
         }
     }
 
@@ -119,6 +131,15 @@ public class NovoGui extends GuiScreen {
     @Override
     public boolean isClientSide() {
         return true;
+    }
+
+    @Override
+    public void handleMouseInput() throws IOException {
+        int offset = Mouse.getDWheel() * 20;
+        for (NovoPanel panel : this.panels) {
+            panel.y += offset;
+        }
+        super.handleMouseInput();
     }
 
     public static int getColor(NovoPanel panel) {

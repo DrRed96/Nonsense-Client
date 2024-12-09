@@ -34,6 +34,10 @@ public enum BlinkUtil {
         poll();
     }
 
+    public static boolean isBlinking() {
+        return INSTANCE.blink;
+    }
+
     public static void poll() {
         while (!INSTANCE.chokedPackets.isEmpty()) {
             PacketUtil.sendNoEvent(INSTANCE.chokedPackets.poll());

@@ -878,7 +878,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
             container = entityplayer.openContainer;
         }
 
-        if (container != null && !packetIn.func_148888_e()) {
+        if (container != null && !packetIn.isAccepted()) {
             this.addToSendQueue(new C0FPacketConfirmTransaction(packetIn.getWindowId(), packetIn.getActionNumber(), true));
         }
     }
@@ -890,9 +890,9 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
         PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.gameController);
         EntityPlayer entityplayer = this.gameController.thePlayer;
 
-        if (packetIn.func_148911_c() == 0) {
+        if (packetIn.getWindowId() == 0) {
             entityplayer.inventoryContainer.putStacksInSlots(packetIn.getItemStacks());
-        } else if (packetIn.func_148911_c() == entityplayer.openContainer.windowId) {
+        } else if (packetIn.getWindowId() == entityplayer.openContainer.windowId) {
             entityplayer.openContainer.putStacksInSlots(packetIn.getItemStacks());
         }
     }

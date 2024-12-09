@@ -8,6 +8,7 @@ import net.minecraft.client.Minecraft;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import wtf.bhopper.nonsense.alt.AltManager;
+import wtf.bhopper.nonsense.anticheat.AntiCheat;
 import wtf.bhopper.nonsense.command.CommandManager;
 import wtf.bhopper.nonsense.config.ConfigManager;
 import wtf.bhopper.nonsense.event.bus.EventBus;
@@ -40,8 +41,9 @@ public enum Nonsense {
     private ConfigManager configManager;
     private AltManager altManager;
 
-    // Render Components
+    // Module Components
     private Hud hud;
+    private AntiCheat antiCheat;
 
     // Util
     private long startTime;
@@ -58,7 +60,9 @@ public enum Nonsense {
 
         this.dataDir = new File(Minecraft.getMinecraft().mcDataDir, NAME);
         if (!this.dataDir.exists()) {
-            this.dataDir.mkdirs();
+            if (this.dataDir.mkdirs()) {
+                throw new RuntimeException("Failed to create data directory.");
+            }
         }
 
         this.eventBus = new EventBus();
@@ -72,6 +76,8 @@ public enum Nonsense {
         Fonts.init();
         this.hud = new Hud();
         module(ClickGui.class).initGuis();
+
+        this.antiCheat = new AntiCheat();
 
         this.tickRate = new TickRate();
         BlinkUtil.init();
@@ -105,6 +111,10 @@ public enum Nonsense {
 
     public static Hud getHud() {
         return INSTANCE.hud;
+    }
+
+    public static AntiCheat getAntiCheat() {
+        return INSTANCE.antiCheat;
     }
 
     public static long getStartTime() {

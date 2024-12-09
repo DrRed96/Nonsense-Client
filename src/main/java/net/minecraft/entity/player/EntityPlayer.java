@@ -2111,21 +2111,21 @@ public abstract class EntityPlayer extends EntityLivingBase
         return this.capabilities.allowEdit;
     }
 
-    public boolean canPlayerEdit(BlockPos p_175151_1_, EnumFacing p_175151_2_, ItemStack p_175151_3_)
+    public boolean canPlayerEdit(BlockPos pos, EnumFacing facing, ItemStack itemStack)
     {
         if (this.capabilities.allowEdit)
         {
             return true;
         }
-        else if (p_175151_3_ == null)
+        else if (itemStack == null)
         {
             return false;
         }
         else
         {
-            BlockPos blockpos = p_175151_1_.offset(p_175151_2_.getOpposite());
+            BlockPos blockpos = pos.offset(facing.getOpposite());
             Block block = this.worldObj.getBlockState(blockpos).getBlock();
-            return p_175151_3_.canPlaceOn(block) || p_175151_3_.canEditBlocks();
+            return itemStack.canPlaceOn(block) || itemStack.canEditBlocks();
         }
     }
 
@@ -2141,7 +2141,7 @@ public abstract class EntityPlayer extends EntityLivingBase
         else
         {
             int i = this.experienceLevel * 7;
-            return i > 100 ? 100 : i;
+            return Math.min(i, 100);
         }
     }
 

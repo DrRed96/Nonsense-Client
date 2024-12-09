@@ -1,6 +1,5 @@
 package wtf.bhopper.nonsense.gui.click.novoline;
 
-import org.lwjglx.input.Keyboard;
 import org.lwjglx.opengl.Display;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.module.Module;
@@ -59,7 +58,7 @@ public class NovoPanel extends NovoComponent {
         NVGHelper.fontFace(Fonts.SEGOE);
 
         if (this.expanded) {
-            NVGHelper.scissor(0.0F, 0.0F, WIDTH, Display.getHeight());
+            NVGHelper.scissor(0.0F, 0.0F, WIDTH, Display.getHeight() - y);
             for (NovoModule module : this.modules) {
                 module.draw(mouseX, mouseY, delta);
             }
@@ -101,19 +100,14 @@ public class NovoPanel extends NovoComponent {
     @Override
     public void keyTyped(char typedChar, int keyCode) {
 
-        // TODO: temporary solution until I can find a way to get the scroll wheel to work
-        if (keyCode == Keyboard.KEY_UP) {
-            this.y += 20.0F;
-        } else if (keyCode == Keyboard.KEY_DOWN) {
-            this.y -= 20.0F;
-        }
-
         if (this.expanded) {
             for (NovoModule module : this.modules) {
                 module.keyTyped(typedChar, keyCode);
             }
         }
     }
+
+
 
     public ModuleCategory getCategory() {
         return this.category;

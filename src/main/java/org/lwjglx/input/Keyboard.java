@@ -177,7 +177,7 @@ public class Keyboard {
 	public static final int KEYBOARD_SIZE = 256;
 	
 	private static final String[] keyName = new String[KEYBOARD_SIZE];
-	private static final Map<String, Integer> keyMap = new HashMap<String, Integer>(253);
+	private static final Map<String, Integer> keyMap = new HashMap<>(253);
 	
 	static {
 		Field[] fields = Keyboard.class.getFields();

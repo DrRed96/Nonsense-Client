@@ -1,13 +1,10 @@
 package wtf.bhopper.nonsense.util.render;
 
-import net.minecraft.client.renderer.texture.ITextureObject;
-import net.minecraft.util.ResourceLocation;
 import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjglx.opengl.Display;
 import org.lwjglx.util.vector.Vector2f;
 import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
-import wtf.bhopper.nonsense.util.misc.GeneralUtil;
 
 import java.awt.*;
 import java.nio.ByteBuffer;
@@ -301,11 +298,6 @@ public class NVGHelper implements MinecraftInstance {
             fill();
             closePath();
         }
-    }
-
-    public static int createImageFromResourceLocation(ResourceLocation location, int width, int height, int flags) {
-        ITextureObject texture = mc.getTextureManager().getTexture(location);
-        return nvglCreateImageFromHandle(context, texture.getGlTextureId(), width, height, flags);
     }
 
     public static NVGColor getColor(int color, NVGColor result) {

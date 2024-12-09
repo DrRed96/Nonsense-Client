@@ -7,6 +7,7 @@ import wtf.bhopper.nonsense.util.misc.GeneralUtil;
 import wtf.bhopper.nonsense.util.misc.ResourceUtil;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
 import java.nio.ByteBuffer;
 
 import static org.lwjgl.nanovg.NanoVG.nvgCreateFont;
@@ -48,7 +49,7 @@ public enum Fonts implements MinecraftInstance {
                 if (font.vgFont == -1) {
                     throw new RuntimeException("Failed to load font: " + font.name);
                 }
-            } catch (IOException exception) {
+            } catch (IOException | URISyntaxException exception) {
                 throw new RuntimeException(exception);
             }
         }

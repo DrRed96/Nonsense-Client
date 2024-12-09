@@ -93,7 +93,7 @@ public class GuiChat extends GuiScreen {
         }
 
         if (keyCode == 1) {
-            this.mc.displayGuiScreen((GuiScreen) null);
+            this.mc.displayGuiScreen(null);
         } else if (keyCode != 28 && keyCode != 156) {
             if (keyCode == 200) {
                 this.getSentHistory(-1);
@@ -109,11 +109,11 @@ public class GuiChat extends GuiScreen {
         } else {
             String s = this.inputField.getText().trim();
 
-            if (s.length() > 0) {
+            if (!s.isEmpty()) {
                 this.sendChatMessage(s);
             }
 
-            this.mc.displayGuiScreen((GuiScreen) null);
+            this.mc.displayGuiScreen(null);
         }
     }
 
@@ -196,7 +196,7 @@ public class GuiChat extends GuiScreen {
             StringBuilder stringbuilder = new StringBuilder();
 
             for (String s2 : this.foundPlayerNames) {
-                if (stringbuilder.length() > 0) {
+                if (!stringbuilder.isEmpty()) {
                     stringbuilder.append(", ");
                 }
 
@@ -206,7 +206,7 @@ public class GuiChat extends GuiScreen {
             this.mc.ingameGUI.getChatGUI().printChatMessageWithOptionalDeletion(new ChatComponentText(stringbuilder.toString()), 1);
         }
 
-        this.inputField.writeText((String) this.foundPlayerNames.get(this.autocompleteIndex++));
+        this.inputField.writeText(this.foundPlayerNames.get(this.autocompleteIndex++));
     }
 
     private void sendAutocompleteRequest(String p_146405_1_, String p_146405_2_) {

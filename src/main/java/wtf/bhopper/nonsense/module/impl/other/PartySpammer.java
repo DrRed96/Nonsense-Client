@@ -61,7 +61,7 @@ public class PartySpammer extends Module {
     public final Listener<EventReceivePacket>  onReceivePacket = event -> {
         if (event.packet instanceof S02PacketChat packet) {
 
-            String text = EnumChatFormatting.getTextWithoutFormattingCodes(packet.getChatComponent().getUnformattedText());
+            String text = packet.getChatComponent().getUnformattedText();
 
             if (text.equals("You cannot invite that player since they have blocked you.")) {
                 toggle(false);

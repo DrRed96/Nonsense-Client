@@ -30,6 +30,7 @@ public class ModuleManager {
                 new Velocity(),
                 new AutoBlock(),
                 new Criticals(),
+                new TargetStrafe(),
                 new FastBow(),
                 new NoClickDelay(),
 
@@ -70,6 +71,7 @@ public class ModuleManager {
                 new Popbob(),
 
                 // Other
+                new AntiCheatMod(),
                 new ChatFilter(),
                 new AntiAim(),
                 new AntiDesync(),

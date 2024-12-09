@@ -1,6 +1,5 @@
 package wtf.bhopper.nonsense.module.impl.other;
 
-import com.google.common.base.Objects;
 import net.minecraft.block.*;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.init.Blocks;
@@ -677,17 +676,7 @@ public class AutoSpeedBuilders extends Module {
     }
 
 
-    private record BlockData(BlockPos pos, EnumFacing face, Vec3 hitVec, int slot) {
-        @Override
-        public String toString() {
-            return Objects.toStringHelper(this)
-                    .add("pos", this.pos)
-                    .add("face", this.face)
-                    .add("hitVec", this.hitVec)
-                    .add("slot", this.slot)
-                    .toString();
-        }
-    }
+    private record BlockData(BlockPos pos, EnumFacing face, Vec3 hitVec, int slot) { }
 
     private record CheckResult(boolean result, Vec3 hitVec) {
         public static final CheckResult TRUE = new CheckResult(true, null);
@@ -695,14 +684,6 @@ public class AutoSpeedBuilders extends Module {
 
         public static CheckResult of(boolean result) {
             return result ? TRUE : FALSE;
-        }
-
-        @Override
-        public String toString() {
-            return Objects.toStringHelper(this)
-                    .add("result", this.result)
-                    .add("hitVec", this.hitVec)
-                    .toString();
         }
     }
 

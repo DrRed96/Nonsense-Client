@@ -40,9 +40,7 @@ public class Hud implements MinecraftInstance {
     }
 
     @EventLink
-    public final Listener<EventRenderGui> onRenderGui = event -> {
-        this.targetHud.setEnabled(enabled() && mod().targetHudEnabled.get());
-    };
+    public final Listener<EventRenderGui> onRenderGui = _ -> this.targetHud.setEnabled(enabled() && mod().targetHudEnabled.get());
 
     public static void addComponent(RenderComponent component) {
         if (Nonsense.getHud() == null) {

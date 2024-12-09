@@ -1,5 +1,6 @@
 package wtf.bhopper.nonsense.gui.screens;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.gui.*;
@@ -8,6 +9,7 @@ import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.client.resources.IResource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import org.lwjglx.util.glu.Project;
@@ -18,9 +20,13 @@ import wtf.bhopper.nonsense.util.render.ColorUtil;
 import wtf.bhopper.nonsense.util.render.Fonts;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
 
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.List;
 
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_CENTER;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
@@ -39,56 +45,7 @@ public class NonsenseMainMenu extends GuiScreen {
 
     private static final ResourceLocation LOGO = new ResourceLocation("nonsense/logo.png");
 
-    private static final String[] SPLASHES = {
-            "Also try Adjust",
-            ":)",
-            "${jndi:ldap://127.0.0.1:69420/skid_stuff_lol}",
-            "#Ratted by nonsense client 2024",
-            "we do a little trolling (just a little)",
-            "mc.getNetHandler().addToSendQueue(new C01PacketChatMessage(\"Hypixel is dumb\"));",
-            "Are you cheating on Minecraft servers again?",
-            "wtf how nuker",
-            "Fuck bridging, I can fly motherfucker!",
-            "yozef lost their winstreak: 1973 -> 0 (playing threes)",
-            "no refunds (you can't refund something that's free)",
-            "blowsy is incompetent",
-            "listen to asmr when sniping you'll win everytime :3",
-            "As you might expect, the ones who work hard succeed more often.",
-            "In order to grow, one must not be afraid of challenges but rather view them as opportunities for self-improvement.",
-            "https://www.youtube.com/watch?v=dQw4w9WgXcQ",
-            "mommy's silly zilly boy :3",
-            "This sentence has thirty-three letters.",
-            "SKIDZ",
-            "ok boomer",
-            "Tear can't code",
-            "Opal client fell off",
-            "How much wood could Alan Wood suck if Alan Wood could suck wood?",
-            "People die of drinking and smoking, but nobody has ever died of gambling",
-            "If she leaves you on seen, put it all on green",
-            "sub to BrettHax",
-            "Now with 2% more bypass!",
-            "Jos\u00e9 de Chiterl, hack the bedwars",
-            "Unicouniuni",
-            "Housing mains are a strange species...",
-            "I'm not going to fix it.",
-            "Betting my car on black",
-            "MM makes my PC lag",
-            "If Diddy diddled dudes day by day, how many dudes did Diddy diddle?",
-            "#LiddellRestock",
-            "t = [proc(cfg, cj, mc, fname, c_data, tht, tdr) for fname, c_data in cj.items()]",
-            "extra L, you are smell",
-            "pee pee poo poo",
-            "https://bhopper.wtf/hoa",
-            "A".repeat(333),
-            "I said a gas of juice, not gas the jews",
-            "You need six hammer the ice cream to monkey of eleven dizzy.",
-            "LOOOOOOOL jd lost to dewier",
-            "Free + Open Source!",
-            "Logos by Ciyuna",
-            "erm... what the sigma?",
-            "acquired by Alan Wood Industries LLC in 2077",
-            "help!"
-    };
+    private static List<String> splashes = null;
 
     private ResourceLocation backgroundTexture;
     private String splashText;
@@ -109,6 +66,9 @@ public class NonsenseMainMenu extends GuiScreen {
     };
 
     public NonsenseMainMenu() {
+        if (splashes == null) {
+            loadSplashes();
+        }
         this.selectNewSplashText();
     }
 
@@ -333,7 +293,7 @@ public class NonsenseMainMenu extends GuiScreen {
         }
 
         do {
-            splashText = GeneralUtil.randomElement(SPLASHES);
+            splashText = GeneralUtil.randomElement(splashes);
         } while (prevSplash.equals(splashText));
 
         Calendar calendar = Calendar.getInstance();
@@ -349,6 +309,20 @@ public class NonsenseMainMenu extends GuiScreen {
 
     public void playPressSound(SoundHandler soundHandlerIn) {
         soundHandlerIn.playSound(PositionedSoundRecord.create(new ResourceLocation("gui.button.press"), 1.0F));
+    }
+
+    private static void loadSplashes() {
+        try {
+            splashes = new ArrayList<>();
+            IResource resource = Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation("nonsense/splashes.txt"));
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
+                while (reader.ready()) {
+                    splashes.add(reader.readLine());
+                }
+            }
+        } catch (IOException exception) {
+            throw new RuntimeException(exception);
+        }
     }
 
     private static class Button {

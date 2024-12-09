@@ -422,7 +422,7 @@ public class Block {
     }
 
     public boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side) {
-        return side == EnumFacing.DOWN && this.minY > 0.0D || (side == EnumFacing.UP && this.maxY < 1.0D || (side == EnumFacing.NORTH && this.minZ > 0.0D || (side == EnumFacing.SOUTH && this.maxZ < 1.0D || (side == EnumFacing.WEST && this.minX > 0.0D ? true : (side == EnumFacing.EAST && this.maxX < 1.0D ? true : !worldIn.getBlockState(pos).getBlock().isOpaqueCube())))));
+        return side == EnumFacing.DOWN && this.minY > 0.0D || (side == EnumFacing.UP && this.maxY < 1.0D || (side == EnumFacing.NORTH && this.minZ > 0.0D || (side == EnumFacing.SOUTH && this.maxZ < 1.0D || (side == EnumFacing.WEST && this.minX > 0.0D || (side == EnumFacing.EAST && this.maxX < 1.0D || !worldIn.getBlockState(pos).getBlock().isOpaqueCube())))));
     }
 
     /**
@@ -608,8 +608,8 @@ public class Block {
      */
     public MovingObjectPosition collisionRayTrace(World worldIn, BlockPos pos, Vec3 start, Vec3 end) {
         this.setBlockBoundsBasedOnState(worldIn, pos);
-        start = start.addVector((double) (-pos.getX()), (double) (-pos.getY()), (double) (-pos.getZ()));
-        end = end.addVector((double) (-pos.getX()), (double) (-pos.getY()), (double) (-pos.getZ()));
+        start = start.addVector(-pos.getX(), -pos.getY(), -pos.getZ());
+        end = end.addVector(-pos.getX(), -pos.getY(), -pos.getZ());
         Vec3 vec3 = start.getIntermediateWithXValue(end, this.minX);
         Vec3 vec31 = start.getIntermediateWithXValue(end, this.maxX);
         Vec3 vec32 = start.getIntermediateWithYValue(end, this.minY);

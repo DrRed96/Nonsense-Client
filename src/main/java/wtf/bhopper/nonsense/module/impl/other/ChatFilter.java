@@ -71,8 +71,12 @@ public class ChatFilter extends Module {
             String[] words = packet.message.split("\\s+");
             for (int i = 0; i < words.length; i++) {
 
-                if (i == 0 && words[i].startsWith("/")) {
-                    continue;
+                if (i == 0 && words[0].startsWith("/")) {
+                    if (COMMANDS.contains(words[0].toLowerCase().substring(1))) {
+                        continue;
+                    } else {
+                        return;
+                    }
                 }
 
                 words[i] = switch (this.mode.get()) {
@@ -126,7 +130,6 @@ public class ChatFilter extends Module {
                         case 'O' -> '\u00D8';
                         case 'u' -> '\u00F9';
                         case 'U' -> '\u00DC';
-                        case 'y', 'Y' -> '\u00FF';
                         default -> '\0';
                     };
                     if (toAppend == '\0') {
@@ -138,6 +141,10 @@ public class ChatFilter extends Module {
                 } else {
                     builder.append(c);
                 }
+            }
+
+            if (!found) {
+                builder.append('\u02CC');
             }
 
             return builder.toString();

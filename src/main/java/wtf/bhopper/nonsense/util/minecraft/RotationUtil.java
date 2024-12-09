@@ -84,6 +84,10 @@ public class RotationUtil implements MinecraftInstance {
         return getRotationVec(fixedYaw, fixedPitch);
     }
 
+    public static Vec3 getRotationVec(Rotation rotation) {
+        return getRotationVec(rotation.yaw, rotation.pitch);
+    }
+
     public static Vec3 getRotationVec(float yaw, float pitch) {
         float f = MathHelper.cos(-yaw * MathHelper.deg2Rad - (float)Math.PI);
         float f1 = MathHelper.sin(-yaw * MathHelper.deg2Rad - (float)Math.PI);
@@ -131,6 +135,24 @@ public class RotationUtil implements MinecraftInstance {
         double distanceXZ = MathHelper.sqrt_double(deltaX * deltaX + deltaZ * deltaZ);
         double pitchToEntity = -Math.toDegrees(Math.atan(deltaY / distanceXZ));
         return -MathHelper.wrapAngleTo180_float(mc.thePlayer.rotationPitch - (float)pitchToEntity) - 2.5F;
+    }
+
+    public static Rotation lerp(Rotation start, Rotation end, float factor) {
+
+        float startYaw = MathHelper.wrapAngleTo180_float(start.yaw);
+        float endYaw = MathHelper.wrapAngleTo180_float(end.yaw);
+
+        float delta = endYaw - startYaw;
+        if (delta > 180.0F) {
+            delta -= 360.0F;
+        } else if (delta < -180.0F) {
+            delta += 360.0F;
+        }
+
+        return new Rotation(
+                MathHelper.wrapAngleTo180_float(startYaw + delta * factor),
+                MathUtil.lerp(start.pitch, end.pitch, factor)
+        );
     }
 
 }

@@ -12,7 +12,7 @@ import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
 public class NoClickDelay extends Module {
 
     @EventLink
-    public final Listener<EventTick> onTick = event -> {
+    public final Listener<EventTick> onTick = _ -> {
         if (PlayerUtil.canUpdate()) {
             mc.leftClickCounter = 0;
         }

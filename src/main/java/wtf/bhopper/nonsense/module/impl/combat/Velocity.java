@@ -37,7 +37,7 @@ public class Velocity extends Module {
     }
 
     @EventLink
-    public final Listener<EventTick> onTick = event -> {
+    public final Listener<EventTick> onTick = _ -> {
 
         if (!PlayerUtil.canUpdate()) {
             return;

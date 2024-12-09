@@ -16,14 +16,14 @@ public class S30PacketWindowItems implements Packet<INetHandlerPlayClient>
     {
     }
 
-    public S30PacketWindowItems(int windowIdIn, List<ItemStack> p_i45186_2_)
+    public S30PacketWindowItems(int windowIdIn, List<ItemStack> itemStacks)
     {
         this.windowId = windowIdIn;
-        this.itemStacks = new ItemStack[p_i45186_2_.size()];
+        this.itemStacks = new ItemStack[itemStacks.size()];
 
         for (int i = 0; i < this.itemStacks.length; ++i)
         {
-            ItemStack itemstack = (ItemStack)p_i45186_2_.get(i);
+            ItemStack itemstack = itemStacks.get(i);
             this.itemStacks[i] = itemstack == null ? null : itemstack.copy();
         }
     }
@@ -65,7 +65,7 @@ public class S30PacketWindowItems implements Packet<INetHandlerPlayClient>
         handler.handleWindowItems(this);
     }
 
-    public int func_148911_c()
+    public int getWindowId()
     {
         return this.windowId;
     }

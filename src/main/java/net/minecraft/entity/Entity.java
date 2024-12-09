@@ -2438,4 +2438,18 @@ public abstract class Entity implements ICommandSender {
     public boolean isClientPlayer() {
         return this == Minecraft.getMinecraft().thePlayer;
     }
+
+    public float getDistanceToPositionXZ(double xIn,  double zIn)
+    {
+        float x = (float)(this.posX - xIn);
+        float z = (float)(this.posZ - zIn);
+        return MathHelper.sqrt_float(x * x + z * z);
+    }
+
+    public float getDistanceToEntityXZ(Entity entityIn)
+    {
+        float x = (float)(this.posX - entityIn.posX);
+        float z = (float)(this.posZ - entityIn.posZ);
+        return MathHelper.sqrt_float(x * x + z * z);
+    }
 }

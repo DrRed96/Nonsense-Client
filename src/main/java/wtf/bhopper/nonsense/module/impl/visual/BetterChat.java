@@ -5,6 +5,7 @@ import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraft.network.play.server.S2EPacketCloseWindow;
 import net.minecraft.util.IChatComponent;
+import wtf.bhopper.nonsense.event.EventPriorities;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
 import wtf.bhopper.nonsense.event.impl.EventReceivePacket;
@@ -28,19 +29,19 @@ public class BetterChat extends Module {
         this.addProperties(this.chatStacker, this.noClose, this.noBackground);
     }
 
-    @EventLink
+    @EventLink(EventPriorities.HIGH)
     public final Listener<EventReceivePacket> onReceivePacket = event -> {
         if (event.packet instanceof S02PacketChat packet) {
-            if (packet.getType() == (byte) 0 && this.chatStacker.get()) {
+            if (packet.getType() == (byte) 0 && this.chatStacker.get() && !event.isCancelled()) {
                 event.cancel();
 
                 IChatComponent component = packet.getChatComponent();
-                String rawMessage = component.getFormattedText();
+                String rawMessage = component.getUnformattedText();
                 GuiNewChat chat = mc.ingameGUI.getChatGUI();
                 if (this.lastMessage.equals(rawMessage)) {
                     chat.deleteChatLine(this.line);
                     this.amount++;
-                    packet.getChatComponent().appendText(" \2477[x" + this.amount + "]");
+                    packet.getChatComponent().appendText(" \2477(x" + this.amount + ")");
                 } else {
                     this.amount = 1;
                 }

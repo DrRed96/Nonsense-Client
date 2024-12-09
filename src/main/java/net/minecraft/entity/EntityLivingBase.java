@@ -673,7 +673,7 @@ public abstract class EntityLivingBase extends Entity {
      * returns the PotionEffect for the supplied Potion if it is active, null otherwise.
      */
     public PotionEffect getActivePotionEffect(Potion potionIn) {
-        return (PotionEffect) this.activePotionsMap.get(Integer.valueOf(potionIn.id));
+        return this.activePotionsMap.get(potionIn.id);
     }
 
     /**

@@ -2,7 +2,7 @@ package net.minecraft.network;
 
 public final class ThreadQuickExitException extends RuntimeException
 {
-    public static final ThreadQuickExitException field_179886_a = new ThreadQuickExitException();
+    public static final ThreadQuickExitException INSTANCE = new ThreadQuickExitException();
 
     private ThreadQuickExitException()
     {

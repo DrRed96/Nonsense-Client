@@ -14,7 +14,7 @@ import net.minecraft.util.IStringSerializable;
 
 public class BlockSandStone extends Block
 {
-    public static final PropertyEnum<BlockSandStone.EnumType> TYPE = PropertyEnum.<BlockSandStone.EnumType>create("type", BlockSandStone.EnumType.class);
+    public static final PropertyEnum<BlockSandStone.EnumType> TYPE = PropertyEnum.create("type", BlockSandStone.EnumType.class);
 
     public BlockSandStone()
     {
@@ -29,7 +29,7 @@ public class BlockSandStone extends Block
      */
     public int damageDropped(IBlockState state)
     {
-        return ((BlockSandStone.EnumType)state.getValue(TYPE)).getMetadata();
+        return state.getValue(TYPE).getMetadata();
     }
 
     /**

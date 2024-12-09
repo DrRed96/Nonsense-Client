@@ -126,4 +126,5 @@ public class TargetHud extends RenderComponent {
             case HEALTH -> target.getAbsorptionAmount() != 0.0F ? 0xFFFFAA00 : ColorUtil.health(target);
         };
     }
+
 }

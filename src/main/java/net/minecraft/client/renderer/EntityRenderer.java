@@ -451,49 +451,49 @@ public class EntityRenderer implements IResourceManagerReloadListener {
 
         if (entity != null && this.mc.theWorld != null) {
             this.mc.pointedEntity = null;
-            double d0 = this.mc.playerController.getBlockReachDistance();
-            this.mc.objectMouseOver = entity.rayTrace(d0, partialTicks);
-            double d1 = d0;
-            Vec3 vec3 = entity.getPositionEyes(partialTicks);
+            double reachDistance = this.mc.playerController.getBlockReachDistance();
+            this.mc.objectMouseOver = entity.rayTrace(reachDistance, partialTicks);
+            double d1 = reachDistance;
+            Vec3 start = entity.getPositionEyes(partialTicks);
             boolean flag = false;
             boolean flag1 = true;
 
             if (this.mc.playerController.extendedReach()) {
-                d0 = 6.0D;
+                reachDistance = 6.0D;
                 d1 = 6.0D;
             } else {
-                if (d0 > 3.0D) {
+                if (reachDistance > 3.0D) {
                     flag = true;
                 }
 
-                d0 = d0;
+                reachDistance = reachDistance;
             }
 
             if (this.mc.objectMouseOver != null) {
-                d1 = this.mc.objectMouseOver.hitVec.distanceTo(vec3);
+                d1 = this.mc.objectMouseOver.hitVec.distanceTo(start);
             }
 
-            Vec3 vec31 = entity.getLook(partialTicks);
-            Vec3 vec32 = vec3.addVector(vec31.xCoord * d0, vec31.yCoord * d0, vec31.zCoord * d0);
+            Vec3 look = entity.getLook(partialTicks);
+            Vec3 end = start.addVector(look.xCoord * reachDistance, look.yCoord * reachDistance, look.zCoord * reachDistance);
             this.pointedEntity = null;
             Vec3 vec33 = null;
             float f = 1.0F;
-            List<Entity> list = this.mc.theWorld.getEntitiesInAABBexcluding(entity, entity.getEntityBoundingBox().addCoord(vec31.xCoord * d0, vec31.yCoord * d0, vec31.zCoord * d0).expand((double) f, (double) f, (double) f), Predicates.and(EntitySelectors.NOT_SPECTATING, new EntityRenderer$1(this)));
+            List<Entity> list = this.mc.theWorld.getEntitiesInAABBexcluding(entity, entity.getEntityBoundingBox().addCoord(look.xCoord * reachDistance, look.yCoord * reachDistance, look.zCoord * reachDistance).expand((double) f, (double) f, (double) f), Predicates.and(EntitySelectors.NOT_SPECTATING, new EntityRenderer$1(this)));
             double d2 = d1;
 
             for (Entity entity1 : list) {
                 float f1 = entity1.getCollisionBorderSize();
-                AxisAlignedBB axisalignedbb = entity1.getEntityBoundingBox().expand((double) f1, (double) f1, (double) f1);
-                MovingObjectPosition movingobjectposition = axisalignedbb.calculateIntercept(vec3, vec32);
+                AxisAlignedBB axisalignedbb = entity1.getEntityBoundingBox().expand(f1, f1, f1);
+                MovingObjectPosition movingobjectposition = axisalignedbb.calculateIntercept(start, end);
 
-                if (axisalignedbb.isVecInside(vec3)) {
+                if (axisalignedbb.isVecInside(start)) {
                     if (d2 >= 0.0D) {
                         this.pointedEntity = entity1;
-                        vec33 = movingobjectposition == null ? vec3 : movingobjectposition.hitVec;
+                        vec33 = movingobjectposition == null ? start : movingobjectposition.hitVec;
                         d2 = 0.0D;
                     }
                 } else if (movingobjectposition != null) {
-                    double d3 = vec3.distanceTo(movingobjectposition.hitVec);
+                    double d3 = start.distanceTo(movingobjectposition.hitVec);
 
                     if (d3 < d2 || d2 == 0.0D) {
                         boolean flag2 = false;
@@ -516,7 +516,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
                 }
             }
 
-            if (this.pointedEntity != null && flag && vec3.distanceTo(vec33) > 3.0D) {
+            if (this.pointedEntity != null && flag && start.distanceTo(vec33) > 3.0D) {
                 this.pointedEntity = null;
                 this.mc.objectMouseOver = new MovingObjectPosition(MovingObjectPosition.MovingObjectType.MISS, vec33, null, new BlockPos(vec33));
             }

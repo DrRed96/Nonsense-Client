@@ -37,6 +37,8 @@ public class Mouse {
 
 	private static boolean clipPostionToDisplay = true;
 
+	private static double fractionalWheelPosition = 0.0;
+
 	public static void addMoveEvent(double mouseX, double mouseY) {
 		latestX = (int)mouseX;
 		latestY = Display.getHeight() - (int)mouseY;
@@ -70,9 +72,30 @@ public class Mouse {
 		queue.add();
 	}
 
-	public static void addScrollEvent(int scroll) {
-		scrollEvents[queue.getNextPos()] = scroll;
-		lastDWheel = scroll;
+	public static void addScrollEvent(double scroll) {
+		final int lastWheel = (int) fractionalWheelPosition;
+		fractionalWheelPosition += scroll;
+		final int newWheel = (int) fractionalWheelPosition;
+		if (newWheel != lastWheel) {
+			lastxEvents[queue.getNextPos()] = lastX;
+			lastyEvents[queue.getNextPos()] = lastY;
+			lastX = latestX;
+			lastY = latestY;
+			lastDWheel += newWheel - lastWheel;
+
+			xEvents[queue.getNextPos()] = latestX;
+			yEvents[queue.getNextPos()] = latestY;
+
+			scrollEvents[queue.getNextPos()] = newWheel - lastWheel;
+
+			buttonEvents[queue.getNextPos()] = -1;
+			buttonEventStates[queue.getNextPos()] = false;
+
+			nanoTimeEvents[queue.getNextPos()] = Sys.getNanoTime();
+
+			queue.add();
+		}
+		fractionalWheelPosition = fractionalWheelPosition % 1;
 	}
 
 	public static void poll() {
@@ -152,7 +175,7 @@ public class Mouse {
 	}
 
 	public static int getEventDWheel() {
-		return (int) scrollEvents[queue.getCurrentPos()]; // TODO
+		return (int) scrollEvents[queue.getCurrentPos()];
 	}
 
 	public static int getX() {

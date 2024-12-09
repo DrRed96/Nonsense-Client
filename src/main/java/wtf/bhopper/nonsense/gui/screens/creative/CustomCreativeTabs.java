@@ -642,6 +642,33 @@ public class CustomCreativeTabs extends CreativeTabs implements MinecraftInstanc
                 .addTag("generation", new NBTTagInt(3)) // Makes the book 'Tattered' (meaning it can't be copied)
                 .build());
 
+        items.add(ItemBuilder.of(Items.wooden_hoe)
+                .setAmount(64)
+                .addTag("HideFlags", new NBTTagInt(0xFF))
+                .setDisplayName("\247e\247l\247nThe Legend Of Hoe Haver")
+                .setLore("\2477Hoe Haver was born on \247nAugust 19, 1946\2477, at Julia Chester Hospital",
+                        "\2477in Hope, Arkansas. He held an impressive ability to physically",
+                        "\2477attract hoes like the magnet scene from Breaking Bad. He left",
+                        "\2477home to find the finest hoe out there, but along the way, he ended",
+                        "\2477up marrying Hillary Diane Rodham Clinton for some extra cash.",
+                        "\2477This turned out to be a major mistake, as she would convince him",
+                        " \2477to become president.",
+                        "",
+                        "\2477During his presidency, Hoe Haver found one of the best hoes",
+                        "\2477out there, Monica Lewinsky. After his term, Hoe Haver began",
+                        "\2477to pursue his dreams of musical stardom, dropping the billboard",
+                        "\2477topping single \247n\u201C\247oBimbo Number 5\2477\247n\u201D\2477. After hearing the song, Hillary",
+                        "\2477Rodham beat him to death, later replacing him with a lookalike.",
+                        "",
+                        "\2477At that exact same moment, the famed rapper Snoop Dogg suffered",
+                        "\2477a heart attack, and died while in his LA home.This timing allowed Hoe",
+                        "\2477Haver to be reincarnated as Snoop Dogg. Hoe Haver proceeded",
+                        "\2477to write billboard tops like Drop it like its hot, and Beautiful.",
+                        "",
+                        "\2477It is said that he can be summoned at any moment by simply saying, \247e\247l\u201CI GOT ALL DA HOES\u201D"
+                )
+                .build());
+
     });
 
     public static final CreativeTabs tabInventory = (new CreativeTabs(11, "inventory", TABS) {

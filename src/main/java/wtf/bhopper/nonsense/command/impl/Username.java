@@ -6,11 +6,11 @@ import wtf.bhopper.nonsense.command.CommandInfo;
 import wtf.bhopper.nonsense.gui.hud.notification.Notification;
 import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
 
-@CommandInfo(name = "Name", description = "Copies your username to the clipboard", syntax = ".name", alias = "ign")
-public class Name extends Command {
+@CommandInfo(name = "Username", description = "Copies your username to the clipboard", syntax = ".name", alias = {"name", "ign"})
+public class Username extends Command {
     @Override
     public void execute(String[] args, String rawCommand) throws Exception {
         GuiScreen.setClipboardString(mc.thePlayer.getName());
-        Notification.send("Name", "Copied your username to the clipboard", NotificationType.SUCCESS, 3000);
+        Notification.send("Name", "Copies your username to the clipboard", NotificationType.SUCCESS, 3000);
     }
 }

@@ -19,11 +19,10 @@ public class CommandManager {
     private final List<Command> commands = new ArrayList<>();
 
     public CommandManager() {
-
         new Reflections(Help.class.getPackage().getName())
                 .getSubTypesOf(Command.class)
                 .stream()
-                .sorted(Comparator.comparing(Class::getSimpleName))
+                .sorted(Comparator.comparing(clazz -> clazz.getAnnotation(CommandInfo.class).name()))
                 .forEach(command -> {
                     try {
                         this.commands.add(command.getConstructor().newInstance());
@@ -31,7 +30,6 @@ public class CommandManager {
                         throw new RuntimeException(e);
                     }
                 });
-
         Nonsense.getEventBus().subscribe(this);
     }
 

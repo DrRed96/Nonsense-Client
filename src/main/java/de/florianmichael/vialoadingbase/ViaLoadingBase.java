@@ -240,7 +240,14 @@ public class ViaLoadingBase {
                 ViaLoadingBase.LOGGER.severe("Please check your ViaLoadingBaseBuilder arguments!");
                 return;
             }
-            new ViaLoadingBase(platforms, runDirectory, nativeVersion, forceNativeVersionCondition, dumpSupplier, providers, managerBuilderConsumer, onProtocolReload);
+            new ViaLoadingBase(platforms,
+                    runDirectory,
+                    nativeVersion,
+                    forceNativeVersionCondition,
+                    dumpSupplier,
+                    providers,
+                    managerBuilderConsumer,
+                    onProtocolReload);
         }
     }
 }

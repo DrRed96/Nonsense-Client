@@ -61,7 +61,7 @@ public class Capes extends Module {
         MONSOON,
         MOON,
         NONSENSE,
-        NOVOLINE,
+        @DisplayName("Novoline.wtf") NOVOLINE_WTF,
         @DisplayName("OptiFine") OPTIFINE,
         REACTOR,
         RISE_5(new AnimatedCape("rise_5", 14, 3)),

@@ -67,7 +67,7 @@ public class S32PacketConfirmTransaction implements Packet<INetHandlerPlayClient
         return this.actionNumber;
     }
 
-    public boolean func_148888_e()
+    public boolean isAccepted()
     {
         return this.accepted;
     }

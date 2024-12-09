@@ -31,7 +31,6 @@ import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
 import wtf.bhopper.nonsense.util.minecraft.RotationUtil;
 
 
-
 @ModuleInfo(name = "Auto Block", description = "Automatically blocks your sword", category = ModuleCategory.COMBAT)
 public class AutoBlock extends Module {
 
@@ -50,14 +49,21 @@ public class AutoBlock extends Module {
     private final BooleanProperty noSlow = new BooleanProperty("No Slow", "Applies No Slow to the sword blocking", true);
     private final BooleanProperty auraOnly = new BooleanProperty("Kill Aura Only", "Only blocks when Kill Aura is enabled", true);
     private final EnumProperty<BlockPacket> blockPacket = new EnumProperty<>("Block Packet", "When to send the block packet.", BlockPacket.PRE, () -> false);
+    private final BooleanProperty blink = new BooleanProperty("Blink", "uses blink to help make auto-block full", false, () -> this.mode.is(Mode.LEGIT));
 
     private boolean blocking = false;
     private MovingObjectPosition mouseOver = null;
 
     public AutoBlock() {
         this.targetsGroup.addProperties(this.players, this.mobs, this.animals, this.others, this.invis, this.dead, this.teams);
-        this.addProperties(this.mode, this.targetsGroup, this.range, this.noSlow, this.auraOnly, this.blockPacket);
-        this.setSuffix(this.mode::getDisplayValue);
+        this.addProperties(this.mode, this.targetsGroup, this.range, this.noSlow, this.auraOnly, this.blockPacket, this.blink);
+        this.setSuffix(() -> {
+            if (this.mode.is(Mode.LEGIT) && this.blink.get()) {
+                return "Blink";
+            }
+
+            return this.mode.getDisplayValue();
+        });
     }
 
     @Override
@@ -99,10 +105,10 @@ public class AutoBlock extends Module {
                 }
             }
 
-            case BLINK -> {
+            case LEGIT -> {
                 if (event.button == EventPreClick.Button.LEFT && this.blocking && this.blockItem()) {
 
-                    if (this.canBlock()) {
+                    if (this.canBlock() && this.blink.get() && !BlinkUtil.isBlinking()) {
                         BlinkUtil.enableBlink();
                     }
 
@@ -138,12 +144,14 @@ public class AutoBlock extends Module {
                 }
             }
 
-            case BLINK -> {
-                if (event.button == EventPostClick.Button.LEFT && this.canBlock()) {
+            case LEGIT -> {
+                if (event.button == EventPostClick.Button.LEFT) {
 
-                    if (event.mouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && !this.blocking) {
-
+                    if (this.blink.get() && BlinkUtil.isBlinking() && !this.blocking) {
                         BlinkUtil.disableBlink();
+                    }
+
+                    if (this.canBlock() && event.mouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && !this.blocking) {
 
                         if (this.mouseOver != null) {
                             PacketUtil.send(new C02PacketUseEntity(this.mouseOver.entityHit, this.mouseOver.hitVec));
@@ -257,24 +265,29 @@ public class AutoBlock extends Module {
             return false;
         }
 
-        if (entity instanceof EntityPlayer) {
-            if (!players.get()) {
-                return false;
+        switch (entity) {
+            case EntityPlayer entityPlayer -> {
+                if (!players.get()) {
+                    return false;
+                }
+                if (teams.get() && PlayerUtil.isOnSameTeam(entityPlayer)) {
+                    return false;
+                }
             }
-            if (teams.get() && PlayerUtil.isOnSameTeam((EntityPlayer)entity)) {
-                return false;
+            case EntityMob _ -> {
+                if (!mobs.get()) {
+                    return false;
+                }
             }
-        } else if (entity instanceof EntityMob) {
-            if (!mobs.get()) {
-                return false;
+            case EntityAnimal _ -> {
+                if (!animals.get()) {
+                    return false;
+                }
             }
-        } else if (entity instanceof EntityAnimal) {
-            if (!animals.get()) {
-                return false;
-            }
-        } else {
-            if (!others.get()) {
-                return false;
+            case null, default -> {
+                if (!others.get()) {
+                    return false;
+                }
             }
         }
 
@@ -297,7 +310,7 @@ public class AutoBlock extends Module {
         BLOCK,
         PACKET,
         @DisplayName("NCP") NCP,
-        BLINK,
+        LEGIT,
         @Description("Enable the 'No Slow' option with this") FAKE
     }
 

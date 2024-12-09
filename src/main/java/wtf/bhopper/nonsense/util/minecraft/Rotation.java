@@ -1,5 +1,7 @@
 package wtf.bhopper.nonsense.util.minecraft;
 
+import net.minecraft.entity.Entity;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 
 public class Rotation {
@@ -25,6 +27,11 @@ public class Rotation {
         this.yaw = yaw;
         this.pitch = pitch;
         this.hitVec = hitVec;
+    }
+
+    public Rotation(Entity entity) {
+        this.yaw = MathHelper.wrapAngleTo180_float(entity.rotationYaw);
+        this.pitch = entity.rotationPitch;
     }
 
 

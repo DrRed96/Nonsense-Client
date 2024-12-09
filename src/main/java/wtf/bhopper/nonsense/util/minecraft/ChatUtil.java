@@ -1,5 +1,6 @@
 package wtf.bhopper.nonsense.util.minecraft;
 
+import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.nbt.NBTTagCompound;
@@ -9,14 +10,17 @@ import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.anticheat.Check;
 import wtf.bhopper.nonsense.network.Account;
+import wtf.bhopper.nonsense.util.misc.GeneralUtil;
 
 public class ChatUtil implements MinecraftInstance {
 
     public static final String CHAT_PREFIX = "\2478\247l[\247c\247lNonsense\2478\247l] \247r\2477";
     public static final String CHAT_PREFIX_SHORT = "\247f> \2477";
     public static final String DEBUG_PREFIX = "\2478[\2473DEBUG\2478] \247r\247b";
-    public static final String IRC_PREFIX = "\2476[IRC] \247r";
+    public static final String ANTICHEAT_PREFIX = "\247d\247lAnti Cheat \247r";
+    public static final String IRC_PREFIX = "\2476\247lIRC \247r";
 
     public static void raw(IChatComponent message) {
         mc.thePlayer.addChatMessage(message);
@@ -42,6 +46,10 @@ public class ChatUtil implements MinecraftInstance {
         Builder.of("%s\247c%s", CHAT_PREFIX, String.format(message, args))
                 .setColor(EnumChatFormatting.RED)
                 .send();
+    }
+
+    public static void title(String title) {
+        print("\247c\247l--- %s ---", title);
     }
 
     public static void debugTitle(String title) {
