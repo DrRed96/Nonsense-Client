@@ -11,6 +11,7 @@ import wtf.bhopper.nonsense.module.property.PropertyContainer;
 import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
 
 import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -33,6 +34,11 @@ public abstract class Module implements PropertyContainer, MinecraftInstance {
 
     protected void autoAddProperties() {
         for (Field field : this.getClass().getDeclaredFields()) {
+
+            if (Modifier.isStatic(field.getModifiers())) {
+                continue;
+            }
+
             if (!field.canAccess(this)) {
                 field.setAccessible(true);
             }

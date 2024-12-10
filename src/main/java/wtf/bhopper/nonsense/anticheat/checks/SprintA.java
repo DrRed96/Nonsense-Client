@@ -6,11 +6,11 @@ import wtf.bhopper.nonsense.anticheat.CheckInfo;
 import wtf.bhopper.nonsense.anticheat.CheckResult;
 import wtf.bhopper.nonsense.anticheat.PlayerData;
 
-@CheckInfo(name = "Rotation", classifier = "A", description = "Impossible pitch.", maxViolations = 1)
-public class RotationA extends Check {
+@CheckInfo(name = "Sprint", classifier = "A", description = "Incorrect direction while sprinting.", maxViolations = 10, unreliable = true)
+public class SprintA extends Check {
     @Override
     protected CheckResult performCheck(EntityPlayer player, PlayerData data) {
-        if (player.rotationPitch > 90.0F || player.rotationPitch < -90.0F) {
+        if (player.isSprinting() && player.moveForward <= 0.0F) {
             return CheckResult.VIOLATE;
         }
         return CheckResult.RESET;

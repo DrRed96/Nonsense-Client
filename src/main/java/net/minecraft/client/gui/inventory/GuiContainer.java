@@ -120,7 +120,7 @@ public abstract class GuiContainer extends GuiScreen
 
         for (int i1 = 0; i1 < this.inventorySlots.inventorySlots.size(); ++i1)
         {
-            Slot slot = (Slot)this.inventorySlots.inventorySlots.get(i1);
+            Slot slot = this.inventorySlots.inventorySlots.get(i1);
             this.drawSlot(slot);
 
             if (this.isMouseOverSlot(slot, mouseX, mouseY) && slot.canBeHovered())

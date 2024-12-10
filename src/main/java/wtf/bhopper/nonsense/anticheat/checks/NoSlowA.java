@@ -13,7 +13,6 @@ public class NoSlowA extends Check {
         if (player.isUsingItem() && player.isSprinting()) {
             return CheckResult.VIOLATE;
         }
-
         return CheckResult.RESET;
     }
 }

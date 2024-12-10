@@ -26,7 +26,7 @@ public abstract class Check implements MinecraftInstance {
                 if (this.violations.get(player.getUniqueID()) >= this.maxViolations) {
                     Nonsense.getAntiCheat().flag(player);
                 }
-                Nonsense.getAntiCheat().notifyViolation(player, data, this, data.violationLevel);
+                Nonsense.getAntiCheat().notifyViolation(player, data, this, this.violations.get(player.getUniqueID()));
                 return true;
             }
             case IDLE -> { /* Does nothing */ }

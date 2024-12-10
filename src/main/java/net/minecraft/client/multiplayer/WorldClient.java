@@ -236,24 +236,24 @@ public class WorldClient extends World
     /**
      * Add an ID to Entity mapping to entityHashSet
      */
-    public void addEntityToWorld(int p_73027_1_, Entity p_73027_2_)
+    public void addEntityToWorld(int entityIdIn, Entity entityIn)
     {
-        Entity entity = this.getEntityByID(p_73027_1_);
+        Entity entity = this.getEntityByID(entityIdIn);
 
         if (entity != null)
         {
             this.removeEntity(entity);
         }
 
-        this.entityList.add(p_73027_2_);
-        p_73027_2_.setEntityId(p_73027_1_);
+        this.entityList.add(entityIn);
+        entityIn.setEntityId(entityIdIn);
 
-        if (!this.spawnEntityInWorld(p_73027_2_))
+        if (!this.spawnEntityInWorld(entityIn))
         {
-            this.entitySpawnQueue.add(p_73027_2_);
+            this.entitySpawnQueue.add(entityIn);
         }
 
-        this.entitiesById.addKey(p_73027_1_, p_73027_2_);
+        this.entitiesById.addKey(entityIdIn, entityIn);
     }
 
     /**

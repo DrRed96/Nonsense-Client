@@ -1,5 +1,6 @@
 package wtf.bhopper.nonsense.command.impl;
 
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
@@ -10,6 +11,7 @@ import wtf.bhopper.nonsense.command.Command;
 import wtf.bhopper.nonsense.command.CommandInfo;
 import wtf.bhopper.nonsense.gui.hud.notification.Notification;
 import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
+import wtf.bhopper.nonsense.module.impl.combat.AntiBot;
 import wtf.bhopper.nonsense.module.impl.other.Debugger;
 import wtf.bhopper.nonsense.network.Account;
 import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
@@ -127,6 +129,13 @@ public class Debug extends Command {
                     default -> ChatUtil.irc("Hello!", account);
                 }
 
+            }
+
+            case "uuids" -> {
+                ChatUtil.debugTitle("Player UUID's");
+                for (EntityPlayer player : mc.theWorld.getEntities(EntityPlayer.class, player -> !Nonsense.module(AntiBot.class).isBot(player))) {
+                    ChatUtil.debugItem(player.getName(), player.getUniqueID());
+                }
             }
 
             default -> ChatUtil.error("Unknown debugging command.");

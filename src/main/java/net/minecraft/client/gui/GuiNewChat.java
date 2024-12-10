@@ -42,11 +42,11 @@ public class GuiNewChat extends Gui {
                     flag = true;
                 }
 
-                float f1 = this.getChatScale();
-                int l = MathHelper.ceiling_float_int((float) this.getChatWidth() / f1);
+                float chatScale = this.getChatScale();
+                int l = MathHelper.ceiling_float_int((float) this.getChatWidth() / chatScale);
                 GlStateManager.pushMatrix();
                 GlStateManager.translate(2.0F, 20.0F, 0.0F);
-                GlStateManager.scale(f1, f1, 1.0F);
+                GlStateManager.scale(chatScale, chatScale, 1.0F);
 
                 for (int i1 = 0; i1 + this.scrollPos < this.chatMessages.size() && i1 < i; ++i1) {
                     ChatLine chatline = this.chatMessages.get(i1 + this.scrollPos);

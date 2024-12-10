@@ -17,6 +17,7 @@ import wtf.bhopper.nonsense.module.impl.combat.AutoBlock;
 import wtf.bhopper.nonsense.module.property.annotations.DisplayName;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
+import wtf.bhopper.nonsense.util.minecraft.MoveUtil;
 import wtf.bhopper.nonsense.util.minecraft.PacketUtil;
 
 @ModuleInfo(name = "No Slow",
@@ -56,7 +57,7 @@ public class NoSlow extends Module {
         if (!Nonsense.module(AutoBlock.class).canBlock()) {
             switch (this.mode.get()) {
                 case NCP -> {
-                    if (this.isBlocking()) {
+                    if (this.isBlocking() && MoveUtil.isMoving()) {
                         PacketUtil.send(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
                     }
                 }
@@ -119,7 +120,7 @@ public class NoSlow extends Module {
         if (!Nonsense.module(AutoBlock.class).canBlock()) {
             switch (this.mode.get()) {
                 case NCP -> {
-                    if (this.isBlocking()) {
+                    if (this.isBlocking() && MoveUtil.isMoving()) {
                         PacketUtil.send(new C08PacketPlayerBlockPlacement(mc.thePlayer.getHeldItem()));
                     }
                 }

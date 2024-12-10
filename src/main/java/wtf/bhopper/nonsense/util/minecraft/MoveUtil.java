@@ -214,6 +214,18 @@ public class MoveUtil implements MinecraftInstance {
         return new JumpOffsets(result, maxHeight);
     }
 
+    public static float[] calculateForwardStrafe(double motionX, double motionZ, float yaw) {
+        float x = (float) Math.sin(yaw * Math.PI / 180.0F);
+        float z = (float) Math.cos(yaw * Math.PI / 180.0F);
+
+        // Solve for strafe and forward
+        double denominator = z * z + x * x; // Should be close to 1
+        double strafe = (motionX * z + motionZ * x) / denominator;
+        double forward = (motionZ * z - motionX * x) / denominator;
+
+        return new float[]{ (float)forward, (float)strafe };
+    }
+
     public record JumpOffsets(List<Double> offsets, double maxHeight) {}
 
 }

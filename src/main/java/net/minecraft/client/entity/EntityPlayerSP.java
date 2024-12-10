@@ -286,7 +286,7 @@ public class EntityPlayerSP extends AbstractClientPlayer {
         EventChat event = new EventChat(message);
         Nonsense.getEventBus().post(event);
         if (!event.isCancelled()) {
-            this.sendQueue.addToSendQueue(new C01PacketChatMessage(message));
+            this.sendQueue.addToSendQueue(new C01PacketChatMessage(event.message));
         }
     }
 

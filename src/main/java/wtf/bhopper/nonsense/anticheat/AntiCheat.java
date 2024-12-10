@@ -9,6 +9,7 @@ import wtf.bhopper.nonsense.anticheat.checks.NoSlowA;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
 import wtf.bhopper.nonsense.event.impl.EventJoinGame;
+import wtf.bhopper.nonsense.event.impl.EventReceivePacket;
 import wtf.bhopper.nonsense.event.impl.EventUpdate;
 import wtf.bhopper.nonsense.gui.hud.notification.Notification;
 import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
@@ -19,12 +20,15 @@ import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
 import wtf.bhopper.nonsense.util.misc.GeneralUtil;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class AntiCheat implements MinecraftInstance {
 
     private final List<Check> checks = new ArrayList<>();
-    private final Map<UUID, PlayerData> players = new HashMap<>();
+    private final Map<UUID, PlayerData> players = new ConcurrentHashMap<>();
     private final List<UUID> flagged = new ArrayList<>();
+
+    private int nextChatLine = 0x7FFF;
 
     public AntiCheat() {
         new Reflections(NoSlowA.class.getPackage().getName())
@@ -63,7 +67,7 @@ public class AntiCheat implements MinecraftInstance {
         }
 
         for (EntityPlayer player : mc.theWorld.getEntities(EntityPlayer.class, player -> !Nonsense.module(AntiBot.class).isBot(player) && !player.isClientPlayer())) {
-            PlayerData data = this.players.getOrDefault(player.getUniqueID(), new PlayerData());
+            PlayerData data = this.players.getOrDefault(player.getUniqueID(), new PlayerData(++this.nextChatLine));
             data.update(player);
             List<String> violated = new ArrayList<>();
             for (Check check : this.checks) {
@@ -75,6 +79,13 @@ public class AntiCheat implements MinecraftInstance {
                 }
             }
             this.players.put(player.getUniqueID(), data);
+        }
+    };
+
+    @EventLink
+    public final Listener<EventReceivePacket> onReceivePacket = event -> {
+        for (PlayerData data : this.players.values()) {
+            data.onPacket(event.packet);
         }
     };
 
@@ -95,7 +106,7 @@ public class AntiCheat implements MinecraftInstance {
                         "\2477" + check.description + " \2478(" + check.maxViolations + " violations to flag)"
                 )).build();
 
-        ChatUtil.raw(component);
+        mc.ingameGUI.getChatGUI().printChatMessageWithOptionalDeletion(component, data.chatLine);
     }
 
     public List<Check> getChecks() {

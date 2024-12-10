@@ -1407,9 +1407,9 @@ public abstract class EntityLivingBase extends Entity {
                     }
 
                     if (this.isOnLadder()) {
-                        float f6 = 0.15F;
-                        this.motionX = MathHelper.clamp_double(this.motionX, (double) (-f6), (double) f6);
-                        this.motionZ = MathHelper.clamp_double(this.motionZ, (double) (-f6), (double) f6);
+                        float maxLadderSpeed = 0.15F;
+                        this.motionX = MathHelper.clamp_double(this.motionX, -maxLadderSpeed, maxLadderSpeed);
+                        this.motionZ = MathHelper.clamp_double(this.motionZ, -maxLadderSpeed, maxLadderSpeed);
                         this.fallDistance = 0.0F;
 
                         if (this.motionY < -0.15D) {

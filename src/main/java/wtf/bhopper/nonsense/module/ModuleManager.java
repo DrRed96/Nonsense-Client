@@ -75,6 +75,7 @@ public class ModuleManager {
                 new ChatFilter(),
                 new AntiAim(),
                 new AntiDesync(),
+                new Announcer(),
                 new PackSpoofer(),
                 new AutoHypixel(),
                 new PartySpammer(),

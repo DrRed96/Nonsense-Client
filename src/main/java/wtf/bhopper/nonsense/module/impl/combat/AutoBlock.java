@@ -169,7 +169,7 @@ public class AutoBlock extends Module {
     };
 
     @EventLink
-    public final Listener<EventUpdate> onUpdate = event -> {
+    public final Listener<EventUpdate> onUpdate = _ -> {
 
         if (this.canBlock()) {
             // Creates the client side blocking animation, will also apply slow-down
@@ -196,7 +196,7 @@ public class AutoBlock extends Module {
     };
 
     @EventLink
-    public final Listener<EventPostMotion> onPost = event -> {
+    public final Listener<EventPostMotion> onPost = _ -> {
         switch (this.mode.get()) {
 
             case PACKET -> {
@@ -257,38 +257,12 @@ public class AutoBlock extends Module {
 
     private boolean isValidTarget(EntityLivingBase entity) {
 
-        if (entity == mc.thePlayer) {
+        if (entity == mc.thePlayer || entity == null) {
             return false;
         }
 
         if (Nonsense.module(AntiBot.class).isBot(entity)) {
             return false;
-        }
-
-        switch (entity) {
-            case EntityPlayer entityPlayer -> {
-                if (!players.get()) {
-                    return false;
-                }
-                if (teams.get() && PlayerUtil.isOnSameTeam(entityPlayer)) {
-                    return false;
-                }
-            }
-            case EntityMob _ -> {
-                if (!mobs.get()) {
-                    return false;
-                }
-            }
-            case EntityAnimal _ -> {
-                if (!animals.get()) {
-                    return false;
-                }
-            }
-            case null, default -> {
-                if (!others.get()) {
-                    return false;
-                }
-            }
         }
 
         if (entity.isInvisible() && !invis.get()) {
@@ -303,14 +277,19 @@ public class AutoBlock extends Module {
             return false;
         }
 
-        return true;
+        return switch (entity) {
+            case EntityPlayer player -> this.players.get() && (!this.teams.get() || PlayerUtil.isOnSameTeam(player));
+            case EntityMob _ -> this.mobs.get();
+            case EntityAnimal _ -> this.animals.get();
+            default -> this.others.get();
+        };
     }
 
     private enum Mode {
         BLOCK,
         PACKET,
         @DisplayName("NCP") NCP,
-        LEGIT,
+        @Description("Will limit your APS to 10") LEGIT,
         @Description("Enable the 'No Slow' option with this") FAKE
     }
 

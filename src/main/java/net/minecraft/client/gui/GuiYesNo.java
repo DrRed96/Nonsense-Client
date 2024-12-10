@@ -23,9 +23,9 @@ public class GuiYesNo extends GuiScreen
     protected int parentButtonClickedId;
     private int ticksUntilEnable;
 
-    public GuiYesNo(GuiYesNoCallback p_i1082_1_, String p_i1082_2_, String p_i1082_3_, int p_i1082_4_)
+    public GuiYesNo(GuiYesNoCallback callback, String p_i1082_2_, String p_i1082_3_, int p_i1082_4_)
     {
-        this.parentScreen = p_i1082_1_;
+        this.parentScreen = callback;
         this.messageLine1 = p_i1082_2_;
         this.messageLine2 = p_i1082_3_;
         this.parentButtonClickedId = p_i1082_4_;

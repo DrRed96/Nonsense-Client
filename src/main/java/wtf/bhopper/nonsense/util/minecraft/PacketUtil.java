@@ -20,7 +20,7 @@ public class PacketUtil implements MinecraftInstance {
     }
 
     public static void sendNoEvent(Packet<?> packet) {
-        mc.getNetHandler().addToSendQueue(packet);
+        mc.getNetHandler().getNetworkManager().sendPacket(packet);
         Nonsense.getEventBus().post(new Debugger.EventPacketDebug(packet, Debugger.State.NO_EVENT, Debugger.EventPacketDebug.Direction.OUTGOING));
     }
 

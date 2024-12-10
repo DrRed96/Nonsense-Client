@@ -6,7 +6,7 @@ import wtf.bhopper.nonsense.anticheat.CheckInfo;
 import wtf.bhopper.nonsense.anticheat.CheckResult;
 import wtf.bhopper.nonsense.anticheat.PlayerData;
 
-@CheckInfo(name = "Velocity", classifier = "B", description = "Vertical velocity")
+@CheckInfo(name = "Velocity", classifier = "B", description = "No vertical motion in response to damage", unreliable = true)
 public class VelocityB extends Check {
     @Override
     protected CheckResult performCheck(EntityPlayer player, PlayerData data) {

@@ -379,7 +379,7 @@ public abstract class Entity implements ICommandSender {
             this.setEntityBoundingBox(new AxisAlignedBB(this.getEntityBoundingBox().minX, this.getEntityBoundingBox().minY, this.getEntityBoundingBox().minZ, this.getEntityBoundingBox().minX + (double) this.width, this.getEntityBoundingBox().minY + (double) this.height, this.getEntityBoundingBox().minZ + (double) this.width));
 
             if (this.width > f && !this.firstUpdate && !this.worldObj.isRemote) {
-                this.moveEntity((double) (f - this.width), 0.0D, (double) (f - this.width));
+                this.moveEntity(f - this.width, 0.0D, f - this.width);
             }
         }
     }
@@ -1945,9 +1945,9 @@ public abstract class Entity implements ICommandSender {
         byte b0 = this.dataWatcher.getWatchableObjectByte(0);
 
         if (set) {
-            this.dataWatcher.updateObject(0, Byte.valueOf((byte) (b0 | 1 << flag)));
+            this.dataWatcher.updateObject(0, (byte) (b0 | 1 << flag));
         } else {
-            this.dataWatcher.updateObject(0, Byte.valueOf((byte) (b0 & ~(1 << flag))));
+            this.dataWatcher.updateObject(0, (byte) (b0 & ~(1 << flag)));
         }
     }
 

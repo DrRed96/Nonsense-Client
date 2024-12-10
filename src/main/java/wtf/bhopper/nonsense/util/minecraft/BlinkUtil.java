@@ -30,8 +30,16 @@ public enum BlinkUtil {
     }
 
     public static void disableBlink() {
+        disableBlink(true);
+    }
+
+    public static void disableBlink(boolean poll) {
         INSTANCE.blink = false;
-        poll();
+        if (poll) {
+            poll();
+        } else {
+            INSTANCE.chokedPackets.clear();
+        }
     }
 
     public static boolean isBlinking() {

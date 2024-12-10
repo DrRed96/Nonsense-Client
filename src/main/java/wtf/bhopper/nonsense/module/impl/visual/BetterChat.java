@@ -8,7 +8,9 @@ import net.minecraft.util.IChatComponent;
 import wtf.bhopper.nonsense.event.EventPriorities;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
+import wtf.bhopper.nonsense.event.impl.EventChat;
 import wtf.bhopper.nonsense.event.impl.EventReceivePacket;
+import wtf.bhopper.nonsense.event.impl.EventSendPacket;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
@@ -20,13 +22,14 @@ public class BetterChat extends Module {
     private final BooleanProperty chatStacker = new BooleanProperty("Chat Stacker", "Stacks duplicate chat messages.", true);
     private final BooleanProperty noClose = new BooleanProperty("No Close", "Prevents the server from closing your chat.", true);
     private final BooleanProperty noBackground = new BooleanProperty("No Background", "Prevents the chat background from rendering.", false);
+    private final BooleanProperty color = new BooleanProperty("Color", "Allows you to use chat formatting with '&' (may not work on all servers)", false);
 
     private String lastMessage = "";
     private int amount = 1;
     private int line = 0;
 
     public BetterChat() {
-        this.addProperties(this.chatStacker, this.noClose, this.noBackground);
+        this.autoAddProperties();
     }
 
     @EventLink(EventPriorities.HIGH)
@@ -58,6 +61,13 @@ public class BetterChat extends Module {
 
         if (this.noClose.get() && event.packet instanceof S2EPacketCloseWindow && mc.currentScreen instanceof GuiChat) {
             event.cancel();
+        }
+    };
+
+    @EventLink
+    public final Listener<EventChat> onChat = event -> {
+        if (this.color.get() && !mc.isSingleplayer()) {
+            event.message = event.message.replace('&', '\247');
         }
     };
 

@@ -43,7 +43,7 @@ public class BlockOverlay extends Module {
     private final BlockOverlayProperty dropper = new BlockOverlayProperty("Dropper", false, 0x55FF55);
     private final BlockOverlayProperty bedSet = new BlockOverlayProperty("Bed", true, 0x55AAFF);
     private final BlockOverlayProperty jukeBox = new BlockOverlayProperty("Juke Box", false, 0xFF55FF);
-    private final NumberProperty searchRange = new NumberProperty("Search Range", "Search range for non tile blocks", 10, 2, 50, 1);
+    private final NumberProperty searchRange = new NumberProperty("Search Range", "Search range for non tile blocks", 30, 5, 100, 5);
 
     private final Clock searchTimer = new Clock();
     private final List<AxisAlignedBB> beds = new ArrayList<>();

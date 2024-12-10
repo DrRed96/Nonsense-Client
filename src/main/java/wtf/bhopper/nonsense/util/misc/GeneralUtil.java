@@ -19,6 +19,7 @@ public class GeneralUtil {
 
     public static final String ALPHABET = "abcdefghijklmnopqrstuvwxyz";
     public static final String CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+    public static final String VOWELS = "aeiou";
     public static final Pattern LINK_REGEX = Pattern.compile("^(?:(ftp|http|https)://)?(?:[\\w-]+\\.)+[a-z]{2,6}$");
 
     public static String capitalize(String str) {
@@ -55,6 +56,10 @@ public class GeneralUtil {
     }
 
     public static <T> T randomElement(T[] array) {
+        if (array.length == 0) {
+            throw new IllegalArgumentException("Array length cannot be 0");
+        }
+
         return array[ThreadLocalRandom.current().nextInt(0, array.length)];
     }
 
