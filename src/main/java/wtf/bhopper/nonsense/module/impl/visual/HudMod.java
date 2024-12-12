@@ -24,7 +24,6 @@ public class HudMod extends Module {
     public final EnumProperty<ModuleListSuffix> moduleListSuffix = new EnumProperty<>("Suffixes", "Displays module suffixes", ModuleListSuffix.NORMAL);
     public final ColorProperty moduleListSuffixColor = new ColorProperty("Suffix Color", "Color for the suffixes", ColorUtil.GRAY, () -> !this.moduleListSuffix.is(ModuleListSuffix.NONE));
     public final BooleanProperty moduleListLowerCase = new BooleanProperty("Lower Case", "Converts the module list to lower case.", false);
-    public final NumberProperty moduleListFontSize = new NumberProperty("Font Size", "Font size for the module list", () -> !this.font.is(Font.MINECRAFT), 18.0, 11.0, 24.0, 1.0, NumberProperty.FORMAT_PIXELS);
     public final BooleanProperty moduleListAnimated = new BooleanProperty("Animated", "Animate the module list.", true);
     public final NumberProperty moduleListSpacing = new NumberProperty("Spacing", "Space between modules", 1.0, 0.0, 2.0, 1.0, NumberProperty.FORMAT_INT);
     public final NumberProperty moduleListBackground = new NumberProperty("Background", "Background transparency.", 120.0, 0.0, 255.0, 1.0, NumberProperty.FORMAT_INT);
@@ -67,7 +66,6 @@ public class HudMod extends Module {
                 this.moduleListSuffix,
                 this.moduleListSuffixColor,
                 this.moduleListLowerCase,
-                this.moduleListFontSize,
                 this.moduleListAnimated,
                 this.moduleListSpacing,
                 this.moduleListBackground,
@@ -84,7 +82,7 @@ public class HudMod extends Module {
         WAVY,
         RAINBOW,
         RAINBOW_2,
-        RAINBOW_3,
+        EXHIBITION_RAINBOW,
         CATEGORY,
         ASTOLFO,
         RANDOM,

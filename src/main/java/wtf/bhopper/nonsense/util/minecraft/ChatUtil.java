@@ -1,6 +1,5 @@
 package wtf.bhopper.nonsense.util.minecraft;
 
-import net.minecraft.client.gui.GuiNewChat;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.nbt.NBTTagCompound;
@@ -10,9 +9,7 @@ import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.anticheat.Check;
 import wtf.bhopper.nonsense.network.Account;
-import wtf.bhopper.nonsense.util.misc.GeneralUtil;
 
 public class ChatUtil implements MinecraftInstance {
 

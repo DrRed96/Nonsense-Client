@@ -110,6 +110,8 @@ import org.lwjglx.util.vector.Vector4f;
 import shadersmod.client.Shaders;
 import shadersmod.client.ShadersRender;
 import shadersmod.client.ShadowUtils;
+import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.module.impl.visual.Xray;
 
 public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListener
 {
@@ -127,7 +129,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
     private final TextureManager renderEngine;
     private final RenderManager renderManager;
     private WorldClient theWorld;
-    private Set chunksToUpdate = Sets.newLinkedHashSet();
+    private Set<RenderChunk> chunksToUpdate = Sets.newLinkedHashSet();
 
     /** List of OpenGL lists for the current render pass */
     private List renderInfos = Lists.newArrayListWithCapacity(69696);
@@ -1169,8 +1171,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
                 }
                 else
                 {
-                    if (playerSpectator && this.theWorld.getBlockState(blockpos2).getBlock().isOpaqueCube())
-                    {
+                    if (playerSpectator && this.theWorld.getBlockState(blockpos2).getBlock().isOpaqueCube()) {
                         flag1 = false;
                     }
 
@@ -1257,7 +1258,7 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
         else
         {
             this.renderDispatcher.clearChunkUpdates();
-            Set set = this.chunksToUpdate;
+            Set<RenderChunk> set = this.chunksToUpdate;
             this.chunksToUpdate = Sets.newLinkedHashSet();
             Iterator iterator1 = this.renderInfos.iterator();
             Lagometer.timerChunkUpdate.start();

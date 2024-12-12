@@ -11,7 +11,7 @@ import wtf.bhopper.nonsense.network.connection.packet.NonsensePacketRegistry;
 import java.io.IOException;
 import java.util.List;
 
-public class NonsenseDeserializer extends ByteToMessageDecoder {
+public class NonsenseDecoder extends ByteToMessageDecoder {
 
     @Override
     protected void decode(ChannelHandlerContext ctx, ByteBuf in, List<Object> out) throws Exception {

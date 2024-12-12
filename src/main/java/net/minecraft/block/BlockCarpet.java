@@ -103,9 +103,9 @@ public class BlockCarpet extends Block
         return !worldIn.isAirBlock(pos.down());
     }
 
-    public boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
+    public boolean shouldSideBeRenderedVanilla(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
     {
-        return side == EnumFacing.UP ? true : super.shouldSideBeRendered(worldIn, pos, side);
+        return side == EnumFacing.UP ? true : super.shouldSideBeRenderedVanilla(worldIn, pos, side);
     }
 
     /**

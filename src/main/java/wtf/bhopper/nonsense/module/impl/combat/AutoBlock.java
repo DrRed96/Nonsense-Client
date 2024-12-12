@@ -265,11 +265,11 @@ public class AutoBlock extends Module {
             return false;
         }
 
-        if (entity.isInvisible() && !invis.get()) {
+        if (entity.isInvisible() && !this.invis.get()) {
             return false;
         }
 
-        if (entity.isDead && !dead.get()) {
+        if (entity.isDead && !this.dead.get()) {
             return false;
         }
 

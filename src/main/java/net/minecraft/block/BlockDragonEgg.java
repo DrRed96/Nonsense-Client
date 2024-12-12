@@ -137,7 +137,7 @@ public class BlockDragonEgg extends Block
         return false;
     }
 
-    public boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
+    public boolean shouldSideBeRenderedVanilla(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
     {
         return true;
     }

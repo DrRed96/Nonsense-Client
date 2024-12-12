@@ -72,9 +72,9 @@ public class BlockPane extends Block
         return false;
     }
 
-    public boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
+    public boolean shouldSideBeRenderedVanilla(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
     {
-        return worldIn.getBlockState(pos).getBlock() != this && super.shouldSideBeRendered(worldIn, pos, side);
+        return worldIn.getBlockState(pos).getBlock() != this && super.shouldSideBeRenderedVanilla(worldIn, pos, side);
     }
 
     /**

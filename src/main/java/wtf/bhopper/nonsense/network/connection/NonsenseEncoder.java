@@ -11,7 +11,7 @@ import wtf.bhopper.nonsense.network.connection.packet.NonsensePacketRegistry;
 
 import java.io.IOException;
 
-public class NonsenseSerializer extends MessageToByteEncoder<NonsensePacket> {
+public class NonsenseEncoder extends MessageToByteEncoder<NonsensePacket> {
     @Override
     protected void encode(ChannelHandlerContext ctx, NonsensePacket packet, ByteBuf out) throws Exception {
         Integer id = NonsensePacketRegistry.PACKETS.getPacketId(EnumPacketDirection.SERVERBOUND, packet);

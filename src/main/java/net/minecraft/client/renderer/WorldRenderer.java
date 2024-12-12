@@ -19,6 +19,9 @@ import optifine.TextureUtils;
 import org.apache.logging.log4j.LogManager;
 import org.lwjgl.opengl.GL11;
 import shadersmod.client.SVertexBuilder;
+import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.module.impl.visual.Xray;
+import wtf.bhopper.nonsense.util.render.ColorUtil;
 
 public class WorldRenderer
 {
@@ -398,39 +401,49 @@ public class WorldRenderer
     /**
      * Takes in the pass the call list is being requested for. Args: renderPass
      */
-    public int getColorIndex(int p_78909_1_)
+    public int getColorIndex(int count)
     {
-        return ((this.vertexCount - p_78909_1_) * this.vertexFormat.getNextOffset() + this.vertexFormat.getColorOffset()) / 4;
+        return ((this.vertexCount - count) * this.vertexFormat.getNextOffset() + this.vertexFormat.getColorOffset()) / 4;
     }
 
-    public void putColorMultiplier(float red, float green, float blue, int p_178978_4_)
+    public void putColorMultiplier(float red, float green, float blue, int index)
     {
-        int i = this.getColorIndex(p_178978_4_);
-        int j = -1;
+        int colorIndex = this.getColorIndex(index);
+        int color = -1;
 
         if (!this.needsUpdate)
         {
-            j = this.rawIntBuffer.get(i);
+            color = this.rawIntBuffer.get(colorIndex);
+
+            Xray xray = Nonsense.module(Xray.class);
 
             if (ByteOrder.nativeOrder() == ByteOrder.LITTLE_ENDIAN)
             {
-                int k = (int)((float)(j & 255) * red);
-                int l = (int)((float)(j >> 8 & 255) * green);
-                int i1 = (int)((float)(j >> 16 & 255) * blue);
-                j = j & -16777216;
-                j = j | i1 << 16 | l << 8 | k;
+                int k = (int)((float)(color & 255) * red);
+                int l = (int)((float)(color >> 8 & 255) * green);
+                int i1 = (int)((float)(color >> 16 & 255) * blue);
+                color = color & 0xff000000;
+                color = color | i1 << 16 | l << 8 | k;
+
+                if (xray.isToggled()) {
+                    color = ColorUtil.get(k, l, i1, xray.getOpacity());
+                }
             }
             else
             {
-                int j1 = (int)((float)(j >> 24 & 255) * red);
-                int k1 = (int)((float)(j >> 16 & 255) * green);
-                int l1 = (int)((float)(j >> 8 & 255) * blue);
-                j = j & 255;
-                j = j | j1 << 24 | k1 << 16 | l1 << 8;
+                int j1 = (int)((float)(color >> 24 & 255) * red);
+                int k1 = (int)((float)(color >> 16 & 255) * green);
+                int l1 = (int)((float)(color >> 8 & 255) * blue);
+                color = color & 255;
+                color = color | j1 << 24 | k1 << 16 | l1 << 8;
+
+                if (xray.isToggled()) {
+                    color = ColorUtil.get(j1, k1, l1, xray.getOpacity());
+                }
             }
         }
 
-        this.rawIntBuffer.put(i, j);
+        this.rawIntBuffer.put(colorIndex, color);
     }
 
     private void putColor(int argb, int p_178988_2_)

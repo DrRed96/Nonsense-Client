@@ -111,6 +111,7 @@ dependencies {
     library 'org.reflections:reflections:0.10.2'
     library 'com.github.Vatuu:discord-rpc:1.6.2'
     library 'org.luaj:luaj-jse:3.0.1'
+    library 'io.github.spair:imgui-java-app:1.86.11'
 
     // Via Version
     library 'com.viaversion:viabackwards:5.0.2-SNAPSHOT'
@@ -137,6 +138,7 @@ tasks.register('allJar', Jar) {
     archiveFileName.set('all.jar')
     from sourceSets.main.output
     from configurations.library.collect { zipTree(it) }
+    from configurations.nativeLib.collect { zipTree(it) }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 
     manifest {
@@ -152,6 +154,13 @@ tasks.register('libraryJar', Jar) {
 
     archiveFileName.set('libs.jar')
     from configurations.library.collect { zipTree(it) }
+    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+}
+
+tasks.register('nativesJar', Jar) {
+    setGroup('client')
+    archiveFileName.set("natives-${os.getFamilyName()}.jar")
+    from configurations.nativeLib.collect { zipTree(it) }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
 
@@ -178,18 +187,9 @@ tasks.register('copyAssets', Copy) {
     into "${rootDir}/run/assets"
 }
 
-tasks.register('nativeImage', Exec) {
-    setGroup('client')
-
-    commandLine 'native-image -jar build/libs/all.jar release/Nonsense'
-    doFirst {
-        println 'Starting native-image...'
-    }
-    dependsOn tasks.build
-}
-
 tasks.build.dependsOn(tasks.allJar)
 tasks.build.dependsOn(tasks.libraryJar)
+tasks.build.dependsOn(tasks.nativesJar)
 tasks.processResources.dependsOn(tasks.extractNatives)
 
 idea.project.settings.runConfigurations {

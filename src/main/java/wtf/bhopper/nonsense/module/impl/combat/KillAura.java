@@ -1,11 +1,13 @@
 package wtf.bhopper.nonsense.module.impl.combat;
 
 import io.netty.util.internal.ThreadLocalRandom;
+import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.potion.Potion;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
@@ -74,6 +76,7 @@ public class KillAura extends Module {
     private final BooleanProperty autoDisable = new BooleanProperty("Auto Disable", "Automatically disabled Kill Aura in certain situations", true);
     private final NumberProperty switchDelay = new NumberProperty("Switch Delay", "Delay between switching targets", () -> this.mode.is(Mode.SWITCH), 250.0, 0.0, 1000.0, 50.0, NumberProperty.FORMAT_MS);
     private final NumberProperty maxTargets = new NumberProperty("Max Targets", "Maximum amount of targets", () -> this.mode.is(Mode.SWITCH), 15, 1, 50, 1, NumberProperty.FORMAT_INT);
+    private final BooleanProperty particles = new BooleanProperty("Particles", "Renderers particles when attacking", true);
 
     private final List<EntityLivingBase> targets = new ArrayList<>();
     private final List<EntityLivingBase> invalidTargets = new ArrayList<>();
@@ -95,7 +98,7 @@ public class KillAura extends Module {
         this.targetsGroup.addProperties(this.players, this.mobs, this.animals, this.others, this.invis, this.dead, this.teams, this.existed);
         this.rangeGroup.addProperties(this.playerRange, this.otherRange, this.rotRange, this.swingRange, this.fov);
         this.rotsGroup.addProperties(this.rotationMode, this.hitVecMode, this.rayCast, this.linear);
-        this.addProperties(this.mode, this.sorting, this.minAps, this.maxAps, this.targetsGroup, this.rangeGroup, this.rotsGroup, this.swingMode, this.autoDisable, this.switchDelay, this.maxTargets);
+        this.addProperties(this.mode, this.sorting, this.minAps, this.maxAps, this.targetsGroup, this.rangeGroup, this.rotsGroup, this.swingMode, this.autoDisable, this.switchDelay, this.maxTargets, this.particles);
         this.setSuffix(this.mode::getDisplayValue);
 
         this.minAps.addValueChangeListener((oldValue, value) -> {
@@ -198,6 +201,18 @@ public class KillAura extends Module {
                 case CLIENT, ATTACK_ONLY -> true;
                 case SILENT -> false;
             });
+
+            if (this.particles.get()) {
+                if (Nonsense.module(Criticals.class).isToggled() || (mc.thePlayer.fallDistance > 0.0F && !mc.thePlayer.onGround && !mc.thePlayer.isOnLadder() && !mc.thePlayer.isInWater() && !mc.thePlayer.isPotionActive(Potion.blindness) && mc.thePlayer.ridingEntity == null)) {
+                    mc.thePlayer.onCriticalHit(this.target);
+                }
+
+                if (EnchantmentHelper.func_152377_a(mc.thePlayer.getHeldItem(), this.target.getCreatureAttribute()) > 0.0F) {
+                    mc.thePlayer.onEnchantmentCritical(this.target);
+                }
+
+            }
+
         } else if (canSwing) {
             PacketUtil.leftClickPackets(new MovingObjectPosition(MovingObjectPosition.MovingObjectType.MISS, hitVec, null, new BlockPos(hitVec)), switch (this.swingMode.get()) {
                 case CLIENT -> true;

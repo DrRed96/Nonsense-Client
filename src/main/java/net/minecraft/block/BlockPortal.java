@@ -144,7 +144,7 @@ public class BlockPortal extends BlockBreakable
         }
     }
 
-    public boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
+    public boolean shouldSideBeRenderedVanilla(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
     {
         EnumFacing.Axis enumfacing$axis = null;
         IBlockState iblockstate = worldIn.getBlockState(pos);

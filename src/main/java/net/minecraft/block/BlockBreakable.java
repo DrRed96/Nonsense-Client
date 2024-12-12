@@ -31,7 +31,7 @@ public class BlockBreakable extends Block
         return false;
     }
 
-    public boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
+    public boolean shouldSideBeRenderedVanilla(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
     {
         IBlockState iblockstate = worldIn.getBlockState(pos);
         Block block = iblockstate.getBlock();
@@ -49,6 +49,6 @@ public class BlockBreakable extends Block
             }
         }
 
-        return !this.ignoreSimilarity && block == this ? false : super.shouldSideBeRendered(worldIn, pos, side);
+        return !this.ignoreSimilarity && block == this ? false : super.shouldSideBeRenderedVanilla(worldIn, pos, side);
     }
 }

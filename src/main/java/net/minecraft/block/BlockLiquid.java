@@ -93,9 +93,9 @@ public abstract class BlockLiquid extends Block
         return material != this.blockMaterial && (side == EnumFacing.UP || (material != Material.ice && super.isBlockSolid(worldIn, pos, side)));
     }
 
-    public boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
+    public boolean shouldSideBeRenderedVanilla(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
     {
-        return worldIn.getBlockState(pos).getBlock().getMaterial() != this.blockMaterial && (side == EnumFacing.UP || super.shouldSideBeRendered(worldIn, pos, side));
+        return worldIn.getBlockState(pos).getBlock().getMaterial() != this.blockMaterial && (side == EnumFacing.UP || super.shouldSideBeRenderedVanilla(worldIn, pos, side));
     }
 
     public boolean func_176364_g(IBlockAccess blockAccess, BlockPos pos)

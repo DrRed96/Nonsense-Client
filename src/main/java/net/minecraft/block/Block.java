@@ -35,6 +35,7 @@ import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.impl.EventBlockBounds;
+import wtf.bhopper.nonsense.module.impl.visual.Xray;
 
 public class Block {
     /**
@@ -422,6 +423,20 @@ public class Block {
     }
 
     public boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side) {
+
+        if (Nonsense.module(Xray.class).isToggled()) {
+            return Nonsense.module(Xray.class).isBlockValid(this);
+        }
+
+        return this.shouldSideBeRenderedVanilla(worldIn, pos, side);
+    }
+
+    public boolean shouldSideBeRenderedVanilla(IBlockAccess worldIn, BlockPos pos, EnumFacing side) {
+
+        if (Nonsense.module(Xray.class).isToggled()) {
+            return Nonsense.module(Xray.class).isBlockValid(this);
+        }
+
         return side == EnumFacing.DOWN && this.minY > 0.0D || (side == EnumFacing.UP && this.maxY < 1.0D || (side == EnumFacing.NORTH && this.minZ > 0.0D || (side == EnumFacing.SOUTH && this.maxZ < 1.0D || (side == EnumFacing.WEST && this.minX > 0.0D || (side == EnumFacing.EAST && this.maxX < 1.0D || !worldIn.getBlockState(pos).getBlock().isOpaqueCube())))));
     }
 
@@ -728,6 +743,12 @@ public class Block {
     }
 
     public EnumWorldBlockLayer getBlockLayer() {
+
+        Xray xray = Nonsense.module(Xray.class);
+        if (xray.isToggled()) {
+            return xray.isBlockValid(this) ? EnumWorldBlockLayer.SOLID : EnumWorldBlockLayer.TRANSLUCENT;
+        }
+
         return EnumWorldBlockLayer.SOLID;
     }
 

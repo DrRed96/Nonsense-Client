@@ -16,6 +16,7 @@ import wtf.bhopper.nonsense.gui.hud.Hud;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleManager;
 import wtf.bhopper.nonsense.module.impl.visual.ClickGui;
+import wtf.bhopper.nonsense.network.NonsenseNetHandler;
 import wtf.bhopper.nonsense.util.minecraft.BlinkUtil;
 import wtf.bhopper.nonsense.util.minecraft.TickRate;
 import wtf.bhopper.nonsense.util.render.Fonts;
@@ -40,6 +41,7 @@ public enum Nonsense {
     private CommandManager commandManager;
     private ConfigManager configManager;
     private AltManager altManager;
+    private NonsenseNetHandler netHandler;
 
     // Module Components
     private Hud hud;
@@ -71,6 +73,7 @@ public enum Nonsense {
         this.configManager = new ConfigManager();
         this.altManager = new AltManager();
         this.altManager.tryLoad();
+        this.netHandler = new NonsenseNetHandler();
 
         NVGHelper.init();
         Fonts.init();
@@ -107,6 +110,10 @@ public enum Nonsense {
 
     public static AltManager getAltManager() {
         return INSTANCE.altManager;
+    }
+
+    public static NonsenseNetHandler getNetHandler() {
+        return INSTANCE.netHandler;
     }
 
     public static Hud getHud() {

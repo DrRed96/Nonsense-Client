@@ -12,8 +12,6 @@ import wtf.bhopper.nonsense.util.minecraft.RotationUtil;
         description = "Updates your movement based on your server rotations.",
         category = ModuleCategory.MOVEMENT)
 public class MovementFix extends Module {
-
     @EventLink
     public final Listener<EventStrafe> onStrafe = event -> event.yaw = RotationUtil.serverYaw;
-
 }

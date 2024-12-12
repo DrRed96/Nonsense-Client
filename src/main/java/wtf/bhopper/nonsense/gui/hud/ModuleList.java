@@ -42,7 +42,7 @@ public class ModuleList {
 
         if (!mod.font.is(HudMod.Font.MINECRAFT)) {
             Hud.bindFont();
-            NVGHelper.fontSize(Hud.mod().moduleListFontSize.getFloat());
+            NVGHelper.fontSize(Hud.mod().fontSize.getFloat());
             NVGHelper.textAlign(NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
         }
 
@@ -95,7 +95,7 @@ public class ModuleList {
                 return yOff;
             }
 
-            float fontSize = hudMod.font.is(HudMod.Font.MINECRAFT) ? 18.0F : hudMod.moduleListFontSize.getFloat();
+            float fontSize = hudMod.font.is(HudMod.Font.MINECRAFT) ? 18.0F : hudMod.fontSize.getFloat();
             float textX = right - (this.width + 2.0F + hudMod.moduleListSpacing.getFloat()) * this.animateFactor;
             float textY = yOff + hudMod.moduleListSpacing.getFloat();
             float textHeight = fontSize + hudMod.moduleListSpacing.getFloat() * 2.0F;
@@ -201,7 +201,7 @@ public class ModuleList {
                 case WAVY -> ColorUtil.wave(Hud.mod().color.getRGB(), timeMS, count);
                 case RAINBOW -> ColorUtil.rainbow(timeMS, count, 0.5F, 1.0F);
                 case RAINBOW_2 -> ColorUtil.rainbow(timeMS, count, 1.0F, 1.0F);
-                case RAINBOW_3 -> ColorUtil.rainbow(timeMS, count, 0.55F, 0.9F);
+                case EXHIBITION_RAINBOW -> ColorUtil.exhiRainbow(timeMS, count);
                 case CATEGORY -> this.module.category.color;
                 case ASTOLFO -> ColorUtil.astolfo(timeMS, count);
                 case RANDOM -> this.module.hashCode() | 0xFF000000;

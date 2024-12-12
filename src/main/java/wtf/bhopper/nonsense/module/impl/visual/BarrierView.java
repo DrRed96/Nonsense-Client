@@ -6,4 +6,5 @@ import wtf.bhopper.nonsense.module.ModuleInfo;
 
 @ModuleInfo(name = "Barrier View", description = "Allows you to see barrier blocks", category = ModuleCategory.VISUAL)
 public class BarrierView extends Module {
+
 }

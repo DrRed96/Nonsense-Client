@@ -30,6 +30,8 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import optifine.Config;
 import optifine.Reflector;
+import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.event.impl.EventEmitParticles;
 
 public class EffectRenderer
 {
@@ -37,13 +39,13 @@ public class EffectRenderer
 
     /** Reference to the World object. */
     protected World worldObj;
-    private List[][] fxLayers = new List[4][];
-    private List particleEmitters = Lists.newArrayList();
+    private final List[][] fxLayers = new List[4][];
+    private final List<EntityParticleEmitter> particleEmitters = Lists.newArrayList();
     private TextureManager renderer;
 
     /** RNG. */
     private Random rand = new Random();
-    private Map particleTypes = Maps.newHashMap();
+    private Map<Integer, IParticleFactory> particleTypes = Maps.newHashMap();
     private static final String __OBFID = "CL_00000915";
 
     public EffectRenderer(World worldIn, TextureManager rendererIn)
@@ -111,12 +113,17 @@ public class EffectRenderer
 
     public void registerParticle(int id, IParticleFactory particleFactory)
     {
-        this.particleTypes.put(Integer.valueOf(id), particleFactory);
+        this.particleTypes.put(id, particleFactory);
     }
 
     public void emitParticleAtEntity(Entity entityIn, EnumParticleTypes particleTypes)
     {
-        this.particleEmitters.add(new EntityParticleEmitter(this.worldObj, entityIn, particleTypes));
+        EventEmitParticles event = new EventEmitParticles(entityIn, particleTypes, 1);
+        Nonsense.getEventBus().post(event);
+
+        for (int i = 0; i < event.amount; i++) {
+            this.particleEmitters.add(new EntityParticleEmitter(this.worldObj, event.entity, event.particleType));
+        }
     }
 
     /**
@@ -169,11 +176,11 @@ public class EffectRenderer
             this.updateEffectLayer(i);
         }
 
-        ArrayList arraylist = Lists.newArrayList();
+        ArrayList<EntityParticleEmitter> arraylist = Lists.newArrayList();
 
-        for (Object entityparticleemitter0 : this.particleEmitters)
+        for (EntityParticleEmitter entityparticleemitter0 : this.particleEmitters)
         {
-            EntityParticleEmitter entityparticleemitter = (EntityParticleEmitter) entityparticleemitter0;
+            EntityParticleEmitter entityparticleemitter = entityparticleemitter0;
             entityparticleemitter.onUpdate();
 
             if (entityparticleemitter.isDead)

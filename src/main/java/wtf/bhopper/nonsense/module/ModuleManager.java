@@ -94,6 +94,7 @@ public class ModuleManager {
                 new Chams(),
                 new Atmosphere(),
                 new BlockOverlay(),
+                new Xray(),
                 new Breadcrumbs(),
                 new ItemAnimations(),
                 new NoRender(),
@@ -104,6 +105,7 @@ public class ModuleManager {
                 new LagNotifier(),
                 new Capes(),
                 new ItemPhysics(),
+                new ParticleMultiplier(),
                 new BarrierView()
         );
 

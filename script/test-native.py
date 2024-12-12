@@ -2,12 +2,11 @@ import os
 import subprocess
 
 def main():
-    os.chdir("run")
+    os.chdir("native-image")
     subprocess.run([
-        "C:\\Program Files\\Java\\jdk-23\\bin\\java.exe",
-        "-Xms1024M", "-Xmx4096M",
-        "-Djava.library.path=../build/libs/natives/windows",
-        "-jar", "../build/libs/all.jar",
+        "Nonsense.exe",
+        # "-Xms1024M", "-Xmx4096M",
+        # "-jar", "../build/libs/all.jar",
         "--version", "Nonsense",
         "--accessToken", "0",
         "--username", "Nonsense",

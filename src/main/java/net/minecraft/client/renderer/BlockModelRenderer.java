@@ -73,7 +73,7 @@ public class BlockModelRenderer
             CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Tesselating block model");
             CrashReportCategory crashreportcategory = crashreport.makeCategory("Block model being tesselated");
             CrashReportCategory.addBlockInfo(crashreportcategory, blockPosIn, blockStateIn);
-            crashreportcategory.addCrashSection("Using AO", Boolean.valueOf(flag));
+            crashreportcategory.addCrashSection("Using AO", flag);
             throw new ReportedException(crashreport);
         }
     }
@@ -114,9 +114,9 @@ public class BlockModelRenderer
             }
         }
 
-        List list1 = p_renderModelAmbientOcclusion_2_.getGeneralQuads();
+        List<BakedQuad> list1 = p_renderModelAmbientOcclusion_2_.getGeneralQuads();
 
-        if (list1.size() > 0)
+        if (!list1.isEmpty())
         {
             if (renderenv == null)
             {
@@ -174,9 +174,9 @@ public class BlockModelRenderer
             }
         }
 
-        List list1 = p_renderModelStandard_2_.getGeneralQuads();
+        List<BakedQuad> list1 = p_renderModelStandard_2_.getGeneralQuads();
 
-        if (list1.size() > 0)
+        if (!list1.isEmpty())
         {
             if (renderenv == null)
             {
@@ -197,7 +197,7 @@ public class BlockModelRenderer
         return flag;
     }
 
-    private void renderModelAmbientOcclusionQuads(IBlockAccess p_renderModelAmbientOcclusionQuads_1_, Block p_renderModelAmbientOcclusionQuads_2_, BlockPos p_renderModelAmbientOcclusionQuads_3_, WorldRenderer p_renderModelAmbientOcclusionQuads_4_, List p_renderModelAmbientOcclusionQuads_5_, RenderEnv p_renderModelAmbientOcclusionQuads_6_)
+    private void renderModelAmbientOcclusionQuads(IBlockAccess p_renderModelAmbientOcclusionQuads_1_, Block p_renderModelAmbientOcclusionQuads_2_, BlockPos p_renderModelAmbientOcclusionQuads_3_, WorldRenderer p_renderModelAmbientOcclusionQuads_4_, List<BakedQuad> p_renderModelAmbientOcclusionQuads_5_, RenderEnv p_renderModelAmbientOcclusionQuads_6_)
     {
         float[] afloat = p_renderModelAmbientOcclusionQuads_6_.getQuadBounds();
         BitSet bitset = p_renderModelAmbientOcclusionQuads_6_.getBoundsFlags();
@@ -220,9 +220,9 @@ public class BlockModelRenderer
             }
         }
 
-        for (Object bakedquad0 : p_renderModelAmbientOcclusionQuads_5_)
+        for (BakedQuad bakedquad0 : p_renderModelAmbientOcclusionQuads_5_)
         {
-            BakedQuad bakedquad = (BakedQuad) bakedquad0;
+            BakedQuad bakedquad = bakedquad0;
 
             if (!p_renderModelAmbientOcclusionQuads_6_.isBreakingAnimation(bakedquad))
             {
@@ -381,7 +381,7 @@ public class BlockModelRenderer
         {
             int i = p_renderModelStandardQuads_3_.getX();
             int j = p_renderModelStandardQuads_3_.getZ();
-            long k = (long)(i * 3129871) ^ (long)j * 116129781L;
+            long k = (i * 3129871L) ^ (long)j * 116129781L;
             k = k * k * 42317861L + k * 11L;
             d0 += ((double)((float)(k >> 16 & 15L) / 15.0F) - 0.5D) * 0.5D;
             d2 += ((double)((float)(k >> 24 & 15L) / 15.0F) - 0.5D) * 0.5D;
@@ -413,7 +413,7 @@ public class BlockModelRenderer
 
             if (p_renderModelStandardQuads_6_)
             {
-                this.fillQuadBounds(p_renderModelStandardQuads_2_, bakedquad.getVertexData(), bakedquad.getFace(), (float[])null, bitset);
+                this.fillQuadBounds(p_renderModelStandardQuads_2_, bakedquad.getVertexData(), bakedquad.getFace(), null, bitset);
                 p_renderModelStandardQuads_5_ = bitset.get(0) ? p_renderModelStandardQuads_2_.getMixedBrightnessForBlock(p_renderModelStandardQuads_1_, p_renderModelStandardQuads_3_.offset(bakedquad.getFace())) : p_renderModelStandardQuads_2_.getMixedBrightnessForBlock(p_renderModelStandardQuads_1_, p_renderModelStandardQuads_3_);
             }
 

@@ -151,6 +151,10 @@ public class MoveUtil implements MinecraftInstance {
         setSpeed(null, speed);
     }
 
+    public static void jump(EventMove event) {
+        jump(event, JUMP_HEIGHT);
+    }
+
     public static void jump(EventMove event, double motion) {
         vertical(event, jumpHeight(motion));
     }

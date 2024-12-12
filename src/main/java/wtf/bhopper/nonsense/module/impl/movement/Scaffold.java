@@ -50,6 +50,7 @@ public class Scaffold extends Module {
 
     private final GroupProperty rotationGroup = new GroupProperty("Rotations", "Scaffold rotations.");
     private final EnumProperty<RotationsMode> rotationsMode = new EnumProperty<>("Mode", "Method for rotations.", RotationsMode.INSTANT);
+    private final EnumProperty<RotationsAiming> rotationsAiming = new EnumProperty<>("Aiming", "Aiming method", RotationsAiming.HIT_VECTOR);
     private final EnumProperty<RotationsHitVec> rotationsHitVec = new EnumProperty<>("Hit Vector", "Block placement vector.", RotationsHitVec.CENTRE);
     private final BooleanProperty rotationRayCast = new BooleanProperty("Ray Cast", "Ray Cast the hit vector", false);
 
@@ -61,10 +62,12 @@ public class Scaffold extends Module {
     private final EnumProperty<SwapMode> swap = new EnumProperty<>("Swap", "Swaps mode.", SwapMode.SILENT);
     private final BooleanProperty sameY = new BooleanProperty("Same Y", "Keeps your Y position the same", false);
 
-    private double playerY = -1.0F;
     private BlockData blockData = null;
     private Vec3 hitVec = null;
     private Rotation rotations = null;
+    private Rotation prevRotations = null;
+
+    private double playerY = -1.0F;
     private int slot = -1;
 
     private int towerStage = 0;
@@ -72,7 +75,7 @@ public class Scaffold extends Module {
     private final Clock towerTimer = new Clock();
 
     public Scaffold() {
-        this.rotationGroup.addProperties(this.rotationsMode, this.rotationsHitVec, this.rotationRayCast);
+        this.rotationGroup.addProperties(this.rotationsMode, this.rotationsAiming, this.rotationsHitVec, this.rotationRayCast);
         this.towerGroup.addProperties(this.towerEnable, this.towerMode);
         this.addProperties(this.mode, this.rotationGroup, this.towerGroup, this.swing, this.swap, this.sameY);
         this.setSuffix(this.mode::getDisplayValue);
@@ -121,9 +124,9 @@ public class Scaffold extends Module {
                 case CENTRE -> RotationUtil.getHitVec(pos, face);
                 case CLOSEST -> RotationUtil.getHitVecOptimized(pos, face);
                 case RANDOM -> {
-                    double x = (double)pos.getX() + 0.5 + (double)face.getFrontOffsetX() * 0.5;
-                    double y = (double)pos.getY() + 0.5 + (double)face.getFrontOffsetY() * 0.5;
-                    double z = (double)pos.getZ() + 0.5 + (double)face.getFrontOffsetZ() * 0.5;
+                    double x = (double) pos.getX() + 0.5 + (double) face.getFrontOffsetX() * 0.5;
+                    double y = (double) pos.getY() + 0.5 + (double) face.getFrontOffsetY() * 0.5;
+                    double z = (double) pos.getZ() + 0.5 + (double) face.getFrontOffsetZ() * 0.5;
 
                     if (face.getAxis() != EnumFacing.Axis.Y) {
                         y += MathUtil.random(0.49, 0.5);
@@ -153,8 +156,10 @@ public class Scaffold extends Module {
                 }
 
                 switch (face.getAxis()) {
-                    case X -> rayCast.hitVec = new Vec3(Math.round(rayCast.hitVec.xCoord), rayCast.hitVec.yCoord, rayCast.hitVec.zCoord);
-                    case Z -> rayCast.hitVec = new Vec3(rayCast.hitVec.xCoord, rayCast.hitVec.yCoord, Math.round(rayCast.hitVec.zCoord));
+                    case X ->
+                            rayCast.hitVec = new Vec3(Math.round(rayCast.hitVec.xCoord), rayCast.hitVec.yCoord, rayCast.hitVec.zCoord);
+                    case Z ->
+                            rayCast.hitVec = new Vec3(rayCast.hitVec.xCoord, rayCast.hitVec.yCoord, Math.round(rayCast.hitVec.zCoord));
                 }
 
                 if (face != EnumFacing.DOWN && face != EnumFacing.UP) {
@@ -188,32 +193,21 @@ public class Scaffold extends Module {
     @EventLink
     public final Listener<EventPreMotion> onPre = event -> {
 
-        switch (this.rotationsMode.get()) {
-            case INSTANT -> {
-                if (this.hitVec != null) {
-                    this.rotations = RotationUtil.getRotations(this.hitVec);
-                    this.hitVec = null;
-                }
-            }
+        this.prevRotations = this.rotations;
 
-            case PLACE -> {
-                if (this.hitVec != null) {
-                    this.rotations = RotationUtil.getRotations(this.hitVec);
-                    this.hitVec = null;
-                } else {
-                    this.rotations = null;
-                }
-            }
-        }
+        Rotation targetRotations = switch (this.rotationsAiming.get()) {
+            case HIT_VECTOR -> this.hitVec == null ? null : RotationUtil.getRotations(this.hitVec);
+        };
 
-        if (this.hitVec != null) {
-            this.rotations = RotationUtil.getRotations(this.hitVec);
-            this.hitVec = null;
-        }
+        this.rotations = switch (this.rotationsMode.get()) {
+            case INSTANT -> targetRotations == null ? this.rotations : targetRotations;
+            case PLACE -> this.blockData != null ? targetRotations : null;
+        };
 
         if (this.rotations != null) {
             event.setRotations(this.rotations);
         }
+
 
         if (this.spoofGround) {
             event.onGround = true;
@@ -399,6 +393,10 @@ public class Scaffold extends Module {
     private enum RotationsMode {
         INSTANT,
         PLACE
+    }
+
+    private enum RotationsAiming {
+        HIT_VECTOR
     }
 
     private enum RotationsHitVec {

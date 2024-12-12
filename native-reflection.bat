@@ -1,4 +1,4 @@
 @echo off
 title Nonsense Client
-python script/testWin.py
+python script/native-reflection.py
 pause

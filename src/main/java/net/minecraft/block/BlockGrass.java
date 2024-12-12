@@ -15,6 +15,8 @@ import net.minecraft.world.ColorizerGrass;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import net.minecraft.world.biome.BiomeColorHelper;
+import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.module.impl.visual.Xray;
 
 public class BlockGrass extends Block implements IGrowable
 {
@@ -154,8 +156,12 @@ public class BlockGrass extends Block implements IGrowable
         }
     }
 
+    @Override
     public EnumWorldBlockLayer getBlockLayer()
     {
+        if (Nonsense.module(Xray.class).isToggled()) {
+            return super.getBlockLayer();
+        }
         return EnumWorldBlockLayer.CUTOUT_MIPPED;
     }
 

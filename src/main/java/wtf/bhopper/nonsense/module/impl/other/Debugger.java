@@ -22,8 +22,10 @@ import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
+import wtf.bhopper.nonsense.module.property.impl.ButtonProperty;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
+import wtf.bhopper.nonsense.network.GuiTestNetwork;
 import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
 import wtf.bhopper.nonsense.util.minecraft.PacketUtil;
 import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
@@ -44,6 +46,7 @@ public class Debugger extends Module {
     private final GroupProperty packetDebuggerServer = new GroupProperty("Server Packets", "Server packet debugger");
     private final BooleanProperty logPosition = new BooleanProperty("Position", "Logs your position", false);
     private final BooleanProperty hideCancelled = new BooleanProperty("Hide Cancelled", "Hides cancelled packets", false);
+    private final ButtonProperty openNetworkTest = new ButtonProperty("Network Tester", "Open the network tester", () -> mc.displayGuiScreen(new GuiTestNetwork()));
 
     private final Map<Class<? extends Packet>, BooleanProperty> clientPacketSettings = new HashMap<>();
     private final Map<Class<? extends Packet>, BooleanProperty> serverPacketSettings = new HashMap<>();
@@ -83,7 +86,7 @@ public class Debugger extends Module {
         }
 
         this.loggingGroup.addProperties(this.tick, this.packetDebuggerClient, this.packetDebuggerServer, this.logPosition, this.hideCancelled);
-        this.addProperties(this.loggingGroup);
+        this.addProperties(this.loggingGroup, this.openNetworkTest);
     }
 
     @EventLink

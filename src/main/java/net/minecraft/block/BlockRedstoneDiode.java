@@ -68,7 +68,7 @@ public abstract class BlockRedstoneDiode extends BlockDirectional
         }
     }
 
-    public boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
+    public boolean shouldSideBeRenderedVanilla(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
     {
         return side.getAxis() != EnumFacing.Axis.Y;
     }

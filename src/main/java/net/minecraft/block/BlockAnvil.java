@@ -114,7 +114,7 @@ public class BlockAnvil extends BlockFalling
         worldIn.playAuxSFX(1022, pos, 0);
     }
 
-    public boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
+    public boolean shouldSideBeRenderedVanilla(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
     {
         return true;
     }

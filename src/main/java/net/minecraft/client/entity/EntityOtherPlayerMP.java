@@ -41,8 +41,8 @@ public class EntityOtherPlayerMP extends AbstractClientPlayer
         this.otherPlayerMPX = x;
         this.otherPlayerMPY = y;
         this.otherPlayerMPZ = z;
-        this.otherPlayerMPYaw = (double)yaw;
-        this.otherPlayerMPPitch = (double)pitch;
+        this.otherPlayerMPYaw = yaw;
+        this.otherPlayerMPPitch = pitch;
         this.otherPlayerMPPosRotationIncrements = posRotationIncrements;
     }
 
@@ -112,7 +112,7 @@ public class EntityOtherPlayerMP extends AbstractClientPlayer
         this.prevCameraYaw = this.cameraYaw;
         this.updateArmSwingProgress();
         float f1 = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
-        float f = (float)Math.atan(-this.motionY * 0.20000000298023224D) * 15.0F;
+        float f = (float)Math.atan(-this.motionY * 0.2) * 15.0F;
 
         if (f1 > 0.1F)
         {

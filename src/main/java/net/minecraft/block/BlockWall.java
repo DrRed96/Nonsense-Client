@@ -145,9 +145,9 @@ public class BlockWall extends Block
         return ((BlockWall.EnumType)state.getValue(VARIANT)).getMetadata();
     }
 
-    public boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
+    public boolean shouldSideBeRenderedVanilla(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
     {
-        return side == EnumFacing.DOWN ? super.shouldSideBeRendered(worldIn, pos, side) : true;
+        return side == EnumFacing.DOWN ? super.shouldSideBeRenderedVanilla(worldIn, pos, side) : true;
     }
 
     /**

@@ -48,10 +48,10 @@ public class NetHandlerLoginServer implements INetHandlerLoginServer, ITickable
     private SecretKey secretKey;
     private EntityPlayerMP field_181025_l;
 
-    public NetHandlerLoginServer(MinecraftServer p_i45298_1_, NetworkManager p_i45298_2_)
+    public NetHandlerLoginServer(MinecraftServer server, NetworkManager networkManager)
     {
-        this.server = p_i45298_1_;
-        this.networkManager = p_i45298_2_;
+        this.server = server;
+        this.networkManager = networkManager;
         RANDOM.nextBytes(this.verifyToken);
     }
 

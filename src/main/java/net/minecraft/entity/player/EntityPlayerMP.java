@@ -517,7 +517,7 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting
         for (ScoreObjective scoreobjective : this.worldObj.getScoreboard().getObjectivesFromCriteria(IScoreObjectiveCriteria.deathCount))
         {
             Score score = this.getWorldScoreboard().getValueFromObjective(this.getName(), scoreobjective);
-            score.func_96648_a();
+            score.tryIncrementScore();
         }
 
         EntityLivingBase entitylivingbase = this.func_94060_bK();

@@ -7,41 +7,41 @@ public class EquationParser {
     private int pos = -1;
     private int ch;
 
-    public EquationParser(String equation) {
+    private EquationParser(String equation) {
         this.equation = equation;
     }
 
     private void nextChar() {
-        ch = (++pos < equation.length()) ? equation.charAt(pos) : -1;
+        this.ch = (++this.pos < this.equation.length()) ? this.equation.charAt(this.pos) : -1;
     }
 
     private boolean eat(int charToEat) {
         while (ch == ' ') {
-            nextChar();
+            this.nextChar();
         }
         if (ch == charToEat) {
-            nextChar();
+            this.nextChar();
             return true;
         }
         return false;
     }
 
-    public double parse() {
-        nextChar();
-        double x = parseExpression();
-        if (pos < equation.length()) {
+    private double parse() {
+        this.nextChar();
+        double x = this.parseExpression();
+        if (this.pos < this.equation.length()) {
             throw new RuntimeException("Unexpected: " + (char) ch);
         }
         return x;
     }
 
     private double parseExpression() {
-        double x = parseTerm();
+        double x = this.parseTerm();
         for (; ; ) {
-            if (eat('+')) {
-                x += parseTerm(); // addition
+            if (this.eat('+')) {
+                x += this.parseTerm(); // addition
             } else if (eat('-')) {
-                x -= parseTerm(); // subtraction
+                x -= this.parseTerm(); // subtraction
             } else {
                 return x;
             }
@@ -49,12 +49,12 @@ public class EquationParser {
     }
 
     private double parseTerm() {
-        double x = parseFactor();
+        double x = this.parseFactor();
         for (; ; ) {
-            if (eat('*')) {
-                x *= parseFactor(); // multiplication
+            if (this.eat('*')) {
+                x *= this.parseFactor(); // multiplication
             } else if (eat('/')) {
-                x /= parseFactor(); // division
+                x /= this.parseFactor(); // division
             } else {
                 return x;
             }
@@ -62,54 +62,49 @@ public class EquationParser {
     }
 
     private double parseFactor() {
-        if (eat('+')) {
-            return parseFactor(); // unary plus
+        if (this.eat('+')) {
+            return this.parseFactor(); // unary plus
         }
-        if (eat('-')) {
-            return -parseFactor(); // unary minus
+        if (this.eat('-')) {
+            return -this.parseFactor(); // unary minus
         }
 
         double x;
         int startPos = this.pos;
-        if (eat('(')) { // parentheses
-            x = parseExpression();
-            eat(')');
+        if (this.eat('(')) { // parentheses
+            x = this.parseExpression();
+            this.eat(')');
         } else if ((ch >= '0' && ch <= '9') || ch == '.') { // numbers
             while ((ch >= '0' && ch <= '9') || ch == '.') {
-                nextChar();
+                this.nextChar();
             }
-            x = Double.parseDouble(equation.substring(startPos, this.pos));
+            x = Double.parseDouble(this.equation.substring(startPos, this.pos));
         } else if (ch >= 'a' && ch <= 'z') { // functions
             while (ch >= 'a' && ch <= 'z') {
-                nextChar();
+                this.nextChar();
             }
-            String func = equation.substring(startPos, this.pos);
-            x = parseFactor();
-            switch (func) {
-                case "sqrt":
-                    x = Math.sqrt(x);
-                    break;
-                case "sin":
-                    x = Math.sin(Math.toRadians(x));
-                    break;
-                case "cos":
-                    x = Math.cos(Math.toRadians(x));
-                    break;
-                case "tan":
-                    x = Math.tan(Math.toRadians(x));
-                    break;
-                default:
-                    throw new RuntimeException("Unknown function: " + func);
-            }
+            String func = this.equation.substring(startPos, this.pos);
+            x = this.parseFactor();
+            x = switch (func) {
+                case "sqrt" -> Math.sqrt(x);
+                case "sin" -> Math.sin(Math.toRadians(x));
+                case "cos" -> Math.cos(Math.toRadians(x));
+                case "tan" -> Math.tan(Math.toRadians(x));
+                default -> throw new RuntimeException("Unknown function: " + func);
+            };
         } else {
             throw new RuntimeException("Unexpected: " + (char) ch);
         }
 
-        if (eat('^')) {
-            x = Math.pow(x, parseFactor()); // exponentiation
+        if (this.eat('^')) {
+            x = Math.pow(x, this.parseFactor()); // exponentiation
         }
 
         return x;
+    }
+
+    public static double parseEquation(String equation) {
+        return new EquationParser(equation).parse();
     }
 
 }

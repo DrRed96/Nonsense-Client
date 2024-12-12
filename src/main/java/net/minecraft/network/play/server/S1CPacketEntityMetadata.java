@@ -16,17 +16,17 @@ public class S1CPacketEntityMetadata implements Packet<INetHandlerPlayClient>
     {
     }
 
-    public S1CPacketEntityMetadata(int entityIdIn, DataWatcher p_i45217_2_, boolean p_i45217_3_)
+    public S1CPacketEntityMetadata(int entityIdIn, DataWatcher watcher, boolean p_i45217_3_)
     {
         this.entityId = entityIdIn;
 
         if (p_i45217_3_)
         {
-            this.field_149378_b = p_i45217_2_.getAllWatched();
+            this.field_149378_b = watcher.getAllWatched();
         }
         else
         {
-            this.field_149378_b = p_i45217_2_.getChanged();
+            this.field_149378_b = watcher.getChanged();
         }
     }
 

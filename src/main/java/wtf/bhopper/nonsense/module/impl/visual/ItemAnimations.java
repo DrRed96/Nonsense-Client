@@ -37,6 +37,8 @@ public class ItemAnimations extends Module {
     private final EnumProperty<BlockAnimation> blockAnimation = new EnumProperty<>("Animation", "Sword blocking animation.", BlockAnimation.DEFAULT);
     private final NumberProperty equipAnimation = new NumberProperty("Equip Animation", "Crontrols the animation played when your item is updated.", 0.5, 0.0, 1.0, 0.05);
 
+    private final BooleanProperty oldTransform = new BooleanProperty("Old Transform", "Applies the 1.7 item transformations", false);
+
     public ItemAnimations() {
 
         this.usePos.addProperties(this.useX, this.useY, this.useZ);
@@ -45,7 +47,21 @@ public class ItemAnimations extends Module {
         this.posGroup.addProperties(this.usePos, this.normPos, this.swordOnly);
 
         this.swordGroup.addProperties(this.blockAnimation, this.equipAnimation);
-        this.addProperties(this.posGroup, this.swordGroup);
+        this.addProperties(this.posGroup, this.swordGroup, this.oldTransform);
+    }
+
+    public void transformFirstPersonItem(float equipProgress, float swingProgress) {
+
+        float swingSq = MathHelper.sin(swingProgress * swingProgress * (float) Math.PI);
+        float swingSqrt = MathHelper.sin(MathHelper.sqrt_float(swingProgress) * (float) Math.PI);
+
+        GlStateManager.translate(0.56F, -0.52F, -0.72F);
+        GlStateManager.translate(0.0F, equipProgress * -0.6F, 0.0F);
+        GlStateManager.rotate(this.oldTransform.get() ? 50.0F : 45.0F, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotate(swingSq * -20.0F, 0.0F, 1.0F, 0.0F);
+        GlStateManager.rotate(swingSqrt * -20.0F, 0.0F, 0.0F, 1.0F);
+        GlStateManager.rotate(swingSqrt * -80.0F, 1.0F, 0.0F, 0.0F);
+        GlStateManager.scale(0.4F, 0.4F, 0.4F);
     }
 
     public void renderItem(ItemRenderer renderer, AbstractClientPlayer player, ItemStack itemToRender, float equipProgress, float swingProgress, float partialTicks) {
@@ -57,11 +73,11 @@ public class ItemAnimations extends Module {
             }
 
             switch (itemToRender.getItemUseAction()) {
-                case NONE -> renderer.transformFirstPersonItem(equipProgress, 0.0F);
+                case NONE -> this.transformFirstPersonItem(equipProgress, 0.0F);
 
                 case EAT, DRINK -> {
                     renderer.doEatTransformations(player, partialTicks);
-                    renderer.transformFirstPersonItem(equipProgress, 0.0F);
+                    this.transformFirstPersonItem(equipProgress, 0.0F);
                 }
 
                 case BLOCK -> {
@@ -72,12 +88,12 @@ public class ItemAnimations extends Module {
 
                     switch (this.blockAnimation.get()) {
                         case DEFAULT -> {
-                            renderer.transformFirstPersonItem(equip, swingProgress);
+                            this.transformFirstPersonItem(equip, swingProgress);
                             renderer.doBlockTransformations();
                         }
 
                         case OLD -> {
-                            renderer.transformFirstPersonItem(equip + 0.05F, swingProgress);
+                            this.transformFirstPersonItem(equip + 0.05F, swingProgress);
                             GlStateManager.translate(-0.5F, 0.5F, 0.0F);
                             GlStateManager.rotate(30.0F, 0.0F, 1.0F, 0.0F);
                             GlStateManager.rotate(-80.0F, 1.0F, 0.0F, 0.0F);
@@ -85,56 +101,56 @@ public class ItemAnimations extends Module {
                         }
 
                         case EXHIBITION -> {
-                            renderer.transformFirstPersonItem(equip, 0.0F);
+                            this.transformFirstPersonItem(equip, 0.0F);
                             GlStateManager.rotate(-factor1 * 20.0F, factor1 / 2.0F, 0.0F, 9.0F);
                             GlStateManager.rotate(-factor1 * 30.0F, 1.0F, factor1 / 2.0F, 0.0F);
                             renderer.doBlockTransformations();
                         }
 
                         case SWONG -> {
-                            renderer.transformFirstPersonItem(equip, 0.0F);
+                            this.transformFirstPersonItem(equip, 0.0F);
                             GlStateManager.rotate(-factor1 * 40.0F, factor1 / 2.0F, 0.0F, 9.0F);
                             GlStateManager.rotate(-factor1 * 60.0F, 0.9F, factor1 / 2.0F, 0.0F);
                             renderer.doBlockTransformations();
                         }
 
                         case SWANG -> {
-                            renderer.transformFirstPersonItem(equip, swingProgress);
+                            this.transformFirstPersonItem(equip, swingProgress);
                             GlStateManager.rotate(factor1 * 30.0F / 2.0F, -factor1, -0.0F, 9.0F);
                             GlStateManager.rotate(factor1 * 40.0F, 1.0F, -factor1 / 2.0F, -0.0F);
                             renderer.doBlockTransformations();
                         }
 
                         case SWANK -> {
-                            renderer.transformFirstPersonItem(equip, swingProgress);
+                            this.transformFirstPersonItem(equip, swingProgress);
                             GlStateManager.rotate(factor1 * 30.0F, -factor1, -0.0F, 9.0F);
                             GlStateManager.rotate(factor1 * 40.0F, 1.0F, -factor1, -0.0F);
                             renderer.doBlockTransformations();
                         }
 
                         case TAP -> {
-                            renderer.transformFirstPersonItem(equip, 0.0F);
+                            this.transformFirstPersonItem(equip, 0.0F);
                             GlStateManager.rotate(-factor2 * 40.0F / 2.0F, factor2 / 2.0F, -0.0F, 9.0F);
                             GlStateManager.rotate(-factor2 * 30.0F, 1.0F, factor2 / 2.0F, -0.0F);
                             renderer.doBlockTransformations();
                         }
 
                         case CHIP -> {
-                            renderer.transformFirstPersonItem(equip, -0.2F);
+                            this.transformFirstPersonItem(equip, -0.2F);
                             GlStateManager.rotate(-factor2 / 19.0F, factor2 / 20.0F, -0.0F, 9.0F);
                             GlStateManager.rotate(-factor2 * 30.0F, 10.0F, factor2 / 50.0F, 0.0F);
                             renderer.doBlockTransformations();
                         }
 
                         case SMOOTH -> {
-                            renderer.transformFirstPersonItem(equip, 0.0F);
+                            this.transformFirstPersonItem(equip, 0.0F);
                             renderer.doBlockTransformations();
                             GlStateManager.rotate(-factor1 * 140.0f, 8.0f, 0.0f, 8.0f);
                             GlStateManager.rotate(factor1 * 90.0f, 8.0f, 0.0f, 8.0f);
                         }
 
                         case PUNCH -> {
-                            renderer.transformFirstPersonItem(equip, 0.0F);
+                            this.transformFirstPersonItem(equip, 0.0F);
                             renderer.doBlockTransformations();
                             GlStateManager.rotate(-factor1 * 30.0f, -5.0f, 0.0f, 9.0f);
                             GlStateManager.rotate(-factor1 * 10.0f, 1.0f, -0.4f, -0.5f);
@@ -154,7 +170,7 @@ public class ItemAnimations extends Module {
                         case DORT -> {
                             final float dort = MathHelper.sin((float) (swingProgress * swingProgress * Math.PI - 3));
 
-                            renderer.transformFirstPersonItem(equip, 1.0F);
+                            this.transformFirstPersonItem(equip, 1.0F);
                             GlStateManager.rotate(-factor1 * 10, 0.0f, 15.0f, 200.0f);
                             GlStateManager.rotate(-factor1 * 10f, 300.0f, factor1 / 2.0f, 1.0f);
                             renderer.doBlockTransformations();
@@ -164,7 +180,7 @@ public class ItemAnimations extends Module {
                         }
 
                         case DOWN -> {
-                            renderer.transformFirstPersonItem(equip, 0.0F);
+                            this.transformFirstPersonItem(equip, 0.0F);
                             renderer.doBlockTransformations();
                             GlStateManager.translate(-0.05f, 0.2f, 0.2f);
                             GlStateManager.rotate(-factor1 * 70.0f / 2.0f, -8.0f, -0.0f, 9.0f);
@@ -172,13 +188,13 @@ public class ItemAnimations extends Module {
                         }
 
                         case SLIDE -> {
-                            renderer.transformFirstPersonItem(equip, 0.0F);
+                            this.transformFirstPersonItem(equip, 0.0F);
                             GlStateManager.rotate(factor1 * 45.0F, -factor1, 0.3F, 0.0F);
                             renderer.doBlockTransformations();
                         }
 
                         case SIGMA -> {
-                            renderer.transformFirstPersonItem(equip, 0.0F);
+                            this.transformFirstPersonItem(equip, 0.0F);
                             GlStateManager.rotate(-factor1 * 55 / 2.0F, -8.0F, -0.0F, 9.0F);
                             GlStateManager.rotate(-factor1 * 45, 1.0F, factor1 / 2, -0.0F);
                             renderer.doBlockTransformations();
@@ -187,7 +203,7 @@ public class ItemAnimations extends Module {
                         }
 
                         case LEAKED -> {
-                            renderer.transformFirstPersonItem(equip, 0.0F);
+                            this.transformFirstPersonItem(equip, 0.0F);
                             GlStateManager.scale(0.8f, 0.8f, 0.8f);
                             GlStateManager.translate(0, 0.1f, 0);
                             renderer.doBlockTransformations();
@@ -196,7 +212,7 @@ public class ItemAnimations extends Module {
                         }
 
                         case REACTOR -> {
-                            renderer.transformFirstPersonItem(equip, 0.0F);
+                            this.transformFirstPersonItem(equip, 0.0F);
                             GlStateManager.rotate(-factor1 * 20.0F, factor1 / 2.0F, 0.0F, 9.0F);
                             GlStateManager.rotate(-factor1 * 30.0F, 1.0F, factor1 / 2, 0.0F);
                             GlStateManager.rotate(-factor1 * 42.0F, 1.5F, (factor1 / 1.2f), 0F);
@@ -204,7 +220,7 @@ public class ItemAnimations extends Module {
                         }
 
                         default -> {
-                            renderer.transformFirstPersonItem(equip, 0.0F);
+                            this.transformFirstPersonItem(equip, 0.0F);
                             renderer.doBlockTransformations();
                         }
 
@@ -212,7 +228,7 @@ public class ItemAnimations extends Module {
                 }
 
                 case BOW -> {
-                    renderer.transformFirstPersonItem(equipProgress, 0.0F);
+                    this.transformFirstPersonItem(equipProgress, 0.0F);
                     renderer.doBowTransformations(partialTicks, player);
                 }
             }
@@ -224,7 +240,7 @@ public class ItemAnimations extends Module {
             }
 
             renderer.doSwingTransformations(swingProgress);
-            renderer.transformFirstPersonItem(equipProgress, swingProgress);
+            this.transformFirstPersonItem(equipProgress, swingProgress);
         }
 
     }

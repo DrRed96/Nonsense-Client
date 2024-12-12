@@ -24,6 +24,8 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
+import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.module.impl.visual.Xray;
 
 public class BlockStairs extends Block
 {
@@ -576,8 +578,12 @@ public class BlockStairs extends Block
         return this.modelBlock.getExplosionResistance(exploder);
     }
 
+    @Override
     public EnumWorldBlockLayer getBlockLayer()
     {
+        if (Nonsense.module(Xray.class).isToggled()) {
+            return super.getBlockLayer();
+        }
         return this.modelBlock.getBlockLayer();
     }
 

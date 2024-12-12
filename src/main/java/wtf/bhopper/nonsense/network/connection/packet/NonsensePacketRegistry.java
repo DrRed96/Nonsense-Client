@@ -5,13 +5,17 @@ import com.google.common.collect.HashBiMap;
 import com.google.common.collect.Maps;
 import net.minecraft.network.EnumPacketDirection;
 import org.apache.logging.log4j.LogManager;
+import wtf.bhopper.nonsense.network.connection.packet.client.C00PacketNonsenseLogin;
+import wtf.bhopper.nonsense.network.connection.packet.server.S00PacketNonsenseLoginResult;
 
 import java.util.Map;
 
 public enum NonsensePacketRegistry {
     PACKETS {
         {
+            this.registerPacket(EnumPacketDirection.CLIENTBOUND, S00PacketNonsenseLoginResult.class);
 
+            this.registerPacket(EnumPacketDirection.SERVERBOUND, C00PacketNonsenseLogin.class);
         }
     };
 

@@ -32,6 +32,11 @@ public class ColorUtil {
         return Color.HSBtoRGB(hue, saturation, brightness);
     }
 
+    public static int exhiRainbow(long timeMS, int count) {
+        float hue = (float) ((timeMS / 4L + (count * 9L)) % 256) / 255.0F;
+        return Color.HSBtoRGB(hue, 0.55F, 0.9F);
+    }
+
     public static int wave(int color, long timeMS, int count) {
         float factor = Math.abs((((timeMS * 2L) - count * 500L) % 8000) / 8000.0F - 0.5F) + 0.5F;
         Color awt = new Color(color);
@@ -58,10 +63,10 @@ public class ColorUtil {
 
     public static Color interpolate(Color current, Color target, int speed, float delta) {
         return new Color(
-                MathUtil.incrementTo(current.getRed(), target.getRed(), (int)(speed * delta)),
-                MathUtil.incrementTo(current.getGreen(), target.getGreen(), (int)(speed * delta)),
-                MathUtil.incrementTo(current.getBlue(), target.getBlue(), (int)(speed * delta)),
-                MathUtil.incrementTo(current.getAlpha(), target.getAlpha(), (int)(speed * delta))
+                MathUtil.incrementTo(current.getRed(), target.getRed(), (int) (speed * delta)),
+                MathUtil.incrementTo(current.getGreen(), target.getGreen(), (int) (speed * delta)),
+                MathUtil.incrementTo(current.getBlue(), target.getBlue(), (int) (speed * delta)),
+                MathUtil.incrementTo(current.getAlpha(), target.getAlpha(), (int) (speed * delta))
         );
     }
 
@@ -79,6 +84,13 @@ public class ColorUtil {
         hsb[1] = MathHelper.clamp_float(hsb[1] * s, 0.0F, 1.0F);
         hsb[2] = MathHelper.clamp_float(hsb[2] * b, 0.0F, 1.0F);
         return alpha(Color.HSBtoRGB(hsb[0], hsb[1], hsb[2]), awt.getAlpha());
+    }
+
+    public static int get(int red, int green, int blue, int alpha) {
+        return (MathHelper.clamp_int(alpha, 0, 255) << 24)
+                | (MathHelper.clamp_int(red, 0, 255) << 16)
+                | (MathHelper.clamp_int(green, 0, 255) << 8)
+                | (MathHelper.clamp_int(blue, 0, 255));
     }
 
 

@@ -198,10 +198,10 @@ public abstract class EntityPlayer extends EntityLivingBase
     protected void entityInit()
     {
         super.entityInit();
-        this.dataWatcher.addObject(16, Byte.valueOf((byte)0));
-        this.dataWatcher.addObject(17, Float.valueOf(0.0F));
-        this.dataWatcher.addObject(18, Integer.valueOf(0));
-        this.dataWatcher.addObject(10, Byte.valueOf((byte)0));
+        this.dataWatcher.addObject(16, (byte) 0);
+        this.dataWatcher.addObject(17, 0.0F);
+        this.dataWatcher.addObject(18, 0);
+        this.dataWatcher.addObject(10, (byte) 0);
     }
 
     /**
@@ -623,7 +623,7 @@ public abstract class EntityPlayer extends EntityLivingBase
 
         if (!this.worldObj.isRemote)
         {
-            iattributeinstance.setBaseValue((double)this.capabilities.getWalkSpeed());
+            iattributeinstance.setBaseValue(this.capabilities.getWalkSpeed());
         }
 
         this.jumpMovementFactor = this.speedInAir;
@@ -635,7 +635,7 @@ public abstract class EntityPlayer extends EntityLivingBase
 
         this.setAIMoveSpeed((float)iattributeinstance.getAttributeValue());
         float f = MathHelper.sqrt_double(this.motionX * this.motionX + this.motionZ * this.motionZ);
-        float f1 = (float)(Math.atan(-this.motionY * 0.20000000298023224D) * 15.0D);
+        float f1 = (float)(Math.atan(-this.motionY * 0.2D) * 15.0D);
 
         if (f > 0.1F)
         {
@@ -782,7 +782,7 @@ public abstract class EntityPlayer extends EntityLivingBase
         for (ScoreObjective scoreobjective : collection)
         {
             Score score = this.getWorldScoreboard().getValueFromObjective(this.getName(), scoreobjective);
-            score.func_96648_a();
+            score.tryIncrementScore();
         }
     }
 
@@ -799,7 +799,7 @@ public abstract class EntityPlayer extends EntityLivingBase
                 for (ScoreObjective scoreobjective : this.getWorldScoreboard().getObjectivesFromCriteria(IScoreObjectiveCriteria.field_178793_i[i]))
                 {
                     Score score = this.getWorldScoreboard().getValueFromObjective(p_175137_1_.getName(), scoreobjective);
-                    score.func_96648_a();
+                    score.tryIncrementScore();
                 }
             }
         }

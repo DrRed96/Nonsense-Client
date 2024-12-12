@@ -38,9 +38,9 @@ public class BlockEndPortal extends BlockContainer
         this.setBlockBounds(0.0F, 0.0F, 0.0F, 1.0F, f, 1.0F);
     }
 
-    public boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
+    public boolean shouldSideBeRenderedVanilla(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
     {
-        return side == EnumFacing.DOWN ? super.shouldSideBeRendered(worldIn, pos, side) : false;
+        return side == EnumFacing.DOWN ? super.shouldSideBeRenderedVanilla(worldIn, pos, side) : false;
     }
 
     /**

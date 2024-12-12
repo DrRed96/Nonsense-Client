@@ -13,7 +13,6 @@ import io.netty.channel.Channel;
 import io.netty.channel.ChannelException;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelFutureListener;
-import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -81,8 +80,8 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
         }
     };
     private final EnumPacketDirection direction;
-    private final Queue<NetworkManager.InboundHandlerTuplePacketListener> outboundPacketsQueue = Queues.<NetworkManager.InboundHandlerTuplePacketListener>newConcurrentLinkedQueue();
-    private final ReentrantReadWriteLock field_181680_j = new ReentrantReadWriteLock();
+    private final Queue<NetworkManager.InboundHandlerTuplePacketListener> outboundPacketsQueue = Queues.newConcurrentLinkedQueue();
+    private final ReentrantReadWriteLock lock = new ReentrantReadWriteLock();
 
     /**
      * The active channel
@@ -118,7 +117,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
         try {
             this.setConnectionState(EnumConnectionState.HANDSHAKING);
         } catch (Throwable throwable) {
-            logger.fatal((Object) throwable);
+            logger.fatal(throwable);
         }
     }
 
@@ -177,12 +176,12 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
             this.flushOutboundQueue();
             this.dispatchPacket(packetIn, null);
         } else {
-            this.field_181680_j.writeLock().lock();
+            this.lock.writeLock().lock();
 
             try {
                 this.outboundPacketsQueue.add(new NetworkManager.InboundHandlerTuplePacketListener(packetIn, (GenericFutureListener[]) null));
             } finally {
-                this.field_181680_j.writeLock().unlock();
+                this.lock.writeLock().unlock();
             }
         }
     }
@@ -192,12 +191,12 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
             this.flushOutboundQueue();
             this.dispatchPacket(packetIn, ArrayUtils.add(listeners, 0, listener));
         } else {
-            this.field_181680_j.writeLock().lock();
+            this.lock.writeLock().lock();
 
             try {
                 this.outboundPacketsQueue.add(new NetworkManager.InboundHandlerTuplePacketListener(packetIn, ArrayUtils.add(listeners, 0, listener)));
             } finally {
-                this.field_181680_j.writeLock().unlock();
+                this.lock.writeLock().unlock();
             }
         }
     }
@@ -249,7 +248,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
      */
     private void flushOutboundQueue() {
         if (this.channel != null && this.channel.isOpen()) {
-            this.field_181680_j.readLock().lock();
+            this.lock.readLock().lock();
 
             try {
                 while (!this.outboundPacketsQueue.isEmpty()) {
@@ -257,7 +256,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
                     this.dispatchPacket(listener.packet, listener.futureListeners);
                 }
             } finally {
-                this.field_181680_j.readLock().unlock();
+                this.lock.readLock().unlock();
             }
         }
     }

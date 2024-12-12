@@ -7,12 +7,19 @@ import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.script.api.lua.ClientLuaApi;
 import wtf.bhopper.nonsense.script.api.lua.PlayerLuaApi;
 import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
+import wtf.bhopper.nonsense.util.misc.CaughtRunnable;
 
+import javax.script.ScriptEngine;
+import javax.script.ScriptEngineManager;
+import javax.script.ScriptException;
 import java.io.File;
+import java.io.FileReader;
+import java.io.Reader;
 
 public class ScriptManager {
 
     public static final Globals LUA = JsePlatform.standardGlobals();
+    public static final ScriptEngine JAVASCRIPT = new ScriptEngineManager().getEngineByName("nashorn");
 
     private final File scriptDir;
 
@@ -26,7 +33,16 @@ public class ScriptManager {
     }
 
     public void loadScript(Script script) {
-        runScriptLua(() -> LUA.loadfile(script.file.getAbsolutePath()).call());
+        String name = script.file.getName();
+        if (name.endsWith(".lua")) {
+            runScriptLua(() -> LUA.loadfile(script.file.getAbsolutePath()).call());
+        } else if (name.endsWith(".js")) {
+            runScriptJs(() -> {
+                try (Reader reader = new FileReader(script.file)) {
+                    JAVASCRIPT.eval(reader);
+                }
+            });
+        }
     }
 
     public static void runScriptLua(Runnable runnable) {
@@ -37,7 +53,19 @@ public class ScriptManager {
             Nonsense.LOGGER.error("Lua Error in script ", luaError);
         } catch (Throwable throwable) {
             ChatUtil.error("Java Error: %s", throwable.getMessage());
-            Nonsense.LOGGER.error("Java Error in script", throwable);
+            Nonsense.LOGGER.error("Java Error in Lua script", throwable);
+        }
+    }
+
+    public static void runScriptJs(CaughtRunnable runnable) {
+        try {
+            runnable.run();
+        } catch (ScriptException exception) {
+            ChatUtil.error("Script Exception (%d:%d): %s", exception.getLineNumber(), exception.getColumnNumber(), exception.getMessage());
+            Nonsense.LOGGER.error("Script Exception", exception);
+        } catch (Throwable throwable) {
+            ChatUtil.error("Java Error: %s", throwable.getMessage());
+            Nonsense.LOGGER.error("Java Error in JS script", throwable);
         }
     }
 

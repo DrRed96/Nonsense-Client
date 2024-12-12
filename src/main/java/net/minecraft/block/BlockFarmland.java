@@ -122,7 +122,7 @@ public class BlockFarmland extends Block
         }
     }
 
-    public boolean shouldSideBeRendered(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
+    public boolean shouldSideBeRenderedVanilla(IBlockAccess worldIn, BlockPos pos, EnumFacing side)
     {
         switch (side)
         {
@@ -137,7 +137,7 @@ public class BlockFarmland extends Block
                 return !block.isOpaqueCube() && block != Blocks.farmland;
 
             default:
-                return super.shouldSideBeRendered(worldIn, pos, side);
+                return super.shouldSideBeRenderedVanilla(worldIn, pos, side);
         }
     }
 

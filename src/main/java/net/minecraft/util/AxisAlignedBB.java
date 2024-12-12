@@ -21,12 +21,12 @@ public class AxisAlignedBB
 
     public AxisAlignedBB(BlockPos pos1, BlockPos pos2)
     {
-        this.minX = (double)pos1.getX();
-        this.minY = (double)pos1.getY();
-        this.minZ = (double)pos1.getZ();
-        this.maxX = (double)pos2.getX();
-        this.maxY = (double)pos2.getY();
-        this.maxZ = (double)pos2.getZ();
+        this.minX = pos1.getX();
+        this.minY = pos1.getY();
+        this.minZ = pos1.getZ();
+        this.maxX = pos2.getX();
+        this.maxY = pos2.getY();
+        this.maxZ = pos2.getZ();
     }
 
     /**
@@ -232,7 +232,7 @@ public class AxisAlignedBB
      */
     public boolean intersectsWith(AxisAlignedBB other)
     {
-        return other.maxX > this.minX && other.minX < this.maxX ? (other.maxY > this.minY && other.minY < this.maxY ? other.maxZ > this.minZ && other.minZ < this.maxZ : false) : false;
+        return other.maxX > this.minX && other.minX < this.maxX && other.maxY > this.minY && other.minY < this.maxY && other.maxZ > this.minZ && other.minZ < this.maxZ;
     }
 
     /**
@@ -240,7 +240,7 @@ public class AxisAlignedBB
      */
     public boolean isVecInside(Vec3 vec)
     {
-        return vec.xCoord > this.minX && vec.xCoord < this.maxX ? (vec.yCoord > this.minY && vec.yCoord < this.maxY ? vec.zCoord > this.minZ && vec.zCoord < this.maxZ : false) : false;
+        return vec.xCoord > this.minX && vec.xCoord < this.maxX && vec.yCoord > this.minY && vec.yCoord < this.maxY && vec.zCoord > this.minZ && vec.zCoord < this.maxZ;
     }
 
     /**
@@ -345,7 +345,7 @@ public class AxisAlignedBB
         }
         else
         {
-            EnumFacing enumfacing = null;
+            EnumFacing enumfacing;
 
             if (vec36 == vec3)
             {
@@ -381,7 +381,7 @@ public class AxisAlignedBB
      */
     private boolean isVecInYZ(Vec3 vec)
     {
-        return vec == null ? false : vec.yCoord >= this.minY && vec.yCoord <= this.maxY && vec.zCoord >= this.minZ && vec.zCoord <= this.maxZ;
+        return vec != null && vec.yCoord >= this.minY && vec.yCoord <= this.maxY && vec.zCoord >= this.minZ && vec.zCoord <= this.maxZ;
     }
 
     /**
@@ -389,7 +389,7 @@ public class AxisAlignedBB
      */
     private boolean isVecInXZ(Vec3 vec)
     {
-        return vec == null ? false : vec.xCoord >= this.minX && vec.xCoord <= this.maxX && vec.zCoord >= this.minZ && vec.zCoord <= this.maxZ;
+        return vec != null && vec.xCoord >= this.minX && vec.xCoord <= this.maxX && vec.zCoord >= this.minZ && vec.zCoord <= this.maxZ;
     }
 
     /**
@@ -397,7 +397,7 @@ public class AxisAlignedBB
      */
     private boolean isVecInXY(Vec3 vec)
     {
-        return vec == null ? false : vec.xCoord >= this.minX && vec.xCoord <= this.maxX && vec.yCoord >= this.minY && vec.yCoord <= this.maxY;
+        return vec != null && vec.xCoord >= this.minX && vec.xCoord <= this.maxX && vec.yCoord >= this.minY && vec.yCoord <= this.maxY;
     }
 
     public String toString()
@@ -405,7 +405,7 @@ public class AxisAlignedBB
         return "box[" + this.minX + ", " + this.minY + ", " + this.minZ + " -> " + this.maxX + ", " + this.maxY + ", " + this.maxZ + "]";
     }
 
-    public boolean func_181656_b()
+    public boolean isNaN()
     {
         return Double.isNaN(this.minX) || Double.isNaN(this.minY) || Double.isNaN(this.minZ) || Double.isNaN(this.maxX) || Double.isNaN(this.maxY) || Double.isNaN(this.maxZ);
     }

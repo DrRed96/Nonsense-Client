@@ -19,6 +19,8 @@ import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
 import wtf.bhopper.nonsense.util.misc.CustomCollectors;
 import wtf.bhopper.nonsense.util.misc.GeneralUtil;
 
+import java.util.Objects;
+
 @ModuleInfo(name = "Announcer", description = "Announces things in chat.", category = ModuleCategory.OTHER)
 public class Announcer extends Module {
 
@@ -38,7 +40,7 @@ public class Announcer extends Module {
     @EventLink
     public final Listener<EventReceivePacket> onReceivePacket = event -> {
 
-        if (!PlayerUtil.canUpdate()) {
+        if (!PlayerUtil.canUpdate() || mc.thePlayer.ticksExisted < 20) {
             return;
         }
 
@@ -57,8 +59,8 @@ public class Announcer extends Module {
         if (event.packet instanceof S38PacketPlayerListItem packet) {
 
             if (this.joins.get()) {
-                switch (packet.getAction()) {
-                    case ADD_PLAYER -> ChatUtil.send("%s, %s.", GeneralUtil.randomElement(WELCOME_MESSAGES), String.join(", ", packet.getPlayers()
+                if (packet.getAction() == S38PacketPlayerListItem.Action.ADD_PLAYER) {
+                    ChatUtil.send("%s, %s.", GeneralUtil.randomElement(WELCOME_MESSAGES), String.join(", ", packet.getPlayers()
                             .stream()
                             .collect(CustomCollectors.stringList(data -> data.getProfile().getName()))));
                 }

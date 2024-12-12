@@ -1236,9 +1236,9 @@ public class EntityHorse extends EntityAnimal implements IInvBasic
         this.setHorseWatchableBoolean(32, eating);
     }
 
-    public void setEatingHaystack(boolean p_110227_1_)
+    public void setEatingHaystack(boolean eating)
     {
-        this.setEating(p_110227_1_);
+        this.setEating(eating);
     }
 
     public void setRearing(boolean rearing)
