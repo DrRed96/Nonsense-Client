@@ -23,12 +23,13 @@ public class ScoreboardMod extends Module {
     private final BooleanProperty noScore = new BooleanProperty("No Score", "Prevents the score (red numbers) from rendering.", true);
     private final BooleanProperty noBackground = new BooleanProperty("No Background", "Prevents the background from rendering.", false);
     private final BooleanProperty novoline = new BooleanProperty("Novoline", "Does the Novoline thing lol", false);
+    private final BooleanProperty moduleListFix = new BooleanProperty("Module List Fix", "Prevents the scoreboard from overlapping with the module list", true);
 
     public ScoreboardMod() {
-        this.addProperties(this.shadow, this.noScore, this.noBackground, this.novoline);
+        this.autoAddProperties();
     }
 
-    public void drawScoreboard(ScaledResolution scaledRes, ScoreObjective objective, Scoreboard scoreboard, List<Score> scores) {
+    public void drawScoreboard(ScaledResolution scaledRes, ScoreObjective objective, Scoreboard scoreboard, List<Score> scores, int minY) {
         FontRenderer font = mc.fontRendererObj;
 
         int objectiveWidth = font.getStringWidth(objective.getDisplayName());
@@ -53,6 +54,10 @@ public class ScoreboardMod extends Module {
         byte b0 = 3;
         int j = scaledRes.getScaledWidth() - objectiveWidth - b0;
         int scoreIndex = 0;
+
+        if (this.moduleListFix.get()) {
+            k1 = Math.max(k1, minY + j1 + font.FONT_HEIGHT + 2);
+        }
 
         for (Score score : scores) {
             ++scoreIndex;

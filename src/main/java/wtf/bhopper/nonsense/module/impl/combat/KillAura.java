@@ -207,7 +207,7 @@ public class KillAura extends Module {
                     mc.thePlayer.onCriticalHit(this.target);
                 }
 
-                if (EnchantmentHelper.func_152377_a(mc.thePlayer.getHeldItem(), this.target.getCreatureAttribute()) > 0.0F) {
+                if (EnchantmentHelper.getLivingModifier(mc.thePlayer.getHeldItem(), this.target.getCreatureAttribute()) > 0.0F) {
                     mc.thePlayer.onEnchantmentCritical(this.target);
                 }
 

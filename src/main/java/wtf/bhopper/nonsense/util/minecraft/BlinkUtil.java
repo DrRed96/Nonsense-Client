@@ -6,6 +6,7 @@ import wtf.bhopper.nonsense.event.EventPriorities;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
 import wtf.bhopper.nonsense.event.impl.EventSendPacket;
+import wtf.bhopper.nonsense.event.impl.EventTick;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
@@ -22,6 +23,14 @@ public enum BlinkUtil {
         if (this.blink && !event.isCancelled()) {
             this.chokedPackets.add(event.packet);
             event.cancel();
+        }
+    };
+
+    @EventLink
+    public final Listener<EventTick> onTick = _ -> {
+        if (!PlayerUtil.canUpdate() && this.blink) {
+            this.blink = false;
+            this.chokedPackets.clear();
         }
     };
 

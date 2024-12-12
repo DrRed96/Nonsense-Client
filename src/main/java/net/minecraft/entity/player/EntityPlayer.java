@@ -1296,55 +1296,48 @@ public abstract class EntityPlayer extends EntityLivingBase
         {
             if (!targetEntity.hitByEntity(this))
             {
-                float f = (float)this.getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue();
-                int i = 0;
-                float f1 = 0.0F;
+                float attackDamage = (float)this.getEntityAttribute(SharedMonsterAttributes.attackDamage).getAttributeValue();
+                int knockback = 0;
+                float enchantmentModifier = targetEntity instanceof EntityLivingBase targetEntityLiving
+                        ? EnchantmentHelper.getLivingModifier(this.getHeldItem(), targetEntityLiving.getCreatureAttribute())
+                        : EnchantmentHelper.getLivingModifier(this.getHeldItem(), EnumCreatureAttribute.UNDEFINED);
 
-                if (targetEntity instanceof EntityLivingBase)
-                {
-                    f1 = EnchantmentHelper.func_152377_a(this.getHeldItem(), ((EntityLivingBase)targetEntity).getCreatureAttribute());
-                }
-                else
-                {
-                    f1 = EnchantmentHelper.func_152377_a(this.getHeldItem(), EnumCreatureAttribute.UNDEFINED);
-                }
-
-                i = i + EnchantmentHelper.getKnockbackModifier(this);
+                knockback += EnchantmentHelper.getKnockbackModifier(this);
 
                 if (this.isSprinting())
                 {
-                    ++i;
+                    ++knockback;
                 }
 
-                if (f > 0.0F || f1 > 0.0F)
+                if (attackDamage > 0.0F || enchantmentModifier > 0.0F)
                 {
-                    boolean flag = this.fallDistance > 0.0F && !this.onGround && !this.isOnLadder() && !this.isInWater() && !this.isPotionActive(Potion.blindness) && this.ridingEntity == null && targetEntity instanceof EntityLivingBase;
+                    boolean critical = this.fallDistance > 0.0F && !this.onGround && !this.isOnLadder() && !this.isInWater() && !this.isPotionActive(Potion.blindness) && this.ridingEntity == null && targetEntity instanceof EntityLivingBase;
 
-                    if (flag && f > 0.0F)
+                    if (critical && attackDamage > 0.0F)
                     {
-                        f *= 1.5F;
+                        attackDamage *= 1.5F;
                     }
 
-                    f = f + f1;
+                    attackDamage = attackDamage + enchantmentModifier;
                     boolean flag1 = false;
-                    int j = EnchantmentHelper.getFireAspectModifier(this);
+                    int fireAspect = EnchantmentHelper.getFireAspectModifier(this);
 
-                    if (targetEntity instanceof EntityLivingBase && j > 0 && !targetEntity.isBurning())
+                    if (targetEntity instanceof EntityLivingBase && fireAspect > 0 && !targetEntity.isBurning())
                     {
                         flag1 = true;
                         targetEntity.setFire(1);
                     }
 
-                    double d0 = targetEntity.motionX;
-                    double d1 = targetEntity.motionY;
-                    double d2 = targetEntity.motionZ;
-                    boolean flag2 = targetEntity.attackEntityFrom(DamageSource.causePlayerDamage(this), f);
+                    double mx = targetEntity.motionX;
+                    double my = targetEntity.motionY;
+                    double mz = targetEntity.motionZ;
+                    boolean attacked = targetEntity.attackEntityFrom(DamageSource.causePlayerDamage(this), attackDamage);
 
-                    if (flag2)
+                    if (attacked)
                     {
-                        if (i > 0)
+                        if (knockback > 0)
                         {
-                            targetEntity.addVelocity(-MathHelper.sin(this.rotationYaw * (float)Math.PI / 180.0F) * (float)i * 0.5F, 0.1D, MathHelper.cos(this.rotationYaw * (float)Math.PI / 180.0F) * (float)i * 0.5F);
+                            targetEntity.addVelocity(-MathHelper.sin(this.rotationYaw * (float)Math.PI / 180.0F) * (float)knockback * 0.5F, 0.1D, MathHelper.cos(this.rotationYaw * (float)Math.PI / 180.0F) * (float)knockback * 0.5F);
 
                             if (!Nonsense.module(Sprint.class).keepSprint()) {
                                 this.motionX *= 0.6;
@@ -1353,26 +1346,26 @@ public abstract class EntityPlayer extends EntityLivingBase
                             }
                         }
 
-                        if (targetEntity instanceof EntityPlayerMP && targetEntity.velocityChanged)
+                        if (targetEntity instanceof EntityPlayerMP targetEntityMP && targetEntity.velocityChanged)
                         {
-                            ((EntityPlayerMP)targetEntity).playerNetServerHandler.sendPacket(new S12PacketEntityVelocity(targetEntity));
+                            targetEntityMP.playerNetServerHandler.sendPacket(new S12PacketEntityVelocity(targetEntity));
                             targetEntity.velocityChanged = false;
-                            targetEntity.motionX = d0;
-                            targetEntity.motionY = d1;
-                            targetEntity.motionZ = d2;
+                            targetEntity.motionX = mx;
+                            targetEntity.motionY = my;
+                            targetEntity.motionZ = mz;
                         }
 
-                        if (flag)
+                        if (critical)
                         {
                             this.onCriticalHit(targetEntity);
                         }
 
-                        if (f1 > 0.0F)
+                        if (enchantmentModifier > 0.0F)
                         {
                             this.onEnchantmentCritical(targetEntity);
                         }
 
-                        if (f >= 18.0F)
+                        if (attackDamage >= 18.0F)
                         {
                             this.triggerAchievement(AchievementList.overkill);
                         }
@@ -1410,11 +1403,11 @@ public abstract class EntityPlayer extends EntityLivingBase
 
                         if (targetEntity instanceof EntityLivingBase)
                         {
-                            this.addStat(StatList.damageDealtStat, Math.round(f * 10.0F));
+                            this.addStat(StatList.damageDealtStat, Math.round(attackDamage * 10.0F));
 
-                            if (j > 0)
+                            if (fireAspect > 0)
                             {
-                                targetEntity.setFire(j * 4);
+                                targetEntity.setFire(fireAspect * 4);
                             }
                         }
 

@@ -280,7 +280,7 @@ public class GuiIngame extends Gui {
 
         }
 
-        Nonsense.getHud().moduleList.draw(partialTicks, scaledRes);
+        int minY = Nonsense.getHud().moduleList.draw(partialTicks, scaledRes) / scaledRes.getScaleFactor();
 
         Scoreboard scoreboard = this.mc.theWorld.getScoreboard();
         ScoreObjective scoreobjective = null;
@@ -297,7 +297,7 @@ public class GuiIngame extends Gui {
         ScoreObjective scoreobjective1 = scoreobjective != null ? scoreobjective : scoreboard.getObjectiveInDisplaySlot(1);
 
         if (scoreobjective1 != null) {
-            this.renderScoreboard(scoreobjective1, scaledRes);
+            this.renderScoreboard(scoreobjective1, scaledRes, minY);
         }
 
         Nonsense.getHud().watermark.draw(scaledRes);
@@ -478,7 +478,7 @@ public class GuiIngame extends Gui {
         }
     }
 
-    private void renderScoreboard(ScoreObjective objective, ScaledResolution scaledRes) {
+    private void renderScoreboard(ScoreObjective objective, ScaledResolution scaledRes, int minY) {
         Scoreboard scoreboard = objective.getScoreboard();
         Collection<Score> collection = scoreboard.getSortedScores(objective);
         ArrayList<Score> unsortedScores = collection.stream()
@@ -494,7 +494,7 @@ public class GuiIngame extends Gui {
 
         ScoreboardMod mod = Nonsense.module(ScoreboardMod.class);
         if (mod.isToggled()) {
-            mod.drawScoreboard(scaledRes, objective, scoreboard, scores);
+            mod.drawScoreboard(scaledRes, objective, scoreboard, scores, minY);
             return;
         }
 

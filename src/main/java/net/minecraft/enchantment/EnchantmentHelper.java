@@ -212,7 +212,7 @@ public class EnchantmentHelper
         return (enchantmentModifierDamage.damageModifier + 1 >> 1) + enchantmentRand.nextInt((enchantmentModifierDamage.damageModifier >> 1) + 1);
     }
 
-    public static float func_152377_a(ItemStack stack, EnumCreatureAttribute attribute)
+    public static float getLivingModifier(ItemStack stack, EnumCreatureAttribute attribute)
     {
         enchantmentModifierLiving.livingModifier = 0.0F;
         enchantmentModifierLiving.entityLiving = attribute;

@@ -121,17 +121,23 @@ public class InfiniteAura extends Module {
                 PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(point.xCoord, point.yCoord, point.zCoord, mc.thePlayer.onGround));
             }
 
+            // Temporarily set the players position to the spoofed position so module like critical's don't mess up the attack
+            Vec3 prevPos = mc.thePlayer.getPositionVector();
+            mc.thePlayer.setPosition(path.getLast().xCoord, path.getLast().yCoord, path.getLast().zCoord);
+
             PacketUtil.leftClickPackets(new MovingObjectPosition(this.target, MathUtil.closestPoint(this.target.getEntityBoundingBox(), PlayerUtil.eyesPos())), true);
             if (this.particles.get()) {
                 if (Nonsense.module(Criticals.class).isToggled() || (mc.thePlayer.fallDistance > 0.0F && !mc.thePlayer.onGround && !mc.thePlayer.isOnLadder() && !mc.thePlayer.isInWater() && !mc.thePlayer.isPotionActive(Potion.blindness) && mc.thePlayer.ridingEntity == null)) {
                     mc.thePlayer.onCriticalHit(this.target);
                 }
 
-                if (EnchantmentHelper.func_152377_a(mc.thePlayer.getHeldItem(), this.target.getCreatureAttribute()) > 0.0F) {
+                if (EnchantmentHelper.getLivingModifier(mc.thePlayer.getHeldItem(), this.target.getCreatureAttribute()) > 0.0F) {
                     mc.thePlayer.onEnchantmentCritical(this.target);
                 }
 
             }
+
+            mc.thePlayer.setPosition(prevPos.xCoord, prevPos.yCoord, prevPos.zCoord);
 
             for (int i = path.size() - 2; i > 0; i--) {
                 Vec3 point = path.get(i);

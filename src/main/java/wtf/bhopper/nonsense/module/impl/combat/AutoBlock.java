@@ -53,6 +53,7 @@ public class AutoBlock extends Module {
 
     private boolean blocking = false;
     private MovingObjectPosition mouseOver = null;
+    private boolean blinking = false;
 
     public AutoBlock() {
         this.targetsGroup.addProperties(this.players, this.mobs, this.animals, this.others, this.invis, this.dead, this.teams);
@@ -76,6 +77,12 @@ public class AutoBlock extends Module {
     public void onDisable() {
         this.blocking = false;
         this.mouseOver = null;
+
+        if (this.blinking) {
+            this.blinking = false;
+            BlinkUtil.disableBlink();
+        }
+
     }
 
     @EventLink
@@ -110,6 +117,7 @@ public class AutoBlock extends Module {
 
                     if (this.canBlock() && this.blink.get() && !BlinkUtil.isBlinking()) {
                         BlinkUtil.enableBlink();
+                        this.blinking = true;
                     }
 
                     PacketUtil.send(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
@@ -149,6 +157,7 @@ public class AutoBlock extends Module {
 
                     if (this.blink.get() && BlinkUtil.isBlinking() && !this.blocking) {
                         BlinkUtil.disableBlink();
+                        this.blinking = false;
                     }
 
                     if (this.canBlock() && event.mouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && !this.blocking) {
@@ -176,6 +185,11 @@ public class AutoBlock extends Module {
             mc.thePlayer.setItemInUse(mc.thePlayer.getHeldItem(), 72000);
         } else {
             this.mouseOver = null;
+        }
+
+        if (!this.canBlock() && this.blinking) {
+            BlinkUtil.disableBlink();
+            this.blinking = false;
         }
 
         switch (this.mode.get()) {

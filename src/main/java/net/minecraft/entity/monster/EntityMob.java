@@ -108,7 +108,7 @@ public abstract class EntityMob extends EntityCreature implements IMob
 
         if (entityIn instanceof EntityLivingBase)
         {
-            f += EnchantmentHelper.func_152377_a(this.getHeldItem(), ((EntityLivingBase)entityIn).getCreatureAttribute());
+            f += EnchantmentHelper.getLivingModifier(this.getHeldItem(), ((EntityLivingBase)entityIn).getCreatureAttribute());
             i += EnchantmentHelper.getKnockbackModifier(this);
         }
 

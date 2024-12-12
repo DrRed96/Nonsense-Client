@@ -1,6 +1,8 @@
 package net.minecraft.util;
 
 import net.minecraft.client.settings.GameSettings;
+import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.event.impl.EventMovementInput;
 
 public class MovementInputFromOptions extends MovementInput
 {
@@ -44,5 +46,12 @@ public class MovementInputFromOptions extends MovementInput
             this.moveStrafe = (float)((double)this.moveStrafe * 0.3D);
             this.moveForward = (float)((double)this.moveForward * 0.3D);
         }
+
+        EventMovementInput event = new EventMovementInput(this.moveForward, this.moveStrafe, this.jump, this.sneak);
+        Nonsense.getEventBus().post(event);
+        this.moveForward = event.forwards;
+        this.moveStrafe = event.strafe;
+        this.jump = event.jump;
+        this.sneak = event.sneak;
     }
 }
