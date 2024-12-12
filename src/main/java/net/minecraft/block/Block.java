@@ -545,8 +545,15 @@ public class Block {
      * Get the hardness of this Block relative to the ability of the given player
      */
     public float getPlayerRelativeBlockHardness(EntityPlayer playerIn, World worldIn, BlockPos pos) {
-        float f = this.getBlockHardness(worldIn, pos);
-        return f < 0.0F ? 0.0F : (!playerIn.canHarvestBlock(this) ? playerIn.getToolDigEfficiency(this) / f / 100.0F : playerIn.getToolDigEfficiency(this) / f / 30.0F);
+        float hardness = this.getBlockHardness(worldIn, pos);
+
+        if (hardness < 0.0F) {
+            return 0.0F;
+        }
+
+        return !playerIn.canHarvestBlock(this)
+                ? playerIn.getToolDigEfficiency(this) / hardness / 100.0F
+                : playerIn.getToolDigEfficiency(this) / hardness / 30.0F;
     }
 
     /**

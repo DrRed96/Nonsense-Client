@@ -50,6 +50,8 @@ Thumbs.db
 */run
 /release
 */release
+/native-image
+*/native-image
 
 # IntelliJ specific files/directories
 out

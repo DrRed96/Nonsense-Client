@@ -828,7 +828,7 @@ public class Item {
         WOOD(0, 59, 2.0F, 0.0F, 15),
         STONE(1, 131, 4.0F, 1.0F, 5),
         IRON(2, 250, 6.0F, 2.0F, 14),
-        EMERALD(3, 1561, 8.0F, 3.0F, 10),
+        EMERALD(3, 1561, 8.0F, 3.0F, 10), // WHY THE FUCK WOULD YOU DO THIS MOJANG???
         GOLD(0, 32, 12.0F, 0.0F, 22);
 
         private final int harvestLevel;
@@ -866,7 +866,13 @@ public class Item {
         }
 
         public Item getRepairItem() {
-            return this == WOOD ? Item.getItemFromBlock(Blocks.planks) : (this == STONE ? Item.getItemFromBlock(Blocks.cobblestone) : (this == GOLD ? Items.gold_ingot : (this == IRON ? Items.iron_ingot : (this == EMERALD ? Items.diamond : null))));
+            return switch (this) {
+                case WOOD -> Item.getItemFromBlock(Blocks.planks);
+                case STONE -> Item.getItemFromBlock(Blocks.cobblestone);
+                case GOLD -> Items.gold_ingot;
+                case IRON -> Items.iron_ingot;
+                case EMERALD -> Items.diamond;
+            };
         }
     }
 }

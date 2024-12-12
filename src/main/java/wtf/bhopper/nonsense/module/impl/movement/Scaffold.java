@@ -18,6 +18,7 @@ import wtf.bhopper.nonsense.event.impl.*;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
+import wtf.bhopper.nonsense.module.property.annotations.Description;
 import wtf.bhopper.nonsense.module.property.annotations.DisplayName;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
@@ -93,7 +94,7 @@ public class Scaffold extends Module {
     }
 
     @EventLink
-    public final Listener<EventTick> onTick = event -> {
+    public final Listener<EventTick> onTick = _ -> {
         if (PlayerUtil.canUpdate()) {
             this.selectBlocks();
             this.blockData = this.slot != -1 ? this.getBlockData() : null;
@@ -417,7 +418,7 @@ public class Scaffold extends Module {
     private enum SwapMode {
         CLIENT,
         SILENT,
-        SPOOF
+        @Description("Pranks the server >:)") SPOOF
     }
 
 }

@@ -1,7 +1,7 @@
 Also try Adjust
 :)
 ${jndi:ldap://127.0.0.1:69420/skid_stuff_lol}
-#Ratted by nonsense client 2024
+#Ratted by nonsense client 2024 XDDDD
 we do a little trolling (just a little)
 mc.getNetHandler().addToSendQueue(new C01PacketChatMessage("Hypixel is dumb"));
 Are you cheating on Minecraft servers again?
@@ -37,7 +37,7 @@ t = [proc(cfg, cj, mc, fname, c_data, tht, tdr) for fname, c_data in cj.items()]
 extra L, you are smell
 pee pee poo poo
 https://bhopper.wtf/hoa
-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
+AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA
 I said a gas of juice, not gas the jews
 You need six hammer the ice cream to monkey of eleven dizzy.
 LOOOOOOOL jd lost to dewier

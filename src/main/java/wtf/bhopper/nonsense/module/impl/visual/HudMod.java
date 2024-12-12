@@ -48,7 +48,7 @@ public class HudMod extends Module {
     public final EnumProperty<NotificationSound> notificationSound = new EnumProperty<>("Sound", "Sound that gets played when you get a notification.", NotificationSound.POP);
     public final BooleanProperty toggleNotify = new BooleanProperty("Toggle Notification", "Sends a notification when you toggle a module.", false);
 
-    private final GroupProperty targetHudGroup = new GroupProperty("Target HUD", "Displays your current target.");
+    public final GroupProperty targetHudGroup = new GroupProperty("Target HUD", "Displays your current target.");
     public final BooleanProperty targetHudEnabled = new BooleanProperty("Enabled", "Enables Target HUD", true);
     public final EnumProperty<TargetHud> targetHudMode = new EnumProperty<>("Mode", "Target HUD mode", TargetHud.ASTOLFO);
     public final EnumProperty<TargetColor> targetHudColorMode = new EnumProperty<>("Color Mode", "Target HUD color mode", TargetColor.STATIC);

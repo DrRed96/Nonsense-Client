@@ -19,8 +19,6 @@ import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
 import wtf.bhopper.nonsense.util.misc.CustomCollectors;
 import wtf.bhopper.nonsense.util.misc.GeneralUtil;
 
-import java.util.Objects;
-
 @ModuleInfo(name = "Announcer", description = "Announces things in chat.", category = ModuleCategory.OTHER)
 public class Announcer extends Module {
 
@@ -40,7 +38,7 @@ public class Announcer extends Module {
     @EventLink
     public final Listener<EventReceivePacket> onReceivePacket = event -> {
 
-        if (!PlayerUtil.canUpdate() || mc.thePlayer.ticksExisted < 20) {
+        if (!PlayerUtil.canUpdate() || mc.thePlayer.ticksExisted < 100) {
             return;
         }
 

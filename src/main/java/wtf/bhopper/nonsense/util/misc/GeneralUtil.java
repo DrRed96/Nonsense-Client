@@ -19,6 +19,7 @@ public class GeneralUtil {
 
     public static final String ALPHABET = "abcdefghijklmnopqrstuvwxyz";
     public static final String CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890";
+    public static final String USERNAME = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890_";
     public static final String VOWELS = "aeiou";
     public static final Pattern LINK_REGEX = Pattern.compile("^(?:(ftp|http|https)://)?(?:[\\w-]+\\.)+[a-z]{2,6}$");
 
@@ -61,6 +62,22 @@ public class GeneralUtil {
         }
 
         return array[ThreadLocalRandom.current().nextInt(0, array.length)];
+    }
+
+    public static char randomElement(CharSequence str) {
+        if (str.isEmpty()) {
+            throw new IllegalArgumentException("Array length cannot be 0");
+        }
+
+        return str.charAt(ThreadLocalRandom.current().nextInt(0, str.length()));
+    }
+
+    public static String randomUsername(int length) {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            builder.append(randomElement(USERNAME));
+        }
+        return builder.toString();
     }
 
 }

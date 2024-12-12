@@ -47,7 +47,7 @@ public class AntiFall extends Module {
                     }
                 }
 
-                // Will cause a setback on certain anticheats (such as NCP) which prevents you from falling into the void
+                // Will cause a setback on certain anti-cheats (such as NCP) which prevents you from falling into the void
                 case PACKET -> PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(event.x, event.y + 11.0F + StrictMath.random(), event.z, false));
 
                 case BOUNCE -> {

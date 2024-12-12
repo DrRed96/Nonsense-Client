@@ -7,11 +7,9 @@ import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.gui.components.RenderComponent;
 import wtf.bhopper.nonsense.module.impl.combat.KillAura;
 import wtf.bhopper.nonsense.module.impl.visual.HudMod;
+import wtf.bhopper.nonsense.module.property.ValueChangeListener;
 import wtf.bhopper.nonsense.util.misc.MathUtil;
-import wtf.bhopper.nonsense.util.render.ColorUtil;
-import wtf.bhopper.nonsense.util.render.Fonts;
-import wtf.bhopper.nonsense.util.render.NVGHelper;
-import wtf.bhopper.nonsense.util.render.RenderUtil;
+import wtf.bhopper.nonsense.util.render.*;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
@@ -21,8 +19,12 @@ public class TargetHud extends RenderComponent {
     private static final NumberFormat ASTOLFO_FORMAT = new DecimalFormat("#0.# \u2764");
     private static final NumberFormat RAVEN_FORMAT = new DecimalFormat("#0.0");
 
+    private final Translate translate = new Translate(0.0F, 0.0F);
+
     public TargetHud() {
         super("Target HUD", Display.getWidth() / 2 + 20, Display.getHeight() / 2 + 10, 0, 0);
+        Nonsense.module(HudMod.class).targetHudGroup.addProperties(this.getProperties());
+        Nonsense.module(HudMod.class).targetHudMode.addValueChangeListener(this::onModeChange);
     }
 
     @Override
@@ -38,17 +40,19 @@ public class TargetHud extends RenderComponent {
         }
 
         switch (mod.targetHudMode.get()) {
-            case ASTOLFO -> this.drawAstolfoHud(target, mod);
-            case RAVEN -> this.drawRavenHud(target, mod);
+            case ASTOLFO -> this.drawAstolfoHud(target, mod, delta);
+            case RAVEN -> this.drawRavenHud(target, mod, delta);
         }
 
     }
 
-    private void drawAstolfoHud(EntityLivingBase target, HudMod mod) {
+    private void drawAstolfoHud(EntityLivingBase target, HudMod mod, float delta) {
 
         float health = target.getHealth() + target.getAbsorptionAmount();
         float maxHealth = target.getMaxHealth() + target.getAbsorptionAmount();
         int color = this.getColor(target, mod);
+
+        this.translate.interpolate((health / maxHealth) * 220.0F, 0.0F, 0.2F, delta);
 
         this.setSize(300, 100);
 
@@ -56,7 +60,7 @@ public class TargetHud extends RenderComponent {
         this.nvgTranslate();
         this.nvgDrawBackground(0x80000000);
         NVGHelper.drawRect(72.0F, 72.0F, 220.0F, 18.0F, ColorUtil.darken(color, 2));
-        NVGHelper.drawRect(72.0F, 72.0F,  (health / maxHealth) * 220.0F, 18.0F, color);
+        NVGHelper.drawRect(72.0F, 72.0F,  this.translate.getX(), 18.0F, color);
         NVGHelper.end();
 
         RenderUtil.glColor(ColorUtil.WHITE);
@@ -67,7 +71,7 @@ public class TargetHud extends RenderComponent {
 
     }
 
-    private void drawRavenHud(EntityLivingBase target, HudMod mod) {
+    private void drawRavenHud(EntityLivingBase target, HudMod mod, float delta) {
 
         String text = target.getDisplayName().getFormattedText() + " ";
         if (target.getHealth() > target.getMaxHealth() * 0.75F) {
@@ -89,7 +93,7 @@ public class TargetHud extends RenderComponent {
 
         this.setSize(Fonts.mc().getStringWidth(text) * 2 + 40, 80);
 
-        float healthWidth = (this.getWidth() - 50.0F) * (target.getHealth() / target.getMaxHealth());
+        this.translate.interpolate((this.getWidth() - 50.0F) * (target.getHealth() / target.getMaxHealth()), 0.0F, 0.2F, delta);
         int color = this.getColor(target, mod);
         int color2 = ColorUtil.multiplySatBri(color, 0.5F, 2.0F);
 
@@ -102,8 +106,8 @@ public class TargetHud extends RenderComponent {
         // Health bar
         NVGHelper.drawRoundedRect(20.0F, 50.0F, this.getWidth() - 40.0F, 10.0F, 5.0F, 0x80000000);
         NVGHelper.beginPath();
-        NVGHelper.roundedRect(20.0F, 50.0F, 10.0F + healthWidth, 10.0F, 5.0F);
-        NVGHelper.fillPaint(NVGHelper.linearGradient(20.0F, this.getHeight() / 2.0F, 30.0F + healthWidth, this.getHeight() / 2.0F, color2, color));
+        NVGHelper.roundedRect(20.0F, 50.0F, 10.0F + this.translate.getX(), 10.0F, 5.0F);
+        NVGHelper.fillPaint(NVGHelper.linearGradient(20.0F, this.getHeight() / 2.0F, 30.0F + this.translate.getX(), this.getHeight() / 2.0F, color2, color));
         NVGHelper.fill();
         NVGHelper.closePath();
 
@@ -125,6 +129,10 @@ public class TargetHud extends RenderComponent {
             case STATIC -> mod.color.getRGB();
             case HEALTH -> target.getAbsorptionAmount() != 0.0F ? 0xFFFFAA00 : ColorUtil.health(target);
         };
+    }
+
+    private void onModeChange(HudMod.TargetHud oldValue, HudMod.TargetHud value) {
+        translate.setX(0.0F);
     }
 
 }

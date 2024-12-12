@@ -32,6 +32,7 @@ public class ModuleManager {
                 new Criticals(),
                 new TargetStrafe(),
                 new FastBow(),
+                new InfiniteAura(),
                 new NoClickDelay(),
 
                 // Movement

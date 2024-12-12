@@ -691,17 +691,17 @@ public class InventoryPlayer implements IInventory
         }
         else
         {
-            ItemStack itemstack = this.getStackInSlot(this.currentItem);
-            return itemstack != null ? itemstack.canHarvestBlock(blockIn) : false;
+            ItemStack itemstack = this.getStackInSlot(InventoryUtil.serverItem);
+            return itemstack != null && itemstack.canHarvestBlock(blockIn);
         }
     }
 
     /**
      * returns a player armor item (as itemstack) contained in specified armor slot.
      */
-    public ItemStack armorItemInSlot(int p_70440_1_)
+    public ItemStack armorItemInSlot(int slot)
     {
-        return this.armorInventory[p_70440_1_];
+        return this.armorInventory[slot];
     }
 
     /**
@@ -711,11 +711,9 @@ public class InventoryPlayer implements IInventory
     {
         int i = 0;
 
-        for (int j = 0; j < this.armorInventory.length; ++j)
-        {
-            if (this.armorInventory[j] != null && this.armorInventory[j].getItem() instanceof ItemArmor)
-            {
-                int k = ((ItemArmor)this.armorInventory[j].getItem()).damageReduceAmount;
+        for (ItemStack stack : this.armorInventory) {
+            if (stack != null && stack.getItem() instanceof ItemArmor) {
+                int k = ((ItemArmor) stack.getItem()).damageReduceAmount;
                 i += k;
             }
         }

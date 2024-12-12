@@ -1,5 +1,6 @@
 package wtf.bhopper.nonsense.gui.screens.altmanager;
 
+import com.mojang.util.UUIDTypeAdapter;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -11,6 +12,7 @@ import wtf.bhopper.nonsense.alt.loginthread.CookieLoginThread;
 import wtf.bhopper.nonsense.alt.mslogin.LoginData;
 import wtf.bhopper.nonsense.gui.hud.notification.Notification;
 import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
+import wtf.bhopper.nonsense.util.misc.GeneralUtil;
 
 import javax.swing.*;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -44,6 +46,8 @@ public class GuiAddSessionAlt extends GuiScreen {
 
         this.buttonList.add(this.doneButton = new GuiButton(4, this.width / 2 - 100, this.height / 2 + 35, "Done"));
         this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height / 2 + 57, I18n.format("gui.cancel")));
+        this.buttonList.add(new GuiButton(12, this.width + 105, this.height / 2 - 50, 50, 20, "Random UUID"));
+        this.buttonList.add(new GuiButton(13, this.width + 105, this.height / 2 - 90, 50, 20, "Random Username"));
     }
 
     @Override
@@ -65,6 +69,10 @@ public class GuiAddSessionAlt extends GuiScreen {
                 this.doneButton.enabled = true;
             }
 
+        } else if (button.id == 12) {
+            this.uuid.setText(UUIDTypeAdapter.fromUUID(UUID.randomUUID()));
+        } else if (button.id == 13) {
+            this.username.setText(GeneralUtil.randomUsername(16));
         }
     }
 
