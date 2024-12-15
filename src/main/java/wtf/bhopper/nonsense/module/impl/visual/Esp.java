@@ -48,6 +48,7 @@ public class Esp extends Module {
     private final BooleanProperty animals = new BooleanProperty("Animals", "Target Animals (Pigs, Cows, etc.)", false);
     private final BooleanProperty others = new BooleanProperty("Others", "Target other entities", false);
     private final BooleanProperty invis = new BooleanProperty("Invisible", "Target invisible entities", true);
+    private final BooleanProperty self = new BooleanProperty("Self", "Targets yourself while in third person", false);
 
     private final GroupProperty boxGroup = new GroupProperty("Box", "Boxes");
     private final BooleanProperty boxEnable = new BooleanProperty("Enable", "Enable boxes", true);
@@ -62,6 +63,7 @@ public class Esp extends Module {
     private final BooleanProperty displayNames = new BooleanProperty("Display Names", "Render display names", true);
     private final BooleanProperty nameHealth = new BooleanProperty("Health", "Display health in name tags", true);
     private final BooleanProperty nameBackground = new BooleanProperty("Background", "Display background", true);
+    private final BooleanProperty heldItem = new BooleanProperty("Held Item", "Displays the entities held item", true);
 
     private final GroupProperty barGroup = new GroupProperty("Health Bar", "Health bars");
     private final BooleanProperty barEnable = new BooleanProperty("Enable", "Enable health bars", true);
@@ -71,15 +73,15 @@ public class Esp extends Module {
     private final List<RenderEntity> renderEntities = new ArrayList<>();
 
     public Esp() {
-        this.targetsGroup.addProperties(this.players, this.mobs, this.animals, this.others, this.invis);
+        this.targetsGroup.addProperties(this.players, this.mobs, this.animals, this.others, this.invis, this.self);
         this.boxGroup.addProperties(this.boxEnable, this.boxCorners, this.boxOutline, this.boxCornerFactor, this.boxColor);
-        this.nameGroup.addProperties(this.nameEnable, this.nameColor, this.displayNames, this.nameHealth, this.nameBackground);
+        this.nameGroup.addProperties(this.nameEnable, this.nameColor, this.displayNames, this.nameHealth, this.nameBackground, this.heldItem);
         this.barGroup.addProperties(this.barEnable, this.barColorMode, this.barColor);
         this.addProperties(this.targetsGroup, this.boxGroup, this.nameGroup, this.barGroup);
     }
 
     @EventLink
-    public final Listener<EventTick> onTick = event -> {
+    public final Listener<EventTick> onTick = _ -> {
         this.renderEntities.clear();
 
         if (PlayerUtil.canUpdate()) {
@@ -114,7 +116,6 @@ public class Esp extends Module {
     public final Listener<EventRenderNameTag> onRenderNameTag = event -> {
         for (RenderEntity renderEntity : this.renderEntities) {
             if (renderEntity.entity == event.entity) {
-                event.cancel();
                 break;
             }
         }
@@ -122,7 +123,7 @@ public class Esp extends Module {
 
     private boolean isValidEntity(EntityLivingBase entity) {
 
-        if (entity == null || entity == mc.thePlayer) {
+        if (entity == null) {
             return false;
         }
 
@@ -134,18 +135,23 @@ public class Esp extends Module {
             return false;
         }
 
-        if (entity instanceof EntityPlayer) {
-            return players.get();
+        return switch (entity) {
+            case EntityPlayer _ -> {
 
-        } else if (entity instanceof EntityMob) {
-            return mobs.get();
+                if (!players.get()) {
+                    yield false;
+                }
 
-        } else if (entity instanceof EntityAnimal) {
-            return animals.get();
+                if (entity.isClientPlayer()) {
+                    yield self.get() && mc.gameSettings.thirdPersonView != 0;
+                }
 
-        }
-
-        return others.get();
+                yield true;
+            }
+            case EntityMob _ -> mobs.get();
+            case EntityAnimal _ -> animals.get();
+            default -> others.get();
+        };
     }
 
     private class RenderEntity {
@@ -331,7 +337,7 @@ public class Esp extends Module {
             NVGHelper.end();
         }
 
-        public void drawName(ScaledResolution scaledRes) {
+        public void drawName(ScaledResolution scale) {
             if (!nameEnable.get()) {
                 return;
             }
@@ -356,9 +362,28 @@ public class Esp extends Module {
             }
 
             GlStateManager.pushMatrix();
-            scaledRes.scaleToFactor(1.0F);
+            scale.scaleToOne();
             font.drawStringWithShadow(display, tagX, tagY - 1.0F, nameColor.getRGB());
             GlStateManager.popMatrix();
+
+            if (heldItem.get() && entity.getHeldItem() != null) {
+                String itemDisplay = entity.getHeldItem().getDisplayName();
+                float itemWidth = font.getStringWidthF(itemDisplay);
+                float itemX = this.startX + w - itemWidth / 2.0F;
+                float itemY = this.endY + 6.0F;
+
+                if (nameBackground.get()) {
+                    NVGHelper.begin();
+                    NVGHelper.drawRect(itemX - 2.0F, itemY - 3.0F, itemWidth + 2.0F, 11.0F, 0x80000000);
+                    NVGHelper.end();
+                }
+
+                GlStateManager.pushMatrix();
+                scale.scaleToOne();
+                font.drawStringWithShadow(itemDisplay, itemX, itemY - 1.0F, ColorUtil.WHITE);
+                GlStateManager.popMatrix();
+            }
+
         }
 
     }

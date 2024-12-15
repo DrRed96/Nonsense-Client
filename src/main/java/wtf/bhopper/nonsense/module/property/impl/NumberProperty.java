@@ -81,6 +81,14 @@ public class NumberProperty extends Property<Double> {
         this.set(percent * (this.max - this.min) + this.min);
     }
 
+    public double getMin() {
+        return this.min;
+    }
+
+    public double getMax() {
+        return this.max;
+    }
+
     @Override
     public String getDisplayValue() {
         return this.format.format(this.get());

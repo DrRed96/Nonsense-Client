@@ -57,12 +57,12 @@ public class NovoModule extends NovoComponent {
 
         NVGHelper.fontSize(16.0F);
         NVGHelper.textAlign(NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-        NVGHelper.drawText(this.module.displayName, 8.0F, yOff + MOD_HEIGHT / 2.0F + 1.0F, 0xFFFFFFFF);
+        NVGHelper.drawText(this.module.displayName, 8.0F, yOff + MOD_HEIGHT / 2.0F + 1.0F, 0xFFFFFFFF, true);
 
         if (!this.components.isEmpty()) {
-            NVGHelper.drawLine(WIDTH - 20.0F, yOff + MOD_HEIGHT / 2.0F, WIDTH - 8.0F, yOff + MOD_HEIGHT / 2.0F, 2.0F, 0xFFDDDDDD);
+            NVGHelper.drawLine(WIDTH - 20.0F, yOff + MOD_HEIGHT / 2.0F, WIDTH - 8.0F, yOff + MOD_HEIGHT / 2.0F, 2.0F, 0xFFFFFFFF);
             if (!this.expanded) {
-                NVGHelper.drawLine(WIDTH - 14.0F, yOff + MOD_HEIGHT / 2.0F - 6.0F, WIDTH - 14.0F, yOff + MOD_HEIGHT / 2.0F + 6.0F, 2.0F, 0xFFDDDDDD);
+                NVGHelper.drawLine(WIDTH - 14.0F, yOff + MOD_HEIGHT / 2.0F - 6.0F, WIDTH - 14.0F, yOff + MOD_HEIGHT / 2.0F + 6.0F, 2.0F, 0xFFFFFFFF);
             }
         }
 

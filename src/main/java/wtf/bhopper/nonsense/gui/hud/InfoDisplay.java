@@ -7,6 +7,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import org.lwjglx.opengl.Display;
 import wtf.bhopper.nonsense.Nonsense;
@@ -82,7 +83,7 @@ public class InfoDisplay implements MinecraftInstance {
                 String name = "TODO: FIX THIS FUCKING THING.";
                 int color = 0xFFAAAAAA;
                 try {
-                    name = I18n.format(Potion.potionTypes[effect.getPotionID()].getName());
+                    name = EnumChatFormatting.getTextWithoutFormattingCodes(I18n.format(Potion.potionTypes[effect.getPotionID()].getName()));
                     color = Potion.potionTypes[effect.getPotionID()].getLiquidColor() | 0xFF000000;
                 } catch (ArrayIndexOutOfBoundsException ignored) {}
                 String display = String.format("%s %d", name, effect.getAmplifier() + 1);

@@ -24,19 +24,19 @@ public class S27PacketExplosion implements Packet<INetHandlerPlayClient>
     {
     }
 
-    public S27PacketExplosion(double p_i45193_1_, double y, double z, float strengthIn, List<BlockPos> affectedBlocksIn, Vec3 p_i45193_9_)
+    public S27PacketExplosion(double x, double y, double z, float strengthIn, List<BlockPos> affectedBlocksIn, Vec3 motion)
     {
-        this.posX = p_i45193_1_;
+        this.posX = x;
         this.posY = y;
         this.posZ = z;
         this.strength = strengthIn;
         this.affectedBlockPositions = Lists.newArrayList(affectedBlocksIn);
 
-        if (p_i45193_9_ != null)
+        if (motion != null)
         {
-            this.motionX = (float)p_i45193_9_.xCoord;
-            this.motionY = (float)p_i45193_9_.yCoord;
-            this.motionZ = (float)p_i45193_9_.zCoord;
+            this.motionX = (float)motion.xCoord;
+            this.motionY = (float)motion.yCoord;
+            this.motionZ = (float)motion.zCoord;
         }
     }
 

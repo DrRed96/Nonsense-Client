@@ -1,6 +1,7 @@
 package wtf.bhopper.nonsense.gui.components;
 
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GlStateManager;
 import org.lwjglx.util.vector.Vector2f;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.gui.hud.Hud;
@@ -41,6 +42,10 @@ public abstract class RenderComponent implements MinecraftInstance {
 
     protected void nvgDrawBackground(int color) {
         NVGHelper.drawRect(0.0F, 0.0F, this.width, this.height, color);
+    }
+
+    protected void nvgScissor() {
+        NVGHelper.scissor(0.0F, 0.0F, this.width, this.height);
     }
 
     protected void drawBackground(int color) {

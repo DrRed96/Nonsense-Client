@@ -22,7 +22,7 @@ public class FastPlace extends Module {
     }
 
     @EventLink
-    public final Listener<EventTick> onTick = event -> {
+    public final Listener<EventTick> onTick = _ -> {
         if (PlayerUtil.canUpdate()) {
 
             if (this.blocksOnly.get()) {

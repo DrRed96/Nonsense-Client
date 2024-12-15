@@ -45,7 +45,7 @@ public class MoveUtil implements MinecraftInstance {
         return mc.thePlayer.moveForward != 0.0F || mc.thePlayer.moveStrafing != 0.0F;
     }
 
-    public static boolean isMoving(float factor){
+    public static boolean isMoving(float factor) {
         return mc.thePlayer.movementInput.moveForward > factor || mc.thePlayer.movementInput.moveForward < -factor ||
                 mc.thePlayer.movementInput.moveStrafe > factor || mc.thePlayer.movementInput.moveStrafe < -factor;
     }
@@ -199,7 +199,7 @@ public class MoveUtil implements MinecraftInstance {
 
         double maxHeight = 0.0;
 
-        for (;;) {
+        for (; ; ) {
             motion = (motion - 0.08) * 0.98;
             y += motion;
 
@@ -227,9 +227,33 @@ public class MoveUtil implements MinecraftInstance {
         double strafe = (motionX * z + motionZ * x) / denominator;
         double forward = (motionZ * z - motionX * x) / denominator;
 
-        return new float[]{ (float)forward, (float)strafe };
+        return new float[]{(float) forward, (float) strafe};
     }
 
-    public record JumpOffsets(List<Double> offsets, double maxHeight) {}
+    public static double direction(float rotationYaw, final double moveForward, final double moveStrafing) {
+        if (moveForward < 0F) {
+            rotationYaw += 180F;
+        }
+
+        float forward = 1F;
+
+        if (moveForward < 0F) {
+            forward = -0.5F;
+        } else if (moveForward > 0F) {
+            forward = 0.5F;
+        }
+
+        if (moveStrafing > 0F) {
+            rotationYaw -= 90F * forward;
+        }
+        if (moveStrafing < 0F) {
+            rotationYaw += 90F * forward;
+        }
+
+        return Math.toRadians(rotationYaw);
+    }
+
+    public record JumpOffsets(List<Double> offsets, double maxHeight) {
+    }
 
 }

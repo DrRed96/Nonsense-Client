@@ -62,6 +62,7 @@ import optifine.Config;
 import optifine.CustomColors;
 import optifine.CustomItems;
 import optifine.Reflector;
+import org.lwjgl.opengl.GL11;
 import shadersmod.client.Shaders;
 import shadersmod.client.ShadersRender;
 
@@ -148,7 +149,7 @@ public class RenderItem implements IResourceManagerReloadListener
             worldrenderer.setBlockLayer(EnumWorldBlockLayer.SOLID);
         }
 
-        worldrenderer.begin(7, DefaultVertexFormats.ITEM);
+        worldrenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.ITEM);
 
         for (EnumFacing enumfacing : EnumFacing.VALUES)
         {
@@ -160,7 +161,7 @@ public class RenderItem implements IResourceManagerReloadListener
 
         if (flag1)
         {
-            worldrenderer.setBlockLayer((EnumWorldBlockLayer)null);
+            worldrenderer.setBlockLayer(null);
             GlStateManager.bindCurrentTexture();
         }
     }
@@ -449,7 +450,10 @@ public class RenderItem implements IResourceManagerReloadListener
 
         if (Reflector.ForgeHooksClient_handleCameraTransforms.exists())
         {
-            ibakedmodel = (IBakedModel)Reflector.call(Reflector.ForgeHooksClient_handleCameraTransforms, new Object[] {ibakedmodel, ItemCameraTransforms.TransformType.GUI});
+            ibakedmodel = (IBakedModel)Reflector.call(Reflector.ForgeHooksClient_handleCameraTransforms, new Object[] {
+                    ibakedmodel,
+                    ItemCameraTransforms.TransformType.GUI
+            });
         }
         else
         {
@@ -502,38 +506,10 @@ public class RenderItem implements IResourceManagerReloadListener
             {
                 CrashReport crashreport = CrashReport.makeCrashReport(throwable, "Rendering item");
                 CrashReportCategory crashreportcategory = crashreport.makeCategory("Item being rendered");
-                crashreportcategory.addCrashSectionCallable("Item Type", new Callable()
-                {
-                    private static final String __OBFID = "CL_00001004";
-                    public String call() throws Exception
-                    {
-                        return String.valueOf((Object)stack.getItem());
-                    }
-                });
-                crashreportcategory.addCrashSectionCallable("Item Aux", new Callable()
-                {
-                    private static final String __OBFID = "CL_00001005";
-                    public String call() throws Exception
-                    {
-                        return String.valueOf(stack.getMetadata());
-                    }
-                });
-                crashreportcategory.addCrashSectionCallable("Item NBT", new Callable()
-                {
-                    private static final String __OBFID = "CL_00001006";
-                    public String call() throws Exception
-                    {
-                        return String.valueOf((Object)stack.getTagCompound());
-                    }
-                });
-                crashreportcategory.addCrashSectionCallable("Item Foil", new Callable()
-                {
-                    private static final String __OBFID = "CL_00001007";
-                    public String call() throws Exception
-                    {
-                        return String.valueOf(stack.hasEffect());
-                    }
-                });
+                crashreportcategory.addCrashSectionCallable("Item Type", () -> String.valueOf(stack.getItem()));
+                crashreportcategory.addCrashSectionCallable("Item Aux", () -> String.valueOf(stack.getMetadata()));
+                crashreportcategory.addCrashSectionCallable("Item NBT", () -> String.valueOf(stack.getTagCompound()));
+                crashreportcategory.addCrashSectionCallable("Item Foil", () -> String.valueOf(stack.hasEffect()));
                 throw new ReportedException(crashreport);
             }
 
@@ -543,7 +519,7 @@ public class RenderItem implements IResourceManagerReloadListener
 
     public void renderItemOverlays(FontRenderer fr, ItemStack stack, int xPosition, int yPosition)
     {
-        this.renderItemOverlayIntoGUI(fr, stack, xPosition, yPosition, (String)null);
+        this.renderItemOverlayIntoGUI(fr, stack, xPosition, yPosition, null);
     }
 
     /**

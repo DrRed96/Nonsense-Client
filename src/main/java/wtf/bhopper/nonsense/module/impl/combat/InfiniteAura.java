@@ -238,6 +238,10 @@ public class InfiniteAura extends Module {
 
     }
 
+    public EntityLivingBase getTarget() {
+        return this.target;
+    }
+
     private enum Mode {
         INSTANT
         // TODO: add path find mode

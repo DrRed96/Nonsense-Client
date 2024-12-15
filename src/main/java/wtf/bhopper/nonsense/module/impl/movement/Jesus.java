@@ -14,7 +14,9 @@ import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.util.minecraft.MoveUtil;
 import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
 
-@ModuleInfo(name = "Jesus", description = "Allows you to walk on water, like Jesus!", category = ModuleCategory.MOVEMENT)
+@ModuleInfo(name = "Jesus",
+        description = "Allows you to walk on water, like Jesus!",
+        category = ModuleCategory.MOVEMENT)
 public class Jesus extends Module {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Method for Jesus", Mode.SOLID);

@@ -36,7 +36,7 @@ public class NovoButton extends NovoComponent {
 
         NVGHelper.fontSize(16.0F);
         NVGHelper.textAlign(NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-        NVGHelper.drawText(this.property.displayName, WIDTH / 2.0F, yOff + MOD_HEIGHT / 2.0F + 1.0F, NovoGui.getColor(this.panel));
+        NVGHelper.drawText(this.property.displayName, WIDTH / 2.0F, yOff + MOD_HEIGHT / 2.0F + 1.0F, NovoGui.getColor(this.panel), true);
 
         this.panel.yOff += MOD_HEIGHT;
     }

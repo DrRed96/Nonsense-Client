@@ -28,7 +28,7 @@ public class AntiCheat implements MinecraftInstance {
     private final Map<UUID, PlayerData> players = new ConcurrentHashMap<>();
     private final List<UUID> flagged = new ArrayList<>();
 
-    private int nextChatLine = 0x7FFF;
+    private int nextChatLine = 0x2000;
 
     public AntiCheat() {
         new Reflections(NoSlowA.class.getPackage().getName())
@@ -79,6 +79,10 @@ public class AntiCheat implements MinecraftInstance {
                 }
             }
             this.players.put(player.getUniqueID(), data);
+
+            if (this.nextChatLine >= 0x3000) {
+                this.nextChatLine = 0x2000;
+            }
         }
     };
 

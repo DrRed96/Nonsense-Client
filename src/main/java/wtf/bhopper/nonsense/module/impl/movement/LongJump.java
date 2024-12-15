@@ -11,7 +11,9 @@ import wtf.bhopper.nonsense.module.property.annotations.DisplayName;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.util.minecraft.MoveUtil;
 
-@ModuleInfo(name = "Long Jump", description = "Allows you to jump far", category = ModuleCategory.MOVEMENT)
+@ModuleInfo(name = "Long Jump",
+        description = "Allows you to jump far",
+        category = ModuleCategory.MOVEMENT)
 public class LongJump extends Module {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Method for long jump", Mode.VANILLA);

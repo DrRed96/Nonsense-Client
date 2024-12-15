@@ -873,8 +873,8 @@ public abstract class Entity implements ICommandSender {
     }
 
     protected void doBlockCollisions() {
-        BlockPos blockpos = new BlockPos(this.getEntityBoundingBox().minX + 0.001D, this.getEntityBoundingBox().minY + 0.001D, this.getEntityBoundingBox().minZ + 0.001D);
-        BlockPos blockpos1 = new BlockPos(this.getEntityBoundingBox().maxX - 0.001D, this.getEntityBoundingBox().maxY - 0.001D, this.getEntityBoundingBox().maxZ - 0.001D);
+        BlockPos blockpos = new BlockPos(this.getEntityBoundingBox().minX + 0.001, this.getEntityBoundingBox().minY + 0.001, this.getEntityBoundingBox().minZ + 0.001);
+        BlockPos blockpos1 = new BlockPos(this.getEntityBoundingBox().maxX - 0.001, this.getEntityBoundingBox().maxY - 0.001, this.getEntityBoundingBox().maxZ - 0.001);
 
         if (this.worldObj.isAreaLoaded(blockpos, blockpos1)) {
             for (int i = blockpos.getX(); i <= blockpos1.getX(); ++i) {
@@ -934,7 +934,7 @@ public abstract class Entity implements ICommandSender {
      * When set to true the entity will not play sounds.
      */
     public void setSilent(boolean isSilent) {
-        this.dataWatcher.updateObject(4, Byte.valueOf((byte) (isSilent ? 1 : 0)));
+        this.dataWatcher.updateObject(4, (byte) (isSilent ? 1 : 0));
     }
 
     /**
@@ -1026,7 +1026,7 @@ public abstract class Entity implements ICommandSender {
      * sets the players height back to normal after doing things like sleeping and dieing
      */
     protected void resetHeight() {
-        float f = MathHelper.sqrt_double(this.motionX * this.motionX * 0.20000000298023224D + this.motionY * this.motionY + this.motionZ * this.motionZ * 0.20000000298023224D) * 0.2F;
+        float f = MathHelper.sqrt_double(this.motionX * this.motionX * 0.2 + this.motionY * this.motionY + this.motionZ * this.motionZ * 0.2) * 0.2F;
 
         if (f > 1.0F) {
             f = 1.0F;
@@ -1038,13 +1038,13 @@ public abstract class Entity implements ICommandSender {
         for (int i = 0; (float) i < 1.0F + this.width * 20.0F; ++i) {
             float f2 = (this.rand.nextFloat() * 2.0F - 1.0F) * this.width;
             float f3 = (this.rand.nextFloat() * 2.0F - 1.0F) * this.width;
-            this.worldObj.spawnParticle(EnumParticleTypes.WATER_BUBBLE, this.posX + (double) f2, (double) (f1 + 1.0F), this.posZ + (double) f3, this.motionX, this.motionY - (double) (this.rand.nextFloat() * 0.2F), this.motionZ, new int[0]);
+            this.worldObj.spawnParticle(EnumParticleTypes.WATER_BUBBLE, this.posX + (double) f2, f1 + 1.0F, this.posZ + (double) f3, this.motionX, this.motionY - (double) (this.rand.nextFloat() * 0.2F), this.motionZ, new int[0]);
         }
 
         for (int j = 0; (float) j < 1.0F + this.width * 20.0F; ++j) {
             float f4 = (this.rand.nextFloat() * 2.0F - 1.0F) * this.width;
             float f5 = (this.rand.nextFloat() * 2.0F - 1.0F) * this.width;
-            this.worldObj.spawnParticle(EnumParticleTypes.WATER_SPLASH, this.posX + (double) f4, (double) (f1 + 1.0F), this.posZ + (double) f5, this.motionX, this.motionY, this.motionZ, new int[0]);
+            this.worldObj.spawnParticle(EnumParticleTypes.WATER_SPLASH, this.posX + (double) f4, f1 + 1.0F, this.posZ + (double) f5, this.motionX, this.motionY, this.motionZ, new int[0]);
         }
     }
 
@@ -1059,7 +1059,7 @@ public abstract class Entity implements ICommandSender {
 
     protected void createRunningParticles() {
         int i = MathHelper.floor_double(this.posX);
-        int j = MathHelper.floor_double(this.posY - 0.20000000298023224D);
+        int j = MathHelper.floor_double(this.posY - 0.2);
         int k = MathHelper.floor_double(this.posZ);
         BlockPos blockpos = new BlockPos(i, j, k);
         IBlockState iblockstate = this.worldObj.getBlockState(blockpos);
@@ -1087,14 +1087,14 @@ public abstract class Entity implements ICommandSender {
             float f = BlockLiquid.getLiquidHeightPercent(iblockstate.getBlock().getMetaFromState(iblockstate)) - 0.11111111F;
             float f1 = (float) (blockpos.getY() + 1) - f;
             boolean flag = d0 < (double) f1;
-            return !flag && this instanceof EntityPlayer ? false : flag;
+            return (flag || !(this instanceof EntityPlayer)) && flag;
         } else {
             return false;
         }
     }
 
     public boolean isInLava() {
-        return this.worldObj.isMaterialInBB(this.getEntityBoundingBox().expand(-0.10000000149011612D, -0.4000000059604645D, -0.10000000149011612D), Material.lava);
+        return this.worldObj.isMaterialInBB(this.getEntityBoundingBox().expand(-0.1, -0.4, -0.1), Material.lava);
     }
 
     /**
@@ -1192,10 +1192,10 @@ public abstract class Entity implements ICommandSender {
      * Returns the distance to the entity. Args: entity
      */
     public float getDistanceToEntity(Entity entityIn) {
-        float f = (float) (this.posX - entityIn.posX);
-        float f1 = (float) (this.posY - entityIn.posY);
-        float f2 = (float) (this.posZ - entityIn.posZ);
-        return MathHelper.sqrt_float(f * f + f1 * f1 + f2 * f2);
+        float x = (float) (this.posX - entityIn.posX);
+        float y = (float) (this.posY - entityIn.posY);
+        float z = (float) (this.posZ - entityIn.posZ);
+        return MathHelper.sqrt_float(x * x + y * y + z * z);
     }
 
     /**
@@ -1326,12 +1326,12 @@ public abstract class Entity implements ICommandSender {
     /**
      * Creates a Vec3 using the pitch and yaw of the entities rotation.
      */
-    protected final Vec3 getVectorForRotation(float pitch, float yaw) {
+    public final Vec3 getVectorForRotation(float pitch, float yaw) {
         float f = MathHelper.cos(-yaw * 0.017453292F - (float) Math.PI);
         float f1 = MathHelper.sin(-yaw * 0.017453292F - (float) Math.PI);
         float f2 = -MathHelper.cos(-pitch * 0.017453292F);
         float f3 = MathHelper.sin(-pitch * 0.017453292F);
-        return new Vec3((double) (f1 * f2), (double) f3, (double) (f * f2));
+        return new Vec3(f1 * f2, f3, f * f2);
     }
 
     public Vec3 getPositionEyes(float partialTicks) {
@@ -1350,6 +1350,13 @@ public abstract class Entity implements ICommandSender {
         Vec3 vec31 = this.getLook(partialTicks);
         Vec3 vec32 = vec3.addVector(vec31.xCoord * blockReachDistance, vec31.yCoord * blockReachDistance, vec31.zCoord * blockReachDistance);
         return this.worldObj.rayTraceBlocks(vec3, vec32, false, false, true);
+    }
+
+    public MovingObjectPosition rayTraceCustom(double blockReachDistance, float yaw, float pitch) {
+        Vec3 start = this.getPositionEyes(1.0F);
+        Vec3 look = this.getVectorForRotation(pitch, yaw);
+        Vec3 end = start.addVector(look.xCoord * blockReachDistance, look.yCoord * blockReachDistance, look.zCoord * blockReachDistance);
+        return this.worldObj.rayTraceBlocks(start, end, false, false, true);
     }
 
     /**

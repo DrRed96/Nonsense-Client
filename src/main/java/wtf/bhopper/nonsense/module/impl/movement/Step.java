@@ -18,7 +18,9 @@ import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
 import wtf.bhopper.nonsense.util.minecraft.MoveUtil;
 import wtf.bhopper.nonsense.util.minecraft.PacketUtil;
 
-@ModuleInfo(name = "Step", description = "Allows you to step up blocks", category = ModuleCategory.MOVEMENT)
+@ModuleInfo(name = "Step",
+        description = "Allows you to step up blocks",
+        category = ModuleCategory.MOVEMENT)
 public class Step extends Module {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Step method", Mode.VANILLA);

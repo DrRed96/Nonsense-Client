@@ -10,7 +10,7 @@ import wtf.bhopper.nonsense.anticheat.PlayerData;
 public class SprintA extends Check {
     @Override
     protected CheckResult performCheck(EntityPlayer player, PlayerData data) {
-        if (player.isSprinting() && data.forward < 0.0F) {
+        if (player.isSprinting() && player.onGround && data.forward < 0.0F) {
             return CheckResult.VIOLATE;
         }
         return CheckResult.RESET;

@@ -1,5 +1,7 @@
 package wtf.bhopper.nonsense.util.minecraft;
 
+import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
+import de.florianmichael.vialoadingbase.ViaLoadingBase;
 import de.florianmichael.viamcp.fixes.AttackOrder;
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.material.Material;
@@ -11,6 +13,7 @@ import net.minecraft.util.MovingObjectPosition;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.impl.EventPostClick;
 import wtf.bhopper.nonsense.event.impl.EventPreClick;
+import wtf.bhopper.nonsense.event.impl.EventReceivePacket;
 import wtf.bhopper.nonsense.module.impl.other.Debugger;
 
 public class PacketUtil implements MinecraftInstance {
@@ -22,6 +25,15 @@ public class PacketUtil implements MinecraftInstance {
     public static void sendNoEvent(Packet<?> packet) {
         mc.getNetHandler().getNetworkManager().sendPacket(packet);
         Nonsense.getEventBus().post(new Debugger.EventPacketDebug(packet, Debugger.State.NO_EVENT, Debugger.EventPacketDebug.Direction.OUTGOING));
+    }
+
+    public static void receive(Packet<?> packet) {
+        EventReceivePacket event = new EventReceivePacket(packet);
+        Nonsense.getEventBus().post(event);
+        if (!event.isCancelled()) {
+            event.packet.processPacket(mc.getNetHandler());
+        }
+        Nonsense.getEventBus().post(new Debugger.EventPacketDebug(packet, event.isCancelled() ? Debugger.State.CANCELED : Debugger.State.NORMAL, Debugger.EventPacketDebug.Direction.INCOMING));
     }
 
     public static void leftClickPackets(MovingObjectPosition objectMouseOver, boolean swing) {
@@ -36,6 +48,7 @@ public class PacketUtil implements MinecraftInstance {
 
             PlayerUtil.swingConditional(!swing, objectMouseOver);
 
+
             if (event.mouseOver == null) {
                 if (mc.playerController.isNotCreative()) {
                     mc.leftClickCounter = 10;
@@ -45,7 +58,7 @@ public class PacketUtil implements MinecraftInstance {
 
             switch (event.mouseOver.typeOfHit) {
                 case ENTITY:
-                    AttackOrder.sendFixedAttack(mc.thePlayer, event.mouseOver.entityHit);
+                    AttackOrder.sendFixedAttack(mc.thePlayer, event.mouseOver.entityHit, !swing);
                     break;
 
                 case BLOCK:

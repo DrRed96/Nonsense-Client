@@ -32,7 +32,7 @@ public class AntiBot extends Module {
     }
 
     @EventLink(EventPriorities.VERY_LOW)
-    public final Listener<EventTick> onTick = event -> {
+    public final Listener<EventTick> onTick = _ -> {
         if (!PlayerUtil.canUpdate()) {
             this.bots.clear();
             return;
@@ -43,16 +43,16 @@ public class AntiBot extends Module {
                 this.bots.clear();
                 this.bots.addAll(mc.theWorld.getEntities(EntityPlayer.class, input -> !ServerUtil.isInTab(input)));
             }
+
             case HYPIXEL -> {
                 this.bots.clear();
-                for (EntityPlayer player : mc.theWorld.getEntities(EntityPlayer.class, input -> true)) {
+                for (EntityPlayer player : mc.theWorld.getEntities(EntityPlayer.class, _ -> true)) {
                     if (!ServerUtil.isInTab(player) || this.nameStartsWith(player, "[NPC] ") || !player.getName().matches(VALID_USERNAME_REGEX)) {
                         this.bots.add(player);
                     }
                 }
             }
         }
-
 
     };
 

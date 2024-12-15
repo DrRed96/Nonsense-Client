@@ -1,5 +1,6 @@
 package wtf.bhopper.nonsense.util.minecraft;
 
+import com.google.common.base.Objects;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
@@ -34,5 +35,11 @@ public class Rotation {
         this.pitch = entity.rotationPitch;
     }
 
-
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("yaw", this.yaw)
+                .add("pitch", this.pitch)
+                .toString();
+    }
 }

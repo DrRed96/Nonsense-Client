@@ -40,30 +40,30 @@ public class Explosion
     private final List<BlockPos> affectedBlockPositions;
     private final Map<EntityPlayer, Vec3> playerKnockbackMap;
 
-    public Explosion(World worldIn, Entity p_i45752_2_, double p_i45752_3_, double p_i45752_5_, double p_i45752_7_, float p_i45752_9_, List<BlockPos> p_i45752_10_)
+    public Explosion(World worldIn, Entity exploder, double x, double y, double z, float strength, List<BlockPos> affectedBlockPositions)
     {
-        this(worldIn, p_i45752_2_, p_i45752_3_, p_i45752_5_, p_i45752_7_, p_i45752_9_, false, true, p_i45752_10_);
+        this(worldIn, exploder, x, y, z, strength, false, true, affectedBlockPositions);
     }
 
-    public Explosion(World worldIn, Entity p_i45753_2_, double p_i45753_3_, double p_i45753_5_, double p_i45753_7_, float p_i45753_9_, boolean p_i45753_10_, boolean p_i45753_11_, List<BlockPos> p_i45753_12_)
+    public Explosion(World world, Entity exploder, double x, double y, double z, float strength, boolean flaming, boolean smoking, List<BlockPos> affectedBlockPositions)
     {
-        this(worldIn, p_i45753_2_, p_i45753_3_, p_i45753_5_, p_i45753_7_, p_i45753_9_, p_i45753_10_, p_i45753_11_);
-        this.affectedBlockPositions.addAll(p_i45753_12_);
+        this(world, exploder, x, y, z, strength, flaming, smoking);
+        this.affectedBlockPositions.addAll(affectedBlockPositions);
     }
 
-    public Explosion(World worldIn, Entity p_i45754_2_, double p_i45754_3_, double p_i45754_5_, double p_i45754_7_, float size, boolean p_i45754_10_, boolean p_i45754_11_)
+    public Explosion(World worldIn, Entity exploder, double x, double y, double z, float size, boolean flaming, boolean smoking)
     {
         this.explosionRNG = new Random();
-        this.affectedBlockPositions = Lists.<BlockPos>newArrayList();
-        this.playerKnockbackMap = Maps.<EntityPlayer, Vec3>newHashMap();
+        this.affectedBlockPositions = Lists.newArrayList();
+        this.playerKnockbackMap = Maps.newHashMap();
         this.worldObj = worldIn;
-        this.exploder = p_i45754_2_;
+        this.exploder = exploder;
         this.explosionSize = size;
-        this.explosionX = p_i45754_3_;
-        this.explosionY = p_i45754_5_;
-        this.explosionZ = p_i45754_7_;
-        this.isFlaming = p_i45754_10_;
-        this.isSmoking = p_i45754_11_;
+        this.explosionX = x;
+        this.explosionY = y;
+        this.explosionZ = z;
+        this.isFlaming = flaming;
+        this.isSmoking = smoking;
     }
 
     /**
@@ -71,7 +71,7 @@ public class Explosion
      */
     public void doExplosionA()
     {
-        Set<BlockPos> set = Sets.<BlockPos>newHashSet();
+        Set<BlockPos> set = Sets.newHashSet();
         int i = 16;
 
         for (int j = 0; j < 16; ++j)
@@ -82,9 +82,9 @@ public class Explosion
                 {
                     if (j == 0 || j == 15 || k == 0 || k == 15 || l == 0 || l == 15)
                     {
-                        double d0 = (double)((float)j / 15.0F * 2.0F - 1.0F);
-                        double d1 = (double)((float)k / 15.0F * 2.0F - 1.0F);
-                        double d2 = (double)((float)l / 15.0F * 2.0F - 1.0F);
+                        double d0 = (float)j / 15.0F * 2.0F - 1.0F;
+                        double d1 = (float)k / 15.0F * 2.0F - 1.0F;
+                        double d2 = (float)l / 15.0F * 2.0F - 1.0F;
                         double d3 = Math.sqrt(d0 * d0 + d1 * d1 + d2 * d2);
                         d0 = d0 / d3;
                         d1 = d1 / d3;
@@ -110,9 +110,9 @@ public class Explosion
                                 set.add(blockpos);
                             }
 
-                            d4 += d0 * 0.30000001192092896D;
-                            d6 += d1 * 0.30000001192092896D;
-                            d8 += d2 * 0.30000001192092896D;
+                            d4 += d0 * 0.3D;
+                            d6 += d1 * 0.3D;
+                            d8 += d2 * 0.3D;
                         }
                     }
                 }

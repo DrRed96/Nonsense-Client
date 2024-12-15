@@ -96,13 +96,12 @@ public class Atmosphere extends Module {
             }
         }
 
-        if (this.weatherEnabled.get()) {
-
-            int time = (300 + (new Random()).nextInt(600)) * 20;
+        if (this.weatherEnabled.get() && mc.thePlayer.ticksExisted % 20 == 0) {
 
             switch (this.weather.get()) {
                 case CLEAR -> {
-                    mc.theWorld.getWorldInfo().setCleanWeatherTime(time);
+                    mc.theWorld.setRainStrength(0);
+                    mc.theWorld.getWorldInfo().setCleanWeatherTime(Integer.MAX_VALUE);
                     mc.theWorld.getWorldInfo().setRainTime(0);
                     mc.theWorld.getWorldInfo().setThunderTime(0);
                     mc.theWorld.getWorldInfo().setRaining(false);
@@ -110,17 +109,19 @@ public class Atmosphere extends Module {
                 }
 
                 case RAIN -> {
+                    mc.theWorld.setRainStrength(1);
                     mc.theWorld.getWorldInfo().setCleanWeatherTime(0);
-                    mc.theWorld.getWorldInfo().setRainTime(time);
-                    mc.theWorld.getWorldInfo().setThunderTime(time);
+                    mc.theWorld.getWorldInfo().setRainTime(Integer.MAX_VALUE);
+                    mc.theWorld.getWorldInfo().setThunderTime(Integer.MAX_VALUE);
                     mc.theWorld.getWorldInfo().setRaining(true);
                     mc.theWorld.getWorldInfo().setThundering(false);
                 }
 
                 case THUNDER -> {
+                    mc.theWorld.setRainStrength(1);
                     mc.theWorld.getWorldInfo().setCleanWeatherTime(0);
-                    mc.theWorld.getWorldInfo().setRainTime(time);
-                    mc.theWorld.getWorldInfo().setThunderTime(time);
+                    mc.theWorld.getWorldInfo().setRainTime(Integer.MAX_VALUE);
+                    mc.theWorld.getWorldInfo().setThunderTime(Integer.MAX_VALUE);
                     mc.theWorld.getWorldInfo().setRaining(true);
                     mc.theWorld.getWorldInfo().setThundering(true);
                 }

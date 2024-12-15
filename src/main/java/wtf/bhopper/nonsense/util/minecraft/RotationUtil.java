@@ -1,10 +1,12 @@
 package wtf.bhopper.nonsense.util.minecraft;
 
+import com.google.common.base.Predicates;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.*;
 import wtf.bhopper.nonsense.util.misc.GeneralUtil;
 import wtf.bhopper.nonsense.util.misc.MathUtil;
 
+import java.util.List;
 import java.util.Set;
 
 public class RotationUtil implements MinecraftInstance {
@@ -153,6 +155,124 @@ public class RotationUtil implements MinecraftInstance {
                 MathHelper.wrapAngleTo180_float(startYaw + delta * factor),
                 MathUtil.lerp(start.pitch, end.pitch, factor)
         );
+    }
+
+    public static boolean isOverBlock(Rotation rotation, BlockPos pos, EnumFacing facing) {
+        MovingObjectPosition objectMouseOver = rayCastBlocks(rotation, 4.5F, mc.thePlayer);
+
+        if (objectMouseOver == null || objectMouseOver.hitVec == null) {
+            return false;
+        }
+
+        return objectMouseOver.getBlockPos().equals(pos) && objectMouseOver.sideHit == facing;
+    }
+
+    public static MovingObjectPosition rayCast(Rotation rotation, double range, Entity entity) {
+
+        if (entity == null || mc.theWorld == null) {
+            return null;
+        }
+
+        MovingObjectPosition objectMouseOver = entity.rayTraceCustom(range, rotation.yaw, rotation.pitch);
+        Vec3 start = entity.getPositionEyes(1.0F);
+        double fixedRange = objectMouseOver != null ? objectMouseOver.hitVec.distanceTo(start) : range;
+
+        Vec3 look = entity.getVectorForRotation(rotation.pitch, rotation.yaw);
+        Vec3 end = start.addVector(look.xCoord * range, look.yCoord * range, look.zCoord * range);
+
+        Entity pointedEntity = null;
+        Vec3 hitVec = null;
+
+        List<Entity> possibleEntities = mc.theWorld.getEntitiesInAABBexcluding(entity,
+                entity.getEntityBoundingBox().addCoord(look.xCoord * range, look.yCoord * range, look.zCoord * range).expand(1.0F, 1.0F, 1.0F),
+                Predicates.and(EntitySelectors.NOT_SPECTATING, Entity::canBeCollidedWith));
+
+        double reach = fixedRange;
+
+        for (Entity e : possibleEntities) {
+            float collisionBoarderSize = e.getCollisionBorderSize();
+            AxisAlignedBB boundingBox = e.getEntityBoundingBox().expand(collisionBoarderSize, collisionBoarderSize, collisionBoarderSize);
+            MovingObjectPosition intercept = boundingBox.calculateIntercept(start, end);
+
+            if (boundingBox.isVecInside(start)) {
+                if (reach >= 0.0) {
+                    pointedEntity = e;
+                    hitVec = intercept != null ? intercept.hitVec : start;
+                    reach = 0.0;
+                }
+            } else if (intercept != null) {
+                double distance = start.distanceTo(intercept.hitVec);
+
+                if (distance < reach || reach == 0.0) {
+                    pointedEntity = e;
+                    hitVec = intercept.hitVec;
+                    reach = distance;
+                }
+            }
+        }
+
+        if (pointedEntity != null && (reach < fixedRange || objectMouseOver == null)) {
+            objectMouseOver = new MovingObjectPosition(pointedEntity, hitVec);
+        }
+
+        return objectMouseOver;
+    }
+
+    public static MovingObjectPosition rayCastBlocks(Rotation rotation, double range, Entity entity) {
+        if (entity == null || mc.theWorld == null) {
+            return null;
+        }
+
+        return entity.rayTraceCustom(range, rotation.yaw, rotation.pitch);
+    }
+
+    public static MovingObjectPosition rayCastEntity(Rotation rotation, double range, Entity entity) {
+        if (entity == null || mc.theWorld == null) {
+            return null;
+        }
+
+        MovingObjectPosition objectMouseOver = null;
+        Vec3 start = entity.getPositionEyes(1.0F);
+
+        Vec3 look = entity.getVectorForRotation(rotation.pitch, rotation.yaw);
+        Vec3 end = start.addVector(look.xCoord * range, look.yCoord * range, look.zCoord * range);
+
+        Entity pointedEntity = null;
+        Vec3 hitVec = null;
+
+        List<Entity> possibleEntities = mc.theWorld.getEntitiesInAABBexcluding(entity,
+                entity.getEntityBoundingBox().addCoord(look.xCoord * range, look.yCoord * range, look.zCoord * range).expand(1.0F, 1.0F, 1.0F),
+                Predicates.and(EntitySelectors.NOT_SPECTATING, Entity::canBeCollidedWith));
+
+        double reach = range;
+
+        for (Entity e : possibleEntities) {
+            float collisionBoarderSize = e.getCollisionBorderSize();
+            AxisAlignedBB boundingBox = e.getEntityBoundingBox().expand(collisionBoarderSize, collisionBoarderSize, collisionBoarderSize);
+            MovingObjectPosition intercept = boundingBox.calculateIntercept(start, end);
+
+            if (boundingBox.isVecInside(start)) {
+                if (reach >= 0.0) {
+                    pointedEntity = e;
+                    hitVec = intercept != null ? intercept.hitVec : start;
+                    reach = 0.0;
+                }
+            } else if (intercept != null) {
+                double distance = start.distanceTo(intercept.hitVec);
+
+                if (distance < reach || reach == 0.0) {
+                    pointedEntity = e;
+                    hitVec = intercept.hitVec;
+                    reach = distance;
+                }
+            }
+        }
+
+        if (pointedEntity != null) {
+            objectMouseOver = new MovingObjectPosition(pointedEntity, hitVec);
+        }
+
+        return objectMouseOver;
     }
 
 }

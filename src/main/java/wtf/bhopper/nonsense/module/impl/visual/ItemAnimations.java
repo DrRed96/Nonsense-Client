@@ -3,6 +3,8 @@ package wtf.bhopper.nonsense.module.impl.visual;
 import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
@@ -37,17 +39,23 @@ public class ItemAnimations extends Module {
     private final EnumProperty<BlockAnimation> blockAnimation = new EnumProperty<>("Animation", "Sword blocking animation.", BlockAnimation.DEFAULT);
     private final NumberProperty equipAnimation = new NumberProperty("Equip Animation", "Crontrols the animation played when your item is updated.", 0.5, 0.0, 1.0, 0.05);
 
+    private final GroupProperty swingGroup = new GroupProperty("Swinging", "Modify item/arm swinging");
+    private final NumberProperty normalSwingSpeed = new NumberProperty("Normal Speed", "Normal swing speed", 6, 1, 15, 1);
+    private final NumberProperty usingSwingSpeed = new NumberProperty("Using Speed", "Using swing speed", 6, 1, 15, 1);
+
     private final BooleanProperty oldTransform = new BooleanProperty("Old Transform", "Applies the 1.7 item transformations", false);
 
     public ItemAnimations() {
 
         this.usePos.addProperties(this.useX, this.useY, this.useZ);
         this.normPos.addProperties(this.normX, this.normY, this.normZ);
-
         this.posGroup.addProperties(this.usePos, this.normPos, this.swordOnly);
 
         this.swordGroup.addProperties(this.blockAnimation, this.equipAnimation);
-        this.addProperties(this.posGroup, this.swordGroup, this.oldTransform);
+
+        this.swingGroup.addProperties(this.normalSwingSpeed, this.usingSwingSpeed);
+
+        this.addProperties(this.posGroup, this.swordGroup, this.swingGroup, this.oldTransform);
     }
 
     public void transformFirstPersonItem(float equipProgress, float swingProgress) {
@@ -110,7 +118,7 @@ public class ItemAnimations extends Module {
                         case SWONG -> {
                             this.transformFirstPersonItem(equip, 0.0F);
                             GlStateManager.rotate(-factor1 * 40.0F, factor1 / 2.0F, 0.0F, 9.0F);
-                            GlStateManager.rotate(-factor1 * 60.0F, 0.9F, factor1 / 2.0F, 0.0F);
+                            GlStateManager.rotate(-factor1 * 40.0F, 1.0F, factor1 / 2.0F, 0.0F);
                             renderer.doBlockTransformations();
                         }
 
@@ -244,6 +252,15 @@ public class ItemAnimations extends Module {
         }
 
     }
+
+    public int getArmSwingEnd(EntityLivingBase entity) {
+        if (!entity.isClientPlayer() || !this.isToggled()) {
+            return 6;
+        }
+
+        return ((EntityPlayer)entity).isUsingItem() ? this.usingSwingSpeed.getInt() : this.normalSwingSpeed.getInt();
+    }
+
 
     private enum BlockAnimation {
         DEFAULT,

@@ -52,6 +52,9 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.event.impl.EventJump;
+import wtf.bhopper.nonsense.module.impl.visual.ItemAnimations;
 import wtf.bhopper.nonsense.util.minecraft.RotationUtil;
 
 public abstract class EntityLivingBase extends Entity {
@@ -1155,7 +1158,18 @@ public abstract class EntityLivingBase extends Entity {
      * progress indicator. Takes dig speed enchantments into account.
      */
     private int getArmSwingAnimationEnd() {
-        return this.isPotionActive(Potion.digSpeed) ? 6 - (1 + this.getActivePotionEffect(Potion.digSpeed).getAmplifier()) * 1 : (this.isPotionActive(Potion.digSlowdown) ? 6 + (1 + this.getActivePotionEffect(Potion.digSlowdown).getAmplifier()) * 2 : 6);
+
+        int baseSpeed = Nonsense.module(ItemAnimations.class).getArmSwingEnd(this);
+
+        if (this.isPotionActive(Potion.digSpeed)) {
+            return baseSpeed - (1 + this.getActivePotionEffect(Potion.digSpeed).getAmplifier());
+        }
+
+        if (this.isPotionActive(Potion.digSlowdown)) {
+            return baseSpeed + (1 + this.getActivePotionEffect(Potion.digSlowdown).getAmplifier()) * 2;
+        }
+
+        return baseSpeed;
     }
 
     /**
@@ -1351,11 +1365,22 @@ public abstract class EntityLivingBase extends Entity {
      * Causes this entity to do an upwards motion (jumping).
      */
     protected void jump() {
-        this.motionY = this.getJumpUpwardsMotion();
+        float motion = this.getJumpUpwardsMotion();
 
         if (this.isPotionActive(Potion.jump)) {
-            this.motionY += (float) (this.getActivePotionEffect(Potion.jump).getAmplifier() + 1) * 0.1F;
+            motion += (float) (this.getActivePotionEffect(Potion.jump).getAmplifier() + 1) * 0.1F;
         }
+
+        if (this.isClientPlayer()) {
+            EventJump event = new EventJump(motion);
+            Nonsense.getEventBus().post(event);
+            if (event.isCancelled()) {
+                return;
+            }
+            motion = event.motion;
+        }
+
+        this.motionY = motion;
 
         if (this.isSprinting()) {
             float f = this.rotationYaw * 0.017453292F;

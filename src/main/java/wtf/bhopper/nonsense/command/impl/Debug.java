@@ -5,7 +5,9 @@ import net.minecraft.event.ClickEvent;
 import net.minecraft.item.ItemBlock;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.CompressedStreamTools;
+import net.minecraft.network.play.server.S27PacketExplosion;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.Vec3;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.command.Command;
 import wtf.bhopper.nonsense.command.CommandInfo;
@@ -15,8 +17,10 @@ import wtf.bhopper.nonsense.module.impl.combat.AntiBot;
 import wtf.bhopper.nonsense.module.impl.other.Debugger;
 import wtf.bhopper.nonsense.network.Account;
 import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
+import wtf.bhopper.nonsense.util.minecraft.PacketUtil;
 
 import java.io.File;
+import java.util.ArrayList;
 
 @CommandInfo(name = "Debug", description = "Helps with debugging", syntax = ".debug <args>")
 public class Debug extends Command {
@@ -137,6 +141,13 @@ public class Debug extends Command {
                     ChatUtil.debugItem(player.getName(), player.getUniqueID());
                 }
             }
+
+            case "explodecrash" -> PacketUtil.receive(new S27PacketExplosion(mc.thePlayer.posX,
+                    mc.thePlayer.posY,
+                    mc.thePlayer.posZ,
+                    1.0F,
+                    new ArrayList<>(),
+                    new Vec3(Byte.MAX_VALUE, Byte.MAX_VALUE, Byte.MAX_VALUE)));
 
             default -> ChatUtil.error("Unknown debugging command.");
 

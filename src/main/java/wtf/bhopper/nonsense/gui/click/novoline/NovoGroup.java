@@ -51,7 +51,7 @@ public class NovoGroup extends NovoComponent {
         this.drawBackground(MOD_HEIGHT, this.expanded ? this.indentColor1(BG_COLOR) : this.indentColor(BG_COLOR));
         NVGHelper.fontSize(16.0F);
         NVGHelper.textAlign(NVG_ALIGN_CENTER | NVG_ALIGN_MIDDLE);
-        NVGHelper.drawText(this.property.displayName + "...", WIDTH / 2.0F, yOff + MOD_HEIGHT / 2.0F + 1.0F, 0xFFFFFFFF);
+        NVGHelper.drawText(this.property.displayName + "...", WIDTH / 2.0F, yOff + MOD_HEIGHT / 2.0F + 1.0F, 0xFFFFFFFF, true);
 
         this.panel.yOff += MOD_HEIGHT;
 

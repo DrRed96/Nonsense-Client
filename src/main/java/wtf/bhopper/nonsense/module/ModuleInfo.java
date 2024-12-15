@@ -26,4 +26,6 @@ public @interface ModuleInfo {
 
     boolean hidden() default false;
 
+    String[] searchAlias() default {};
+
 }

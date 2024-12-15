@@ -112,4 +112,15 @@ public class MathUtil {
         return closestPointOnFace(aabb, face, vec.xCoord, vec.yCoord, vec.zCoord);
     }
 
+    public static double wrappedDifference(double number1, double number2) {
+        return Math.min(Math.abs(number1 - number2), Math.min(Math.abs(number1 - 360) - Math.abs(number2 - 0), Math.abs(number2 - 360) - Math.abs(number1 - 0)));
+    }
+
+    public static float distanceTo(Vec3 pointA, Vec3 pointB) {
+        double x = pointA.xCoord - pointB.xCoord;
+        double y = pointA.yCoord - pointB.yCoord;
+        double z = pointA.zCoord - pointB.zCoord;
+        return MathHelper.sqrt_double(x * x + y * y + z * z);
+    }
+
 }

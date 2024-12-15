@@ -21,8 +21,11 @@ public class InventoryUtil implements MinecraftInstance {
         return mc.thePlayer.inventoryContainer.getSlot(slot).getStack();
     }
 
-    public static boolean placeStackInInventory(ItemStack stack) {
+    public static void windowClick(int windowId, int slotId, int mouseButtonClicked, ClickType type) {
+        mc.playerController.windowClick(windowId, slotId, mouseButtonClicked, type.ordinal(), mc.thePlayer);
+    }
 
+    public static boolean placeStackInInventory(ItemStack stack) {
         for (int i = 0; i < 36; i++) {
             int slot = i < 9 ? i + 36 : i;
             if (mc.thePlayer.inventory.getStackInSlot(i) == null) {
@@ -33,6 +36,10 @@ public class InventoryUtil implements MinecraftInstance {
         }
 
         return false;
+    }
+
+    public enum ClickType {
+        PICKUP, QUICK_MOVE, SWAP, CLONE, THROW, QUICK_CRAFT, PICKUP_ALL
     }
 
 }

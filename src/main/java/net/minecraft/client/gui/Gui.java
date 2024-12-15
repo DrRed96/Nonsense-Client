@@ -200,6 +200,23 @@ public class Gui
     }
 
     /**
+     * Draws a textured rectangle at z = 0. Args: x, y, u, v, width, height, textureWidth, textureHeight
+     */
+    public static void drawModalRectWithCustomSizedTexture(float x, float y, float u, float v, float width, float height, float textureWidth, float textureHeight)
+    {
+        float inverseWidth = 1.0F / textureWidth;
+        float inverseHeight = 1.0F / textureHeight;
+        Tessellator tessellator = Tessellator.getInstance();
+        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
+        worldrenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
+        worldrenderer.pos(x, y + height, 0.0D).tex(u * inverseWidth, (v + height) * inverseHeight).endVertex();
+        worldrenderer.pos(x + width, y + height, 0.0D).tex((u + width) * inverseWidth, (v + height) * inverseHeight).endVertex();
+        worldrenderer.pos(x + width, y, 0.0D).tex((u + width) * inverseWidth, v * inverseHeight).endVertex();
+        worldrenderer.pos(x, y, 0.0D).tex(u * inverseWidth, v * inverseHeight).endVertex();
+        tessellator.draw();
+    }
+
+    /**
      * Draws a scaled, textured, tiled modal rect at z = 0. This method isn't used anywhere in vanilla code.
      */
     public static void drawScaledCustomSizeModalRect(int x, int y, float u, float v, int uWidth, int vHeight, int width, int height, float tileWidth, float tileHeight)

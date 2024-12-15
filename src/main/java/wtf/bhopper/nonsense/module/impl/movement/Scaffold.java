@@ -144,8 +144,34 @@ public class Scaffold extends Module {
 
                     yield new Vec3(x, y, z);
                 }
-                case CORNER -> new Vec3(pos.getX(), pos.getY(), pos.getZ());
+
+                // Shameless copy from Rise
+                case RAY_CAST -> {
+                    double diff = PlayerUtil.eyesPos().yCoord - pos.getY() - 0.5 - (Math.random() - 0.5) * 0.1;
+
+                    MovingObjectPosition mouseOver = null;
+                    for (int offset = -180; offset <= 180; offset += 45) {
+                        mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY - diff, mc.thePlayer.posZ);
+                        mouseOver = RotationUtil.rayCastBlocks(new Rotation(mc.thePlayer.rotationYaw + offset * 3.0F, 0.0F), mc.playerController.getBlockReachDistance(), mc.thePlayer);
+                        mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + diff, mc.thePlayer.posZ);
+
+                        if (mouseOver == null || mouseOver.hitVec == null) {
+                            yield null;
+                        }
+
+                        if (RotationUtil.isOverBlock(RotationUtil.getRotations(mouseOver.hitVec), pos, face)) {
+                            yield mouseOver.hitVec;
+                        }
+
+                    }
+
+                    yield null;
+                }
             };
+
+            if (this.hitVec != null && MathUtil.distanceTo(PlayerUtil.eyesPos(), this.hitVec) > mc.playerController.getBlockReachDistance()) {
+                this.hitVec = null;
+            }
 
             if (this.hitVec != null && this.rotationRayCast.get()) {
                 Vec3 src = PlayerUtil.eyesPos();
@@ -198,6 +224,7 @@ public class Scaffold extends Module {
 
         Rotation targetRotations = switch (this.rotationsAiming.get()) {
             case HIT_VECTOR -> this.hitVec == null ? null : RotationUtil.getRotations(this.hitVec);
+            case INVALID -> new Rotation(mc.thePlayer.rotationYaw, 95);
         };
 
         this.rotations = switch (this.rotationsMode.get()) {
@@ -397,14 +424,15 @@ public class Scaffold extends Module {
     }
 
     private enum RotationsAiming {
-        HIT_VECTOR
+        HIT_VECTOR,
+        INVALID
     }
 
     private enum RotationsHitVec {
         CENTRE,
         CLOSEST,
         RANDOM,
-        CORNER
+        RAY_CAST
     }
 
     private enum TowerMode {

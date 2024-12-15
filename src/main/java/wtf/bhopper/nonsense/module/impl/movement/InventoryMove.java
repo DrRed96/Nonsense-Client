@@ -6,6 +6,7 @@ import net.minecraft.client.settings.KeyBinding;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
 import wtf.bhopper.nonsense.event.impl.EventPostMotion;
+import wtf.bhopper.nonsense.event.impl.EventUpdate;
 import wtf.bhopper.nonsense.gui.click.novoline.NovoButton;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
@@ -30,7 +31,7 @@ public class InventoryMove extends Module {
     }
 
     @EventLink
-    public final Listener<EventPostMotion> onPost = event -> {
+    public final Listener<EventUpdate> onUpdate = _ -> {
         if (this.canInvMove()) {
             for (KeyBinding keyBinding : keyBindings) {
                 keyBinding.setPressed(GameSettings.isKeyDown(keyBinding));
@@ -41,6 +42,18 @@ public class InventoryMove extends Module {
     private boolean canInvMove() {
 
         if (mc.currentScreen == null || mc.currentScreen instanceof GuiChat) {
+            return false;
+        }
+
+        if (this.clientSide.get()) {
+            return mc.currentScreen.isClientSide();
+        }
+
+        return true;
+    }
+
+    public boolean canClick() {
+        if (!this.isToggled()) {
             return false;
         }
 

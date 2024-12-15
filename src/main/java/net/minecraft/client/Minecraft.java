@@ -96,6 +96,7 @@ import org.lwjglx.opengl.*;
 import org.lwjglx.util.glu.GLU;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.impl.*;
+import wtf.bhopper.nonsense.module.impl.movement.InventoryMove;
 import wtf.bhopper.nonsense.util.minecraft.InventoryUtil;
 
 import javax.imageio.ImageIO;
@@ -1101,7 +1102,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
             } else {
                 switch (event.mouseOver.typeOfHit) {
                     case ENTITY:
-                        AttackOrder.sendFixedAttack(this.thePlayer, this.objectMouseOver.entityHit);
+                        AttackOrder.sendFixedAttack(this.thePlayer, this.objectMouseOver.entityHit, false);
                         break;
 
                     case BLOCK:
@@ -1301,7 +1302,7 @@ public class Minecraft implements IThreadListener, IPlayerUsage {
             this.displayGuiScreen(null);
         }
 
-        if (this.currentScreen != null) {
+        if (this.currentScreen != null && !Nonsense.module(InventoryMove.class).canClick()) {
             this.leftClickCounter = 10000;
         }
 

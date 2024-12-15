@@ -43,7 +43,7 @@ public class NovoTextBox extends NovoComponent {
 
         NVGHelper.fontSize(16.0F);
         NVGHelper.textAlign(NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-        NVGHelper.drawText(this.property.displayName + ": ", this.getIndentionOffset(), yOff + MOD_HEIGHT / 2.0F + 1.0F, 0xFFFFFFFF);
+        NVGHelper.drawText(this.property.displayName + ": ", this.getIndentionOffset(), yOff + MOD_HEIGHT / 2.0F + 1.0F, 0xFFFFFFFF, true);
 
         if (this.expanded) {
             if (this.typeTimer.hasReached(1000)) {
@@ -57,7 +57,7 @@ public class NovoTextBox extends NovoComponent {
 
             NVGHelper.fontSize(14.0F);
             NVGHelper.textAlign(NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-            NVGHelper.drawText(this.property.get() + (this.showType ? "|" : ""), this.getIndentionOffset(), this.panel.yOff + EXPANDED_HEIGHT / 2.0F + 1.0F, 0xFFDDDDDD);
+            NVGHelper.drawText(this.property.get() + (this.showType ? "|" : ""), this.getIndentionOffset(), this.panel.yOff + EXPANDED_HEIGHT / 2.0F + 1.0F, 0xFFDDDDDD, true);
 
             this.panel.yOff += EXPANDED_HEIGHT;
         } else {
@@ -65,7 +65,7 @@ public class NovoTextBox extends NovoComponent {
 
             NVGHelper.fontSize(14.0F);
             NVGHelper.textAlign(NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-            NVGHelper.drawText(this.property.get(), offset, yOff + MOD_HEIGHT / 2.0F, 0xFFDDDDDD);
+            NVGHelper.drawText(this.property.get(), offset, yOff + MOD_HEIGHT / 2.0F, 0xFFDDDDDD, true);
 
             this.panel.yOff += MOD_HEIGHT;
         }

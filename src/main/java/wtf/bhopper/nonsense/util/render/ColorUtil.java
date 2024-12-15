@@ -14,7 +14,7 @@ public class ColorUtil {
     public static final int GRAY = 0xFFAAAAAA;
     public static final int RED = 0xFFFF0000;
 
-    public static int dropShadowColor(int color) {
+    public static int dropShadow(int color) {
         return (color & 0xFCFCFC) >> 2 | color & 0xFF000000;
     }
 

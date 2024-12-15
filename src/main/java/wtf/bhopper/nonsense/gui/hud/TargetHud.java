@@ -1,10 +1,14 @@
 package wtf.bhopper.nonsense.gui.hud;
 
 import net.minecraft.client.gui.inventory.GuiInventory;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
 import org.lwjglx.opengl.Display;
+import org.lwjglx.opengl.GLSync;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.gui.components.RenderComponent;
+import wtf.bhopper.nonsense.module.impl.combat.InfiniteAura;
 import wtf.bhopper.nonsense.module.impl.combat.KillAura;
 import wtf.bhopper.nonsense.module.impl.visual.HudMod;
 import wtf.bhopper.nonsense.module.property.ValueChangeListener;
@@ -18,6 +22,7 @@ public class TargetHud extends RenderComponent {
 
     private static final NumberFormat ASTOLFO_FORMAT = new DecimalFormat("#0.# \u2764");
     private static final NumberFormat RAVEN_FORMAT = new DecimalFormat("#0.0");
+    private static final NumberFormat DISTANCE_FORMAT = new DecimalFormat("#0.00'm'");
 
     private final Translate translate = new Translate(0.0F, 0.0F);
 
@@ -33,6 +38,9 @@ public class TargetHud extends RenderComponent {
 
         EntityLivingBase target = Nonsense.module(KillAura.class).getTarget();
         if (target == null) {
+            target = Nonsense.module(InfiniteAura.class).getTarget();
+        }
+        if (target == null) {
             if (!bypass) {
                 return;
             }
@@ -40,10 +48,57 @@ public class TargetHud extends RenderComponent {
         }
 
         switch (mod.targetHudMode.get()) {
+            case DETAILED -> this.drawDetailedHud(target, mod, delta);
             case ASTOLFO -> this.drawAstolfoHud(target, mod, delta);
             case RAVEN -> this.drawRavenHud(target, mod, delta);
         }
 
+    }
+
+    private void drawDetailedHud(EntityLivingBase target, HudMod mod, float delta) {
+        float health = target.getHealth() + target.getAbsorptionAmount();
+        float maxHealth = target.getMaxHealth() + target.getAbsorptionAmount();
+        int color = this.getColor(target, mod);
+
+        String hurt = target.hurtTime <= 0 ? "\247aDamageable" : "\247cImmune \2477(\247f" + target.hurtTime + "\2477)";
+        String distance = "Distance: " + DISTANCE_FORMAT.format(mc.thePlayer.getDistanceToEntity(target));
+
+        this.translate.interpolate((health / maxHealth) * 350.0F, 0.0F, 0.2F, delta);
+
+        this.setSize(360, 150);
+
+        NVGHelper.begin();
+        this.nvgTranslate();
+        this.nvgDrawBackground(0x80000000);
+        NVGHelper.drawRect(5.0F, 135.0F, 350.0F, 10.0F, ColorUtil.dropShadow(color));
+        NVGHelper.drawRect(5.0F, 135.0F, this.translate.getX(), 10.0F, color);
+        NVGHelper.end();
+
+        RenderUtil.glColor(ColorUtil.WHITE);
+        GuiInventory.drawEntityOnScreen(40, 127, 60, -80, 0, target);
+
+        GlStateManager.pushMatrix();
+        GlStateManager.scale(2.0F, 2.0F, 1.0F);
+        int itemY = 2;
+        for (int i = 3; i >= 0; i--) {
+            ItemStack stack = target.getCurrentArmor(i);
+            if (stack != null) {
+                mc.getRenderItem().renderItemAndEffectIntoGUI(stack, 162, itemY);
+                itemY += 16;
+            }
+        }
+
+        ItemStack currentItem = target.getHeldItem();
+        if (currentItem != null) {
+            mc.getRenderItem().renderItemIntoGUI(currentItem, 146, 2);
+        }
+
+        GlStateManager.popMatrix();
+
+        RenderUtil.drawScaledString(target.getName(), 82.0F, 10.0F, ColorUtil.WHITE, true, 2.0F);
+        RenderUtil.drawScaledString(ASTOLFO_FORMAT.format(health), 80.0F, 34.0F, color, true, 4.0F);
+        RenderUtil.drawScaledString(hurt, 82.0F, 80.0F, ColorUtil.WHITE, true, 2.0F);
+        RenderUtil.drawScaledString(distance, 82.0F, 104.0F, ColorUtil.WHITE, true, 2.0F);
     }
 
     private void drawAstolfoHud(EntityLivingBase target, HudMod mod, float delta) {
@@ -59,7 +114,7 @@ public class TargetHud extends RenderComponent {
         NVGHelper.begin();
         this.nvgTranslate();
         this.nvgDrawBackground(0x80000000);
-        NVGHelper.drawRect(72.0F, 72.0F, 220.0F, 18.0F, ColorUtil.darken(color, 2));
+        NVGHelper.drawRect(72.0F, 72.0F, 220.0F, 18.0F, ColorUtil.dropShadow(color));
         NVGHelper.drawRect(72.0F, 72.0F,  this.translate.getX(), 18.0F, color);
         NVGHelper.end();
 

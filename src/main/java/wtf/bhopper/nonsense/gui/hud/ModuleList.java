@@ -1,7 +1,10 @@
 package wtf.bhopper.nonsense.gui.hud;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.ResourceLocation;
 import org.lwjglx.opengl.Display;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.module.Module;
@@ -15,17 +18,17 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
-import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_TOP;
+import static org.lwjgl.nanovg.NanoVG.*;
 
 public class ModuleList {
 
     public static final float ANIMATION_FACTOR = 0.1F;
+    public static final ResourceLocation JELLO_BG = new ResourceLocation("nonsense/arraylistshadow.png");
 
     private final List<Slot> slots = new ArrayList<>();
 
     public void init() {
-        Nonsense.getModuleManager().getModules().forEach(module -> slots.add(new Slot(module)));
+        Nonsense.getModuleManager().getModules().forEach(module -> slots.add(new Slot(Hud.mod(), module)));
     }
 
     public int draw(float delta, ScaledResolution scaledRes) {
@@ -36,17 +39,23 @@ public class ModuleList {
         }
 
         int right = Display.getWidth();
-        float yOff = 0.0F;
+        float yOff = switch (mod.moduleListMode.get()) {
+            case EXHIBITION -> 0.0F;
+        };
 
         NVGHelper.begin();
 
-        if (!mod.font.is(HudMod.Font.MINECRAFT)) {
-            Hud.bindFont();
-            NVGHelper.fontSize(Hud.mod().fontSize.getFloat());
-            NVGHelper.textAlign(NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+        switch (mod.moduleListMode.get()) {
+            case EXHIBITION -> {
+                if (!mod.font.is(HudMod.Font.MINECRAFT)) {
+                    Hud.bindFont();
+                    NVGHelper.fontSize(mod.fontSize.getFloat());
+                    NVGHelper.textAlign(NVG_ALIGN_LEFT | NVG_ALIGN_TOP);
+                }
+            }
         }
 
-        this.updateSlots(delta);
+        this.updateSlots(mod, delta);
 
         for (Slot slot : this.slots) {
             yOff = slot.draw(yOff, right, scaledRes, mod);
@@ -57,9 +66,9 @@ public class ModuleList {
         return (int)Math.ceil(yOff);
     }
 
-    private void updateSlots(float delta) {
-        this.slots.forEach(slot -> slot.updateText(delta));
-        switch (Hud.mod().moduleListSorting.get()) {
+    private void updateSlots(HudMod mod, float delta) {
+        this.slots.forEach(slot -> slot.updateText(mod, delta));
+        switch (mod.moduleListSorting.get()) {
             case LENGTH -> this.slots.sort(Comparator.comparingDouble(Slot::getWidth).reversed());
             case ALPHABETICAL -> this.slots.sort(Comparator.comparing(slot -> slot.name));
         }
@@ -67,7 +76,7 @@ public class ModuleList {
         int count = 0;
         for (Slot slot : this.slots) {
             if (slot.shouldDisplay) {
-                slot.updateColor(timeMS, count);
+                slot.updateColor(mod, timeMS, count);
                 count++;
             }
         }
@@ -84,9 +93,9 @@ public class ModuleList {
         private int color;
         private float animateFactor;
 
-        public Slot(Module module) {
+        public Slot(HudMod hudMod, Module module) {
             this.module = module;
-            this.updateText(1.0F);
+            this.updateText(hudMod, 1.0F);
         }
 
         public float draw(float yOff, float right, ScaledResolution scaledRes, HudMod hudMod) {
@@ -95,46 +104,48 @@ public class ModuleList {
                 return yOff;
             }
 
-            float fontSize = hudMod.font.is(HudMod.Font.MINECRAFT) ? 18.0F : hudMod.fontSize.getFloat();
-            float textX = right - (this.width + 2.0F + hudMod.moduleListSpacing.getFloat()) * this.animateFactor;
-            float textY = yOff + hudMod.moduleListSpacing.getFloat();
-            float textHeight = fontSize + hudMod.moduleListSpacing.getFloat() * 2.0F;
+            return switch (hudMod.moduleListMode.get()) {
+                case EXHIBITION -> {
+                    float fontSize = hudMod.font.is(HudMod.Font.MINECRAFT) ? 18.0F : hudMod.fontSize.getFloat();
+                    float textX = right - (this.width + 2.0F + hudMod.moduleListSpacing.getFloat()) * this.animateFactor;
+                    float textY = yOff + hudMod.moduleListSpacing.getFloat();
+                    float textHeight = fontSize + hudMod.moduleListSpacing.getFloat() * 2.0F;
 
-            if (hudMod.moduleListBackground.getInt() != 0) {
-                NVGHelper.drawRect(textX - 2.0F, yOff, right - textX + 2.0F, textHeight, ColorUtil.alpha(0, hudMod.moduleListBackground.getInt()));
-            }
+                    if (hudMod.moduleListBackground.getInt() != 0) {
+                        NVGHelper.drawRect(textX - 2.0F, yOff, right - textX + 2.0F, textHeight, ColorUtil.alpha(0, hudMod.moduleListBackground.getInt()));
+                    }
 
-            if (hudMod.font.is(HudMod.Font.MINECRAFT)) {
-                NVGHelper.end();
-                GlStateManager.pushMatrix();
-                scaledRes.scaleToFactor(1.0F);
+                    if (hudMod.font.is(HudMod.Font.MINECRAFT)) {
+                        NVGHelper.end();
+                        GlStateManager.pushMatrix();
+                        scaledRes.scaleToFactor(1.0F);
 
-                RenderUtil.drawScaledString(this.name, textX, textY, this.color, true, 2.0F);
-                if (this.suffix != null) {
-                    RenderUtil.drawScaledString(this.suffix, textX + this.suffixOffset, textY, hudMod.moduleListSuffixColor.getRGB(), true, 2.0F);
+                        RenderUtil.drawScaledString(this.name, textX, textY, this.color, true, 2.0F);
+                        if (this.suffix != null) {
+                            RenderUtil.drawScaledString(this.suffix, textX + this.suffixOffset, textY, hudMod.moduleListSuffixColor.getRGB(), true, 2.0F);
+                        }
+
+                        GlStateManager.popMatrix();
+                        NVGHelper.begin();
+                    } else {
+                        NVGHelper.drawText(this.name, textX, textY, this.color, true);
+                        if (this.suffix != null) {
+                            NVGHelper.drawText(this.suffix, textX + this.suffixOffset, textY, hudMod.moduleListSuffixColor.getRGB(), true);
+                        }
+                    }
+
+                    yield yOff + textHeight * this.animateFactor;
                 }
-
-                GlStateManager.popMatrix();
-                NVGHelper.begin();
-            } else {
-                NVGHelper.drawText(this.name, textX, textY, this.color, true);
-                if (this.suffix != null) {
-                    NVGHelper.drawText(this.suffix, textX + this.suffixOffset, textY, hudMod.moduleListSuffixColor.getRGB(), true);
-                }
-            }
-
-            return yOff + textHeight * this.animateFactor;
+            };
         }
 
-        public void updateText(float delta) {
+        public void updateText(HudMod hudMod, float delta) {
             if (this.module.isHidden()) {
                 this.shouldDisplay = false;
                 this.width = 0.0F;
                 this.name = "";
                 return;
             }
-
-            HudMod hudMod = Hud.mod();
 
             if (hudMod.moduleListAnimated.get()) {
                 if (this.module.isToggled()) {
@@ -160,15 +171,18 @@ public class ModuleList {
 
             String rawSuffix = module.getSuffix();
             this.name = hudMod.moduleListDisplay.get() ? module.displayName : module.displayName.replace(" ", "");
+            assert name != null; // Just to get rid of an annoying error
             if (rawSuffix != null) {
-                this.suffix = switch (hudMod.moduleListSuffix.get()) {
-                    case NORMAL -> module.getSuffix();
-                    case HYPHEN -> "- " + module.getSuffix();
-                    case BRACKET -> "(" + module.getSuffix() + ")";
-                    case SQUARE -> "[" + module.getSuffix() + "]";
-                    case ANGLE -> "<" + module.getSuffix() + ">";
-                    case CURLY -> "{" + module.getSuffix() + "}";
-                    case NONE -> null;
+                this.suffix = switch (hudMod.moduleListMode.get()) {
+                    case EXHIBITION -> switch (hudMod.moduleListSuffix.get()) {
+                        case NORMAL -> module.getSuffix();
+                        case HYPHEN -> "- " + module.getSuffix();
+                        case BRACKET -> "(" + module.getSuffix() + ")";
+                        case SQUARE -> "[" + module.getSuffix() + "]";
+                        case ANGLE -> "<" + module.getSuffix() + ">";
+                        case CURLY -> "{" + module.getSuffix() + "}";
+                        case NONE -> null;
+                    };
                 };
             } else {
                 this.suffix = null;
@@ -181,9 +195,11 @@ public class ModuleList {
                 }
             }
 
-            Hud.WidthMethod getWidth = hudMod.font.is(HudMod.Font.MINECRAFT)
-                    ? text -> Fonts.mc().getStringWidthF(text) * 2.0F
-                    : NVGHelper::getStringWidth;
+            Hud.WidthMethod getWidth = switch (hudMod.moduleListMode.get()) {
+                case EXHIBITION -> hudMod.font.is(HudMod.Font.MINECRAFT)
+                        ? text -> Fonts.mc().getStringWidthF(text) * 2.0F
+                        : NVGHelper::getStringWidth;
+            };
 
             if (this.suffix != null) {
                 this.width = getWidth.getWidth(this.name + " " + this.suffix);
@@ -195,20 +211,23 @@ public class ModuleList {
 
         }
 
-        public void updateColor(long timeMS, int count) {
-            this.color = switch (Hud.mod().moduleListColor.get()) {
-                case STATIC -> Hud.mod().color.getRGB();
-                case WAVY -> ColorUtil.wave(Hud.mod().color.getRGB(), timeMS, count);
-                case RAINBOW -> ColorUtil.rainbow(timeMS, count, 0.5F, 1.0F);
-                case RAINBOW_2 -> ColorUtil.rainbow(timeMS, count, 1.0F, 1.0F);
-                case EXHIBITION_RAINBOW -> ColorUtil.exhiRainbow(timeMS, count);
-                case CATEGORY -> this.module.category.color;
-                case ASTOLFO -> ColorUtil.astolfo(timeMS, count);
-                case RANDOM -> this.module.hashCode() | 0xFF000000;
-                case TRANS -> switch (count % 3) {
-                    case 0 -> 0xFF5BCEFA; // I legit Googled the exact RGB values XD
-                    case 1 -> 0xFFF5A9B8;
-                    default -> 0xFFFFFFFF;
+        public void updateColor(HudMod mod, long timeMS, int count) {
+
+            this.color = switch (mod.moduleListMode.get()) {
+                case EXHIBITION -> switch (mod.moduleListColor.get()) {
+                    case STATIC -> mod.color.getRGB();
+                    case WAVY -> ColorUtil.wave(mod.color.getRGB(), timeMS, count);
+                    case RAINBOW -> ColorUtil.rainbow(timeMS, count, 0.5F, 1.0F);
+                    case RAINBOW_2 -> ColorUtil.rainbow(timeMS, count, 1.0F, 1.0F);
+                    case EXHIBITION_RAINBOW -> ColorUtil.exhiRainbow(timeMS, count);
+                    case CATEGORY -> this.module.category.color;
+                    case ASTOLFO -> ColorUtil.astolfo(timeMS, count);
+                    case RANDOM -> this.module.hashCode() | 0xFF000000;
+                    case TRANS -> switch (count % 3) {
+                        case 0 -> 0xFF5BCEFA; // I legit Googled the exact RGB values XD
+                        case 1 -> 0xFFF5A9B8;
+                        default -> 0xFFFFFFFF;
+                    };
                 };
             };
         }

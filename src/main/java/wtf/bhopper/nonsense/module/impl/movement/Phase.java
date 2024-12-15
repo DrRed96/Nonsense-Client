@@ -11,7 +11,9 @@ import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.util.minecraft.MoveUtil;
 import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
 
-@ModuleInfo(name = "Phase", description = "Allows you to walk through blocks", category = ModuleCategory.MOVEMENT)
+@ModuleInfo(name = "Phase",
+        description = "Allows you to walk through blocks",
+        category = ModuleCategory.MOVEMENT)
 public class Phase extends Module {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Phase method", Mode.VANILLA);
@@ -40,7 +42,7 @@ public class Phase extends Module {
                     if (mc.gameSettings.keyBindJump.isKeyDown() && !mc.gameSettings.keyBindSneak.isKeyDown()) {
                         MoveUtil.vertical(event, 1.0);
                     } else if (!mc.gameSettings.keyBindJump.isKeyDown() && mc.gameSettings.keyBindSneak.isKeyDown()) {
-                        MoveUtil.vertical(event, 1.0);
+                        MoveUtil.vertical(event, -1.0);
                     } else {
                         MoveUtil.vertical(event, 0.0);
                     }

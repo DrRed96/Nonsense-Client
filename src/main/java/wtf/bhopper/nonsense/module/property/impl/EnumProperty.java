@@ -2,11 +2,16 @@ package wtf.bhopper.nonsense.module.property.impl;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import imgui.ImGui;
+import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.module.impl.visual.ClickGui;
 import wtf.bhopper.nonsense.module.property.Property;
 import wtf.bhopper.nonsense.module.property.annotations.Description;
 import wtf.bhopper.nonsense.module.property.annotations.DisplayName;
 import wtf.bhopper.nonsense.util.misc.GeneralUtil;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class EnumProperty<T extends Enum<T>> extends Property<T> {
@@ -50,12 +55,29 @@ public class EnumProperty<T extends Enum<T>> extends Property<T> {
         this.set(values[index]);
     }
 
+    public void setFromOrdinal(int ordinal) {
+        for (T value : this.values) {
+            if (value.ordinal() == ordinal) {
+                this.set(value);
+                return;
+            }
+        }
+    }
+
     public String getFullDescription() {
         String enumDesc = getEnumDescription(this.get());
         if (enumDesc != null) {
             return this.description + "\n" + this.getDisplayValue() + ": " + enumDesc;
         }
         return this.description;
+    }
+
+    public Map<T, String> valueNameMap() {
+        Map<T, String> map = new HashMap<>();
+        for (T t : values) {
+            map.put(t, toDisplay(t));
+        }
+        return map;
     }
 
     @Override
@@ -114,5 +136,30 @@ public class EnumProperty<T extends Enum<T>> extends Property<T> {
         } catch (NoSuchFieldException | NullPointerException ignored) {}
 
         return null;
+    }
+
+    public void imGuiDraw() {
+        // An internal method is needed here to manage the generics
+
+        Map<T, String> nameMap = this.valueNameMap();
+
+        if (ImGui.beginCombo(this.displayName, this.getDisplayValue())) {
+            for (T value : values) {
+
+                if (ImGui.selectable(nameMap.get(value))) {
+                    this.set(value);
+                }
+                String desc = getEnumDescription(value);
+                if (desc != null) {
+                    if (ImGui.isItemHovered() && Nonsense.module(ClickGui.class).toolTips.get()) {
+                        ImGui.setTooltip(desc);
+                    }
+                }
+            }
+            ImGui.endCombo();
+        } else if (ImGui.isItemHovered() && Nonsense.module(ClickGui.class).toolTips.get()) {
+            ImGui.setTooltip(this.description);
+        }
+
     }
 }

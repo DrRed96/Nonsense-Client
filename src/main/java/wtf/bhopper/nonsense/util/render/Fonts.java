@@ -3,7 +3,6 @@ package wtf.bhopper.nonsense.util.render;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.ResourceLocation;
 import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
-import wtf.bhopper.nonsense.util.misc.GeneralUtil;
 import wtf.bhopper.nonsense.util.misc.ResourceUtil;
 
 import java.io.IOException;
@@ -18,18 +17,23 @@ public enum Fonts implements MinecraftInstance {
     CASCADIA_MONO("cascadiamono", "CascadiaMono.ttf"),
     COMIC_SANS("comicsans", "comic.ttf"),
     CONSOLAS("consolas", "consola.ttf"),
+    HELVETICA("helvetica", "helveticaregular.ttf"),
+    HELVETICA_LIGHT("helveticalight", "helveticalight.ttf"),
+    HELVETICA_MEDIUM("helveticamedium", "helveticamedium.ttf"),
     JETBRAINS_MONO("jetbrainsmono", "JetBrainsMono-Regular.ttf"),
+    OUTFIT("outfit", "outfit.ttf"),
     ROBOTO("roboto", "Roboto-Regular.ttf"),
     SANS_SERIF("sansserif", "micross.ttf"),
     SEGOE("segoe","segoeui.ttf"),
     SEGOE_BOLD("segoebold", "segoeuib.ttf"),
+    SF_PRO_ROUNDED("sfprorounded", "SF-Pro-Rounded-Regular.otf"),
     TAHOMA("tahoma", "tahoma.ttf"), // Same font that Exhibition uses
     TIMES_NEW_ROMAN("timesnewroman", "times.ttf");
 
     public final String name;
     private final ResourceLocation location;
     private int vgFont;
-    private ByteBuffer buffer;
+    private ByteBuffer data;
 
     Fonts(String name, String resource) {
         this.name = name;
@@ -43,8 +47,8 @@ public enum Fonts implements MinecraftInstance {
     public static void init() {
         for (Fonts font : values()) {
             try {
-                font.buffer = ResourceUtil.loadResource(font.location);
-                font.vgFont = NVGHelper.createFontMem(font.name, font.buffer, false);
+                font.data = ResourceUtil.loadResource(font.location);
+                font.vgFont = NVGHelper.createFontMem(font.name, font.data, false);
 
                 if (font.vgFont == -1) {
                     throw new RuntimeException("Failed to load font: " + font.name);

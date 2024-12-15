@@ -7,6 +7,7 @@ import de.florianmichael.viamcp.ViaMCP;
 import net.minecraft.client.Minecraft;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import org.lwjglx.opengl.Display;
 import wtf.bhopper.nonsense.alt.AltManager;
 import wtf.bhopper.nonsense.anticheat.AntiCheat;
 import wtf.bhopper.nonsense.command.CommandManager;
@@ -17,9 +18,11 @@ import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleManager;
 import wtf.bhopper.nonsense.module.impl.visual.ClickGui;
 import wtf.bhopper.nonsense.network.NonsenseNetHandler;
+import wtf.bhopper.nonsense.util.minecraft.AntiExploit;
 import wtf.bhopper.nonsense.util.minecraft.BlinkUtil;
 import wtf.bhopper.nonsense.util.minecraft.TickRate;
 import wtf.bhopper.nonsense.util.render.Fonts;
+import wtf.bhopper.nonsense.util.render.ImGuiHelper;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
 
 import java.io.File;
@@ -76,6 +79,7 @@ public enum Nonsense {
         this.netHandler = new NonsenseNetHandler();
 
         NVGHelper.init();
+        ImGuiHelper.init(Display.getHandle());
         Fonts.init();
         this.hud = new Hud();
         module(ClickGui.class).initGuis();
@@ -84,6 +88,7 @@ public enum Nonsense {
 
         this.tickRate = new TickRate();
         BlinkUtil.init();
+        this.eventBus.subscribe(AntiExploit.INSTANCE);
 
         this.configManager.loadDefaultConfig();
     }

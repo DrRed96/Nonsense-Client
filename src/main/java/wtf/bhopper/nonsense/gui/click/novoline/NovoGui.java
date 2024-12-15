@@ -79,7 +79,7 @@ public class NovoGui extends GuiScreen {
 
                 y = mousePos[1];
                 for (int i = parts.length - 1; i >= 0; i--) {
-                    NVGHelper.drawText(parts[i], mousePos[0], y, 0xFFFFFFFF);
+                    NVGHelper.drawText(parts[i], mousePos[0], y, 0xFFFFFFFF, true);
                     y -= 16.0F;
                 }
 
@@ -91,6 +91,7 @@ public class NovoGui extends GuiScreen {
 
     @Override
     protected void mouseClicked(int mouseXIgnored, int mouseYIgnored, int mouseButton) throws IOException {
+        super.mouseClicked(mouseXIgnored, mouseYIgnored, mouseButton);
         int[] mousePos = InputUtil.getUnscaledMousePositions();
         for (NovoPanel dropdown : this.panels) {
             dropdown.mouseClick(mousePos[0] - dropdown.x, mousePos[1] - dropdown.y, mouseButton);
@@ -99,6 +100,7 @@ public class NovoGui extends GuiScreen {
 
     @Override
     protected void mouseReleased(int mouseXIgnored, int mouseYIgnored, int state) {
+        super.mouseReleased(mouseXIgnored, mouseYIgnored, state);
         int[] mousePos = InputUtil.getUnscaledMousePositions();
         for (NovoPanel dropdown : this.panels) {
             dropdown.mouseRelease(mousePos[0] - dropdown.x, mousePos[1] - dropdown.y, state);

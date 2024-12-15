@@ -829,7 +829,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
 
         float f1 = this.mc.thePlayer.prevTimeInPortal + (this.mc.thePlayer.timeInPortal - this.mc.thePlayer.prevTimeInPortal) * partialTicks;
 
-        if (f1 > 0.0F) {
+        if (f1 > 0.0F && !Nonsense.module(NoRender.class).nausea()) {
             byte b0 = 20;
 
             if (this.mc.thePlayer.isPotionActive(Potion.confusion)) {
@@ -1991,11 +1991,11 @@ public class EntityRenderer implements IResourceManagerReloadListener {
         double d2 = worldclient.provider.getVoidFogYFactor();
         double d1 = (entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * (double) partialTicks) * d2;
 
-        if (entity instanceof EntityLivingBase && ((EntityLivingBase) entity).isPotionActive(Potion.blindness)) {
-            int i = ((EntityLivingBase) entity).getActivePotionEffect(Potion.blindness).getDuration();
+        if (entity instanceof EntityLivingBase entityLivingBase && entityLivingBase.isPotionActive(Potion.blindness) && Nonsense.module(NoRender.class).blindness(entityLivingBase)) {
+            int i = entityLivingBase.getActivePotionEffect(Potion.blindness).getDuration();
 
             if (i < 20) {
-                d1 *= (double) (1.0F - (float) i / 20.0F);
+                d1 *= 1.0F - (float) i / 20.0F;
             } else {
                 d1 = 0.0D;
             }
@@ -2076,14 +2076,14 @@ public class EntityRenderer implements IResourceManagerReloadListener {
         float f1 = -1.0F;
 
         if (Reflector.ForgeHooksClient_getFogDensity.exists()) {
-            f1 = Reflector.callFloat(Reflector.ForgeHooksClient_getFogDensity, new Object[]{this, entity, block, Float.valueOf(partialTicks), Float.valueOf(0.1F)});
+            f1 = Reflector.callFloat(Reflector.ForgeHooksClient_getFogDensity, this, entity, block, partialTicks, 0.1F);
         }
 
         if (f1 >= 0.0F) {
             GlStateManager.setFogDensity(f1);
-        } else if (entity instanceof EntityLivingBase && ((EntityLivingBase) entity).isPotionActive(Potion.blindness)) {
+        } else if (entity instanceof EntityLivingBase entityLivingBase && entityLivingBase.isPotionActive(Potion.blindness) && Nonsense.module(NoRender.class).blindness(entityLivingBase)) {
             float f2 = 5.0F;
-            int i = ((EntityLivingBase) entity).getActivePotionEffect(Potion.blindness).getDuration();
+            int i = entityLivingBase.getActivePotionEffect(Potion.blindness).getDuration();
 
             if (i < 20) {
                 f2 = 5.0F + (this.farPlaneDistance - 5.0F) * (1.0F - (float) i / 20.0F);

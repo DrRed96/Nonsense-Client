@@ -8,10 +8,12 @@ import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
 
-@ModuleInfo(name = "No Jump Delay", description = "Removes the delay between jumping", category = ModuleCategory.MOVEMENT)
+@ModuleInfo(name = "No Jump Delay",
+        description = "Removes the delay between jumping",
+        category = ModuleCategory.MOVEMENT)
 public class NoJumpDelay extends Module {
     @EventLink
-    public final Listener<EventTick> onTick = event -> {
+    public final Listener<EventTick> onTick = _ -> {
         if (mc.inGameHasFocus && PlayerUtil.canUpdate()) {
             mc.thePlayer.jumpTicks = 0;
         }

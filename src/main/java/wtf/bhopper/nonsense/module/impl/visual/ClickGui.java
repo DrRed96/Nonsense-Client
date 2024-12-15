@@ -4,10 +4,12 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.util.ResourceLocation;
 import org.lwjglx.input.Keyboard;
+import wtf.bhopper.nonsense.gui.click.imgui.ImClickGui;
 import wtf.bhopper.nonsense.gui.click.novoline.NovoGui;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
+import wtf.bhopper.nonsense.module.property.annotations.DisplayName;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.ColorProperty;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
@@ -27,13 +29,15 @@ public class ClickGui extends Module {
     public final EnumProperty<Sound> sound = new EnumProperty<>("Sound", "Plays a sound when you press a button", Sound.NONE);
 
     private NovoGui novoline;
+    private ImClickGui imGui;
 
     public ClickGui() {
         this.addProperties(this.mode, this.categoryColors, this.color, this.toolTips, this.sound);
     }
 
     public void initGuis() {
-        novoline = new NovoGui();
+        this.novoline = new NovoGui();
+        this.imGui = new ImClickGui();
     }
 
     @Override
@@ -42,14 +46,16 @@ public class ClickGui extends Module {
         if (mc.currentScreen == null) {
 
             switch (this.mode.get()) {
-                case NOVOLINE -> mc.displayGuiScreen(novoline);
+                case NOVOLINE -> mc.displayGuiScreen(this.novoline);
+                case IMGUI -> mc.displayGuiScreen(this.imGui);
                 default -> ChatUtil.error("Someone has been tampering with the Click GUI's!");
             }
         }
     }
 
     private enum Mode {
-        NOVOLINE
+        NOVOLINE,
+        @DisplayName("ImGUI") IMGUI
     }
     
     public enum Sound {

@@ -1,10 +1,13 @@
 package wtf.bhopper.nonsense.module.impl.movement;
 
+import net.minecraft.network.play.server.S12PacketEntityVelocity;
+import net.minecraft.potion.Potion;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
 import wtf.bhopper.nonsense.event.impl.EventMove;
 import wtf.bhopper.nonsense.event.impl.EventPreMotion;
+import wtf.bhopper.nonsense.event.impl.EventReceivePacket;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
@@ -24,14 +27,17 @@ public class Speed extends Module {
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Method for speed.", Mode.VANILLA);
     private final NumberProperty speedSet = new NumberProperty("Speed", "Move speed.", () -> this.mode.is(Mode.VANILLA), 1.0, 0.1, 3.0, 0.01);
     private final BooleanProperty jump = new BooleanProperty("Jump", "Automatically Jumps", false, () -> this.mode.isAny(Mode.VANILLA, Mode.MINIBLOX));
-    private final NumberProperty bhopSpeed = new NumberProperty("Bhop Speed", "Speed for Bhop Mode.\n1.6 will bypass NCP", () -> this.mode.is(Mode.BHOP), 1.6, 0.0, 3.0, 0.01);
+    private final NumberProperty bhopSpeed = new NumberProperty("Bhop Speed", "Speed for Bhop Mode.\n1.6 will bypass NCP", () -> this.mode.isAny(Mode.BHOP, Mode.LOW_HOP), 1.6, 0.0, 3.0, 0.01);
     private final NumberProperty jumpHeight = new NumberProperty("Jump Height", "Bhop jump height", () -> this.mode.is(Mode.BHOP), 0.4, 0.1, 1.0, 0.01);
-    private final BooleanProperty bhopSlow = new BooleanProperty("Slow", "Slows you down more to help bypass", false, () -> this.mode.is(Mode.BHOP));
-    private final BooleanProperty limit = new BooleanProperty("Limit Speed", "Limits your speed, useful for servers with strict anti-cheats.", false, () -> this.mode.is(Mode.BHOP));
+    private final BooleanProperty bhopSlow = new BooleanProperty("Slow", "Slows you down more to help bypass", false, () -> this.mode.isAny(Mode.BHOP, Mode.LOW_HOP));
+    private final BooleanProperty limit = new BooleanProperty("Limit Speed", "Limits your speed, useful for servers with strict anti-cheats.", false, () -> this.mode.isAny(Mode.BHOP, Mode.LOW_HOP));
+    private final BooleanProperty damageBoost = new BooleanProperty("Damage Boost", "Boosts your speed when you get hit", false, () -> this.mode.is(Mode.BHOP));
 
     private double speed = 0.0;
     private double lastDist = 0.0;
     private int stage = 0;
+
+    private boolean didLowHop = false;
 
     private final Clock timer = new Clock();
 
@@ -51,6 +57,7 @@ public class Speed extends Module {
         this.speed = 0.0;
         this.lastDist = 0.0;
         this.stage = 0;
+        this.didLowHop = false;
     }
 
     @EventLink
@@ -70,7 +77,7 @@ public class Speed extends Module {
                 }
             }
 
-            case BHOP -> {
+            case BHOP, LOW_HOP -> {
 
                 switch (this.stage) {
                     case 0 -> {
@@ -82,13 +89,27 @@ public class Speed extends Module {
 
                     case 1 -> {
                         if (MoveUtil.isMoving() && mc.thePlayer.onGround) {
-                            MoveUtil.vertical(event, MoveUtil.jumpHeight(this.jumpHeight.getDouble()));
+                            if (this.mode.is(Mode.LOW_HOP)) {
+                                if (mc.thePlayer.isPotionActive(Potion.jump) || mc.gameSettings.keyBindJump.isKeyDown()) {
+                                    MoveUtil.vertical(event, MoveUtil.jumpHeight(MoveUtil.JUMP_HEIGHT));
+                                    this.didLowHop = false;
+                                } else {
+                                    MoveUtil.vertical(event, 0.2);
+                                    this.didLowHop = true;
+                                }
+                            } else {
+                                MoveUtil.vertical(event, MoveUtil.jumpHeight(this.jumpHeight.getDouble()));
+                            }
                             this.speed *= this.bhopSpeed.getDouble();
                             this.stage = 2;
                         }
                     }
 
                     case 2 -> {
+                        if (this.mode.is(Mode.LOW_HOP) && !mc.thePlayer.isPotionActive(Potion.jump) && this.didLowHop) {
+                            MoveUtil.vertical(event, -0.0784);
+                            this.didLowHop = false;
+                        }
                         this.speed = this.lastDist - (this.lastDist - MoveUtil.baseSpeed()) * (this.bhopSlow.get() ? 0.76 : 0.66);
                         this.stage = 3;
                     }
@@ -130,9 +151,25 @@ public class Speed extends Module {
     @EventLink
     public final Listener<EventPreMotion> onPre = _ -> this.lastDist = MoveUtil.lastDistance();
 
+    @EventLink
+    public final Listener<EventReceivePacket> onReceivePacket = event -> {
+
+        if (event.packet instanceof S12PacketEntityVelocity packet && this.damageBoost.get()) {
+            switch (this.mode.get()) {
+                case BHOP -> {
+                    double velocity = Math.hypot(packet.getMotionX() / 8000.0, packet.getMotionZ() / 8000.0);
+                    if (this.speed < velocity && !mc.thePlayer.onGround) {
+                        this.speed = velocity;
+                    }
+                }
+            }
+        }
+    };
+
     private enum Mode {
         VANILLA,
         BHOP,
+        LOW_HOP,
         MINIBLOX
     }
 

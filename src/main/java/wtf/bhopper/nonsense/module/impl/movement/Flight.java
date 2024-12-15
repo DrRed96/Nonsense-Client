@@ -25,7 +25,8 @@ import wtf.bhopper.nonsense.util.misc.Clock;
 
 @ModuleInfo(name = "Flight",
         description = "Allows you to fly.",
-        category = ModuleCategory.MOVEMENT)
+        category = ModuleCategory.MOVEMENT,
+        searchAlias = "fly")
 public class Flight extends Module {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Flight method.", Mode.VANILLA);

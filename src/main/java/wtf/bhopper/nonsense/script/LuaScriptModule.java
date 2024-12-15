@@ -12,7 +12,7 @@ import wtf.bhopper.nonsense.module.ModuleInfo;
 @ModuleInfo(name = "SCRIPT_MODULE", description = "SCRIPT_MODULE", category = ModuleCategory.SCRIPT)
 public class LuaScriptModule extends Module {
 
-    private LuaTable data = null;
+    private LuaTable data;
 
     public LuaScriptModule(String name, String description, LuaTable data) {
         this.data = data;

@@ -35,7 +35,7 @@ public class Criticals extends Module {
     }
 
     @EventLink
-    public final Listener<EventTick> onTick = event -> {
+    public final Listener<EventTick> onTick = _ -> {
         if (PlayerUtil.canUpdate()) {
             this.ticks--;
         } else {
@@ -72,6 +72,13 @@ public class Criticals extends Module {
                     PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, false));
                 }
 
+                case PACKET_JUMP -> {
+                    PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.2, mc.thePlayer.posZ, false));
+                    PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.1216, mc.thePlayer.posZ, false));
+                    PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, false));
+                }
+
+
             }
 
         }
@@ -80,7 +87,8 @@ public class Criticals extends Module {
 
     private enum Mode {
         PACKET,
-        PACKET_LOW
+        PACKET_LOW,
+        PACKET_JUMP
     }
 
 }

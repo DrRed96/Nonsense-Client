@@ -7,12 +7,12 @@ import wtf.bhopper.nonsense.gui.hud.Hud;
 import wtf.bhopper.nonsense.module.impl.visual.HudMod;
 import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class NotificationManager implements MinecraftInstance {
 
-    private final List<Notification> notifications = new ArrayList<>();
+    private final List<Notification> notifications = new CopyOnWriteArrayList<>();
 
     public void addNotification(Notification notification) {
         if (!Hud.enabled() || !Hud.mod().notificationEnabled.get())  {

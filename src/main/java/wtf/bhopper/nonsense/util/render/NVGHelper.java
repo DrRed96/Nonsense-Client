@@ -2,6 +2,7 @@ package wtf.bhopper.nonsense.util.render;
 
 import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NVGPaint;
+import org.lwjgl.system.NativeType;
 import org.lwjglx.opengl.Display;
 import org.lwjglx.util.vector.Vector2f;
 import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
@@ -38,6 +39,7 @@ public class NVGHelper implements MinecraftInstance {
 
     public static void begin() {
         glPushAttrib(GL_ALL_ATTRIB_BITS);
+        glPushMatrix();
         nvgBeginFrame(context, Display.getWidth(), Display.getHeight(), 1.0F);
     }
 
@@ -45,6 +47,7 @@ public class NVGHelper implements MinecraftInstance {
         nvgEndFrame(context);
 
         glPopAttrib();
+        glPopMatrix();
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
@@ -129,11 +132,19 @@ public class NVGHelper implements MinecraftInstance {
     }
 
     public static NVGPaint linearGradient(float sx, float sy, float ex, float ey, int icol, int ocol) {
-        return nvgLinearGradient(context, sx, sy, ex, ey, getColor(icol), getColor(ocol, color2), paint);
+        return nvgLinearGradient(context, sx, sy, ex, ey, getColor(icol, color), getColor(ocol, color2), paint);
     }
 
     public static NVGPaint linearGradient(float sx, float sy, float ex, float ey, Color icol, Color ocol) {
-        return nvgLinearGradient(context, sx, sy, ex, ey, getColor(icol), getColor(ocol, color2), paint);
+        return nvgLinearGradient(context, sx, sy, ex, ey, getColor(icol, color), getColor(ocol, color2), paint);
+    }
+
+    public static NVGPaint boxGradient(float x, float y, float w, float h, float r, float f, int icol, int ocol) {
+        return nvgBoxGradient(context, x, y, w, h, r, f, getColor(icol, color), getColor(ocol, color2), paint);
+    }
+
+    public static NVGPaint radialGradient(float cx, float cy, float inr, float outr, int icol, int ocol) {
+        return nvgRadialGradient(context, cx, cy, inr, outr, getColor(icol, color), getColor(ocol, color2), paint);
     }
 
     public static int createImage(int flags, ByteBuffer data) {
@@ -238,7 +249,7 @@ public class NVGHelper implements MinecraftInstance {
     public static void drawText(String text, float x, float y, int color, boolean shadow) {
         beginPath();
         if (shadow) {
-            fillColor(ColorUtil.dropShadowColor(color));
+            fillColor(ColorUtil.dropShadow(color));
             text(x + 1.0F, y + 1.0F, text);
         }
         fillColor(color);

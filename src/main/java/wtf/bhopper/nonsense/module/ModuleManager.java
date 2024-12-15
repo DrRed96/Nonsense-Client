@@ -51,6 +51,7 @@ public class ModuleManager {
                 new Terrain(),
                 new Strafe(),
                 new NoJumpDelay(),
+                new FastSneak(),
                 new MovementFix(),
 
                 // Player
