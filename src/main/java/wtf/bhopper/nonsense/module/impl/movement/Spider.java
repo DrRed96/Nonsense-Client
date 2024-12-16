@@ -9,7 +9,10 @@ import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.util.minecraft.MoveUtil;
 
-@ModuleInfo(name = "Spider", description = "Allows you to climb up walls", category = ModuleCategory.MOVEMENT)
+@ModuleInfo(name = "Spider",
+        description = "Allows you to climb up walls",
+        category = ModuleCategory.MOVEMENT,
+        searchAlias = "Wall Climb")
 public class Spider extends Module {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Method for spider.", Mode.VANILLA);

@@ -35,7 +35,7 @@ public class Flight extends Module {
     private final NumberProperty hSpeed = new NumberProperty("Horizontal", "Horizontal Speed", () -> this.mode.isAny(Mode.VANILLA, Mode.MINIBLOX), 1.0, 0.1, 10.0, 0.01);
     private final NumberProperty vSpeed = new NumberProperty("Vertical", "Horizontal Speed", () -> this.mode.isAny(Mode.VANILLA, Mode.MINIBLOX), 0.5, 0.1, 10.0, 0.01);
 
-    private final GroupProperty boostGroup = new GroupProperty("Boost", "Boost settings", () -> this.mode.isAny(Mode.BOOST));
+    private final GroupProperty boostGroup = new GroupProperty("Boost", "Boost settings", this, () -> this.mode.isAny(Mode.BOOST));
     private final BooleanProperty useBoost = new BooleanProperty("Enable", "Enables boost fly.", false, () -> false);
     private final EnumProperty<Timer> useTimer = new EnumProperty<>("Timer", "Use timer to increase speed", Timer.NONE);
     private final NumberProperty timerFactor = new NumberProperty("Timer Factor", "Timer speed", () -> !useTimer.is(Timer.NONE), 1.5, 0.05, 5.0, 0.05);

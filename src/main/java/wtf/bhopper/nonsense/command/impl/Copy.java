@@ -5,7 +5,9 @@ import wtf.bhopper.nonsense.command.Command;
 import wtf.bhopper.nonsense.command.CommandInfo;
 import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
 
-@CommandInfo(name = "Copy", description = "Copies text to the clipboard (used in copy chat click events)", syntax = ".copy <text>")
+@CommandInfo(name = "Copy",
+        description = "Copies text to the clipboard (used in copy chat click events)",
+        syntax = ".copy <text>")
 public class Copy extends Command {
 
 

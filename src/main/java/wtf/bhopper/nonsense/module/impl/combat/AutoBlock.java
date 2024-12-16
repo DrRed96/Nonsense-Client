@@ -31,12 +31,15 @@ import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
 import wtf.bhopper.nonsense.util.minecraft.RotationUtil;
 
 
-@ModuleInfo(name = "Auto Block", description = "Automatically blocks your sword", category = ModuleCategory.COMBAT)
+@ModuleInfo(name = "Auto Block",
+        description = "Automatically blocks your sword",
+        category = ModuleCategory.COMBAT,
+        searchAlias = "Block Hit")
 public class AutoBlock extends Module {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Autoblock method", Mode.BLOCK);
 
-    private final GroupProperty targetsGroup = new GroupProperty("Targets", "What entities Kill Aura should target");
+    private final GroupProperty targetsGroup = new GroupProperty("Targets", "What entities Kill Aura should target", this);
     private final BooleanProperty players = new BooleanProperty("Players", "Target Players.", true);
     private final BooleanProperty mobs = new BooleanProperty("Mobs", "Target Mobs (Zombies, Skeletons, etc.)", false);
     private final BooleanProperty animals = new BooleanProperty("Animals", "Target Animals (Pigs, Cows, etc.)", false);

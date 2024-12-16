@@ -27,7 +27,7 @@ public class NovoPanel extends NovoComponent {
     public int moveX;
     public int moveY;
 
-    private boolean expanded = false;
+    private boolean expanded = true;
 
     public NovoPanel(NovoGui gui, ModuleCategory category, int x) {
         super(null, 0);

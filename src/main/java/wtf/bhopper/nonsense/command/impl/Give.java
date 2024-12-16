@@ -21,7 +21,7 @@ public class Give extends Command {
         // Implementation of the /give command
 
         if (!mc.thePlayer.capabilities.isCreativeMode) {
-            ChatUtil.error("You must be in creative mode to use that command");
+            ChatUtil.error("You must be in creative mode to use that command.");
             return;
         }
 

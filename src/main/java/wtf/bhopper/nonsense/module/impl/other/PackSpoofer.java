@@ -12,7 +12,9 @@ import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.util.minecraft.PacketUtil;
 
-@ModuleInfo(name = "Pack Spoofer", description = "Spoofs server resource packs", category = ModuleCategory.OTHER)
+@ModuleInfo(name = "Pack Spoofer",
+        description = "Spoofs server resource packs",
+        category = ModuleCategory.OTHER)
 public class PackSpoofer extends Module {
 
     @EventLink

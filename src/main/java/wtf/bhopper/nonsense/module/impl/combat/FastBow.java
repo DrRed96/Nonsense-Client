@@ -12,13 +12,14 @@ import wtf.bhopper.nonsense.event.impl.EventUpdate;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
+import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.util.minecraft.PacketUtil;
 
 @ModuleInfo(name = "Fast Bow", description = "Turns your bow into a machine gun.", category = ModuleCategory.COMBAT)
 public class FastBow extends Module {
 
     @EventLink
-    public final Listener<EventUpdate> onUpdate = event -> {
+    public final Listener<EventUpdate> onUpdate = _ -> {
         ItemStack currentItem = mc.thePlayer.inventory.getCurrentItem();
         if (currentItem != null && currentItem.getItem() == Items.bow) {
             if (mc.gameSettings.keyBindUseItem.isKeyDown()) {

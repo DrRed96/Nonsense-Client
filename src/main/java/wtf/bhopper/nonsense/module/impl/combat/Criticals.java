@@ -4,6 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.util.MovingObjectPosition;
+import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
 import wtf.bhopper.nonsense.event.impl.EventPreClick;
@@ -49,7 +50,7 @@ public class Criticals extends Module {
         if (event.mouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && mc.leftClickCounter <= 0) {
             Entity entity = event.mouseOver.entityHit;
 
-            if (!(entity instanceof EntityLivingBase)) {
+            if (!(entity instanceof EntityLivingBase) || Nonsense.module(AntiBot.class).isBot(entity)) {
                 return;
             }
 

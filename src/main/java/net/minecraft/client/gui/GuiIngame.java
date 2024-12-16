@@ -35,6 +35,7 @@ import optifine.CustomColors;
 import org.lwjgl.opengl.GL11;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.impl.EventRenderGui;
+import wtf.bhopper.nonsense.gui.hud.Hud;
 import wtf.bhopper.nonsense.gui.screens.GuiMoveHudComponents;
 import wtf.bhopper.nonsense.module.impl.visual.ScoreboardMod;
 import wtf.bhopper.nonsense.util.minecraft.InventoryUtil;
@@ -353,6 +354,8 @@ public class GuiIngame extends Gui {
                 int l = sr.getScaledHeight() - 16 - 3;
                 this.renderHotbarItem(j, k, l, partialTicks, entityplayer);
             }
+
+            Nonsense.getHud().infoDisplay.drawArmor(sr);
 
             RenderHelper.disableStandardItemLighting();
             GlStateManager.disableRescaleNormal();

@@ -29,7 +29,9 @@ import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 
-@ModuleInfo(name = "Guess The Build Solver", description = "Attempts to solve Guess The Build builds", category = ModuleCategory.OTHER)
+@ModuleInfo(name = "Guess The Build Solver",
+        description = "Attempts to solve Guess The Build builds",
+        category = ModuleCategory.OTHER)
 public class GuessTheBuildSolver extends Module {
 
     private static final String[] RANK_PREFIX = {

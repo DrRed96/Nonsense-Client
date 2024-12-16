@@ -47,15 +47,15 @@ public class Scaffold extends Module {
             Blocks.jukebox
     );
 
-    private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Scaffold method.", Mode.VANILLA);
+    private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Scaffold method.", Mode.NORMAL);
 
-    private final GroupProperty rotationGroup = new GroupProperty("Rotations", "Scaffold rotations.");
+    private final GroupProperty rotationGroup = new GroupProperty("Rotations", "Scaffold rotations.", this);
     private final EnumProperty<RotationsMode> rotationsMode = new EnumProperty<>("Mode", "Method for rotations.", RotationsMode.INSTANT);
     private final EnumProperty<RotationsAiming> rotationsAiming = new EnumProperty<>("Aiming", "Aiming method", RotationsAiming.HIT_VECTOR);
     private final EnumProperty<RotationsHitVec> rotationsHitVec = new EnumProperty<>("Hit Vector", "Block placement vector.", RotationsHitVec.CENTRE);
     private final BooleanProperty rotationRayCast = new BooleanProperty("Ray Cast", "Ray Cast the hit vector", false);
 
-    private final GroupProperty towerGroup = new GroupProperty("Tower", "Scaffold tower");
+    private final GroupProperty towerGroup = new GroupProperty("Tower", "Scaffold tower", this);
     private final BooleanProperty towerEnable = new BooleanProperty("Enable", "Enables tower", true);
     private final EnumProperty<TowerMode> towerMode = new EnumProperty<>("Mode", "Tower mode", TowerMode.VANILLA);
 
@@ -415,7 +415,7 @@ public class Scaffold extends Module {
     }
 
     private enum Mode {
-        VANILLA
+        NORMAL
     }
 
     private enum RotationsMode {

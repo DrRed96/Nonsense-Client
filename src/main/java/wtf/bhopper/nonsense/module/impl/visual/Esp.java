@@ -42,7 +42,7 @@ public class Esp extends Module {
 
     private static final NumberFormat HEALTH_FORMAT = new DecimalFormat("#0.#");
 
-    private final GroupProperty targetsGroup = new GroupProperty("Targets", "What entities ESP should render");
+    private final GroupProperty targetsGroup = new GroupProperty("Targets", "What entities ESP should render", this);
     private final BooleanProperty players = new BooleanProperty("Players", "Target Players.", true);
     private final BooleanProperty mobs = new BooleanProperty("Mobs", "Target Mobs (Zombies, Skeletons, etc.)", false);
     private final BooleanProperty animals = new BooleanProperty("Animals", "Target Animals (Pigs, Cows, etc.)", false);
@@ -50,14 +50,14 @@ public class Esp extends Module {
     private final BooleanProperty invis = new BooleanProperty("Invisible", "Target invisible entities", true);
     private final BooleanProperty self = new BooleanProperty("Self", "Targets yourself while in third person", false);
 
-    private final GroupProperty boxGroup = new GroupProperty("Box", "Boxes");
+    private final GroupProperty boxGroup = new GroupProperty("Box", "Boxes", this);
     private final BooleanProperty boxEnable = new BooleanProperty("Enable", "Enable boxes", true);
     private final BooleanProperty boxCorners = new BooleanProperty("Corners", "Only render corners", false);
     private final NumberProperty boxCornerFactor = new NumberProperty("Corner Factor", "Corner factor.", this.boxCorners::get, 50.0, 1.0, 100.0, 1.0, NumberProperty.FORMAT_PERCENT);
     private final BooleanProperty boxOutline = new BooleanProperty("Outline", "Box outline", true);
     private final ColorProperty boxColor = new ColorProperty("Color", "color", 0xFFFFFFFF);
 
-    private final GroupProperty nameGroup = new GroupProperty("Names", "Names");
+    private final GroupProperty nameGroup = new GroupProperty("Names", "Names", this);
     private final BooleanProperty nameEnable = new BooleanProperty("Enable", "Enable name tags", true);
     private final ColorProperty nameColor = new ColorProperty("Color", "Color of the name tags", 0xFFFFFFFF);
     private final BooleanProperty displayNames = new BooleanProperty("Display Names", "Render display names", true);
@@ -65,7 +65,7 @@ public class Esp extends Module {
     private final BooleanProperty nameBackground = new BooleanProperty("Background", "Display background", true);
     private final BooleanProperty heldItem = new BooleanProperty("Held Item", "Displays the entities held item", true);
 
-    private final GroupProperty barGroup = new GroupProperty("Health Bar", "Health bars");
+    private final GroupProperty barGroup = new GroupProperty("Health Bar", "Health bars", this);
     private final BooleanProperty barEnable = new BooleanProperty("Enable", "Enable health bars", true);
     private final EnumProperty<HealthColor> barColorMode = new EnumProperty<>("Color Mode", "Color mode of the health bars.", HealthColor.HEALTH);
     private final ColorProperty barColor = new ColorProperty("Color", "Health bars color", 0xFF00FF00, () -> this.barColorMode.is(HealthColor.CUSTOM));
@@ -116,6 +116,7 @@ public class Esp extends Module {
     public final Listener<EventRenderNameTag> onRenderNameTag = event -> {
         for (RenderEntity renderEntity : this.renderEntities) {
             if (renderEntity.entity == event.entity) {
+                event.cancel();
                 break;
             }
         }

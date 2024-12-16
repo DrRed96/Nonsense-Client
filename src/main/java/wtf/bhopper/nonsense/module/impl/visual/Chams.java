@@ -28,7 +28,7 @@ import static org.lwjgl.opengl.GL11.*;
 @ModuleInfo(name = "Chams", description = "Allows you to see entities through walls", category = ModuleCategory.VISUAL)
 public class Chams extends Module {
 
-    private final GroupProperty targetsGroup = new GroupProperty("Targets", "What entities Chams should render");
+    private final GroupProperty targetsGroup = new GroupProperty("Targets", "What entities Chams should render", this);
     private final BooleanProperty players = new BooleanProperty("Players", "Target Players.", true);
     private final BooleanProperty mobs = new BooleanProperty("Mobs", "Target Mobs (Zombies, Skeletons, etc.)", false);
     private final BooleanProperty animals = new BooleanProperty("Animals", "Target Animals (Pigs, Cows, etc.)", false);

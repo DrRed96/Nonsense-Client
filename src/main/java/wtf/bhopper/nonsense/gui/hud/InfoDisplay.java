@@ -1,10 +1,12 @@
 package wtf.bhopper.nonsense.gui.hud;
 
+import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiChat;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.item.ItemStack;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumChatFormatting;
@@ -13,6 +15,7 @@ import org.lwjglx.opengl.Display;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.module.impl.visual.HudMod;
 import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
+import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
 import wtf.bhopper.nonsense.util.render.Fonts;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
 
@@ -28,6 +31,26 @@ public class InfoDisplay implements MinecraftInstance {
     private final List<Component> components = new ArrayList<>();
     private final List<PotionComponent> potionComponents = new ArrayList<>();
 
+    public void drawArmor(ScaledResolution sr) {
+        if (!Hud.enabled() || !PlayerUtil.canUpdate() || !Hud.mod().armorHud.get()) {
+            return;
+        }
+
+        int left = sr.getScaledWidth() / 2 + 85;
+
+        int offset = 16;
+        for (ItemStack stack : mc.thePlayer.inventory.armorInventory) {
+            if (stack != null) {
+                int x = left - offset;
+                int y = sr.getScaledHeight() - (mc.thePlayer.capabilities.isCreativeMode ? 40 : mc.thePlayer.isInsideOfMaterial(Material.water) ? 68 : 56);
+                mc.getRenderItem().renderItemAndEffectIntoGUI(stack, x, y);
+                mc.getRenderItem().renderItemOverlayIntoGUI(mc.bitFontRenderer, stack, x, y, null);
+                offset += 18;
+            }
+        }
+        GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+    }
+
     public void draw(ScaledResolution scaledRes) {
 
         if (!Hud.enabled() || mc.currentScreen instanceof GuiChat) {
@@ -42,7 +65,7 @@ public class InfoDisplay implements MinecraftInstance {
         this.potionComponents.clear();
 
         if (mod.coords.get()) {
-            this.components.add(new Component("XYZ", String.format("%,.1f, %,.1f, %,.1f", mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ)));
+            this.components.add(new Component("XYZ", String.format("%,.1f / %,.1f / %,.1f", mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ)));
         }
 
         if (mod.angles.get()) {

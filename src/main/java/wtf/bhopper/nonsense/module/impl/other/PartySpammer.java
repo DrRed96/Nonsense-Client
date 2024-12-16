@@ -19,7 +19,9 @@ import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
 import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
 import wtf.bhopper.nonsense.util.misc.Clock;
 
-@ModuleInfo(name = "Party Spammer", description = "Spams someone with party invites", category = ModuleCategory.OTHER)
+@ModuleInfo(name = "Party Spammer",
+        description = "Spams someone with party invites",
+        category = ModuleCategory.OTHER)
 public class PartySpammer extends Module {
 
     private final StringProperty player = new StringProperty("Player", "Player to spam", "knaall");

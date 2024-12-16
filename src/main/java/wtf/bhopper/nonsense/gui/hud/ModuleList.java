@@ -1,10 +1,7 @@
 package wtf.bhopper.nonsense.gui.hud;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
 import org.lwjglx.opengl.Display;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.module.Module;
@@ -23,7 +20,6 @@ import static org.lwjgl.nanovg.NanoVG.*;
 public class ModuleList {
 
     public static final float ANIMATION_FACTOR = 0.1F;
-    public static final ResourceLocation JELLO_BG = new ResourceLocation("nonsense/arraylistshadow.png");
 
     private final List<Slot> slots = new ArrayList<>();
 
@@ -38,7 +34,7 @@ public class ModuleList {
             return 0;
         }
 
-        int right = Display.getWidth();
+        int right = Display.getWidth() - (mod.moduleListOutline.is(HudMod.ModuleListOutline.RIGHT) ? 2 : 0);
         float yOff = switch (mod.moduleListMode.get()) {
             case EXHIBITION -> 0.0F;
         };
@@ -57,8 +53,52 @@ public class ModuleList {
 
         this.updateSlots(mod, delta);
 
+        // Background
+        if (mod.moduleListBackground.getInt() != 0) {
+
+            NVGHelper.beginPath();
+            NVGHelper.moveTo(right, 0);
+
+            float yOffBg = yOff;
+
+            for (Slot slot : this.slots) {
+                yOffBg = slot.drawBackgroundPoints(yOffBg, right, mod);
+            }
+
+            NVGHelper.lineTo(right, yOffBg);
+
+            NVGHelper.fillColor(ColorUtil.alpha(0, mod.moduleListBackground.getInt()));
+            NVGHelper.fill();
+            NVGHelper.closePath();
+        }
+
+        switch (mod.moduleListOutline.get()) {
+            case LEFT, RIGHT -> {
+                float yOffOutline = yOff;
+
+                for (Slot slot : this.slots) {
+                    yOffOutline = slot.drawOutlinePoints(yOffOutline, right, mod);
+                }
+            }
+
+            case FULL -> {
+
+                float yOffOutline = yOff;
+
+                for (int i = 0; i < this.slots.size(); i++) {
+                    if (i == this.slots.size() - 1) {
+                        yOffOutline = this.slots.get(i).drawOutlinePointsFull(yOffOutline, right, mod, null);
+                        continue;
+                    }
+
+                    yOffOutline = this.slots.get(i).drawOutlinePointsFull(yOffOutline, right, mod, this.slots.get(i + 1));
+                }
+
+            }
+        }
+
         for (Slot slot : this.slots) {
-            yOff = slot.draw(yOff, right, scaledRes, mod);
+            yOff = slot.drawText(yOff, right, scaledRes, mod);
         }
 
         NVGHelper.end();
@@ -98,7 +138,7 @@ public class ModuleList {
             this.updateText(hudMod, 1.0F);
         }
 
-        public float draw(float yOff, float right, ScaledResolution scaledRes, HudMod hudMod) {
+        public float drawText(float yOff, float right, ScaledResolution scaledRes, HudMod hudMod) {
 
             if (!this.shouldDisplay) {
                 return yOff;
@@ -108,12 +148,8 @@ public class ModuleList {
                 case EXHIBITION -> {
                     float fontSize = hudMod.font.is(HudMod.Font.MINECRAFT) ? 18.0F : hudMod.fontSize.getFloat();
                     float textX = right - (this.width + 2.0F + hudMod.moduleListSpacing.getFloat()) * this.animateFactor;
-                    float textY = yOff + hudMod.moduleListSpacing.getFloat();
+                    float textY = yOff + hudMod.moduleListSpacing.getFloat() + 1.0F;
                     float textHeight = fontSize + hudMod.moduleListSpacing.getFloat() * 2.0F;
-
-                    if (hudMod.moduleListBackground.getInt() != 0) {
-                        NVGHelper.drawRect(textX - 2.0F, yOff, right - textX + 2.0F, textHeight, ColorUtil.alpha(0, hudMod.moduleListBackground.getInt()));
-                    }
 
                     if (hudMod.font.is(HudMod.Font.MINECRAFT)) {
                         NVGHelper.end();
@@ -137,6 +173,76 @@ public class ModuleList {
                     yield yOff + textHeight * this.animateFactor;
                 }
             };
+        }
+
+        public float drawBackgroundPoints(float yOff, float right, HudMod hudMod) {
+
+            if (!this.shouldDisplay) {
+                return yOff;
+            }
+
+            float fontSize = hudMod.font.is(HudMod.Font.MINECRAFT) ? 18.0F : hudMod.fontSize.getFloat();
+            float textX = right - (this.width + 2.0F + hudMod.moduleListSpacing.getFloat()) * this.animateFactor;
+            float textHeight = (fontSize + hudMod.moduleListSpacing.getFloat() * 2.0F) * this.animateFactor;
+
+            NVGHelper.lineTo(textX - 2.0F, yOff);
+            NVGHelper.lineTo(textX - 2.0F, yOff + textHeight);
+
+            return yOff + textHeight;
+        }
+
+        public float drawOutlinePoints(float yOff, float right, HudMod hudMod) {
+            if (!this.shouldDisplay) {
+                return yOff;
+            }
+
+            float fontSize = hudMod.font.is(HudMod.Font.MINECRAFT) ? 18.0F : hudMod.fontSize.getFloat();
+            float textX = right - (this.width + 2.0F + hudMod.moduleListSpacing.getFloat()) * this.animateFactor;
+            float textHeight = (fontSize + hudMod.moduleListSpacing.getFloat() * 2.0F) * this.animateFactor;
+
+            NVGHelper.beginPath();
+
+            switch (hudMod.moduleListOutline.get()) {
+                case LEFT -> {
+                    NVGHelper.moveTo(textX - 3.0F, yOff);
+                    NVGHelper.lineTo(textX - 3.0F, yOff + textHeight * this.animateFactor);
+                }
+                case RIGHT -> {
+                    NVGHelper.moveTo(right + 1.0F, yOff);
+                    NVGHelper.lineTo(right + 1.0F, yOff + textHeight * this.animateFactor);
+                }
+            }
+
+            NVGHelper.strokeColor(this.color);
+            NVGHelper.strokeWidth(2.0F);
+            NVGHelper.stroke();
+            NVGHelper.closePath();
+
+            return yOff + textHeight;
+        }
+
+        public float drawOutlinePointsFull(float yOff, float right, HudMod hudMod, Slot nextSlot) {
+            if (!this.shouldDisplay) {
+                return yOff;
+            }
+
+            float fontSize = hudMod.font.is(HudMod.Font.MINECRAFT) ? 18.0F : hudMod.fontSize.getFloat();
+            float textX = right - (this.width + 2.0F + hudMod.moduleListSpacing.getFloat()) * this.animateFactor;
+            float nextTextX = nextSlot == null ? Display.getWidth() + 5.0F : right - (nextSlot.width + 2.0F + hudMod.moduleListSpacing.getFloat()) * nextSlot.animateFactor;
+            float textHeight = (fontSize + hudMod.moduleListSpacing.getFloat() * 2.0F) * this.animateFactor;
+
+            NVGHelper.beginPath();
+
+            NVGHelper.moveTo(textX - 3.0F, yOff);
+            NVGHelper.lineTo(textX - 3.0F, yOff + textHeight * this.animateFactor);
+            NVGHelper.lineTo(nextTextX - 3.0F, yOff + textHeight * this.animateFactor);
+
+            NVGHelper.strokeColor(this.color);
+            NVGHelper.strokeWidth(2.0F);
+            NVGHelper.stroke();
+            NVGHelper.closePath();
+
+            return yOff + textHeight;
         }
 
         public void updateText(HudMod hudMod, float delta) {

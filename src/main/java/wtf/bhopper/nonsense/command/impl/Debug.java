@@ -22,7 +22,9 @@ import wtf.bhopper.nonsense.util.minecraft.PacketUtil;
 import java.io.File;
 import java.util.ArrayList;
 
-@CommandInfo(name = "Debug", description = "Helps with debugging", syntax = ".debug <args>")
+@CommandInfo(name = "Debug",
+        description = "Helps with debugging",
+        syntax = ".debug <args>")
 public class Debug extends Command {
     @Override
     public void execute(String[] args, String rawCommand) throws Exception {

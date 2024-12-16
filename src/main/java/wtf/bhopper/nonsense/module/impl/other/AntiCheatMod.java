@@ -5,7 +5,12 @@ import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 
-@ModuleInfo(name = "Anti Cheat", description = "Detects other cheaters", category = ModuleCategory.OTHER, hidden = true, toggled = true)
+@ModuleInfo(name = "Anti Cheat",
+        description = "Detects other cheaters",
+        category = ModuleCategory.OTHER,
+        hidden = true,
+        toggled = true,
+        searchAlias = {"Hacker Detector", "Cheater Detector"})
 public class AntiCheatMod extends Module {
 
     public final BooleanProperty unreliable = new BooleanProperty("Unreliable Checks", "Use checks that are likely to false flag depending on server conditions", true);

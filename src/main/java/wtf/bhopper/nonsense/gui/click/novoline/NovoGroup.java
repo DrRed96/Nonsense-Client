@@ -22,13 +22,16 @@ public class NovoGroup extends NovoComponent {
         this.property = property;
 
         for (Property<?> p : this.property.getProperties()) {
-            if (p instanceof BooleanProperty booleanProperty) components.add(new NovoSwitch(this.panel, booleanProperty, this.indention + 1));
-            else if (p instanceof NumberProperty numberProperty) components.add(new NovoSlider(this.panel, numberProperty, this.indention + 1));
-            else if (p instanceof EnumProperty<?> enumProperty) components.add(new NovoSelector(this.panel, enumProperty, this.indention + 1));
-            else if (p instanceof StringProperty stringProperty) components.add(new NovoTextBox(this.panel, stringProperty, this.indention + 1));
-            else if (p instanceof ColorProperty colorProperty) components.add(new NovoColorPicker(this.panel, colorProperty, this.indention + 1));
-            else if (p instanceof GroupProperty groupProperty) components.add(new NovoGroup(this.panel, groupProperty, this.indention + 1));
-            else if (p instanceof ButtonProperty buttonProperty) components.add(new NovoButton(this.panel, buttonProperty, this.indention + 1));
+            switch (p) {
+                case BooleanProperty booleanProperty -> components.add(new NovoSwitch(this.panel, booleanProperty, this.indention + 1));
+                case NumberProperty numberProperty -> components.add(new NovoSlider(this.panel, numberProperty, this.indention + 1));
+                case EnumProperty<?> enumProperty -> components.add(new NovoSelector(this.panel, enumProperty, this.indention + 1));
+                case StringProperty stringProperty -> components.add(new NovoTextBox(this.panel, stringProperty, this.indention + 1));
+                case ColorProperty colorProperty -> components.add(new NovoColorPicker(this.panel, colorProperty, this.indention + 1));
+                case GroupProperty groupProperty -> components.add(new NovoGroup(this.panel, groupProperty, this.indention + 1));
+                case ButtonProperty buttonProperty -> components.add(new NovoButton(this.panel, buttonProperty, this.indention + 1));
+                default -> {}
+            }
         }
 
     }

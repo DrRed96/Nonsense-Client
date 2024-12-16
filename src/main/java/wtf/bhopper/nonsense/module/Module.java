@@ -26,7 +26,7 @@ public abstract class Module implements PropertyContainer, MinecraftInstance {
     public final String displayName = this.getClass().getAnnotation(ModuleInfo.class).name();
     public final String description = this.getClass().getAnnotation(ModuleInfo.class).description();
     public final ModuleCategory category = this.getClass().getAnnotation(ModuleInfo.class).category();
-    public final String[] searchAlias = GeneralUtil.concat(new String[]{this.displayName}, this.getClass().getAnnotation(ModuleInfo.class).searchAlias());
+    public final String[] searchAlias = GeneralUtil.concat(new String[]{this.displayName, this.description}, this.getClass().getAnnotation(ModuleInfo.class).searchAlias());
 
     private boolean toggled = this.getClass().getAnnotation(ModuleInfo.class).toggled();
     private int bind = this.getClass().getAnnotation(ModuleInfo.class).bind();
@@ -108,6 +108,11 @@ public abstract class Module implements PropertyContainer, MinecraftInstance {
         return this.properties;
     }
 
+    @Override
+    public String getContainerId() {
+        return this.name;
+    }
+
     public Property<?> getProperty(String name) {
         return this.properties
                 .stream()
@@ -115,6 +120,26 @@ public abstract class Module implements PropertyContainer, MinecraftInstance {
                 .findFirst()
                 .orElse(null);
     }
+
+    public boolean matches(String name) {
+
+        if (name.isBlank()) {
+            return true;
+        }
+
+        String nameLower = name.trim().toLowerCase();
+
+        for (String search : this.searchAlias) {
+            String search1 = search.toLowerCase();
+            String search2 = search1.replace(" ", "");
+            if (search1.contains(nameLower) || nameLower.contains(search1) || search2.contains(nameLower) || nameLower.contains(search2)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
 
     public void setSuffix(Supplier<String> suffix) {
         this.suffix = suffix;

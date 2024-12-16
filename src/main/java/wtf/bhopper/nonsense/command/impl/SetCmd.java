@@ -8,7 +8,9 @@ import wtf.bhopper.nonsense.module.property.Property;
 import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
 import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
 
-@CommandInfo(name = "Set", description = "Sets the value of a property", syntax = ".set <module> <setting> <value>")
+@CommandInfo(name = "Set",
+        description = "Sets the value of a property.",
+        syntax = ".set <module> <setting> <value>")
 public class SetCmd extends Command {
     @Override
     public void execute(String[] args, String rawCommand) throws Exception {

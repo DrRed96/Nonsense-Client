@@ -4,7 +4,10 @@ import wtf.bhopper.nonsense.command.Command;
 import wtf.bhopper.nonsense.command.CommandInfo;
 import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
 
-@CommandInfo(name = "Say", description = "Send a message in chat", syntax = ".say <message>", alias = "chat")
+@CommandInfo(name = "Say",
+        description = "Send a message in chat",
+        syntax = ".say <message>",
+        alias = "chat")
 public class Say extends Command {
 
     @Override

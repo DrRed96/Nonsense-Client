@@ -12,7 +12,10 @@ import wtf.bhopper.nonsense.util.misc.Clock;
 
 import java.util.Set;
 
-@ModuleInfo(name = "Skin Blinker", description = "Makes your skin blink", category = ModuleCategory.OTHER, hidden = true)
+@ModuleInfo(name = "Skin Blinker",
+        description = "Makes your skin blink",
+        category = ModuleCategory.OTHER,
+        hidden = true)
 public class SkinBlinker extends Module {
 
     public final NumberProperty delay = new NumberProperty("Delay", "Delay between changing", 250, 50, 1000, 50, NumberProperty.FORMAT_MS);

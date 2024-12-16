@@ -49,11 +49,11 @@ public class AutoSpeedBuilders extends Module {
     private final NumberProperty delay = new NumberProperty("Delay", "Delay between placing blocks.", 100.0, 0.0, 1000.0, 25.0, NumberProperty.FORMAT_MS);
     private final BooleanProperty disconnectedFix = new BooleanProperty("Disconnected Fix", "Tries to fix disconnected blocks.", true);
 
-    private final GroupProperty silent = new GroupProperty("Silent", "Do things silently.");
+    private final GroupProperty silent = new GroupProperty("Silent", "Do things silently.", this);
     private final BooleanProperty silentSwing = new BooleanProperty("Swing", "Swing silently.", false);
     private final BooleanProperty silentSwap = new BooleanProperty("Swap", "Swap silently", false);
 
-    private final GroupProperty render = new GroupProperty("Render", "Rendering options");
+    private final GroupProperty render = new GroupProperty("Render", "Rendering options", this);
     private final BooleanProperty renderBuild = new BooleanProperty("Build", "Renders the build.", true);
     private final ColorProperty validBlock = new ColorProperty("Valid Block", "Color for valid blocks.", 0xFF00FF00, this.renderBuild::get);
     private final ColorProperty invalidBlock = new ColorProperty("Invalid Block", "Color for invalid blocks.", 0xFFFF0000, this.renderBuild::get);

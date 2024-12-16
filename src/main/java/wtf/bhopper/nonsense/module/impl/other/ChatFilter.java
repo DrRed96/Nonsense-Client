@@ -22,7 +22,10 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-@ModuleInfo(name = "Chat Filter", description = "Allows you to bypass chat filters", category = ModuleCategory.OTHER)
+@ModuleInfo(name = "Chat Filter",
+        description = "Allows you to bypass chat filters",
+        category = ModuleCategory.OTHER,
+        searchAlias = "Chat Bypass")
 public class ChatFilter extends Module {
 
     private static final List<String> COMMANDS = Arrays.asList("message", "msg", "whisper", "w", "tell", "reply", "r");

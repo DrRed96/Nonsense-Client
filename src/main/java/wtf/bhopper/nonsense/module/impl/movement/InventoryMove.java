@@ -13,7 +13,9 @@ import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 
-@ModuleInfo(name = "Inventory Move", description = "Allows you to move whilst in your inventory or other GUI's", category = ModuleCategory.MOVEMENT)
+@ModuleInfo(name = "Inventory Move",
+        description = "Allows you to move whilst in your inventory or other GUI's",
+        category = ModuleCategory.MOVEMENT)
 public class InventoryMove extends Module {
 
     private final BooleanProperty clientSide = new BooleanProperty("Client Side Only", "Only move in client sided GUI's", false);

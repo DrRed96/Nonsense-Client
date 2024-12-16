@@ -26,7 +26,7 @@ import static org.lwjgl.opengl.GL11.*;
 @ModuleInfo(name = "Tracers", description = "Draws a line to nearby entities", category = ModuleCategory.VISUAL)
 public class Tracers extends Module {
 
-    private final GroupProperty targetsGroup = new GroupProperty("Targets", "What entities Tracers should render");
+    private final GroupProperty targetsGroup = new GroupProperty("Targets", "What entities Tracers should render", this);
     private final BooleanProperty players = new BooleanProperty("Players", "Target Players.", true);
     private final BooleanProperty mobs = new BooleanProperty("Mobs", "Target Mobs (Zombies, Skeletons, etc.)", false);
     private final BooleanProperty animals = new BooleanProperty("Animals", "Target Animals (Pigs, Cows, etc.)", false);

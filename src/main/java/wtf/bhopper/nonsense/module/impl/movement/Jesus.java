@@ -1,11 +1,13 @@
 package wtf.bhopper.nonsense.module.impl.movement;
 
 import net.minecraft.block.BlockLiquid;
+import net.minecraft.block.material.Material;
 import net.minecraft.util.AxisAlignedBB;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
 import wtf.bhopper.nonsense.event.impl.EventBlockBounds;
 import wtf.bhopper.nonsense.event.impl.EventMove;
+import wtf.bhopper.nonsense.event.impl.EventUpdate;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
@@ -20,12 +22,19 @@ import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
 public class Jesus extends Module {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Method for Jesus", Mode.SOLID);
-    private final EnumProperty<PushOut> pushOut = new EnumProperty<>("Push Out", "Pushes you out of water/lava", PushOut.BOOST);
+    private final EnumProperty<PushOut> pushOut = new EnumProperty<>("Push Out", "Pushes you out of water/lava", PushOut.BOOST, () -> this.mode.isAny(Mode.SOLID, Mode.NCP));
 
     public Jesus() {
         this.addProperties(this.mode, this.pushOut);
         this.setSuffix(this.mode::getDisplayValue);
     }
+
+    @EventLink
+    public final Listener<EventUpdate> onUpdate = _ -> {
+        if (this.mode.is(Mode.DOLPHIN)) {
+            mc.theWorld.handleMaterialAcceleration(mc.thePlayer.getEntityBoundingBox().expand(0.0, -0.1, 0.0), Material.water, mc.thePlayer);
+        }
+    };
 
     @EventLink
     public final Listener<EventBlockBounds> onCollide = event -> {
@@ -82,7 +91,8 @@ public class Jesus extends Module {
 
     private enum Mode {
         SOLID,
-        @DisplayName("NCP") NCP
+        @DisplayName("NCP") NCP,
+        DOLPHIN
     }
 
     private enum PushOut {

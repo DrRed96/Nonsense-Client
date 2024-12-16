@@ -9,7 +9,9 @@ import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
 
-@ModuleInfo(name = "Lightning Detector", description = "Attempts to detect lightning strikes", category = ModuleCategory.OTHER)
+@ModuleInfo(name = "Lightning Detector",
+        description = "Attempts to detect lightning strikes",
+        category = ModuleCategory.OTHER)
 public class LightningDetector extends Module {
 
     @EventLink

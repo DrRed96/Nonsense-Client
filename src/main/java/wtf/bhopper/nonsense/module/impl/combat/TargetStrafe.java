@@ -29,7 +29,7 @@ public class TargetStrafe extends Module {
     private final NumberProperty range = new NumberProperty("Range", "Strafe range", 1.0, 0.1, 4.0, 0.05, NumberProperty.FORMAT_DISTANCE);
     private final BooleanProperty jump = new BooleanProperty("Jump", "Requires holding the jump button", true);
 
-    private final GroupProperty render = new GroupProperty("Render", "Renders the target strafe path");
+    private final GroupProperty render = new GroupProperty("Render", "Renders the target strafe path", this);
     private final BooleanProperty enableRender = new BooleanProperty("Enable", "Enables rendering", true);
     private final NumberProperty renderPoints = new NumberProperty("Points", "Amount of points to use in the rendering", 30, 3, 30, 1);
     private final BooleanProperty renderOutline = new BooleanProperty("Outline", "Renders an outline", true);

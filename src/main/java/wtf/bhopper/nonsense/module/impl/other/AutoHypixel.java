@@ -43,7 +43,7 @@ public class AutoHypixel extends Module {
     };
 
 
-    public final GroupProperty autoGg = new GroupProperty("Auto GG", "Automatically sends 'GG' or another message upon finishing a game");
+    public final GroupProperty autoGg = new GroupProperty("Auto GG", "Automatically sends 'GG' or another message upon finishing a game", this);
     private final BooleanProperty autoGgEnabled = new BooleanProperty("Enabled", "Enables Auto GG", true);
     private final StringProperty autoGgMessage = new StringProperty("Message", "Message to send", "gg");
 

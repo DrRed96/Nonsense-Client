@@ -13,6 +13,8 @@ public class ColorUtil {
     public static final int BLACK = 0xFF000000;
     public static final int GRAY = 0xFFAAAAAA;
     public static final int RED = 0xFFFF0000;
+    public static final int YELLOW = 0xFFFFFF00;
+    public static final int GREEN = 0xFF00FF00;
 
     public static int dropShadow(int color) {
         return (color & 0xFCFCFC) >> 2 | color & 0xFF000000;
@@ -91,6 +93,18 @@ public class ColorUtil {
                 | (MathHelper.clamp_int(red, 0, 255) << 16)
                 | (MathHelper.clamp_int(green, 0, 255) << 8)
                 | (MathHelper.clamp_int(blue, 0, 255));
+    }
+
+    public static int getF(float r, float g, float b, float a) {
+        return get((int)(r * 255.0F), (int)(g * 255.0F), (int)(b * 255.0F), (int)(a * 255.0F));
+    }
+
+    public static float[] splitF(final int color) {
+        final float r = (float) (color >> 16 & 255) / 255.0F;
+        final float g = (float) (color >> 8 & 255) / 255.0F;
+        final float b = (float) (color & 255) / 255.0F;
+        final float a = (float) (color >> 24 & 255) / 255.0F;
+        return new float[]{r, g, b, a};
     }
 
 

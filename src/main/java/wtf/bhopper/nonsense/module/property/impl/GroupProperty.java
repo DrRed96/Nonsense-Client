@@ -7,17 +7,21 @@ import wtf.bhopper.nonsense.module.property.PropertyContainer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
 public class GroupProperty extends Property<List<Property<?>>> implements PropertyContainer {
 
-    public GroupProperty(String displayName, String description, Supplier<Boolean> dependency) {
+    private final PropertyContainer owner;
+
+    public GroupProperty(String displayName, String description, PropertyContainer owner, Supplier<Boolean> dependency) {
         super(displayName, description, new ArrayList<>(), dependency);
+        this.owner = owner;
     }
 
-    public GroupProperty(String displayName, String description) {
-        this(displayName, description, () -> true);
+    public GroupProperty(String displayName, String description, PropertyContainer owner) {
+        this(displayName, description, owner, () -> true);
     }
 
     @Override
@@ -63,6 +67,22 @@ public class GroupProperty extends Property<List<Property<?>>> implements Proper
     @Override
     public List<Property<?>> getProperties() {
         return this.value;
+    }
+
+    @Override
+    public String getContainerId() {
+        List<String> id = new ArrayList<>(Collections.singletonList(this.name));
+        PropertyContainer owner = this.getOwner();
+        while (owner != null) {
+            id.add(owner.getContainerId());
+            owner = owner.getOwner();
+        }
+        return String.join(":", id);
+    }
+
+    @Override
+    public PropertyContainer getOwner() {
+        return this.owner;
     }
 
     public Property<?> getProperty(String name) {

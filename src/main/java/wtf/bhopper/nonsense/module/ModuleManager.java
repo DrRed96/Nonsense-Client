@@ -34,6 +34,7 @@ public class ModuleManager {
                 new FastBow(),
                 new InfiniteAura(),
                 new NoClickDelay(),
+                new AutoCopsAndCrims(),
 
                 // Movement
                 new Sprint(),
@@ -150,7 +151,14 @@ public class ModuleManager {
         return this.getModules()
                 .stream()
                 .filter(module -> module.category == category)
-                .collect(Collectors.toList());
+                .toList();
+    }
+
+    public List<Module> search(String name) {
+        return this.getModules()
+                .stream()
+                .filter(module -> module.matches(name))
+                .toList();
     }
 
     public int size() {

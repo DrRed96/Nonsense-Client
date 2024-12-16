@@ -17,6 +17,7 @@ import wtf.bhopper.nonsense.event.impl.EventTick;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
+import wtf.bhopper.nonsense.module.property.PropertyContainer;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.ColorProperty;
 import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
@@ -34,15 +35,15 @@ public class BlockOverlay extends Module {
 
     private static final float BED_HEIGHT = 0.5625F;
 
-    public final BlockOverlayProperty mouseOver = new BlockOverlayProperty("Mouse over", true, 0xFF0000, true, true);
-    private final BlockOverlayProperty chests = new BlockOverlayProperty("Chest", true, 0xFFAA00);
-    private final BlockOverlayProperty trappedChest = new BlockOverlayProperty("Trapped Chest", true, 0xFF5555);
-    private final BlockOverlayProperty enderChests = new BlockOverlayProperty("Ender Chest", true, 0xAA00AA);
-    private final BlockOverlayProperty hopper = new BlockOverlayProperty("Hopper", false, 0x777777);
-    private final BlockOverlayProperty dispenser = new BlockOverlayProperty("Dispenser", false, 0x00FFFF);
-    private final BlockOverlayProperty dropper = new BlockOverlayProperty("Dropper", false, 0x55FF55);
-    private final BlockOverlayProperty bedSet = new BlockOverlayProperty("Bed", true, 0x55AAFF);
-    private final BlockOverlayProperty jukeBox = new BlockOverlayProperty("Juke Box", false, 0xFF55FF);
+    public final BlockOverlayProperty mouseOver = new BlockOverlayProperty("Mouse over", true, 0xFF0000, true, true, this);
+    private final BlockOverlayProperty chests = new BlockOverlayProperty("Chest", true, 0xFFAA00, this);
+    private final BlockOverlayProperty trappedChest = new BlockOverlayProperty("Trapped Chest", true, 0xFF5555, this);
+    private final BlockOverlayProperty enderChests = new BlockOverlayProperty("Ender Chest", true, 0xAA00AA, this);
+    private final BlockOverlayProperty hopper = new BlockOverlayProperty("Hopper", false, 0x777777, this);
+    private final BlockOverlayProperty dispenser = new BlockOverlayProperty("Dispenser", false, 0x00FFFF, this);
+    private final BlockOverlayProperty dropper = new BlockOverlayProperty("Dropper", false, 0x55FF55, this);
+    private final BlockOverlayProperty bedSet = new BlockOverlayProperty("Bed", true, 0x55AAFF, this);
+    private final BlockOverlayProperty jukeBox = new BlockOverlayProperty("Juke Box", false, 0xFF55FF, this);
     private final NumberProperty searchRange = new NumberProperty("Search Range", "Search range for non tile blocks", 30, 5, 100, 5);
 
     private final Clock searchTimer = new Clock();
@@ -191,8 +192,8 @@ public class BlockOverlay extends Module {
         private final BooleanProperty box;
         private final BooleanProperty outline;
 
-        public BlockOverlayProperty(String displayName, boolean enabled, int color, boolean box, boolean outline) {
-            super(displayName, displayName);
+        public BlockOverlayProperty(String displayName, boolean enabled, int color, boolean box, boolean outline, PropertyContainer owner) {
+            super(displayName, displayName, owner);
             this.enable = new BooleanProperty("Enable", "Enable " + displayName, enabled);
             this.color = new ColorProperty("Color", displayName + " color", color | 0xFF000000);
             this.box = new BooleanProperty("Box", displayName + " box", box);
@@ -200,8 +201,8 @@ public class BlockOverlay extends Module {
             this.addProperties(this.enable, this.color, this.box, this.outline);
         }
 
-        public BlockOverlayProperty(String displayName, boolean enabled, int color) {
-            this(displayName, enabled, color, true, false);
+        public BlockOverlayProperty(String displayName, boolean enabled, int color, PropertyContainer owner) {
+            this(displayName, enabled, color, true, false, owner);
         }
 
         public boolean isEnabled() {

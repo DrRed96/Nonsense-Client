@@ -8,7 +8,10 @@ import wtf.bhopper.nonsense.command.CommandInfo;
 import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
 import wtf.bhopper.nonsense.util.misc.GeneralUtil;
 
-@CommandInfo(name = "Help", description = "Displays this message.", syntax = ".help", alias = "?")
+@CommandInfo(name = "Help",
+        description = "Displays this message.",
+        syntax = ".help",
+        alias = {"?", "nonsense"})
 public class Help extends Command {
 
     @Override

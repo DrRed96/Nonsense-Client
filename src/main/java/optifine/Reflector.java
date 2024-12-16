@@ -494,13 +494,12 @@ public class Reflector
             }
             else
             {
-                Object object = method.invoke((Object)null, p_call_1_);
-                return object;
+                return method.invoke(null, p_call_1_);
             }
         }
         catch (Throwable throwable)
         {
-            handleException(throwable, (Object)null, p_call_0_, p_call_1_);
+            handleException(throwable, null, p_call_0_, p_call_1_);
             return null;
         }
     }

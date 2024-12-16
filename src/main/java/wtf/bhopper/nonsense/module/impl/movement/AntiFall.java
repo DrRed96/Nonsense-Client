@@ -16,7 +16,11 @@ import wtf.bhopper.nonsense.util.minecraft.BlockUtil;
 import wtf.bhopper.nonsense.util.minecraft.PacketUtil;
 import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
 
-@ModuleInfo(name = "Anti Fall", description = "Prevents you from falling off edges.", category = ModuleCategory.MOVEMENT)
+@ModuleInfo(
+        name = "Anti Fall",
+        description = "Prevents you from falling off edges.",
+        category = ModuleCategory.MOVEMENT,
+        searchAlias = {"Anti Void", "No Void"})
 public class AntiFall extends Module {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Anti Fall method", Mode.PACKET);

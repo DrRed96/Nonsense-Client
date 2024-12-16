@@ -15,7 +15,9 @@ import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.util.minecraft.*;
 
-@ModuleInfo(name = "Auto Pixel Party", description = "Plays pixel party for you", category = ModuleCategory.OTHER)
+@ModuleInfo(name = "Auto Pixel Party",
+        description = "Plays pixel party for you",
+        category = ModuleCategory.OTHER)
 public class AutoPixelParty extends Module {
 
     private final BooleanProperty update = new BooleanProperty("Update", "Re-Updates the blocks", false);

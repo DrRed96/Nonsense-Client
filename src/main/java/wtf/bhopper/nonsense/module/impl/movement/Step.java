@@ -26,7 +26,7 @@ public class Step extends Module {
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Step method", Mode.VANILLA);
     private final NumberProperty height = new NumberProperty("Height", "Step height", () -> this.mode.is(Mode.VANILLA), 1.0, 1.0, 10.0, 0.5);
 
-    private final GroupProperty timerGroup = new GroupProperty("Timer", "Uses timer to help bypass");
+    private final GroupProperty timerGroup = new GroupProperty("Timer", "Uses timer to help bypass", this);
     private final BooleanProperty timerEnable = new BooleanProperty("Enable", "Enable timer", false);
     private final NumberProperty timerSpeed = new NumberProperty("Speed", "Timer speed", 0.55F, 0.1F, 1.0F, 0.05F);
     private final BooleanProperty speedDisable = new BooleanProperty("Speed Disable", "Disables step when using speed.", true);

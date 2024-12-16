@@ -23,13 +23,16 @@ public class NovoModule extends NovoComponent {
         this.module = module;
 
         for (Property<?> p : module.getProperties()) {
-            if (p instanceof BooleanProperty booleanProperty) components.add(new NovoSwitch(this.panel, booleanProperty, 0));
-            else if (p instanceof NumberProperty numberProperty) components.add(new NovoSlider(this.panel, numberProperty, 0));
-            else if (p instanceof EnumProperty<?> enumProperty) components.add(new NovoSelector(this.panel, enumProperty, 0));
-            else if (p instanceof StringProperty stringProperty) components.add(new NovoTextBox(this.panel, stringProperty, 0));
-            else if (p instanceof ColorProperty colorProperty) components.add(new NovoColorPicker(this.panel, colorProperty, 0));
-            else if (p instanceof GroupProperty groupProperty) components.add(new NovoGroup(this.panel, groupProperty, 0));
-            else if (p instanceof ButtonProperty buttonProperty) components.add(new NovoButton(this.panel, buttonProperty, 0));
+            switch (p) {
+                case BooleanProperty booleanProperty -> components.add(new NovoSwitch(this.panel, booleanProperty, 0));
+                case NumberProperty numberProperty -> components.add(new NovoSlider(this.panel, numberProperty, 0));
+                case EnumProperty<?> enumProperty -> components.add(new NovoSelector(this.panel, enumProperty, 0));
+                case StringProperty stringProperty -> components.add(new NovoTextBox(this.panel, stringProperty, 0));
+                case ColorProperty colorProperty -> components.add(new NovoColorPicker(this.panel, colorProperty, 0));
+                case GroupProperty groupProperty -> components.add(new NovoGroup(this.panel, groupProperty, 0));
+                case ButtonProperty buttonProperty -> components.add(new NovoButton(this.panel, buttonProperty, 0));
+                default -> {}
+            }
         }
     }
 

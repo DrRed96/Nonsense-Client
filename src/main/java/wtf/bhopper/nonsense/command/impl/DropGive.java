@@ -6,17 +6,16 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTException;
-import net.minecraft.network.play.client.C07PacketPlayerDigging;
 import net.minecraft.network.play.client.C10PacketCreativeInventoryAction;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
 import wtf.bhopper.nonsense.command.Command;
 import wtf.bhopper.nonsense.command.CommandInfo;
 import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
-import wtf.bhopper.nonsense.util.minecraft.InventoryUtil;
 import wtf.bhopper.nonsense.util.minecraft.PacketUtil;
 
-@CommandInfo(name = "DropGive", description = "Creates an item then drops it, this will delete your current held item.", syntax = ".dropgive <item> [amount] [meta] [nbt]", alias = {"drop"})
+@CommandInfo(name = "DropGive",
+        description = "Creates an item then drops it, this will delete your current held item.",
+        syntax = ".dropgive <item> [amount] [meta] [nbt]",
+        alias = "drop")
 public class DropGive extends Command {
     @Override
     public void execute(String[] args, String rawCommand) throws Exception {

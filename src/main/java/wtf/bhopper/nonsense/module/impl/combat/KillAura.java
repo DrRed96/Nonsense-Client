@@ -15,24 +15,24 @@ import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
 import wtf.bhopper.nonsense.event.impl.EventPreMotion;
+import wtf.bhopper.nonsense.event.impl.EventRender3D;
 import wtf.bhopper.nonsense.event.impl.EventTick;
 import wtf.bhopper.nonsense.event.impl.EventUpdate;
+import wtf.bhopper.nonsense.gui.hud.Hud;
 import wtf.bhopper.nonsense.gui.hud.notification.Notification;
 import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
-import wtf.bhopper.nonsense.module.property.annotations.DisplayName;
-import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
-import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
-import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
-import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
+import wtf.bhopper.nonsense.module.property.impl.*;
 import wtf.bhopper.nonsense.util.minecraft.PacketUtil;
 import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
 import wtf.bhopper.nonsense.util.minecraft.Rotation;
 import wtf.bhopper.nonsense.util.minecraft.RotationUtil;
 import wtf.bhopper.nonsense.util.misc.Clock;
 import wtf.bhopper.nonsense.util.misc.MathUtil;
+import wtf.bhopper.nonsense.util.render.ColorUtil;
+import wtf.bhopper.nonsense.util.render.RenderUtil;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -41,7 +41,8 @@ import java.util.List;
 @SuppressWarnings("FieldCanBeLocal")
 @ModuleInfo(name = "Kill Aura",
         description = "Automatically attacks nearby entities",
-        category = ModuleCategory.COMBAT)
+        category = ModuleCategory.COMBAT,
+        searchAlias = {"Trigger Bot", "Auto Attack"})
 public class KillAura extends Module {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Target selection method", Mode.SWITCH);
@@ -49,7 +50,7 @@ public class KillAura extends Module {
     private final NumberProperty minAps = new NumberProperty("Min APS", "Minimum attacks per second", 7.0, 1.0, 20.0, 1.0, NumberProperty.FORMAT_APS);
     private final NumberProperty maxAps = new NumberProperty("Max APS", "Maximum attacks per second", 12.0, 1.0, 20.0, 1.0, NumberProperty.FORMAT_APS);
 
-    private final GroupProperty targetsGroup = new GroupProperty("Targets", "What entities Kill Aura should target");
+    private final GroupProperty targetsGroup = new GroupProperty("Targets", "What entities Kill Aura should target", this);
     private final BooleanProperty players = new BooleanProperty("Players", "Target Players.", true);
     private final BooleanProperty mobs = new BooleanProperty("Mobs", "Target Mobs (Zombies, Skeletons, etc.)", false);
     private final BooleanProperty animals = new BooleanProperty("Animals", "Target Animals (Pigs, Cows, etc.)", false);
@@ -59,18 +60,22 @@ public class KillAura extends Module {
     private final BooleanProperty teams = new BooleanProperty("Teams", "Prevents you from attacking teammates", true);
     private final NumberProperty existed = new NumberProperty("Ticks Existed", "Ticks and entity has to have existed for before attacking.", 20, 0, 50, 1, NumberProperty.FORMAT_INT);
 
-    private final GroupProperty rangeGroup = new GroupProperty("Range", "Kill Aura range");
+    private final GroupProperty rangeGroup = new GroupProperty("Range", "Kill Aura range", this);
     private final NumberProperty playerRange = new NumberProperty("Players", "Player attack range", 4.0, 3.0, 10.0, 0.05, NumberProperty.FORMAT_DISTANCE);
     private final NumberProperty otherRange = new NumberProperty("Others", "Other entities attack range", 4.0, 3.0, 10.0, 0.05, NumberProperty.FORMAT_DISTANCE);
     private final NumberProperty rotRange = new NumberProperty("Rotate", "Rotation range", 5.2, 3.0, 16.0, 0.05, NumberProperty.FORMAT_DISTANCE);
     private final NumberProperty swingRange = new NumberProperty("Swing", "Swing range", 5.2, 3.0, 16.0, 0.05, NumberProperty.FORMAT_DISTANCE);
     private final NumberProperty fov = new NumberProperty("FOV", "Targets must be in FOV.", 360.0, 0.0, 360.0, 1.0, NumberProperty.FORMAT_ANGLE);
 
-    private final GroupProperty rotsGroup = new GroupProperty("Rotations", "Kill Aura Rotations");
+    private final GroupProperty rotsGroup = new GroupProperty("Rotations", "Kill Aura Rotations", this);
     private final EnumProperty<RotationMode> rotationMode = new EnumProperty<>("Mode", "Rotations method", RotationMode.INSTANT);
     private final EnumProperty<HitVecMode> hitVecMode = new EnumProperty<>("Hit Vector", "Hit vector of the entity", HitVecMode.CLOSEST);
     private final BooleanProperty rayCast = new BooleanProperty("Ray Cast", "Performs a ray-cast check", false);
     private final NumberProperty linear = new NumberProperty("Linear Amount", "Amount to change by with linear rotations", () -> this.rotationMode.is(RotationMode.LINEAR), 80.0, 1.0, 100.0, 1.0, NumberProperty.FORMAT_PERCENT);
+
+    private final GroupProperty renderGroup = new GroupProperty("Render", "Rendering options", this);
+    private final EnumProperty<RangeIndiactor> rangeIndicator = new EnumProperty<>("Range Indicator", "Draws a circle to indicate your range", RangeIndiactor.NONE);
+    private final ColorProperty attackColor = new ColorProperty("Attack Color", "Color for attacking", ColorUtil.RED, () -> !this.rangeIndicator.is(RangeIndiactor.NONE));
 
     private final EnumProperty<Swing> swingMode = new EnumProperty<>("Swing", "Swinging", Swing.CLIENT);
     private final BooleanProperty autoDisable = new BooleanProperty("Auto Disable", "Automatically disabled Kill Aura in certain situations", true);
@@ -98,7 +103,8 @@ public class KillAura extends Module {
         this.targetsGroup.addProperties(this.players, this.mobs, this.animals, this.others, this.invis, this.dead, this.teams, this.existed);
         this.rangeGroup.addProperties(this.playerRange, this.otherRange, this.rotRange, this.swingRange, this.fov);
         this.rotsGroup.addProperties(this.rotationMode, this.hitVecMode, this.rayCast, this.linear);
-        this.addProperties(this.mode, this.sorting, this.minAps, this.maxAps, this.targetsGroup, this.rangeGroup, this.rotsGroup, this.swingMode, this.autoDisable, this.switchDelay, this.maxTargets, this.particles);
+        this.renderGroup.addProperties(this.rangeIndicator, this.attackColor);
+        this.addProperties(this.mode, this.sorting, this.minAps, this.maxAps, this.targetsGroup, this.rangeGroup, this.rotsGroup, this.renderGroup, this.swingMode, this.autoDisable, this.switchDelay, this.maxTargets, this.particles);
         this.setSuffix(this.mode::getDisplayValue);
 
         this.minAps.addValueChangeListener((oldValue, value) -> {
@@ -261,9 +267,8 @@ public class KillAura extends Module {
 
     private void sortTargets(List<EntityLivingBase> targets) {
         targets.sort(switch (this.sorting.get()) {
-            case ANGLE -> Comparator.comparingDouble(entity -> RotationUtil.getRotations(entity).yaw);
+            case ANGLE -> Comparator.comparingDouble(entity -> Math.abs(RotationUtil.getYawChange(entity.posX, entity.posZ)));
             case RANGE -> Comparator.comparingDouble(entity -> entity.getDistanceToEntity(mc.thePlayer));
-            case FOV -> Comparator.comparingDouble(entity -> Math.abs(RotationUtil.getYawChange(entity.posX, entity.posZ)));
             case ARMOR -> Comparator.comparingInt(entity -> entity instanceof EntityPlayer ? ((EntityPlayer) entity).inventory.getTotalArmorValue() : (int) entity.getHealth());
             case HEALTH -> Comparator.comparingDouble(EntityLivingBase::getHealth);
         });
@@ -348,6 +353,22 @@ public class KillAura extends Module {
         return this.target;
     }
 
+    @EventLink
+    public final Listener<EventRender3D> onRender = event -> {
+        if (!this.rangeIndicator.is(RangeIndiactor.NONE)) {
+            double x = MathUtil.lerp(mc.thePlayer.lastTickPosX, mc.thePlayer.posX, event.delta);
+            double y = MathUtil.lerp(mc.thePlayer.lastTickPosY, mc.thePlayer.posY, event.delta);
+            double z = MathUtil.lerp(mc.thePlayer.lastTickPosZ, mc.thePlayer.posZ, event.delta);
+
+            int color = this.target != null && this.isTargetValid ? this.attackColor.getRGB() : Hud.color();
+
+            if (this.rangeIndicator.is(RangeIndiactor.OUTLINE)) {
+                RenderUtil.drawRadius(x, y, z, this.playerRange.getDouble(), 100, 4.0F, ColorUtil.BLACK);
+            }
+            RenderUtil.drawRadius(x, y, z, this.playerRange.getDouble(), 100, 2.0F, color);
+        }
+    };
+
     private enum Mode {
         SINGLE,
         SWITCH
@@ -363,10 +384,15 @@ public class KillAura extends Module {
         HEAD
     }
 
+    private enum RangeIndiactor {
+        NORMAL,
+        OUTLINE,
+        NONE
+    }
+
     private enum Sorting {
         ANGLE,
         RANGE,
-        @DisplayName("FOV") FOV,
         ARMOR,
         HEALTH,
     }

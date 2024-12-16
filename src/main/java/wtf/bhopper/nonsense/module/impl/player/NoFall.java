@@ -17,7 +17,8 @@ import java.util.function.Supplier;
 
 @ModuleInfo(name = "No Fall",
         category = ModuleCategory.PLAYER,
-        description = "Prevents fall damage.")
+        description = "Prevents fall damage.",
+        searchAlias = "No Fall Damage")
 public class NoFall extends Module {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Method to prevent fall damage.", Mode.SPOOF);

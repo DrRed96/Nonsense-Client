@@ -21,25 +21,25 @@ import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
         category = ModuleCategory.VISUAL)
 public class ItemAnimations extends Module {
 
-    private final GroupProperty posGroup = new GroupProperty("Position", "Modify item position.");
+    private final GroupProperty posGroup = new GroupProperty("Position", "Modify item position.", this);
 
-    private final GroupProperty usePos = new GroupProperty("Using", "Item position while using.");
+    private final GroupProperty usePos = new GroupProperty("Using", "Item position while using.", this.posGroup);
     private final NumberProperty useX = new NumberProperty("X", "Using X.", 0.0, -1.0, 1.0, 0.05);
     private final NumberProperty useY = new NumberProperty("Y", "Using Y.", 0.0, -1.0, 1.0, 0.05);
     private final NumberProperty useZ = new NumberProperty("Z", "Using Z.", 0.0, -1.0, 1.0, 0.05);
 
-    private final GroupProperty normPos = new GroupProperty("Normal", "Normal item position.");
+    private final GroupProperty normPos = new GroupProperty("Normal", "Normal item position.", this.posGroup);
     private final NumberProperty normX = new NumberProperty("X", "Normal X.", 0.0, -1.0, 1.0, 0.05);
     private final NumberProperty normY = new NumberProperty("Y", "Normal Y.", 0.0, -1.0, 1.0, 0.05);
     private final NumberProperty normZ = new NumberProperty("Z", "Normal Z.", 0.0, -1.0, 1.0, 0.05);
 
     private final BooleanProperty swordOnly = new BooleanProperty("Sword Only", "Only transform if holding a sword.", false);
 
-    private final GroupProperty swordGroup = new GroupProperty("Sword", "Modify sword animations.");
+    private final GroupProperty swordGroup = new GroupProperty("Sword", "Modify sword animations.", this);
     private final EnumProperty<BlockAnimation> blockAnimation = new EnumProperty<>("Animation", "Sword blocking animation.", BlockAnimation.DEFAULT);
     private final NumberProperty equipAnimation = new NumberProperty("Equip Animation", "Crontrols the animation played when your item is updated.", 0.5, 0.0, 1.0, 0.05);
 
-    private final GroupProperty swingGroup = new GroupProperty("Swinging", "Modify item/arm swinging");
+    private final GroupProperty swingGroup = new GroupProperty("Swinging", "Modify item/arm swinging", this);
     private final NumberProperty normalSwingSpeed = new NumberProperty("Normal Speed", "Normal swing speed", 6, 1, 15, 1);
     private final NumberProperty usingSwingSpeed = new NumberProperty("Using Speed", "Using swing speed", 6, 1, 15, 1);
 

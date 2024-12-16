@@ -15,7 +15,8 @@ import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
 
 @ModuleInfo(name = "Velocity",
         description = "Reduces/removes knock-back.",
-        category = ModuleCategory.COMBAT)
+        category = ModuleCategory.COMBAT,
+        searchAlias = {"Anti Knock Back", "Anti KB", "Anti Velocity"})
 public class Velocity extends Module {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Method for velocity.", Mode.PACKET);

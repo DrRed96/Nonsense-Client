@@ -22,7 +22,8 @@ import wtf.bhopper.nonsense.util.minecraft.PacketUtil;
 
 @ModuleInfo(name = "No Slow",
         description = "Prevents you from being slowed down while using an item.",
-        category = ModuleCategory.MOVEMENT)
+        category = ModuleCategory.MOVEMENT,
+        searchAlias = "No Slow Down")
 public class NoSlow extends Module {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Method for no slow.", Mode.VANILLA);

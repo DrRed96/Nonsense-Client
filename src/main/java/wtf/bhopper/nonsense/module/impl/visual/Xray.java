@@ -16,7 +16,7 @@ import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
 @ModuleInfo(name = "Xray", description = "Allows you to see ores thought blocks", category = ModuleCategory.VISUAL)
 public class Xray extends Module {
 
-    private final GroupProperty ores = new GroupProperty("Ores", "Ores to be rendered");
+    private final GroupProperty ores = new GroupProperty("Ores", "Ores to be rendered", this);
     private final BooleanProperty diamond = new BooleanProperty("Diamond", "Render diamond ores", true);
 
     private final NumberProperty opacity = new NumberProperty("Opacity", "Opacity of other blocks", 10, 0, 255, 1, NumberProperty.FORMAT_INT);

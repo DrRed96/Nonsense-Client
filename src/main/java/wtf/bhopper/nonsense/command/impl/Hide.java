@@ -6,7 +6,9 @@ import wtf.bhopper.nonsense.command.CommandInfo;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
 
-@CommandInfo(name = "Hide", description = "Hides or shows a module in the array list", syntax = ".hide <module>/all/none")
+@CommandInfo(name = "Hide",
+        description = "Hides or shows a module in the array list",
+        syntax = ".hide <module>/all/none")
 public class Hide extends Command {
     @Override
     public void execute(String[] args, String rawCommand) throws Exception {

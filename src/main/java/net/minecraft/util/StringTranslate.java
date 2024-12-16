@@ -112,7 +112,7 @@ public class StringTranslate
      */
     private String tryTranslateKey(String key)
     {
-        String s = (String)this.languageList.get(key);
+        String s = this.languageList.get(key);
         return s == null ? key : s;
     }
 

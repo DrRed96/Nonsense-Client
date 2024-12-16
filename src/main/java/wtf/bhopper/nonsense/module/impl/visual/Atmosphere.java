@@ -22,16 +22,16 @@ public class Atmosphere extends Module {
 
     private final EnumProperty<FullBright> fullBright = new EnumProperty<>("Full Bright", "Method for brightness", FullBright.GAMMA);
     
-    private final GroupProperty timeGroup = new GroupProperty("Time", "Change the world time");
+    private final GroupProperty timeGroup = new GroupProperty("Time", "Change the world time", this);
     private final BooleanProperty timeEnable = new BooleanProperty("Enable", "Enables time changer", false);
     private final EnumProperty<TimeMode> timeMode = new EnumProperty<>("Mode", "How to change the time", TimeMode.CUSTOM);
     private final NumberProperty timeChange = new NumberProperty("Time", "What time to change to", () -> this.timeMode.is(TimeMode.CUSTOM), 18000, 0, 24000, 300);
 
-    private final GroupProperty weatherGroup = new GroupProperty("Weather", "Changes the weather");
+    private final GroupProperty weatherGroup = new GroupProperty("Weather", "Changes the weather", this);
     private final BooleanProperty weatherEnabled = new BooleanProperty("Enabled", "Enables weather changer", true);
     private final EnumProperty<Weather> weather = new EnumProperty<>("Weather", "What weather to use", Weather.CLEAR);
 
-    private final GroupProperty worldColorGroup = new GroupProperty("World Color", "Modifies the world color");
+    private final GroupProperty worldColorGroup = new GroupProperty("World Color", "Modifies the world color", this);
     private final BooleanProperty worldColorEnable = new BooleanProperty("Enable", "Enables world color", false);
     public final ColorProperty worldColor = new ColorProperty("Color", "World color", ColorUtil.WHITE);
 

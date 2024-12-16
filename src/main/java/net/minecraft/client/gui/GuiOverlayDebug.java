@@ -35,7 +35,6 @@ public class GuiOverlayDebug extends Gui
 {
     private final Minecraft mc;
     private final FontRenderer fontRenderer;
-    private static final String __OBFID = "CL_00001956";
 
     public GuiOverlayDebug(Minecraft mc)
     {
@@ -58,11 +57,11 @@ public class GuiOverlayDebug extends Gui
 
     protected void renderDebugInfoLeft()
     {
-        List list = this.call();
+        List<String> list = this.call();
 
         for (int i = 0; i < list.size(); ++i)
         {
-            String s = (String)list.get(i);
+            String s = list.get(i);
 
             if (!Strings.isNullOrEmpty(s))
             {
@@ -116,7 +115,19 @@ public class GuiOverlayDebug extends Gui
                 default -> "Invalid";
             };
 
-            ArrayList<String> arraylist = Lists.newArrayList("Minecraft 1.8.8 (" + this.mc.getVersion() + "/" + ClientBrandRetriever.getClientModName() + ")", this.mc.debug, this.mc.renderGlobal.getDebugInfoRenders(), this.mc.renderGlobal.getDebugInfoEntities(), "P: " + this.mc.effectRenderer.getStatistics() + ". T: " + this.mc.theWorld.getDebugLoadedEntities(), this.mc.theWorld.getProviderName(), "", String.format("XYZ: %.3f / %.5f / %.3f", this.mc.getRenderViewEntity().posX, this.mc.getRenderViewEntity().getEntityBoundingBox().minY, Double.valueOf(this.mc.getRenderViewEntity().posZ)), String.format("Block: %d %d %d", Integer.valueOf(blockpos.getX()), Integer.valueOf(blockpos.getY()), Integer.valueOf(blockpos.getZ())), String.format("Chunk: %d %d %d in %d %d %d", new Object[]{Integer.valueOf(blockpos.getX() & 15), Integer.valueOf(blockpos.getY() & 15), Integer.valueOf(blockpos.getZ() & 15), Integer.valueOf(blockpos.getX() >> 4), Integer.valueOf(blockpos.getY() >> 4), Integer.valueOf(blockpos.getZ() >> 4)}), String.format("Facing: %s (%s) (%.1f / %.1f)", new Object[]{enumfacing, s, Float.valueOf(MathHelper.wrapAngleTo180_float(entity.rotationYaw)), Float.valueOf(MathHelper.wrapAngleTo180_float(entity.rotationPitch))}));
+            ArrayList<String> arraylist = Lists.newArrayList(
+                    "Minecraft 1.8.8 (" + this.mc.getVersion() + "/" + ClientBrandRetriever.getClientModName() + ")",
+                    this.mc.debug,
+                    this.mc.renderGlobal.getDebugInfoRenders(),
+                    this.mc.renderGlobal.getDebugInfoEntities(),
+                    "P: " + this.mc.effectRenderer.getStatistics() + ". T: " + this.mc.theWorld.getDebugLoadedEntities(),
+                    this.mc.theWorld.getProviderName(),
+                    "",
+                    String.format("XYZ: %.3f / %.5f / %.3f", this.mc.getRenderViewEntity().posX, this.mc.getRenderViewEntity().getEntityBoundingBox().minY, this.mc.getRenderViewEntity().posZ),
+                    String.format("Block: %d %d %d", blockpos.getX(), blockpos.getY(), blockpos.getZ()),
+                    String.format("Chunk: %d %d %d in %d %d %d", blockpos.getX() & 15, blockpos.getY() & 15, blockpos.getZ() & 15, blockpos.getX() >> 4, blockpos.getY() >> 4, blockpos.getZ() >> 4),
+                    String.format("Facing: %s (%s) (%.1f / %.1f)", enumfacing, s, MathHelper.wrapAngleTo180_float(entity.rotationYaw), MathHelper.wrapAngleTo180_float(entity.rotationPitch))
+            );
 
             if (this.mc.theWorld != null && this.mc.theWorld.isBlockLoaded(blockpos))
             {
@@ -135,7 +146,7 @@ public class GuiOverlayDebug extends Gui
                     }
                 }
 
-                arraylist.add(String.format("Local Difficulty: %.2f (Day %d)", Float.valueOf(difficultyinstance.getAdditionalDifficulty()), Long.valueOf(this.mc.theWorld.getWorldTime() / 24000L)));
+                arraylist.add(String.format("Local Difficulty: %.2f (Day %d)", difficultyinstance.getAdditionalDifficulty(), this.mc.theWorld.getWorldTime() / 24000L));
             }
 
             if (this.mc.entityRenderer != null && this.mc.entityRenderer.isShaderActive())
@@ -146,7 +157,7 @@ public class GuiOverlayDebug extends Gui
             if (this.mc.objectMouseOver != null && this.mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK && this.mc.objectMouseOver.getBlockPos() != null)
             {
                 BlockPos blockpos1 = this.mc.objectMouseOver.getBlockPos();
-                arraylist.add(String.format("Looking at: %d %d %d", blockpos1.getX(), blockpos1.getY(), Integer.valueOf(blockpos1.getZ())));
+                arraylist.add(String.format("Looking at: %d %d %d", blockpos1.getX(), blockpos1.getY(), blockpos1.getZ()));
             }
 
             return arraylist;
@@ -155,11 +166,21 @@ public class GuiOverlayDebug extends Gui
 
     protected List<String> getDebugInfoRight()
     {
-        long i = Runtime.getRuntime().maxMemory();
-        long j = Runtime.getRuntime().totalMemory();
-        long k = Runtime.getRuntime().freeMemory();
-        long l = j - k;
-        ArrayList<String> arraylist = Lists.newArrayList(String.format("Java: %s %dbit", System.getProperty("java.version"), Integer.valueOf(this.mc.isJava64bit() ? 64 : 32)), String.format("Mem: % 2d%% %03d/%03dMB", new Object[]{Long.valueOf(l * 100L / i), Long.valueOf(bytesToMb(l)), Long.valueOf(bytesToMb(i))}), String.format("Allocated: % 2d%% %03dMB", new Object[]{Long.valueOf(j * 100L / i), Long.valueOf(bytesToMb(j))}), "", String.format("CPU: %s", new Object[]{OpenGlHelper.getCPU()}), "", String.format("Display: %dx%d (%s)", new Object[]{Integer.valueOf(Display.getWidth()), Integer.valueOf(Display.getHeight()), GL11.glGetString(GL11.GL_VENDOR)}), GL11.glGetString(GL11.GL_RENDERER), GL11.glGetString(GL11.GL_VERSION));
+        long maxMemory = Runtime.getRuntime().maxMemory();
+        long totalMemory = Runtime.getRuntime().totalMemory();
+        long freeMemory = Runtime.getRuntime().freeMemory();
+        long usedMemory = totalMemory - freeMemory;
+        ArrayList<String> arraylist = Lists.newArrayList(
+                String.format("Java: %s %dbit", System.getProperty("java.version"), this.mc.isJava64bit() ? 64 : 32),
+                String.format("Mem: % 2d%% %03d/%03dMB", usedMemory * 100L / maxMemory, bytesToMb(usedMemory), bytesToMb(maxMemory)),
+                String.format("Allocated: % 2d%% %03dMB", totalMemory * 100L / maxMemory, bytesToMb(totalMemory)),
+                "",
+                String.format("CPU: %s", OpenGlHelper.getCPU()),
+                "",
+                String.format("Display: %dx%d (%s)", Display.getWidth(), Display.getHeight(), GL11.glGetString(GL11.GL_VENDOR)),
+                GL11.glGetString(GL11.GL_RENDERER),
+                GL11.glGetString(GL11.GL_VERSION)
+        );
 
         if (Reflector.FMLCommonHandler_getBrandings.exists())
         {

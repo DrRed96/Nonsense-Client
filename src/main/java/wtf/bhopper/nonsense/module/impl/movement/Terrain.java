@@ -12,7 +12,9 @@ import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 
-@ModuleInfo(name = "Terrain", description = "Modifies your movement on certain blocks", category = ModuleCategory.MOVEMENT)
+@ModuleInfo(name = "Terrain",
+        description = "Modifies your movement on certain blocks.",
+        category = ModuleCategory.MOVEMENT)
 public class Terrain extends Module {
 
     private final EnumProperty<Mode> soulSand = new EnumProperty<>("Soul Sand", "Prevents you from being slowed by soul sand", Mode.NORMAL);

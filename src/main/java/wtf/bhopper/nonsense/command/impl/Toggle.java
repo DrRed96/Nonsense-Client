@@ -6,7 +6,10 @@ import wtf.bhopper.nonsense.command.CommandInfo;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
 
-@CommandInfo(name = "Toggle", description = "Toggles a module.", syntax = ".toggle <module>", alias = "t")
+@CommandInfo(name = "Toggle",
+        description = "Toggles a module.",
+        syntax = ".toggle <module>",
+        alias = "t")
 public class Toggle extends Command {
 
     @Override

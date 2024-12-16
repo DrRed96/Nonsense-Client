@@ -5,7 +5,9 @@ import wtf.bhopper.nonsense.command.Command;
 import wtf.bhopper.nonsense.command.CommandInfo;
 import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
 
-@CommandInfo(name = "VClip", description = "Teleports you vertically", syntax = ".vclip <blocks>")
+@CommandInfo(name = "VClip",
+        description = "Teleports you vertically",
+        syntax = ".vclip <blocks>")
 public class Vclip extends Command {
     @Override
     public void execute(String[] args, String rawCommand) throws Exception {

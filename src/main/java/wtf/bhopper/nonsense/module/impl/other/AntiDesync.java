@@ -5,7 +5,9 @@ import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 
-@ModuleInfo(name = "Anti Desync", description = "Prevents block de-syncs", category = ModuleCategory.OTHER)
+@ModuleInfo(name = "Anti Desync",
+        description = "Prevents block de-syncs",
+        category = ModuleCategory.OTHER)
 public class AntiDesync extends Module {
 
     private final BooleanProperty breakSet = new BooleanProperty("Break", "Block breaking", true);

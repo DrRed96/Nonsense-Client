@@ -19,7 +19,7 @@ import wtf.bhopper.nonsense.util.minecraft.BlockUtil;
 @ModuleInfo(name = "Fast Mine", description = "Allows you to break blocks faster", category = ModuleCategory.PLAYER)
 public class FastMine extends Module {
 
-    private final GroupProperty breakingGroup = new GroupProperty("Breaking", "Block breaking");
+    private final GroupProperty breakingGroup = new GroupProperty("Breaking", "Block breaking", this);
     private final BooleanProperty enableBreaking = new BooleanProperty("Enable", "Enables faster breaking", true);
     private final EnumProperty<BreakMode> breakingMode = new EnumProperty<>("Mode", "Breaking mode", BreakMode.PROGRESS);
     private final NumberProperty multiplier = new NumberProperty("Multiplier", "Break multiplier", () -> !this.breakingMode.is(BreakMode.INSTANT), 1.25, 1.0, 5.0, 0.05);

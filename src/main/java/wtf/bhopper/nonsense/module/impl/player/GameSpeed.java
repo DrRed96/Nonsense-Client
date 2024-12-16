@@ -9,7 +9,10 @@ import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
 import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
 
-@ModuleInfo(name = "Game Speed", description = "Changes the game speed", category = ModuleCategory.PLAYER)
+@ModuleInfo(name = "Game Speed",
+        description = "Changes the game speed",
+        category = ModuleCategory.PLAYER,
+        searchAlias = "Timer")
 public class GameSpeed extends Module {
 
     private final NumberProperty speed = new NumberProperty("Speed", "Game speed multiplier", 1.5, 0.1, 10.0, 0.01);

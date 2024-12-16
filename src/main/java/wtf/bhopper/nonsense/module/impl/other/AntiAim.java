@@ -15,7 +15,10 @@ import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
 
 import java.util.function.Supplier;
 
-@ModuleInfo(name = "Anti Aim", description = "CS:GO anti aim but useless and in Minecraft", category = ModuleCategory.OTHER)
+@ModuleInfo(name = "Anti Aim",
+        description = "CS:GO anti aim but useless and in Minecraft",
+        category = ModuleCategory.OTHER,
+        searchAlias = {"Derp", "Annoy"})
 public class AntiAim extends Module {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "mode", Mode.SPIN);

@@ -40,10 +40,10 @@ import java.util.Queue;
 @ModuleInfo(name = "Debugger", description = "Module to help with debugging.", category = ModuleCategory.OTHER)
 public class Debugger extends Module {
 
-    private final GroupProperty loggingGroup = new GroupProperty("Logging", "Logs things in chat");
+    private final GroupProperty loggingGroup = new GroupProperty("Logging", "Logs things in chat", this);
     private final BooleanProperty tick = new BooleanProperty("Tick", "Log the start of a tick", false);
-    private final GroupProperty packetDebuggerClient = new GroupProperty("Client Packets", "Client packet debugger");
-    private final GroupProperty packetDebuggerServer = new GroupProperty("Server Packets", "Server packet debugger");
+    private final GroupProperty packetDebuggerClient = new GroupProperty("Client Packets", "Client packet debugger", this);
+    private final GroupProperty packetDebuggerServer = new GroupProperty("Server Packets", "Server packet debugger", this);
     private final BooleanProperty logPosition = new BooleanProperty("Position", "Logs your position", false);
     private final BooleanProperty hideCancelled = new BooleanProperty("Hide Cancelled", "Hides cancelled packets", false);
     private final ButtonProperty openNetworkTest = new ButtonProperty("Network Tester", "Open the network tester", () -> mc.displayGuiScreen(new GuiTestNetwork()));
