@@ -18,8 +18,8 @@ import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
-import wtf.bhopper.nonsense.util.minecraft.Rotation;
-import wtf.bhopper.nonsense.util.minecraft.RotationUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.Rotation;
+import wtf.bhopper.nonsense.util.minecraft.player.RotationUtil;
 import wtf.bhopper.nonsense.util.render.ColorUtil;
 import wtf.bhopper.nonsense.util.render.RenderUtil;
 

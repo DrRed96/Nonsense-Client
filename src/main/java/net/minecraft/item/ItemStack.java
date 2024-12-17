@@ -309,12 +309,12 @@ public final class ItemStack
         {
             if (amount > 0)
             {
-                int i = EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, this);
+                int unbreaking = EnchantmentHelper.getEnchantmentLevel(Enchantment.unbreaking.effectId, this);
                 int j = 0;
 
-                for (int k = 0; i > 0 && k < amount; ++k)
+                for (int k = 0; unbreaking > 0 && k < amount; ++k)
                 {
-                    if (EnchantmentDurability.negateDamage(this, i, rand))
+                    if (EnchantmentDurability.negateDamage(this, unbreaking, rand))
                     {
                         ++j;
                     }

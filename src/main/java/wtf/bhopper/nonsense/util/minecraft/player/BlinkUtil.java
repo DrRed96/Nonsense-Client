@@ -1,4 +1,4 @@
-package wtf.bhopper.nonsense.util.minecraft;
+package wtf.bhopper.nonsense.util.minecraft.player;
 
 import net.minecraft.network.Packet;
 import wtf.bhopper.nonsense.Nonsense;

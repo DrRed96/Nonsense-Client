@@ -9,8 +9,8 @@ import net.minecraft.nbt.NBTException;
 import net.minecraft.network.play.client.C10PacketCreativeInventoryAction;
 import wtf.bhopper.nonsense.command.Command;
 import wtf.bhopper.nonsense.command.CommandInfo;
-import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
-import wtf.bhopper.nonsense.util.minecraft.PacketUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.PacketUtil;
 
 @CommandInfo(name = "DropGive",
         description = "Creates an item then drops it, this will delete your current held item.",

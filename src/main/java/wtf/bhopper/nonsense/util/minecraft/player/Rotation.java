@@ -1,4 +1,4 @@
-package wtf.bhopper.nonsense.util.minecraft;
+package wtf.bhopper.nonsense.util.minecraft.player;
 
 import com.google.common.base.Objects;
 import net.minecraft.entity.Entity;

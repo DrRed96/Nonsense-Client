@@ -18,7 +18,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import wtf.bhopper.nonsense.util.minecraft.ServerUtil;
+import wtf.bhopper.nonsense.util.minecraft.world.ServerUtil;
 
 public class GuiConnecting extends GuiScreen
 {

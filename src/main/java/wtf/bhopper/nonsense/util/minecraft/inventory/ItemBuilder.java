@@ -1,4 +1,4 @@
-package wtf.bhopper.nonsense.util.minecraft;
+package wtf.bhopper.nonsense.util.minecraft.inventory;
 
 import net.minecraft.block.Block;
 import net.minecraft.enchantment.Enchantment;

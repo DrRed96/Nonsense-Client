@@ -11,11 +11,8 @@ import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.*;
-import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 import wtf.bhopper.nonsense.util.render.ColorUtil;
-
-import java.util.Random;
-import java.util.function.Supplier;
 
 @ModuleInfo(name = "Atmosphere", description = "Modifies the atmosphere", category = ModuleCategory.VISUAL)
 public class Atmosphere extends Module {

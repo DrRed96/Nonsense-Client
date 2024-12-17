@@ -5,9 +5,7 @@ import net.minecraft.network.play.client.C01PacketChatMessage;
 import net.minecraft.network.play.client.C02PacketUseEntity;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C07PacketPlayerDigging;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
-import org.luaj.vm2.LuaError;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.Varargs;
@@ -16,7 +14,7 @@ import org.luaj.vm2.lib.VarArgFunction;
 import org.luaj.vm2.lib.ZeroArgFunction;
 import wtf.bhopper.nonsense.script.api.lua.types.LuaTypes;
 import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
-import wtf.bhopper.nonsense.util.minecraft.PacketUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.PacketUtil;
 
 public class PlayerLuaApi extends LuaTable implements MinecraftInstance {
 

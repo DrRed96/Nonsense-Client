@@ -29,10 +29,9 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSettings;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.module.ModuleManager;
 import wtf.bhopper.nonsense.module.impl.other.AntiDesync;
 import wtf.bhopper.nonsense.module.impl.player.FastMine;
-import wtf.bhopper.nonsense.util.minecraft.InventoryUtil;
+import wtf.bhopper.nonsense.util.minecraft.inventory.InventoryUtil;
 
 public class PlayerControllerMP {
     /**

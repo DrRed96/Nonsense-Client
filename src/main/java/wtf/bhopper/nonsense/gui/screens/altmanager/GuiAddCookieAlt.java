@@ -49,9 +49,9 @@ public class GuiAddCookieAlt extends GuiScreen {
         } else if (button.id == 1) {
             this.doneButton.enabled = false;
             AltManager.loginThread = new CookieLoginThread(new File(this.cookieFile.getText()), loginData -> {
-                Alt account = new Alt(Alt.Type.COOKIE, loginData);
-                Nonsense.getAltManager().addAccount(account);
-                account.login();
+                Alt alt = new Alt(Alt.Type.COOKIE, loginData);
+                Nonsense.getAltManager().addAccount(alt);
+                alt.login();
                 Notification.send("Alt Manager", "Logged into account: " + loginData.username, NotificationType.SUCCESS, 3000);
                 GuiAddCookieAlt.this.mc.displayGuiScreen(GuiAddCookieAlt.this.parentScreen);
             }, error -> {

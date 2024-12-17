@@ -6,7 +6,7 @@ import org.luaj.vm2.lib.jse.JsePlatform;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.script.api.lua.ClientLuaApi;
 import wtf.bhopper.nonsense.script.api.lua.PlayerLuaApi;
-import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 import wtf.bhopper.nonsense.util.misc.CaughtRunnable;
 
 import javax.script.ScriptEngine;

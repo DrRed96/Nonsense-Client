@@ -8,7 +8,7 @@ import wtf.bhopper.nonsense.command.CommandInfo;
 import wtf.bhopper.nonsense.config.Config;
 import wtf.bhopper.nonsense.gui.hud.notification.Notification;
 import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
-import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 
 import java.io.IOException;
 

@@ -7,8 +7,7 @@ import wtf.bhopper.nonsense.event.impl.EventTick;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
-import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
-import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 
 @ModuleInfo(name = "Auto Respawn", description = "Automatically respawns you upon death.", category = ModuleCategory.PLAYER)
 public class AutoRespawn extends Module {

@@ -54,7 +54,7 @@ import wtf.bhopper.nonsense.event.impl.EventPostStep;
 import wtf.bhopper.nonsense.event.impl.EventPreStep;
 import wtf.bhopper.nonsense.event.impl.EventStrafe;
 import wtf.bhopper.nonsense.module.impl.movement.Terrain;
-import wtf.bhopper.nonsense.util.minecraft.RotationUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.RotationUtil;
 
 public abstract class Entity implements ICommandSender {
     private static final AxisAlignedBB ZERO_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
@@ -150,7 +150,7 @@ public abstract class Entity implements ICommandSender {
      */
     public boolean isCollided;
     public boolean velocityChanged;
-    protected boolean isInWeb;
+    public boolean isInWeb;
     private boolean isOutsideBorder;
 
     /**

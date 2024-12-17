@@ -1,4 +1,4 @@
-package wtf.bhopper.nonsense.util.minecraft;
+package wtf.bhopper.nonsense.util.minecraft.world;
 
 import net.minecraft.network.play.server.S03PacketTimeUpdate;
 import net.minecraft.util.MathHelper;
@@ -7,6 +7,7 @@ import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
 import wtf.bhopper.nonsense.event.impl.EventJoinGame;
 import wtf.bhopper.nonsense.event.impl.EventReceivePacket;
+import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 
 import java.util.Arrays;
 

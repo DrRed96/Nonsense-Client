@@ -11,7 +11,7 @@ import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
-import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 
 @ModuleInfo(name = "Velocity",
         description = "Reduces/removes knock-back.",

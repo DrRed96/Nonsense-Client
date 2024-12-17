@@ -11,8 +11,8 @@ import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
-import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
-import wtf.bhopper.nonsense.util.minecraft.ServerUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
+import wtf.bhopper.nonsense.util.minecraft.world.ServerUtil;
 
 import java.util.HashSet;
 import java.util.Set;

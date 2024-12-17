@@ -12,8 +12,7 @@ import wtf.bhopper.nonsense.event.impl.EventUpdate;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
-import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
-import wtf.bhopper.nonsense.util.minecraft.PacketUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.PacketUtil;
 
 @ModuleInfo(name = "Fast Bow", description = "Turns your bow into a machine gun.", category = ModuleCategory.COMBAT)
 public class FastBow extends Module {

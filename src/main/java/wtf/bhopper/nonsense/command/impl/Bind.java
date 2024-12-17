@@ -5,7 +5,7 @@ import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.command.Command;
 import wtf.bhopper.nonsense.command.CommandInfo;
 import wtf.bhopper.nonsense.module.Module;
-import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 
 @CommandInfo(name = "Bind",
         description = "Sets a key-bind.",

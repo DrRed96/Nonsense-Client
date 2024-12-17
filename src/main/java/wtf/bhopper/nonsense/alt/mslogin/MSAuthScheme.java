@@ -1,6 +1,9 @@
 package wtf.bhopper.nonsense.alt.mslogin;
 
+import com.mojang.util.UUIDTypeAdapter;
+import com.sun.net.httpserver.HttpServer;
 import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.alt.Alt;
 import wtf.bhopper.nonsense.gui.screens.altmanager.GuiAltManager;
 import wtf.bhopper.nonsense.util.misc.Http;
 
@@ -13,12 +16,31 @@ public class MSAuthScheme {
     public static final String CLIENT_ID = "54fd49e4-2103-4044-9603-2b028c814ec3";
     public static final int PORT = 59125;
 
+    public static HttpServer server = null;
+
     public static final String OAUTH20_TOKEN_LINK = "https://login.live.com/oauth20_token.srf";
     public static final String XBL_LINK = "https://user.auth.xboxlive.com/user/authenticate";
     public static final String XSTS_LINK = "https://xsts.auth.xboxlive.com/xsts/authorize";
     public static final String MC_SERVICES_LINK = "https://api.minecraftservices.com/authentication/login_with_xbox";
     public static final String OWNERSHIP_LINK = "https://api.minecraftservices.com/entitlements/mcstore";
     public static final String PROFILE_LINK = "https://api.minecraftservices.com/minecraft/profile";
+
+    public static final String LOGIN_URL = "https://login.live.com/oauth20_authorize.srf?client_id=" + CLIENT_ID + "&response_type=code&redirect_uri=http://localhost:" + PORT + "&scope=XboxLive.signin%20offline_access&prompt=select_account";
+
+    public static LoginData quickLogin(String accessToken, String meta, Alt.Type type) throws Exception {
+        XblXstsResponse xblRes = xboxLiveAuth(accessToken);
+        XblXstsResponse xstsRes = xstsToken(xblRes.Token);
+        McResponse mcRes = minecraftAuth(xblRes.DisplayClaims.xui[0].uhs, xstsRes.Token);
+        GameOwnershipResponse ownershipRes = checkGameOwnership(mcRes.access_token);
+
+        if (!ownershipRes.hasGameOwnership()) {
+            throw new MSAuthException("That account does not own Minecraft");
+        }
+
+        ProfileResponse profileRes = minecraftProfile(mcRes.access_token);
+
+        return new LoginData(type, mcRes.access_token, profileRes.id, profileRes.name, meta);
+    }
 
     public static AuthTokenResponse tokenFromCode(String code) throws Exception {
         Map<Object, Object> params = new HashMap<>();

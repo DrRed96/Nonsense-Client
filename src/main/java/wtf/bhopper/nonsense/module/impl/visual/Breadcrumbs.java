@@ -12,10 +12,9 @@ import wtf.bhopper.nonsense.event.impl.EventTick;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
-import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.ColorProperty;
-import wtf.bhopper.nonsense.util.minecraft.MoveUtil;
-import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.MoveUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 import wtf.bhopper.nonsense.util.misc.Clock;
 import wtf.bhopper.nonsense.util.render.RenderUtil;
 

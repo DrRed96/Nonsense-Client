@@ -1,7 +1,7 @@
 package wtf.bhopper.nonsense.event.impl;
 
 import wtf.bhopper.nonsense.event.Event;
-import wtf.bhopper.nonsense.util.minecraft.Rotation;
+import wtf.bhopper.nonsense.util.minecraft.player.Rotation;
 
 public class EventPreMotion implements Event {
 

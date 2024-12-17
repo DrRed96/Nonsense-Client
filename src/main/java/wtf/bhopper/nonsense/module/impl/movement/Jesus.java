@@ -13,8 +13,8 @@ import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.annotations.DisplayName;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
-import wtf.bhopper.nonsense.util.minecraft.MoveUtil;
-import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.MoveUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 
 @ModuleInfo(name = "Jesus",
         description = "Allows you to walk on water, like Jesus!",

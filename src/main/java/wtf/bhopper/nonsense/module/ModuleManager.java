@@ -57,6 +57,7 @@ public class ModuleManager {
 
                 // Player
                 new NoFall(),
+                new InventoryManager(),
                 new NoRotate(),
                 new AutoRespawn(),
                 new FastMine(),

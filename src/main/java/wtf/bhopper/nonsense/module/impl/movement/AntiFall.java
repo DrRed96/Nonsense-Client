@@ -12,9 +12,9 @@ import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
-import wtf.bhopper.nonsense.util.minecraft.BlockUtil;
-import wtf.bhopper.nonsense.util.minecraft.PacketUtil;
-import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
+import wtf.bhopper.nonsense.util.minecraft.world.BlockUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.PacketUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 
 @ModuleInfo(
         name = "Anti Fall",

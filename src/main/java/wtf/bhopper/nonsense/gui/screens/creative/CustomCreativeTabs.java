@@ -8,7 +8,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
 import net.minecraft.potion.Potion;
-import wtf.bhopper.nonsense.util.minecraft.ItemBuilder;
+import wtf.bhopper.nonsense.util.minecraft.inventory.ItemBuilder;
 import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
 
 import java.util.List;

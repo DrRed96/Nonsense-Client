@@ -1,7 +1,8 @@
-package wtf.bhopper.nonsense.util.minecraft;
+package wtf.bhopper.nonsense.util.minecraft.world;
 
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.player.EntityPlayer;
+import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
 
 public class ServerUtil implements MinecraftInstance {
 

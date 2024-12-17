@@ -10,9 +10,9 @@ import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
-import wtf.bhopper.nonsense.util.minecraft.PacketUtil;
-import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
-import wtf.bhopper.nonsense.util.minecraft.Rotation;
+import wtf.bhopper.nonsense.util.minecraft.player.PacketUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.Rotation;
 
 @ModuleInfo(name = "No Rotate",
         description = "Prevents the server from modifying your rotations",

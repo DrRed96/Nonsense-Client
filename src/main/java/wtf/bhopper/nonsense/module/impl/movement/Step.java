@@ -15,8 +15,8 @@ import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
-import wtf.bhopper.nonsense.util.minecraft.MoveUtil;
-import wtf.bhopper.nonsense.util.minecraft.PacketUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.MoveUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.PacketUtil;
 
 @ModuleInfo(name = "Step",
         description = "Allows you to step up blocks",

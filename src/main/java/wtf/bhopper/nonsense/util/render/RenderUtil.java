@@ -16,7 +16,7 @@ import net.minecraft.util.*;
 import org.lwjglx.opengl.Display;
 import org.lwjglx.util.glu.GLU;
 import wtf.bhopper.nonsense.module.property.impl.ColorProperty;
-import wtf.bhopper.nonsense.util.minecraft.BlockUtil;
+import wtf.bhopper.nonsense.util.minecraft.world.BlockUtil;
 import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
 import wtf.bhopper.nonsense.util.misc.MathUtil;
 

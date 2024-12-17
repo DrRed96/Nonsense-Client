@@ -14,7 +14,7 @@ import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
-import wtf.bhopper.nonsense.util.minecraft.BlockUtil;
+import wtf.bhopper.nonsense.util.minecraft.world.BlockUtil;
 
 @ModuleInfo(name = "Fast Mine", description = "Allows you to break blocks faster", category = ModuleCategory.PLAYER)
 public class FastMine extends Module {

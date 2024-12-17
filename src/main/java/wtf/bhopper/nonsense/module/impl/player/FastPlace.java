@@ -9,7 +9,7 @@ import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
-import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 
 @ModuleInfo(name = "Fast Place", description = "Reduces/removes the delay between placing blocks.", category = ModuleCategory.PLAYER)
 public class FastPlace extends Module {

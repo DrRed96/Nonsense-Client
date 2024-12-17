@@ -11,9 +11,7 @@ import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
-import wtf.bhopper.nonsense.util.minecraft.PacketUtil;
-
-import java.util.function.Supplier;
+import wtf.bhopper.nonsense.util.minecraft.player.PacketUtil;
 
 @ModuleInfo(name = "No Fall",
         category = ModuleCategory.PLAYER,

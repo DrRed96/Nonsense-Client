@@ -3,7 +3,7 @@ package wtf.bhopper.nonsense.script.api.lua;
 import org.luaj.vm2.LuaTable;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.OneArgFunction;
-import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 
 public class ClientLuaApi extends LuaTable {
 

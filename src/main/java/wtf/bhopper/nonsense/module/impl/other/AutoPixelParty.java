@@ -13,7 +13,11 @@ import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
-import wtf.bhopper.nonsense.util.minecraft.*;
+import wtf.bhopper.nonsense.util.minecraft.inventory.InventoryUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.RotationUtil;
+import wtf.bhopper.nonsense.util.minecraft.world.BlockUtil;
 
 @ModuleInfo(name = "Auto Pixel Party",
         description = "Plays pixel party for you",

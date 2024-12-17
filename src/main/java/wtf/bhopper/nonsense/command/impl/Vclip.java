@@ -3,7 +3,7 @@ package wtf.bhopper.nonsense.command.impl;
 import net.minecraft.command.CommandBase;
 import wtf.bhopper.nonsense.command.Command;
 import wtf.bhopper.nonsense.command.CommandInfo;
-import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 
 @CommandInfo(name = "VClip",
         description = "Teleports you vertically",

@@ -49,7 +49,7 @@ import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.impl.*;
 import wtf.bhopper.nonsense.module.impl.movement.NoSlow;
 import wtf.bhopper.nonsense.module.impl.player.HorseJump;
-import wtf.bhopper.nonsense.util.minecraft.RotationUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.RotationUtil;
 
 public class EntityPlayerSP extends AbstractClientPlayer {
     public final NetHandlerPlayClient sendQueue;

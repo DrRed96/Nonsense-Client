@@ -8,8 +8,8 @@ import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTException;
 import wtf.bhopper.nonsense.command.Command;
 import wtf.bhopper.nonsense.command.CommandInfo;
-import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
-import wtf.bhopper.nonsense.util.minecraft.InventoryUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
+import wtf.bhopper.nonsense.util.minecraft.inventory.InventoryUtil;
 
 @CommandInfo(name = "Give",
         description = "Gives you any item (Requires creative mode)",

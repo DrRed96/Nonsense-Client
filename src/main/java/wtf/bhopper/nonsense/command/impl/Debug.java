@@ -16,8 +16,8 @@ import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
 import wtf.bhopper.nonsense.module.impl.combat.AntiBot;
 import wtf.bhopper.nonsense.module.impl.other.Debugger;
 import wtf.bhopper.nonsense.network.Account;
-import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
-import wtf.bhopper.nonsense.util.minecraft.PacketUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.PacketUtil;
 
 import java.io.File;
 import java.util.ArrayList;

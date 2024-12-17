@@ -25,10 +25,10 @@ import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
-import wtf.bhopper.nonsense.util.minecraft.BlinkUtil;
-import wtf.bhopper.nonsense.util.minecraft.PacketUtil;
-import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
-import wtf.bhopper.nonsense.util.minecraft.RotationUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.BlinkUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.PacketUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.RotationUtil;
 
 
 @ModuleInfo(name = "Auto Block",

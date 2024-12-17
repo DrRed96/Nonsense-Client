@@ -7,7 +7,7 @@ import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
-import wtf.bhopper.nonsense.util.minecraft.MoveUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.MoveUtil;
 
 @ModuleInfo(name = "Sprint",
         description = "Makes you sprint.",

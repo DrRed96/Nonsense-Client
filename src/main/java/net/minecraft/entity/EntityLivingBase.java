@@ -55,7 +55,7 @@ import net.minecraft.world.WorldServer;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.impl.EventJump;
 import wtf.bhopper.nonsense.module.impl.visual.ItemAnimations;
-import wtf.bhopper.nonsense.util.minecraft.RotationUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.RotationUtil;
 
 public abstract class EntityLivingBase extends Entity {
     private static final UUID sprintingSpeedBoostModifierUUID = UUID.fromString("662A6B8D-DA3E-4C1C-8813-96EA6097278D");

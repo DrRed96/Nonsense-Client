@@ -47,7 +47,7 @@ public class GuiAddAlt extends GuiScreen {
         } else if (button.id == 2) {
             this.mc.displayGuiScreen(new GuiAddCookieAlt(this.parentScreen));
         } else if (button.id == 3) {
-//            this.mc.displayGuiScreen(new GuiAddBrowserAccount(this.parentScreen));
+            this.mc.displayGuiScreen(new GuiAddBrowserAlt(this.parentScreen));
         } else if (button.id == 4) {
             this.mc.displayGuiScreen(new GuiAddSessionAlt(this.parentScreen));
         } else if (button.id == 5) {

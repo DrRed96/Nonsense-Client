@@ -6,7 +6,7 @@ import java.util.List;
 import net.minecraft.client.multiplayer.GuiConnecting;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.IChatComponent;
-import wtf.bhopper.nonsense.util.minecraft.ServerUtil;
+import wtf.bhopper.nonsense.util.minecraft.world.ServerUtil;
 
 public class GuiDisconnected extends GuiScreen
 {

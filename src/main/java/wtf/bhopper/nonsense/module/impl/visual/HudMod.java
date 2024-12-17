@@ -14,7 +14,10 @@ import wtf.bhopper.nonsense.util.render.ColorUtil;
 import wtf.bhopper.nonsense.util.render.Fonts;
 
 @SuppressWarnings("FieldCanBeLocal")
-@ModuleInfo(name = "HUD", description = "Heads Up Display.", category = ModuleCategory.VISUAL, toggled = true)
+@ModuleInfo(name = "HUD",
+        description = "Heads Up Display.",
+        category = ModuleCategory.VISUAL,
+        toggled = true)
 public class HudMod extends Module {
 
     private final GroupProperty moduleListGroup = new GroupProperty("Module List", "Displays what modules are enabled", this);
@@ -34,7 +37,7 @@ public class HudMod extends Module {
     private final GroupProperty watermarkGroup = new GroupProperty("Watermark", "Client Watermark", this);
     public final BooleanProperty watermarkEnabled = new BooleanProperty("Enabled", "Enables the water mark", true);
     public final EnumProperty<WatermarkMode> watermarkMode = new EnumProperty<>("Mode", "Watermark mode.", WatermarkMode.EXHIBITION);
-    public final EnumProperty<WatermarkColorMode> watermarkColorMode = new EnumProperty<>("Color Mode", "Watermark color mode.", WatermarkColorMode.STATIC);
+    public final EnumProperty<WatermarkColorMode> watermarkColorMode = new EnumProperty<>("Color Mode", "Watermark color mode.", WatermarkColorMode.STATIC, () -> this.watermarkMode.is(WatermarkMode.EXHIBITION));
     public final StringProperty watermarkText = new StringProperty("Text", "Oh look mom, I can rename a client!", Nonsense.NAME);
 
     private final GroupProperty information = new GroupProperty("Information", "HUD Information", this);
@@ -83,7 +86,7 @@ public class HudMod extends Module {
     }
 
     public enum ModuleListMode {
-        EXHIBITION
+        EXHIBITION,
     }
 
     public enum ModuleListColor {
@@ -121,7 +124,8 @@ public class HudMod extends Module {
     }
 
     public enum WatermarkMode {
-        EXHIBITION
+        EXHIBITION,
+        NEVERLOSE
     }
 
     public enum WatermarkColorMode {
@@ -175,8 +179,10 @@ public class HudMod extends Module {
         CASCADIA_MONO(Fonts.CASCADIA_MONO),
         COMIC_SANS(Fonts.COMIC_SANS),
         CONSOLAS(Fonts.CONSOLAS),
+        GREYCLIFF_CF(Fonts.GREYCLIFF_CF),
         HELVETICA(Fonts.HELVETICA),
         @DisplayName("JetBrains Mono") JETBRAINS_MONO(Fonts.JETBRAINS_MONO),
+        MUSEO_SANS(Fonts.MUSEO_SANS),
         OUTFIT(Fonts.OUTFIT),
         ROBOTO(Fonts.ROBOTO),
         SANS_SERIF(Fonts.SANS_SERIF),
@@ -184,7 +190,7 @@ public class HudMod extends Module {
         @DisplayName("SF Pro Rounded") SF_PRO_ROUNDED(Fonts.SF_PRO_ROUNDED),
         TAHOMA(Fonts.TAHOMA),
         TIMES_NEW_ROMAN(Fonts.TIMES_NEW_ROMAN),
-        MINECRAFT(Fonts.ARIAL); // Will default to arial if Minecraft font is not implemented
+        MINECRAFT(Fonts.HELVETICA); // Will default to helvetica if Minecraft font is not implemented
 
         public final Fonts font;
 

@@ -35,10 +35,9 @@ import optifine.CustomColors;
 import org.lwjgl.opengl.GL11;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.impl.EventRenderGui;
-import wtf.bhopper.nonsense.gui.hud.Hud;
 import wtf.bhopper.nonsense.gui.screens.GuiMoveHudComponents;
 import wtf.bhopper.nonsense.module.impl.visual.ScoreboardMod;
-import wtf.bhopper.nonsense.util.minecraft.InventoryUtil;
+import wtf.bhopper.nonsense.util.minecraft.inventory.InventoryUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;

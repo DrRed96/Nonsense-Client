@@ -23,7 +23,8 @@ import wtf.bhopper.nonsense.module.property.annotations.DisplayName;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
-import wtf.bhopper.nonsense.util.minecraft.*;
+import wtf.bhopper.nonsense.util.minecraft.player.*;
+import wtf.bhopper.nonsense.util.minecraft.world.BlockUtil;
 import wtf.bhopper.nonsense.util.misc.Clock;
 import wtf.bhopper.nonsense.util.misc.MathUtil;
 

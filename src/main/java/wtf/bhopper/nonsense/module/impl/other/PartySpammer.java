@@ -1,7 +1,6 @@
 package wtf.bhopper.nonsense.module.impl.other;
 
 import net.minecraft.network.play.server.S02PacketChat;
-import net.minecraft.util.EnumChatFormatting;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
 import wtf.bhopper.nonsense.event.impl.EventJoinGame;
@@ -15,8 +14,8 @@ import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
 import wtf.bhopper.nonsense.module.property.impl.StringProperty;
-import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
-import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 import wtf.bhopper.nonsense.util.misc.Clock;
 
 @ModuleInfo(name = "Party Spammer",

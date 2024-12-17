@@ -2,7 +2,7 @@ package wtf.bhopper.nonsense.anticheat;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.Packet;
-import wtf.bhopper.nonsense.util.minecraft.MoveUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.MoveUtil;
 
 public class PlayerData {
 

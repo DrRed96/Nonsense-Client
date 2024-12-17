@@ -1,7 +1,5 @@
-package wtf.bhopper.nonsense.util.minecraft;
+package wtf.bhopper.nonsense.util.minecraft.player;
 
-import com.viaversion.viaversion.api.protocol.version.ProtocolVersion;
-import de.florianmichael.vialoadingbase.ViaLoadingBase;
 import de.florianmichael.viamcp.fixes.AttackOrder;
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.material.Material;
@@ -15,6 +13,7 @@ import wtf.bhopper.nonsense.event.impl.EventPostClick;
 import wtf.bhopper.nonsense.event.impl.EventPreClick;
 import wtf.bhopper.nonsense.event.impl.EventReceivePacket;
 import wtf.bhopper.nonsense.module.impl.other.Debugger;
+import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
 
 public class PacketUtil implements MinecraftInstance {
 

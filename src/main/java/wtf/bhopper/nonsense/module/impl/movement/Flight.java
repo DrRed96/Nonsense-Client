@@ -18,9 +18,9 @@ import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
-import wtf.bhopper.nonsense.util.minecraft.MoveUtil;
-import wtf.bhopper.nonsense.util.minecraft.PacketUtil;
-import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.MoveUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.PacketUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 import wtf.bhopper.nonsense.util.misc.Clock;
 
 @ModuleInfo(name = "Flight",
@@ -198,7 +198,7 @@ public class Flight extends Module {
                             }
                         }
 
-                        speed = lastDist - lastDist / MoveUtil.SLOWDOWN_FACTOR;
+                        speed = lastDist - lastDist / MoveUtil.NCP_FRICTION;
                         speed = Math.max(speed, MoveUtil.baseSpeed());
                         MoveUtil.setSpeed(event, speed);
                         MoveUtil.vertical(event, 0.0);

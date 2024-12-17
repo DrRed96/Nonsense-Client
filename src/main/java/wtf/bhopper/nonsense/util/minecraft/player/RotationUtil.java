@@ -1,13 +1,12 @@
-package wtf.bhopper.nonsense.util.minecraft;
+package wtf.bhopper.nonsense.util.minecraft.player;
 
 import com.google.common.base.Predicates;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.*;
-import wtf.bhopper.nonsense.util.misc.GeneralUtil;
+import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
 import wtf.bhopper.nonsense.util.misc.MathUtil;
 
 import java.util.List;
-import java.util.Set;
 
 public class RotationUtil implements MinecraftInstance {
 

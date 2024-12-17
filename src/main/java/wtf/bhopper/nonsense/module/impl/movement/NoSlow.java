@@ -17,8 +17,8 @@ import wtf.bhopper.nonsense.module.impl.combat.AutoBlock;
 import wtf.bhopper.nonsense.module.property.annotations.DisplayName;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
-import wtf.bhopper.nonsense.util.minecraft.MoveUtil;
-import wtf.bhopper.nonsense.util.minecraft.PacketUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.MoveUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.PacketUtil;
 
 @ModuleInfo(name = "No Slow",
         description = "Prevents you from being slowed down while using an item.",

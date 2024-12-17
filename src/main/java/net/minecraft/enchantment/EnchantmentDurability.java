@@ -50,8 +50,12 @@ public class EnchantmentDurability extends Enchantment
      * enchantment level (par1). If the ItemStack is Armor then there is a flat 60% chance for damage to be negated no
      * matter the enchantment level, otherwise there is a 1-(par/1) chance for damage to be negated.
      */
-    public static boolean negateDamage(ItemStack p_92097_0_, int p_92097_1_, Random p_92097_2_)
+    public static boolean negateDamage(ItemStack stack, int unbreaking, Random rand)
     {
-        return p_92097_0_.getItem() instanceof ItemArmor && p_92097_2_.nextFloat() < 0.6F ? false : p_92097_2_.nextInt(p_92097_1_ + 1) > 0;
+        if (stack.getItem() instanceof ItemArmor && rand.nextFloat() < 0.6F) {
+            return false;
+        }
+
+        return rand.nextInt(unbreaking + 1) > 0;
     }
 }

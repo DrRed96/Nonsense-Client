@@ -6,7 +6,7 @@ import wtf.bhopper.nonsense.command.CommandInfo;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.property.Property;
 import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
-import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 
 @CommandInfo(name = "Set",
         description = "Sets the value of a property.",

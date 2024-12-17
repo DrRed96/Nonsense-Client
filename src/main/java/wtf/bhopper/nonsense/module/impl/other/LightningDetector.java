@@ -7,7 +7,7 @@ import wtf.bhopper.nonsense.event.impl.EventReceivePacket;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
-import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 
 @ModuleInfo(name = "Lightning Detector",
         description = "Attempts to detect lightning strikes",

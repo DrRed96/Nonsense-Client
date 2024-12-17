@@ -5,7 +5,7 @@ import net.minecraft.util.EnumChatFormatting;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.command.Command;
 import wtf.bhopper.nonsense.command.CommandInfo;
-import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 import wtf.bhopper.nonsense.util.misc.GeneralUtil;
 
 @CommandInfo(name = "Help",

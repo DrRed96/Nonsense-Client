@@ -30,7 +30,7 @@ public class ColorUtil {
     }
 
     public static int rainbow(long timeMS, int count, float saturation, float brightness) {
-        float hue = (float) ((timeMS - count * 200L) % 4000) / 4000.0F;
+        float hue = (float) ((timeMS - count * 200L) % 4001) / 4000.0F;
         return Color.HSBtoRGB(hue, saturation, brightness);
     }
 
@@ -40,14 +40,14 @@ public class ColorUtil {
     }
 
     public static int wave(int color, long timeMS, int count) {
-        float factor = Math.abs((((timeMS * 2L) - count * 500L) % 8000) / 8000.0F - 0.5F) + 0.5F;
+        float factor = Math.abs((((timeMS * 2L) - count * 500L) % 8001) / 8000.0F - 0.5F) + 0.5F;
         Color awt = new Color(color);
         float[] hsb = Color.RGBtoHSB(awt.getRed(), awt.getGreen(), awt.getBlue(), null);
         return Color.HSBtoRGB(hsb[0], hsb[1], hsb[2] * factor);
     }
 
     public static int astolfo(long timeMS, int count) {
-        float hue = Math.abs(((((timeMS * 2L) - count * 500L) % 8000) / 8000.0F) - 0.5f) + 0.5F;
+        float hue = Math.abs(((((timeMS * 2L) - count * 500L) % 8001) / 8000.0F) - 0.5f) + 0.5F;
         return Color.HSBtoRGB(hue, 0.5F, 1.0F);
     }
 

@@ -97,7 +97,7 @@ import org.lwjglx.util.glu.GLU;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.impl.*;
 import wtf.bhopper.nonsense.module.impl.movement.InventoryMove;
-import wtf.bhopper.nonsense.util.minecraft.InventoryUtil;
+import wtf.bhopper.nonsense.util.minecraft.inventory.InventoryUtil;
 
 import javax.imageio.ImageIO;
 import java.awt.image.BufferedImage;

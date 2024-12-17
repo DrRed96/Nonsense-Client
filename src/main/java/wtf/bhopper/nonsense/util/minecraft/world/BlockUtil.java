@@ -1,14 +1,14 @@
-package wtf.bhopper.nonsense.util.minecraft;
+package wtf.bhopper.nonsense.util.minecraft.world;
 
 import io.netty.util.internal.ThreadLocalRandom;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
-import net.minecraft.block.properties.PropertyDirection;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.world.World;
+import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
 
 public class BlockUtil implements MinecraftInstance {
 

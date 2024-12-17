@@ -19,9 +19,9 @@ import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
-import wtf.bhopper.nonsense.util.minecraft.BlockUtil;
-import wtf.bhopper.nonsense.util.minecraft.ChatUtil;
-import wtf.bhopper.nonsense.util.minecraft.PlayerUtil;
+import wtf.bhopper.nonsense.util.minecraft.world.BlockUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 import wtf.bhopper.nonsense.util.misc.CustomCollectors;
 import wtf.bhopper.nonsense.util.misc.GeneralUtil;
 
@@ -51,16 +51,19 @@ public class Announcer extends Module {
             return;
         }
 
-        if (event.packet instanceof C07PacketPlayerDigging packet) {
-            if (packet.getStatus() == C07PacketPlayerDigging.Action.STOP_DESTROY_BLOCK) {
-                Block block = BlockUtil.getBlock(packet.getPosition());
-                this.sendAction(mc.thePlayer, "mined", I18n.format(block.getLocalizedName()), 1);
-            }
-        }
+        if (this.blocks.get()) {
 
-        if (event.packet instanceof C08PacketPlayerBlockPlacement packet) {
-            if (packet.getStack() != null && packet.getStack().getItem() instanceof ItemBlock block) {
-                this.sendAction(mc.thePlayer, "placed", I18n.format(block.getBlock().getLocalizedName()), 1);
+            if (event.packet instanceof C07PacketPlayerDigging packet) {
+                if (packet.getStatus() == C07PacketPlayerDigging.Action.STOP_DESTROY_BLOCK) {
+                    Block block = BlockUtil.getBlock(packet.getPosition());
+                    this.sendAction(mc.thePlayer, "mined", I18n.format(block.getLocalizedName()), 1);
+                }
+            }
+
+            if (event.packet instanceof C08PacketPlayerBlockPlacement packet) {
+                if (packet.getStack() != null && packet.getStack().getItem() instanceof ItemBlock block) {
+                    this.sendAction(mc.thePlayer, "placed", I18n.format(block.getBlock().getLocalizedName()), 1);
+                }
             }
         }
 

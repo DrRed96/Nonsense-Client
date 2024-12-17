@@ -9,7 +9,7 @@ import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.annotations.DisplayName;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
-import wtf.bhopper.nonsense.util.minecraft.MoveUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.MoveUtil;
 
 @ModuleInfo(name = "Long Jump",
         description = "Allows you to jump far",
@@ -99,7 +99,7 @@ public class LongJump extends Module {
                                 mc.thePlayer.motionY *= 0.5;
                             }
 
-                            this.speed = this.lastDist - this.lastDist / MoveUtil.SLOWDOWN_FACTOR;
+                            this.speed = this.lastDist - this.lastDist / MoveUtil.NCP_FRICTION;
                         }
 
                     }

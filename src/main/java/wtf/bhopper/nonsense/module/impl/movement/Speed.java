@@ -14,10 +14,8 @@ import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
-import wtf.bhopper.nonsense.util.minecraft.MoveUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.MoveUtil;
 import wtf.bhopper.nonsense.util.misc.Clock;
-
-import java.util.function.Supplier;
 
 @ModuleInfo(name = "Speed",
         description = "Increases your move speed.",
@@ -118,7 +116,7 @@ public class Speed extends Module {
                         if (mc.thePlayer.isCollidedVertically || !mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer, mc.thePlayer.getEntityBoundingBox().offset(0.0, mc.thePlayer.motionY, 0.0)).isEmpty()) {
                             this.stage = 0;
                         }
-                        this.speed = this.lastDist - this.lastDist / MoveUtil.SLOWDOWN_FACTOR;
+                        this.speed = this.lastDist - this.lastDist / MoveUtil.NCP_FRICTION;
                     }
 
                 }
