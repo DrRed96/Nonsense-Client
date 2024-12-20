@@ -1,18 +1,15 @@
 # Nonsense Client
 Nonsense Client is a free and open source hack client for Minecraft 1.8.8.
 
-![ClickGUI](/.github/images/clickgui.png)
-
 ## Installation
 - TBA
 
 ## IntelliJ Setup
-1. Install GraalVM JDK 23 (https://www.graalvm.org/downloads/).
-2. Clone this repository.
-3. Open the cloned repository in IntelliJ.
-4. Go to `File -> Project Structure -> Project` and set the `SDK` to GraalVM 23 and the `Language Level` to Java 23.
-5. Make sure you have launched Minecraft 1.8.8 at least once, run the `copyAssets` task.
-6. To run the client, run the `Start` run configuration.
+1. Clone this repository.
+2. Open the cloned repository in IntelliJ.
+3. Go to `File -> Project Structure -> Project` and set the `SDK` and `Language Level` to Java 23 (Make sure you have JDK 23 installed).
+4. Make sure you have launched Minecraft 1.8.8 at least once, run the `copyAssets` task.
+5. To run the client, run the `Start` run configuration.
 
 ## FAQ
 - **Can I use Nonsense Client's source code for my own client?**<br>
