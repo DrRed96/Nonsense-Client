@@ -48,9 +48,7 @@ public class GameSettings
 {
     private static final Logger logger = LogManager.getLogger();
     private static final Gson gson = new Gson();
-    private static final ParameterizedType typeListString = new ParameterizedType()
-    {
-        private static final String __OBFID = "CL_00000651";
+    private static final ParameterizedType typeListString = new ParameterizedType() {
         public Type[] getActualTypeArguments()
         {
             return new Type[] {String.class};
@@ -95,7 +93,7 @@ public class GameSettings
     public boolean chatLinks = true;
     public boolean chatLinksPrompt = true;
     public float chatOpacity = 1.0F;
-    public boolean snooperEnabled = true;
+    public boolean snooperEnabled = false;
     public boolean fullScreen;
     public boolean enableVsync = true;
     public boolean useVbo = false;
