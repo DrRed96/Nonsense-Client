@@ -5,8 +5,8 @@ import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.EventPriorities;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
-import wtf.bhopper.nonsense.event.impl.EventSendPacket;
-import wtf.bhopper.nonsense.event.impl.EventTick;
+import wtf.bhopper.nonsense.event.impl.packet.EventSendPacket;
+import wtf.bhopper.nonsense.event.impl.client.EventTick;
 
 import java.util.ArrayDeque;
 import java.util.Queue;

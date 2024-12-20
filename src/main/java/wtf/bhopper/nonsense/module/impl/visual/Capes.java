@@ -4,15 +4,15 @@ import net.minecraft.util.ResourceLocation;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
-import wtf.bhopper.nonsense.event.impl.EventTick;
+import wtf.bhopper.nonsense.event.impl.client.EventTick;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
-import wtf.bhopper.nonsense.module.property.ValueChangeListener;
 import wtf.bhopper.nonsense.module.property.annotations.Description;
 import wtf.bhopper.nonsense.module.property.annotations.DisplayName;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
+import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 import wtf.bhopper.nonsense.util.render.CapeLocation;
 import wtf.bhopper.nonsense.util.render.ColorUtil;
 
@@ -32,8 +32,17 @@ public class Capes extends Module {
         this.cape.addValueChangeListener((oldValue, value) -> this.frameCounter = 0);
     }
 
+    @Override
+    public void onEnable() {
+        this.frameCounter = 0;
+    }
+
     @EventLink
-    public final Listener<EventTick> onTick = event -> {
+    public final Listener<EventTick> onTick = _ -> {
+        if (!PlayerUtil.canUpdate()) {
+            this.frameCounter = 0;
+            return;
+        }
         ICape cape = this.cape.get().cape;
         if (cape instanceof AnimatedCape animatedCape) {
             if (mc.thePlayer.ticksExisted % animatedCape.tickDelay == 0) {

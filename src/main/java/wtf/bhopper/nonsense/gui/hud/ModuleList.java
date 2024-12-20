@@ -235,7 +235,7 @@ public class ModuleList {
 
             NVGHelper.moveTo(textX - 3.0F, yOff);
             NVGHelper.lineTo(textX - 3.0F, yOff + textHeight * this.animateFactor);
-            NVGHelper.lineTo(nextTextX - 3.0F, yOff + textHeight * this.animateFactor);
+            NVGHelper.lineTo(nextTextX - 2.0F, yOff + textHeight * this.animateFactor);
 
             NVGHelper.strokeColor(this.color);
             NVGHelper.strokeWidth(2.0F);

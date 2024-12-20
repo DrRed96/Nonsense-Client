@@ -34,7 +34,7 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.IBlockAccess;
 import net.minecraft.world.World;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.event.impl.EventBlockBounds;
+import wtf.bhopper.nonsense.event.impl.world.EventBlockBounds;
 import wtf.bhopper.nonsense.module.impl.visual.Xray;
 
 public class Block {

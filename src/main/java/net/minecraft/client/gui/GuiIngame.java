@@ -34,8 +34,9 @@ import optifine.Config;
 import optifine.CustomColors;
 import org.lwjgl.opengl.GL11;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.event.impl.EventRenderGui;
+import wtf.bhopper.nonsense.event.impl.render.EventRenderGui;
 import wtf.bhopper.nonsense.gui.screens.GuiMoveHudComponents;
+import wtf.bhopper.nonsense.module.impl.visual.Crosshair;
 import wtf.bhopper.nonsense.module.impl.visual.ScoreboardMod;
 import wtf.bhopper.nonsense.util.minecraft.inventory.InventoryUtil;
 
@@ -127,8 +128,8 @@ public class GuiIngame extends Gui {
 
     public void renderGameOverlay(float partialTicks) {
         ScaledResolution scaledRes = new ScaledResolution(this.mc);
-        int i = scaledRes.getScaledWidth();
-        int j = scaledRes.getScaledHeight();
+        int scaledWidth = scaledRes.getScaledWidth();
+        int scaledHeight = scaledRes.getScaledHeight();
         this.mc.entityRenderer.setupOverlayRendering();
         GlStateManager.enableBlend();
 
@@ -163,10 +164,13 @@ public class GuiIngame extends Gui {
         this.mc.getTextureManager().bindTexture(icons);
         GlStateManager.enableBlend();
 
-        if (this.showCrosshair() && this.mc.gameSettings.thirdPersonView < 1) {
-            GlStateManager.tryBlendFuncSeparate(775, 769, 1, 0);
+        Crosshair crosshairMod = Nonsense.module(Crosshair.class);
+        if (crosshairMod.isToggled()) {
+            crosshairMod.draw(partialTicks);
+        } else if (this.showCrosshair() && this.mc.gameSettings.thirdPersonView < 1) {
+            GlStateManager.tryBlendFuncSeparate(GL11.GL_ONE_MINUS_DST_COLOR, GL11.GL_ONE_MINUS_SRC_COLOR, 1, 0);
             GlStateManager.enableAlpha();
-            this.drawTexturedModalRect(i / 2 - 7, j / 2 - 7, 0, 0, 16, 16);
+            this.drawTexturedModalRect(scaledWidth / 2 - 7, scaledHeight / 2 - 7, 0, 0, 16, 16);
         }
 
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
@@ -191,13 +195,13 @@ public class GuiIngame extends Gui {
             }
 
             int k = (int) (220.0F * f2) << 24 | 1052704;
-            drawRect(0, 0, i, j, k);
+            drawRect(0, 0, scaledWidth, scaledHeight, k);
             GlStateManager.enableAlpha();
             GlStateManager.enableDepth();
         }
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-        int i2 = i / 2 - 91;
+        int i2 = scaledWidth / 2 - 91;
 
         if (this.mc.thePlayer.isRidingHorse()) {
             this.renderHorseJumpBar(scaledRes, i2);
@@ -229,7 +233,7 @@ public class GuiIngame extends Gui {
 
             if (k1 > 8) {
                 GlStateManager.pushMatrix();
-                GlStateManager.translate((float) (i / 2), (float) (j - 68), 0.0F);
+                GlStateManager.translate((float) (scaledWidth / 2), (float) (scaledHeight - 68), 0.0F);
                 GlStateManager.enableBlend();
                 GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
                 int i1 = 16777215;
@@ -262,7 +266,7 @@ public class GuiIngame extends Gui {
 
             if (l1 > 8) {
                 GlStateManager.pushMatrix();
-                GlStateManager.translate((float) (i / 2), (float) (j / 2), 0.0F);
+                GlStateManager.translate((float) (scaledWidth / 2), (float) (scaledHeight / 2), 0.0F);
                 GlStateManager.enableBlend();
                 GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
                 GlStateManager.pushMatrix();
@@ -315,7 +319,7 @@ public class GuiIngame extends Gui {
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
         GlStateManager.disableAlpha();
         GlStateManager.pushMatrix();
-        GlStateManager.translate(0.0F, (float) (j - 48), 0.0F);
+        GlStateManager.translate(0.0F, (float) (scaledHeight - 48), 0.0F);
         this.persistantChatGUI.drawChat(this.updateCounter);
         GlStateManager.popMatrix();
         scoreobjective1 = scoreboard.getObjectiveInDisplaySlot(0);
@@ -324,7 +328,7 @@ public class GuiIngame extends Gui {
             this.overlayPlayerList.updatePlayerList(false);
         } else {
             this.overlayPlayerList.updatePlayerList(true);
-            this.overlayPlayerList.renderPlayerlist(i, scoreboard, scoreobjective1);
+            this.overlayPlayerList.renderPlayerlist(scaledWidth, scoreboard, scoreobjective1);
         }
 
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);

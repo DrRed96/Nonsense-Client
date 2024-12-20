@@ -1,10 +1,11 @@
 package wtf.bhopper.nonsense.util.minecraft.player;
 
 import net.minecraft.potion.Potion;
+import net.minecraft.util.Vec3;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.event.impl.EventMove;
-import wtf.bhopper.nonsense.event.impl.EventSlowDown;
-import wtf.bhopper.nonsense.event.impl.EventSpeed;
+import wtf.bhopper.nonsense.event.impl.player.EventMove;
+import wtf.bhopper.nonsense.event.impl.player.EventSlowDown;
+import wtf.bhopper.nonsense.event.impl.player.EventSpeed;
 import wtf.bhopper.nonsense.module.impl.movement.NoSlow;
 import wtf.bhopper.nonsense.module.impl.movement.Terrain;
 import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
@@ -162,6 +163,50 @@ public class MoveUtil implements MinecraftInstance {
         double mz = Math.sin(Math.toRadians(yaw + 90.0F));
 
         setMotion(event, forward * speed * mx + strafe * speed * mz, forward * speed * mz - strafe * speed * mx);
+    }
+
+    public static Vec3 simulateSpeed(double speedIn, float yawIn, double forwardIn, double strafeIn, boolean event) {
+        EventSpeed eventSpeed = new EventSpeed(speedIn, yawIn, forwardIn, strafeIn);
+        if (event) {
+            Nonsense.getEventBus().post(eventSpeed);
+        }
+
+        double speed = eventSpeed.speed;
+        float yaw = eventSpeed.yaw;
+        double forward = eventSpeed.forward;
+        double strafe = eventSpeed.strafe;
+
+        if (mc.thePlayer.isUsingItem() && !mc.thePlayer.isRiding()) {
+            EventSlowDown eventSlowDown = new EventSlowDown(0.2F);
+            Nonsense.getEventBus().post(eventSlowDown);
+            if (!eventSlowDown.isCancelled()) {
+                speed *= eventSlowDown.factor;
+            }
+        }
+
+        if (forward == 0.0 && strafe == 0.0) {
+            return new Vec3(0.0, 0.0, 0.0);
+        }
+
+        if (forward != 0.0) {
+            if (strafe > 0.0) {
+                yaw += ((forward > 0.0) ? -45.0F : 45.0F);
+            } else if (strafe < 0.0) {
+                yaw += ((forward > 0.0) ? 45.0F : -45.0F);
+            }
+            strafe = 0.0;
+            if (forward > 0.0) {
+                forward = 1.0;
+            } else if (forward < 0.0) {
+                forward = -1.0;
+            }
+        }
+
+
+        double mx = Math.cos(Math.toRadians(yaw + 90.0F));
+        double mz = Math.sin(Math.toRadians(yaw + 90.0F));
+
+        return new Vec3(forward * speed * mx + strafe * speed * mz, 0.0, forward * speed * mz - strafe * speed * mx);
     }
 
     public static void setMotion(EventMove event, double x, double z) {

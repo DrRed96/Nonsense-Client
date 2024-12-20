@@ -12,8 +12,8 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MovingObjectPosition;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
-import wtf.bhopper.nonsense.event.impl.EventRender3D;
-import wtf.bhopper.nonsense.event.impl.EventTick;
+import wtf.bhopper.nonsense.event.impl.render.EventRenderWorld;
+import wtf.bhopper.nonsense.event.impl.client.EventTick;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
@@ -55,7 +55,7 @@ public class BlockOverlay extends Module {
     }
 
     @EventLink
-    public final Listener<EventRender3D> onRender3D = _ -> {
+    public final Listener<EventRenderWorld> onRender3D = _ -> {
 
         for (TileEntity tileEntity : mc.theWorld.loadedTileEntityList) {
             try {

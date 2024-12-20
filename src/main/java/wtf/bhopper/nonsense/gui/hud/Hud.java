@@ -2,11 +2,10 @@ package wtf.bhopper.nonsense.gui.hud;
 
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
-import org.lwjgl.opengl.GL11;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
-import wtf.bhopper.nonsense.event.impl.EventRenderGui;
+import wtf.bhopper.nonsense.event.impl.render.EventRenderGui;
 import wtf.bhopper.nonsense.gui.components.RenderComponent;
 import wtf.bhopper.nonsense.gui.hud.notification.NotificationManager;
 import wtf.bhopper.nonsense.module.impl.visual.HudMod;

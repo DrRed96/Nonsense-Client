@@ -14,10 +14,10 @@ import net.minecraft.util.Vec3;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
-import wtf.bhopper.nonsense.event.impl.EventPreMotion;
-import wtf.bhopper.nonsense.event.impl.EventRender3D;
-import wtf.bhopper.nonsense.event.impl.EventTick;
-import wtf.bhopper.nonsense.event.impl.EventUpdate;
+import wtf.bhopper.nonsense.event.impl.player.EventPreMotion;
+import wtf.bhopper.nonsense.event.impl.render.EventRenderWorld;
+import wtf.bhopper.nonsense.event.impl.client.EventTick;
+import wtf.bhopper.nonsense.event.impl.player.EventUpdate;
 import wtf.bhopper.nonsense.gui.hud.Hud;
 import wtf.bhopper.nonsense.gui.hud.notification.Notification;
 import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
@@ -275,7 +275,7 @@ public class KillAura extends Module {
     }
 
     private TargetValidity isTargetValid(EntityLivingBase target) {
-        if (target == null || target.isClientPlayer()) {
+        if (target == null || target.isClientPlayer() || target.isFake) {
             return TargetValidity.INVALID;
         }
 
@@ -354,7 +354,7 @@ public class KillAura extends Module {
     }
 
     @EventLink
-    public final Listener<EventRender3D> onRender = event -> {
+    public final Listener<EventRenderWorld> onRender = event -> {
         if (!this.rangeIndicator.is(RangeIndiactor.NONE)) {
             double x = MathUtil.lerp(mc.thePlayer.lastTickPosX, mc.thePlayer.posX, event.delta);
             double y = MathUtil.lerp(mc.thePlayer.lastTickPosY, mc.thePlayer.posY, event.delta);

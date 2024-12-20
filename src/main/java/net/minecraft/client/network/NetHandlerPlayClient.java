@@ -68,8 +68,8 @@ import net.minecraft.world.storage.MapData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.event.impl.EventJoinGame;
-import wtf.bhopper.nonsense.event.impl.EventSendPacket;
+import wtf.bhopper.nonsense.event.impl.player.EventJoinGame;
+import wtf.bhopper.nonsense.event.impl.packet.EventSendPacket;
 import wtf.bhopper.nonsense.module.impl.other.Debugger;
 
 import java.io.File;

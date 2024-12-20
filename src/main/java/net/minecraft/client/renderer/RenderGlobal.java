@@ -111,6 +111,7 @@ import shadersmod.client.Shaders;
 import shadersmod.client.ShadersRender;
 import shadersmod.client.ShadowUtils;
 import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.module.impl.visual.FreeCamera;
 import wtf.bhopper.nonsense.module.impl.visual.Xray;
 
 public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListener
@@ -658,12 +659,13 @@ public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListene
             double d3 = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * (double)partialTicks;
             double d4 = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * (double)partialTicks;
             double d5 = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * (double)partialTicks;
+
             TileEntityRendererDispatcher.staticPlayerX = d3;
             TileEntityRendererDispatcher.staticPlayerY = d4;
             TileEntityRendererDispatcher.staticPlayerZ = d5;
             this.renderManager.setRenderPosition(d3, d4, d5);
             this.mc.entityRenderer.enableLightmap();
-            List list = this.theWorld.getLoadedEntityList();
+            List<Entity> list = this.theWorld.getLoadedEntityList();
 
             if (i == 0)
             {

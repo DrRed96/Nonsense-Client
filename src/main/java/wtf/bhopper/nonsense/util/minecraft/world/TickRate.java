@@ -5,8 +5,8 @@ import net.minecraft.util.MathHelper;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
-import wtf.bhopper.nonsense.event.impl.EventJoinGame;
-import wtf.bhopper.nonsense.event.impl.EventReceivePacket;
+import wtf.bhopper.nonsense.event.impl.player.EventJoinGame;
+import wtf.bhopper.nonsense.event.impl.packet.EventReceivePacket;
 import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 
 import java.util.Arrays;

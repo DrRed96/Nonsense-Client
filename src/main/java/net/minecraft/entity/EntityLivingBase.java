@@ -53,7 +53,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.event.impl.EventJump;
+import wtf.bhopper.nonsense.event.impl.player.EventJump;
 import wtf.bhopper.nonsense.module.impl.visual.ItemAnimations;
 import wtf.bhopper.nonsense.util.minecraft.player.RotationUtil;
 

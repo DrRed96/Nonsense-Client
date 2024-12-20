@@ -23,7 +23,7 @@ import optifine.Config;
 import org.lwjgl.opengl.GL11;
 import shadersmod.client.Shaders;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.event.impl.EventRenderNameTag;
+import wtf.bhopper.nonsense.event.impl.render.EventRenderNameTag;
 
 public abstract class Render<T extends Entity>
 {

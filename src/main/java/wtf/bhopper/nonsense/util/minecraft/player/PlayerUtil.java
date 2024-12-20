@@ -132,7 +132,7 @@ public class PlayerUtil implements MinecraftInstance {
     }
 
     public static boolean selfDamage(double value, final boolean groundCheck, final boolean hurtTimeCheck) {
-        if (groundCheck && !mc.thePlayer.onGround) {
+        if (groundCheck && !ground()) {
             return false;
         }
 
@@ -156,7 +156,7 @@ public class PlayerUtil implements MinecraftInstance {
 
     public static boolean selfDamageLow() {
 
-        if (!mc.thePlayer.onGround || mc.thePlayer.hurtTime > 0) {
+        if (!ground() || mc.thePlayer.hurtTime > 0) {
             return false;
         }
 
@@ -177,7 +177,7 @@ public class PlayerUtil implements MinecraftInstance {
 
     public static boolean selfDamageJump() {
 
-        if (!mc.thePlayer.onGround || mc.thePlayer.hurtTime > 0) {
+        if (!ground() || mc.thePlayer.hurtTime > 0) {
             return false;
         }
 
@@ -196,6 +196,25 @@ public class PlayerUtil implements MinecraftInstance {
         PacketUtil.sendNoEvent(new C03PacketPlayer(true));
 
         return true;
+    }
+
+    public static boolean selfDamageMinimal() {
+        if (!ground() || mc.thePlayer.hurtTime > 0) {
+            return false;
+        }
+
+        double x = mc.thePlayer.posX;
+        double y = mc.thePlayer.posY;
+        double z = mc.thePlayer.posZ;
+
+        PacketUtil.sendNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(x, y + getMaxFallDist(), z, false));
+        PacketUtil.sendNoEvent(new C03PacketPlayer.C04PacketPlayerPosition(x, y, z, false));
+        PacketUtil.sendNoEvent(new C03PacketPlayer(true));
+        return true;
+    }
+
+    public static boolean ground() {
+        return mc.thePlayer.onGround && mc.thePlayer.isCollidedVertically;
     }
 
 

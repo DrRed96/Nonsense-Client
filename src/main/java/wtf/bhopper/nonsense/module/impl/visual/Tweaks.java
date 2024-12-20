@@ -1,9 +1,8 @@
 package wtf.bhopper.nonsense.module.impl.visual;
 
-import net.minecraft.entity.EntityLivingBase;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
-import wtf.bhopper.nonsense.event.impl.EventRenderNameTag;
+import wtf.bhopper.nonsense.event.impl.render.EventRenderNameTag;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;

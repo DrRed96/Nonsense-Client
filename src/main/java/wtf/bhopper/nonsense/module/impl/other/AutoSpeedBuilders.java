@@ -14,7 +14,13 @@ import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Vec3;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
-import wtf.bhopper.nonsense.event.impl.*;
+import wtf.bhopper.nonsense.event.impl.client.EventTick;
+import wtf.bhopper.nonsense.event.impl.packet.EventReceivePacket;
+import wtf.bhopper.nonsense.event.impl.player.EventJoinGame;
+import wtf.bhopper.nonsense.event.impl.player.EventPreMotion;
+import wtf.bhopper.nonsense.event.impl.player.EventSelectItem;
+import wtf.bhopper.nonsense.event.impl.player.EventUpdate;
+import wtf.bhopper.nonsense.event.impl.render.EventRenderWorld;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
@@ -645,7 +651,7 @@ public class AutoSpeedBuilders extends Module {
     };
 
     @EventLink
-    public final Listener<EventRender3D> onRender3D = _ -> {
+    public final Listener<EventRenderWorld> onRender3D = _ -> {
 
         if (this.renderBuild.get() && !this.build.isEmpty()) {
             for (Map.Entry<BlockPos, IBlockState> entry : this.build.entrySet()) {

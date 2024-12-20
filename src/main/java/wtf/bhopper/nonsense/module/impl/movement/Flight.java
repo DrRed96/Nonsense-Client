@@ -5,10 +5,10 @@ import net.minecraft.network.play.client.C0BPacketEntityAction;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
-import wtf.bhopper.nonsense.event.impl.EventMove;
-import wtf.bhopper.nonsense.event.impl.EventPreMotion;
-import wtf.bhopper.nonsense.event.impl.EventReceivePacket;
-import wtf.bhopper.nonsense.event.impl.EventTick;
+import wtf.bhopper.nonsense.event.impl.player.EventMove;
+import wtf.bhopper.nonsense.event.impl.player.EventPreMotion;
+import wtf.bhopper.nonsense.event.impl.packet.EventReceivePacket;
+import wtf.bhopper.nonsense.event.impl.client.EventTick;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
@@ -160,6 +160,7 @@ public class Flight extends Module {
                                 case PACKET -> PlayerUtil.selfDamage(0.0625, true, true);
                                 case LOW -> PlayerUtil.selfDamageLow();
                                 case JUMP_PACKET -> PlayerUtil.selfDamageJump();
+                                case MINIMAL -> PlayerUtil.selfDamageMinimal();
                                 case NONE -> mc.thePlayer.onGround;
                             }) {
                                 this.stage = 1;
@@ -252,6 +253,7 @@ public class Flight extends Module {
         PACKET,
         LOW,
         JUMP_PACKET,
+        MINIMAL,
         NONE
     }
 

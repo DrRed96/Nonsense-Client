@@ -2,7 +2,7 @@ package net.minecraft.util;
 
 import net.minecraft.client.settings.GameSettings;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.event.impl.EventMovementInput;
+import wtf.bhopper.nonsense.event.impl.player.EventMovementInput;
 import wtf.bhopper.nonsense.module.impl.movement.FastSneak;
 
 public class MovementInputFromOptions extends MovementInput {

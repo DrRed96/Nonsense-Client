@@ -4,10 +4,10 @@ import net.minecraft.entity.EntityLivingBase;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
-import wtf.bhopper.nonsense.event.impl.EventMovementInput;
-import wtf.bhopper.nonsense.event.impl.EventRender3D;
-import wtf.bhopper.nonsense.event.impl.EventSpeed;
-import wtf.bhopper.nonsense.event.impl.EventUpdate;
+import wtf.bhopper.nonsense.event.impl.player.EventMovementInput;
+import wtf.bhopper.nonsense.event.impl.render.EventRenderWorld;
+import wtf.bhopper.nonsense.event.impl.player.EventSpeed;
+import wtf.bhopper.nonsense.event.impl.player.EventUpdate;
 import wtf.bhopper.nonsense.gui.hud.Hud;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
@@ -89,7 +89,7 @@ public class TargetStrafe extends Module {
     public final Listener<EventMovementInput> onMovementInput = _ -> this.strafing = this.canStrafe();
 
     @EventLink
-    public final Listener<EventRender3D> onRender3D = event -> {
+    public final Listener<EventRenderWorld> onRender3D = event -> {
         if (this.strafing && this.enableRender.get() && this.target != null) {
 
             double x = MathUtil.lerp(this.target.lastTickPosX, this.target.posX, event.delta);

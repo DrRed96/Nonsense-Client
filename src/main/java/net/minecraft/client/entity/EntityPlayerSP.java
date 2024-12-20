@@ -46,7 +46,7 @@ import net.minecraft.util.*;
 import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.event.impl.*;
+import wtf.bhopper.nonsense.event.impl.player.*;
 import wtf.bhopper.nonsense.module.impl.movement.NoSlow;
 import wtf.bhopper.nonsense.module.impl.player.HorseJump;
 import wtf.bhopper.nonsense.util.minecraft.player.RotationUtil;
@@ -641,7 +641,7 @@ public class EntityPlayerSP extends AbstractClientPlayer {
 
         if (this.inPortal) {
             if (this.mc.currentScreen != null && !this.mc.currentScreen.doesGuiPauseGame()) {
-                this.mc.displayGuiScreen((GuiScreen) null);
+                this.mc.displayGuiScreen(null);
             }
 
             if (this.timeInPortal == 0.0F) {

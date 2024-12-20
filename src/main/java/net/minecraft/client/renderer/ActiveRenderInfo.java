@@ -83,7 +83,7 @@ public class ActiveRenderInfo
 
     public static Block getBlockAtEntityViewpoint(World worldIn, Entity p_180786_1_, float p_180786_2_)
     {
-        Vec3 vec3 = projectViewFromEntity(p_180786_1_, (double)p_180786_2_);
+        Vec3 vec3 = projectViewFromEntity(p_180786_1_, p_180786_2_);
         BlockPos blockpos = new BlockPos(vec3);
         IBlockState iblockstate = worldIn.getBlockState(blockpos);
         Block block = iblockstate.getBlock();

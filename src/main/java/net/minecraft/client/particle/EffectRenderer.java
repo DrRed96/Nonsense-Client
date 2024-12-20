@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Random;
-import java.util.concurrent.Callable;
+
 import net.minecraft.block.Block;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.state.IBlockState;
@@ -31,7 +31,7 @@ import net.minecraft.world.World;
 import optifine.Config;
 import optifine.Reflector;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.event.impl.EventEmitParticles;
+import wtf.bhopper.nonsense.event.impl.render.EventEmitParticles;
 
 public class EffectRenderer
 {

@@ -4,7 +4,7 @@ import io.netty.util.internal.ThreadLocalRandom;
 import wtf.bhopper.nonsense.event.EventPriorities;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
-import wtf.bhopper.nonsense.event.impl.EventPreMotion;
+import wtf.bhopper.nonsense.event.impl.player.EventPreMotion;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
@@ -12,8 +12,6 @@ import wtf.bhopper.nonsense.module.property.annotations.Description;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
-
-import java.util.function.Supplier;
 
 @ModuleInfo(name = "Anti Aim",
         description = "CS:GO anti aim but useless and in Minecraft",

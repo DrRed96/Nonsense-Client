@@ -49,10 +49,10 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.event.impl.EventBlockCollision;
-import wtf.bhopper.nonsense.event.impl.EventPostStep;
-import wtf.bhopper.nonsense.event.impl.EventPreStep;
-import wtf.bhopper.nonsense.event.impl.EventStrafe;
+import wtf.bhopper.nonsense.event.impl.world.EventBlockCollision;
+import wtf.bhopper.nonsense.event.impl.player.EventPostStep;
+import wtf.bhopper.nonsense.event.impl.player.EventPreStep;
+import wtf.bhopper.nonsense.event.impl.player.EventStrafe;
 import wtf.bhopper.nonsense.module.impl.movement.Terrain;
 import wtf.bhopper.nonsense.util.minecraft.player.RotationUtil;
 
@@ -277,6 +277,8 @@ public abstract class Entity implements ICommandSender {
     protected EnumFacing field_181018_ap;
     private boolean invulnerable;
     protected UUID entityUniqueID;
+
+    public boolean isFake = false;
 
     /**
      * The command result statistics for this Entity.
@@ -2458,5 +2460,9 @@ public abstract class Entity implements ICommandSender {
         float x = (float)(this.posX - entityIn.posX);
         float z = (float)(this.posZ - entityIn.posZ);
         return MathHelper.sqrt_float(x * x + z * z);
+    }
+
+    public void setUniqueID(UUID uuid) {
+        this.entityUniqueID = uuid;
     }
 }

@@ -24,13 +24,13 @@ public class GuiSpectator extends Gui implements ISpectatorMenuRecipient
         this.mc = mcIn;
     }
 
-    public void func_175260_a(int p_175260_1_)
+    public void func_175260_a(int slot)
     {
         this.startTime = Minecraft.getSystemTime();
 
         if (this.spectatorMenu != null)
         {
-            this.spectatorMenu.func_178644_b(p_175260_1_);
+            this.spectatorMenu.func_178644_b(slot);
         }
         else
         {

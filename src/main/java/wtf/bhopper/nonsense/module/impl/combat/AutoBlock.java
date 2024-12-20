@@ -15,7 +15,7 @@ import net.minecraft.util.MovingObjectPosition;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
-import wtf.bhopper.nonsense.event.impl.*;
+import wtf.bhopper.nonsense.event.impl.player.*;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
@@ -274,7 +274,7 @@ public class AutoBlock extends Module {
 
     private boolean isValidTarget(EntityLivingBase entity) {
 
-        if (entity == mc.thePlayer || entity == null) {
+        if (entity == null || entity == mc.thePlayer || entity.isFake) {
             return false;
         }
 

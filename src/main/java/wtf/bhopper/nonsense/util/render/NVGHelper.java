@@ -2,10 +2,8 @@ package wtf.bhopper.nonsense.util.render;
 
 import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NVGPaint;
-import org.lwjgl.system.NativeType;
 import org.lwjglx.opengl.Display;
 import org.lwjglx.util.vector.Vector2f;
-import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
 
 import java.awt.*;
 import java.nio.ByteBuffer;
@@ -14,7 +12,11 @@ import static org.lwjgl.nanovg.NanoVG.*;
 import static org.lwjgl.nanovg.NanoVGGL3.*;
 import static org.lwjgl.opengl.GL11.*;
 
-public class NVGHelper implements MinecraftInstance {
+/**
+ * Utility class to make managing NanoVG easier.
+ * <code>NVGHelper.init()</code> must be called during initialization for this class to be used.
+ */
+public class NVGHelper {
 
     private static long context;
     private static NVGColor color;

@@ -56,7 +56,6 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EntitySelectors;
-import net.minecraft.util.EnumFacing;
 import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.util.MathHelper;
@@ -88,11 +87,10 @@ import org.lwjglx.util.glu.Project;
 import shadersmod.client.Shaders;
 import shadersmod.client.ShadersRender;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.event.impl.EventRender3D;
-import wtf.bhopper.nonsense.module.impl.visual.Atmosphere;
-import wtf.bhopper.nonsense.module.impl.visual.BlockOverlay;
-import wtf.bhopper.nonsense.module.impl.visual.NoRender;
-import wtf.bhopper.nonsense.module.impl.visual.Tweaks;
+import wtf.bhopper.nonsense.event.impl.render.EventPostRenderWorld;
+import wtf.bhopper.nonsense.event.impl.render.EventPreRenderWorld;
+import wtf.bhopper.nonsense.event.impl.render.EventRenderWorld;
+import wtf.bhopper.nonsense.module.impl.visual.*;
 
 public class EntityRenderer implements IResourceManagerReloadListener {
     private static final Logger logger = LogManager.getLogger();
@@ -478,10 +476,15 @@ public class EntityRenderer implements IResourceManagerReloadListener {
             this.pointedEntity = null;
             Vec3 vec33 = null;
             float f = 1.0F;
-            List<Entity> list = this.mc.theWorld.getEntitiesInAABBexcluding(entity, entity.getEntityBoundingBox().addCoord(look.xCoord * reachDistance, look.yCoord * reachDistance, look.zCoord * reachDistance).expand((double) f, (double) f, (double) f), Predicates.and(EntitySelectors.NOT_SPECTATING, new EntityRenderer$1(this)));
+            List<Entity> list = this.mc.theWorld.getEntitiesInAABBexcluding(
+                    entity,
+                    entity.getEntityBoundingBox().addCoord(look.xCoord * reachDistance, look.yCoord * reachDistance, look.zCoord * reachDistance).expand(f, f, f),
+                    Predicates.and(EntitySelectors.NOT_SPECTATING, new EntityRenderer$1(this), input -> !input.isClientPlayer() && !input.isFake)
+            );
             double d2 = d1;
 
             for (Entity entity1 : list) {
+
                 float f1 = entity1.getCollisionBorderSize();
                 AxisAlignedBB axisalignedbb = entity1.getEntityBoundingBox().expand(f1, f1, f1);
                 MovingObjectPosition movingobjectposition = axisalignedbb.calculateIntercept(start, end);
@@ -660,14 +663,15 @@ public class EntityRenderer implements IResourceManagerReloadListener {
      * sets up player's eye (or camera in third person mode)
      */
     private void orientCamera(float partialTicks) {
+
         Entity entity = this.mc.getRenderViewEntity();
-        float f = entity.getEyeHeight();
-        double d0 = entity.prevPosX + (entity.posX - entity.prevPosX) * (double) partialTicks;
-        double d1 = entity.prevPosY + (entity.posY - entity.prevPosY) * (double) partialTicks + (double) f;
-        double d2 = entity.prevPosZ + (entity.posZ - entity.prevPosZ) * (double) partialTicks;
+        float eyeHeight = entity.getEyeHeight();
+        double x = entity.prevPosX + (entity.posX - entity.prevPosX) * (double) partialTicks;
+        double y = entity.prevPosY + (entity.posY - entity.prevPosY) * (double) partialTicks + (double) eyeHeight;
+        double z = entity.prevPosZ + (entity.posZ - entity.prevPosZ) * (double) partialTicks;
 
         if (entity instanceof EntityLivingBase && ((EntityLivingBase) entity).isPlayerSleeping()) {
-            f = (float) ((double) f + 1.0D);
+            eyeHeight = (float) ((double) eyeHeight + 1.0D);
             GlStateManager.translate(0.0F, 0.3F, 0.0F);
 
             if (!this.mc.gameSettings.debugCamEnable) {
@@ -676,9 +680,9 @@ public class EntityRenderer implements IResourceManagerReloadListener {
                 Block block = iblockstate.getBlock();
 
                 if (Reflector.ForgeHooksClient_orientBedCamera.exists()) {
-                    Reflector.callVoid(Reflector.ForgeHooksClient_orientBedCamera, new Object[]{this.mc.theWorld, blockpos, iblockstate, entity});
+                    Reflector.callVoid(Reflector.ForgeHooksClient_orientBedCamera, this.mc.theWorld, blockpos, iblockstate, entity);
                 } else if (block == Blocks.bed) {
-                    int j = ((EnumFacing) iblockstate.getValue(BlockBed.FACING)).getHorizontalIndex();
+                    int j = iblockstate.getValue(BlockBed.FACING).getHorizontalIndex();
                     GlStateManager.rotate((float) (j * 90), 0.0F, 1.0F, 0.0F);
                 }
 
@@ -711,10 +715,10 @@ public class EntityRenderer implements IResourceManagerReloadListener {
                         f3 = f3 * 0.1F;
                         f4 = f4 * 0.1F;
                         f5 = f5 * 0.1F;
-                        MovingObjectPosition movingobjectposition = this.mc.theWorld.rayTraceBlocks(new Vec3(d0 + (double) f3, d1 + (double) f4, d2 + (double) f5), new Vec3(d0 - d4 + (double) f3 + (double) f5, d1 - d6 + (double) f4, d2 - d5 + (double) f5));
+                        MovingObjectPosition movingobjectposition = this.mc.theWorld.rayTraceBlocks(new Vec3(x + (double) f3, y + (double) f4, z + (double) f5), new Vec3(x - d4 + (double) f3 + (double) f5, y - d6 + (double) f4, z - d5 + (double) f5));
 
                         if (movingobjectposition != null) {
-                            double d7 = movingobjectposition.hitVec.distanceTo(new Vec3(d0, d1, d2));
+                            double d7 = movingobjectposition.hitVec.distanceTo(new Vec3(x, y, z));
 
                             if (d7 < d3) {
                                 d3 = d7;
@@ -749,7 +753,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
                 }
 
                 Block block1 = ActiveRenderInfo.getBlockAtEntityViewpoint(this.mc.theWorld, entity, partialTicks);
-                Object object = Reflector.newInstance(Reflector.EntityViewRenderEvent_CameraSetup_Constructor, new Object[]{this, entity, block1, Float.valueOf(partialTicks), Float.valueOf(f6), Float.valueOf(f7), Float.valueOf(f8)});
+                Object object = Reflector.newInstance(Reflector.EntityViewRenderEvent_CameraSetup_Constructor, this, entity, block1, partialTicks, Float.valueOf(f6), Float.valueOf(f7), Float.valueOf(f8));
                 Reflector.postForgeBusEvent(object);
                 f8 = Reflector.getFieldValueFloat(object, Reflector.EntityViewRenderEvent_CameraSetup_roll, f8);
                 f7 = Reflector.getFieldValueFloat(object, Reflector.EntityViewRenderEvent_CameraSetup_pitch, f7);
@@ -769,11 +773,12 @@ public class EntityRenderer implements IResourceManagerReloadListener {
             }
         }
 
-        GlStateManager.translate(0.0F, -f, 0.0F);
-        d0 = entity.prevPosX + (entity.posX - entity.prevPosX) * (double) partialTicks;
-        d1 = entity.prevPosY + (entity.posY - entity.prevPosY) * (double) partialTicks + (double) f;
-        d2 = entity.prevPosZ + (entity.posZ - entity.prevPosZ) * (double) partialTicks;
-        this.cloudFog = this.mc.renderGlobal.hasCloudFog(d0, d1, d2, partialTicks);
+        GlStateManager.translate(0.0F, -eyeHeight, 0.0F);
+        x = entity.prevPosX + (entity.posX - entity.prevPosX) * (double) partialTicks;
+        y = entity.prevPosY + (entity.posY - entity.prevPosY) * (double) partialTicks + (double) eyeHeight;
+        z = entity.prevPosZ + (entity.posZ - entity.prevPosZ) * (double) partialTicks;
+
+        this.cloudFog = this.mc.renderGlobal.hasCloudFog(x, y, z, partialTicks);
     }
 
     /**
@@ -1147,7 +1152,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
             this.mc.mouseHelper.mouseXYChange();
             float f = this.mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
             float f1 = f * f * f * 8.0F;
-            float f2 = (float) this.mc.mouseHelper.deltaX * f1;
+            float yaw = (float) this.mc.mouseHelper.deltaX * f1;
             float f3 = (float) this.mc.mouseHelper.deltaY * f1;
             byte b0 = 1;
 
@@ -1156,17 +1161,17 @@ public class EntityRenderer implements IResourceManagerReloadListener {
             }
 
             if (this.mc.gameSettings.smoothCamera) {
-                this.smoothCamYaw += f2;
+                this.smoothCamYaw += yaw;
                 this.smoothCamPitch += f3;
                 float f4 = partialTicks - this.smoothCamPartialTicks;
                 this.smoothCamPartialTicks = partialTicks;
-                f2 = this.smoothCamFilterX * f4;
+                yaw = this.smoothCamFilterX * f4;
                 f3 = this.smoothCamFilterY * f4;
             } else {
                 this.smoothCamYaw = 0.0F;
                 this.smoothCamPitch = 0.0F;
             }
-            this.mc.thePlayer.setAngles(f2, f3 * (float) b0);
+            this.mc.thePlayer.setAngles(yaw, f3 * (float) b0);
         }
 
         if (!this.mc.skipRenderWorld) {
@@ -1338,6 +1343,9 @@ public class EntityRenderer implements IResourceManagerReloadListener {
     }
 
     private void renderWorldPass(int pass, float partialTicks, long finishTimeNano) {
+
+        Nonsense.getEventBus().post(new EventPreRenderWorld(partialTicks));
+
         boolean flag = Config.isShaders();
 
         if (flag) {
@@ -1372,14 +1380,14 @@ public class EntityRenderer implements IResourceManagerReloadListener {
         ClippingHelperImpl.getInstance();
         Frustum frustum = new Frustum();
         Entity entity = this.mc.getRenderViewEntity();
-        double d0 = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * (double) partialTicks;
-        double d1 = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * (double) partialTicks;
-        double d2 = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * (double) partialTicks;
+        double frustumX = entity.lastTickPosX + (entity.posX - entity.lastTickPosX) * (double) partialTicks;
+        double frustumY = entity.lastTickPosY + (entity.posY - entity.lastTickPosY) * (double) partialTicks;
+        double frustumZ = entity.lastTickPosZ + (entity.posZ - entity.lastTickPosZ) * (double) partialTicks;
 
         if (flag) {
-            ShadersRender.setFrustrumPosition(frustum, d0, d1, d2);
+            ShadersRender.setFrustrumPosition(frustum, frustumX, frustumY, frustumZ);
         } else {
-            frustum.setPosition(d0, d1, d2);
+            frustum.setPosition(frustumX, frustumY, frustumZ);
         }
 
         if ((Config.isSkyEnabled() || Config.isSunMoonEnabled() || Config.isStarsEnabled()) && !Shaders.isShadowPass) {
@@ -1615,7 +1623,7 @@ public class EntityRenderer implements IResourceManagerReloadListener {
             Reflector.callVoid(Reflector.ForgeHooksClient_dispatchRenderLast, renderglobal, partialTicks);
         }
 
-        Nonsense.getEventBus().post(new EventRender3D(partialTicks));
+        Nonsense.getEventBus().post(new EventRenderWorld(partialTicks));
 
         boolean flag2 = ReflectorForge.renderFirstPersonHand(this.mc.renderGlobal, partialTicks, pass);
 
@@ -1639,6 +1647,8 @@ public class EntityRenderer implements IResourceManagerReloadListener {
         if (flag) {
             Shaders.endRender();
         }
+
+        Nonsense.getEventBus().post(new EventPostRenderWorld(partialTicks));
     }
 
     private void renderCloudsCheck(RenderGlobal renderGlobalIn, float partialTicks, int pass) {

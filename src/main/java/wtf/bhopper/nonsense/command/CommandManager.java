@@ -5,7 +5,7 @@ import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.command.impl.Help;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
-import wtf.bhopper.nonsense.event.impl.EventChat;
+import wtf.bhopper.nonsense.event.impl.player.EventChat;
 import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 
 import java.util.ArrayList;

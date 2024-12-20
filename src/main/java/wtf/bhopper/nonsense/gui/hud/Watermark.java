@@ -24,15 +24,15 @@ public class Watermark implements MinecraftInstance {
     private static final NumberFormat TPS_FORMAT = new DecimalFormat("#0.00");
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("h:mm a");
 
-    public void draw(ScaledResolution scaledRes) {
+    public int draw(ScaledResolution scaledRes) {
 
         HudMod mod = Hud.mod();
 
         if (!Hud.enabled() || !mod.watermarkEnabled.get()) {
-            return;
+            return 0;
         }
 
-        switch (mod.watermarkMode.get()) {
+        return switch (mod.watermarkMode.get()) {
             case EXHIBITION -> {
                 String text = this.getText(mod);
                 int color = switch (mod.watermarkColorMode.get()) {
@@ -53,6 +53,8 @@ public class Watermark implements MinecraftInstance {
                     Minecraft.getMinecraft().fontRendererObj.drawStringWithShadow(text, 2, 2, color);
                     GlStateManager.popMatrix();
 
+                    yield Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT * 2;
+
                 } else {
 
                     NVGHelper.begin();
@@ -69,6 +71,8 @@ public class Watermark implements MinecraftInstance {
                     NVGHelper.drawText(part2, valueX, 4.0F, mod.watermarkColorMode.is(HudMod.WatermarkColorMode.SOLID) ? color : ColorUtil.WHITE, true);
 
                     NVGHelper.end();
+
+                    yield mod.fontSize.getInt();
                 }
             }
 
@@ -101,10 +105,10 @@ public class Watermark implements MinecraftInstance {
 
                 NVGHelper.end();
 
+                yield 28;
             }
 
-        }
-
+        };
     }
 
     public String getText(HudMod mod) {

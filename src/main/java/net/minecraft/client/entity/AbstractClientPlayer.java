@@ -31,8 +31,7 @@ public abstract class AbstractClientPlayer extends EntityPlayer
 {
     private NetworkPlayerInfo playerInfo;
     private ResourceLocation locationOfCape = null;
-    private String nameClear = null;
-    private static final String __OBFID = "CL_00000935";
+    private String nameClear;
 
     public AbstractClientPlayer(World worldIn, GameProfile playerProfile)
     {
@@ -99,7 +98,7 @@ public abstract class AbstractClientPlayer extends EntityPlayer
         {
             return null;
         }
-        else if (this.isClientPlayer() && Nonsense.module(Capes.class).isToggled())
+        else if ((this.isClientPlayer() || (this.isFake && this.getUniqueID() == Minecraft.getMinecraft().thePlayer.getUniqueID())) && Nonsense.module(Capes.class).isToggled())
         {
             return Nonsense.module(Capes.class).cape.get().getResource();
         }

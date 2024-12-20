@@ -44,10 +44,10 @@ public class SpectatorMenu
         this.field_178651_f = p_i45497_1_;
     }
 
-    public ISpectatorMenuObject func_178643_a(int p_178643_1_)
+    public ISpectatorMenuObject func_178643_a(int slot)
     {
-        int i = p_178643_1_ + this.field_178658_j * 6;
-        return this.field_178658_j > 0 && p_178643_1_ == 0 ? field_178656_c : (p_178643_1_ == 7 ? (i < this.field_178659_h.func_178669_a().size() ? field_178653_d : field_178654_e) : (p_178643_1_ == 8 ? field_178655_b : (i >= 0 && i < this.field_178659_h.func_178669_a().size() ? (ISpectatorMenuObject)Objects.firstNonNull(this.field_178659_h.func_178669_a().get(i), field_178657_a) : field_178657_a)));
+        int i = slot + this.field_178658_j * 6;
+        return this.field_178658_j > 0 && slot == 0 ? field_178656_c : (slot == 7 ? (i < this.field_178659_h.func_178669_a().size() ? field_178653_d : field_178654_e) : (slot == 8 ? field_178655_b : (i >= 0 && i < this.field_178659_h.func_178669_a().size() ? (ISpectatorMenuObject)Objects.firstNonNull(this.field_178659_h.func_178669_a().get(i), field_178657_a) : field_178657_a)));
     }
 
     public List<ISpectatorMenuObject> func_178642_a()
@@ -72,19 +72,19 @@ public class SpectatorMenu
         return this.field_178659_h;
     }
 
-    public void func_178644_b(int p_178644_1_)
+    public void func_178644_b(int slot)
     {
-        ISpectatorMenuObject ispectatormenuobject = this.func_178643_a(p_178644_1_);
+        ISpectatorMenuObject ispectatormenuobject = this.func_178643_a(slot);
 
         if (ispectatormenuobject != field_178657_a)
         {
-            if (this.field_178660_i == p_178644_1_ && ispectatormenuobject.func_178662_A_())
+            if (this.field_178660_i == slot && ispectatormenuobject.func_178662_A_())
             {
                 ispectatormenuobject.func_178661_a(this);
             }
             else
             {
-                this.field_178660_i = p_178644_1_;
+                this.field_178660_i = slot;
             }
         }
     }

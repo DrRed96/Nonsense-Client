@@ -22,15 +22,15 @@ public class AL {
 			IntBuffer attribs = BufferUtils.createIntBuffer(16);
 
 			attribs.put(org.lwjgl.openal.ALC10.ALC_FREQUENCY);
-			attribs.put(44100);
+			attribs.put(0xAC44);
 
 			attribs.put(org.lwjgl.openal.ALC10.ALC_REFRESH);
-			attribs.put(60);
+			attribs.put(0x3C);
 
 			attribs.put(org.lwjgl.openal.ALC10.ALC_SYNC);
 			attribs.put(org.lwjgl.openal.ALC10.ALC_FALSE);
 
-			attribs.put(0);
+			attribs.put(0x0);
 			attribs.flip();
 
 			long contextHandle = org.lwjgl.openal.ALC10.alcCreateContext(AL.getDevice().device, attribs);

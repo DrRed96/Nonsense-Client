@@ -15,7 +15,6 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.entity.layers.LayerRenderer;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EnumPlayerModelParts;
@@ -31,9 +30,9 @@ import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
 import shadersmod.client.Shaders;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.event.impl.EventPostRenderEntity;
-import wtf.bhopper.nonsense.event.impl.EventPreRenderEntity;
-import wtf.bhopper.nonsense.event.impl.EventRenderNameTag;
+import wtf.bhopper.nonsense.event.impl.render.EventPostRenderEntity;
+import wtf.bhopper.nonsense.event.impl.render.EventPreRenderEntity;
+import wtf.bhopper.nonsense.event.impl.render.EventRenderNameTag;
 
 public abstract class RendererLivingEntity<T extends EntityLivingBase> extends Render<T>
 {

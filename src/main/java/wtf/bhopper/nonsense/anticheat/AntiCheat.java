@@ -8,9 +8,9 @@ import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.anticheat.checks.NoSlowA;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
-import wtf.bhopper.nonsense.event.impl.EventJoinGame;
-import wtf.bhopper.nonsense.event.impl.EventReceivePacket;
-import wtf.bhopper.nonsense.event.impl.EventUpdate;
+import wtf.bhopper.nonsense.event.impl.player.EventJoinGame;
+import wtf.bhopper.nonsense.event.impl.packet.EventReceivePacket;
+import wtf.bhopper.nonsense.event.impl.player.EventUpdate;
 import wtf.bhopper.nonsense.gui.hud.notification.Notification;
 import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
 import wtf.bhopper.nonsense.module.impl.combat.AntiBot;
@@ -66,7 +66,7 @@ public class AntiCheat implements MinecraftInstance {
             return;
         }
 
-        for (EntityPlayer player : mc.theWorld.getEntities(EntityPlayer.class, player -> !Nonsense.module(AntiBot.class).isBot(player) && !player.isClientPlayer())) {
+        for (EntityPlayer player : mc.theWorld.getEntities(EntityPlayer.class, player -> !Nonsense.module(AntiBot.class).isBot(player) && !player.isClientPlayer() && !player.isFake)) {
             PlayerData data = this.players.getOrDefault(player.getUniqueID(), new PlayerData(++this.nextChatLine));
             data.update(player);
             List<String> violated = new ArrayList<>();

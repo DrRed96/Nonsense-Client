@@ -9,9 +9,9 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.event.impl.EventPostClick;
-import wtf.bhopper.nonsense.event.impl.EventPreClick;
-import wtf.bhopper.nonsense.event.impl.EventReceivePacket;
+import wtf.bhopper.nonsense.event.impl.player.EventPostClick;
+import wtf.bhopper.nonsense.event.impl.player.EventPreClick;
+import wtf.bhopper.nonsense.event.impl.packet.EventReceivePacket;
 import wtf.bhopper.nonsense.module.impl.other.Debugger;
 import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
 

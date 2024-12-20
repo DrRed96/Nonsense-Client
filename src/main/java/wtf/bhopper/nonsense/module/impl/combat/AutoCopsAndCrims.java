@@ -12,7 +12,11 @@ import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.util.Vec3;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
-import wtf.bhopper.nonsense.event.impl.*;
+import wtf.bhopper.nonsense.event.impl.packet.EventSendPacket;
+import wtf.bhopper.nonsense.event.impl.player.EventPostClick;
+import wtf.bhopper.nonsense.event.impl.player.EventPreMotion;
+import wtf.bhopper.nonsense.event.impl.player.EventUpdate;
+import wtf.bhopper.nonsense.event.impl.render.EventRenderWorld;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
@@ -114,7 +118,7 @@ public class AutoCopsAndCrims extends Module {
     };
 
     @EventLink
-    public final Listener<EventRender3D> onRender = event -> {
+    public final Listener<EventRenderWorld> onRender = event -> {
 
         if (this.target == null) {
             return;

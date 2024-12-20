@@ -1,10 +1,11 @@
 package wtf.bhopper.nonsense.module;
 
+import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.ImmutableClassToInstanceMap;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
-import wtf.bhopper.nonsense.event.impl.EventKeyPress;
+import wtf.bhopper.nonsense.event.impl.client.EventKeyPress;
 import wtf.bhopper.nonsense.module.impl.combat.*;
 import wtf.bhopper.nonsense.module.impl.exploit.*;
 import wtf.bhopper.nonsense.module.impl.movement.*;
@@ -16,13 +17,13 @@ import wtf.bhopper.nonsense.module.impl.visual.*;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
-import java.util.stream.Collectors;
 
 public class ModuleManager {
 
-    private final ImmutableClassToInstanceMap<Module> modules;
+    private final ClassToInstanceMap<Module> modules;
 
     public ModuleManager() {
+
         this.modules = this.addModules(
                 // Combat
                 new KillAura(),
@@ -96,6 +97,7 @@ public class ModuleManager {
                 new ClickGui(),
                 new Esp(),
                 new Chams(),
+                new FreeCamera(),
                 new Atmosphere(),
                 new BlockOverlay(),
                 new Xray(),
@@ -104,6 +106,7 @@ public class ModuleManager {
                 new NoRender(),
                 new ScoreboardMod(),
                 new BetterChat(),
+                new Crosshair(),
                 new Tweaks(),
                 new Tracers(),
                 new LagNotifier(),
@@ -126,7 +129,7 @@ public class ModuleManager {
     };
 
     @SuppressWarnings("unchecked")
-    private ImmutableClassToInstanceMap<Module> addModules(Module... modules) {
+    private ClassToInstanceMap<Module> addModules(Module... modules) {
         ImmutableClassToInstanceMap.Builder<Module> modulesBuilder = ImmutableClassToInstanceMap.builder();
         Arrays.stream(modules).forEach(module -> modulesBuilder.put((Class<Module>)module.getClass(), module));
         return modulesBuilder.build();

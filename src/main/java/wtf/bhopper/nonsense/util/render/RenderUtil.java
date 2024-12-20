@@ -132,7 +132,7 @@ public class RenderUtil implements MinecraftInstance {
         final Block block = BlockUtil.getBlock(blockPos);
 
         if (block != null) {
-            final EntityPlayer player = mc.thePlayer;
+            final Entity player = mc.getRenderViewEntity();
 
             final double posX = player.lastTickPosX + (player.posX - player.lastTickPosX) * (double) timer.renderPartialTicks;
             final double posY = player.lastTickPosY + (player.posY - player.lastTickPosY) * (double) timer.renderPartialTicks;
@@ -400,7 +400,7 @@ public class RenderUtil implements MinecraftInstance {
     }
 
     public static Vec3 renderPos(float delta) {
-        return renderPos(mc.thePlayer, delta);
+        return renderPos(mc.getRenderViewEntity(), delta);
     }
 
     public static Vec3 renderPos() {

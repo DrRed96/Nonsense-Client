@@ -14,7 +14,8 @@ import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
-import wtf.bhopper.nonsense.event.impl.*;
+import wtf.bhopper.nonsense.event.impl.client.EventTick;
+import wtf.bhopper.nonsense.event.impl.player.*;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
@@ -31,7 +32,9 @@ import wtf.bhopper.nonsense.util.misc.MathUtil;
 import java.util.Arrays;
 import java.util.List;
 
-@ModuleInfo(name = "Scaffold", description = "Automatically places blocks under you.", category = ModuleCategory.MOVEMENT)
+@ModuleInfo(name = "Scaffold",
+        description = "Automatically places blocks under you.",
+        category = ModuleCategory.MOVEMENT)
 public class Scaffold extends Module {
 
     private static final List<Block> BAD_BLOCKS = Arrays.asList(
