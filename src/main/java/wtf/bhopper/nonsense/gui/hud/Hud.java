@@ -25,6 +25,7 @@ public class Hud implements MinecraftInstance {
     public final HudMod module;
     public final ModuleList moduleList = new ModuleList();
     public final Watermark watermark = new Watermark();
+    public final TabGui tabGui = new TabGui();
     public final InfoDisplay infoDisplay = new InfoDisplay();
     public final NotificationManager notifications = new NotificationManager();
     public final TargetHud targetHud = new TargetHud();
@@ -37,6 +38,7 @@ public class Hud implements MinecraftInstance {
         componentsToAdd.clear();
         this.components.add(this.targetHud);
         Nonsense.getEventBus().subscribe(this);
+        Nonsense.getEventBus().subscribe(this.tabGui);
     }
 
     @EventLink

@@ -4,14 +4,17 @@ import org.lwjglx.opengl.Display;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
+import wtf.bhopper.nonsense.util.misc.ResourceUtil;
 import wtf.bhopper.nonsense.util.render.Fonts;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
 
+import java.io.IOException;
+import java.net.URISyntaxException;
+import java.nio.ByteBuffer;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
-import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
+import static org.lwjgl.nanovg.NanoVG.*;
 
 public class NovoPanel extends NovoComponent {
 
@@ -29,12 +32,22 @@ public class NovoPanel extends NovoComponent {
 
     private boolean expanded = true;
 
+    @SuppressWarnings("FieldCanBeLocal") private final ByteBuffer iconData;
+    private final int icon;
+
     public NovoPanel(NovoGui gui, ModuleCategory category, int x) {
         super(null, 0);
         this.gui = gui;
         this.category = category;
         this.x = x;
         this.y = 10;
+
+        try {
+            this.iconData = ResourceUtil.loadResource(this.category.icon);
+            this.icon = NVGHelper.createImage(0, this.iconData);
+        } catch (IOException | URISyntaxException exception) {
+            throw new RuntimeException(exception);
+        }
 
         for (Module module : Nonsense.getModuleManager().getInCategory(category)) {
             modules.add(new NovoModule(this, module));
@@ -48,6 +61,8 @@ public class NovoPanel extends NovoComponent {
 
         NVGHelper.drawRect(0.0F, 0.0F, WIDTH, HEADER_HEIGHT, NovoComponent.OUTLINE_COLOR);
         NVGHelper.drawRect(1.0F, 1.0F, WIDTH - 2.0F, HEADER_HEIGHT - 1.0F, NovoComponent.BG_COLOR_DARK);
+
+        NVGHelper.drawImage(WIDTH - 23.0F, HEADER_HEIGHT + 7.0F, 16.0F, 16.0F, 16.0F, 16.0F, this.icon);
 
         NVGHelper.fontSize(20.0F);
         NVGHelper.fontFace(Fonts.SEGOE);

@@ -42,7 +42,7 @@ import java.util.List;
 @ModuleInfo(name = "Kill Aura",
         description = "Automatically attacks nearby entities",
         category = ModuleCategory.COMBAT,
-        searchAlias = {"Trigger Bot", "Auto Attack"})
+        searchAlias = {"Trigger Bot", "Force Field", "Auto Attack"})
 public class KillAura extends Module {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Target selection method", Mode.SWITCH);

@@ -398,7 +398,7 @@ public class PlayerControllerMP {
             int i = itemStackIn.stackSize;
             ItemStack itemstack = itemStackIn.useItemRightClick(worldIn, playerIn);
 
-            if (itemstack != itemStackIn || itemstack != null && itemstack.stackSize != i) {
+            if (itemstack != itemStackIn || itemstack.stackSize != i) {
                 playerIn.inventory.mainInventory[playerIn.inventory.currentItem] = itemstack;
 
                 if (itemstack.stackSize == 0) {
@@ -448,9 +448,9 @@ public class PlayerControllerMP {
      * Handles slot clicks sends a packet to the server.
      */
     public ItemStack windowClick(int windowId, int slotId, int mouseButtonClicked, int mode, EntityPlayer playerIn) {
-        short short1 = playerIn.openContainer.getNextTransactionID(playerIn.inventory);
+        short actionNumber = playerIn.openContainer.getNextTransactionID(playerIn.inventory);
         ItemStack itemstack = playerIn.openContainer.slotClick(slotId, mouseButtonClicked, mode, playerIn);
-        this.netClientHandler.addToSendQueue(new C0EPacketClickWindow(windowId, slotId, mouseButtonClicked, mode, itemstack, short1));
+        this.netClientHandler.addToSendQueue(new C0EPacketClickWindow(windowId, slotId, mouseButtonClicked, mode, itemstack, actionNumber));
         return itemstack;
     }
 

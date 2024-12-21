@@ -304,7 +304,9 @@ public class GuiIngame extends Gui {
             this.renderScoreboard(scoreobjective1, scaledRes, minY);
         }
 
-        Nonsense.getHud().watermark.draw(scaledRes);
+        int watermarkY = Nonsense.getHud().watermark.draw(scaledRes);
+        Nonsense.getHud().tabGui.draw(scaledRes, partialTicks, watermarkY + 2);
+
         Nonsense.getHud().infoDisplay.draw(scaledRes);
 
         if (mc.currentScreen == null) {

@@ -37,7 +37,7 @@ import java.util.List;
         category = ModuleCategory.MOVEMENT)
 public class Scaffold extends Module {
 
-    private static final List<Block> BAD_BLOCKS = Arrays.asList(
+    public static final List<Block> BAD_BLOCKS = Arrays.asList(
             Blocks.air,
             Blocks.sand,
             Blocks.gravel,
@@ -66,6 +66,7 @@ public class Scaffold extends Module {
     private final BooleanProperty swing = new BooleanProperty("Swing", "Swings client sided.", true);
     private final EnumProperty<SwapMode> swap = new EnumProperty<>("Swap", "Swaps mode.", SwapMode.SILENT);
     private final BooleanProperty sameY = new BooleanProperty("Same Y", "Keeps your Y position the same", false);
+    private final BooleanProperty down = new BooleanProperty("Down", "Allows scaffold to go down by sneaking", false);
 
     private BlockData blockData = null;
     private Vec3 hitVec = null;
@@ -82,7 +83,7 @@ public class Scaffold extends Module {
     public Scaffold() {
         this.rotationGroup.addProperties(this.rotationsMode, this.rotationsAiming, this.rotationsHitVec, this.rotationRayCast);
         this.towerGroup.addProperties(this.towerEnable, this.towerMode);
-        this.addProperties(this.mode, this.rotationGroup, this.towerGroup, this.swing, this.swap, this.sameY);
+        this.addProperties(this.mode, this.rotationGroup, this.towerGroup, this.swing, this.swap, this.sameY, this.down);
         this.setSuffix(this.mode::getDisplayValue);
     }
 
@@ -320,6 +321,13 @@ public class Scaffold extends Module {
 
     };
 
+    @EventLink
+    public final Listener<EventMovementInput> onMovementInput = event -> {
+        if (this.down.get()) {
+            event.sneak = false;
+        }
+    };
+
     public void placeBlock() {
 
         if (this.blockData == null || this.hitVec == null) {
@@ -353,9 +361,13 @@ public class Scaffold extends Module {
 
         BlockPos playerPos = new BlockPos(x, y, z).down();
 
+        if (this.down.get() && mc.gameSettings.keyBindSneak.isKeyDown() && mc.thePlayer.onGround) {
+            playerPos = playerPos.down();
+        }
+
         if (BlockUtil.isAir(playerPos)) {
             for (EnumFacing face : EnumFacing.values()) {
-                if (face == EnumFacing.UP) {
+                if (face == EnumFacing.UP && !this.down.get()) {
                     continue;
                 }
                 BlockPos offset = playerPos.offset(face);
@@ -365,7 +377,7 @@ public class Scaffold extends Module {
             }
 
             for (EnumFacing face : EnumFacing.values()) {
-                if (face == EnumFacing.UP) {
+                if (face == EnumFacing.UP && !this.down.get()) {
                     continue;
                 }
                 BlockPos offset = playerPos.offset(face);

@@ -12,9 +12,11 @@ public class ColorUtil {
     public static final int WHITE = 0xFFFFFFFF;
     public static final int BLACK = 0xFF000000;
     public static final int GRAY = 0xFFAAAAAA;
+    public static final int DARK_GRAY = 0xFF555555;
     public static final int RED = 0xFFFF0000;
     public static final int YELLOW = 0xFFFFFF00;
     public static final int GREEN = 0xFF00FF00;
+    public static final int BACKGROUND = 0x80000000;
 
     public static int dropShadow(int color) {
         return (color & 0xFCFCFC) >> 2 | color & 0xFF000000;

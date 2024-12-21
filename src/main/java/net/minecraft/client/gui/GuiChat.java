@@ -209,15 +209,15 @@ public class GuiChat extends GuiScreen {
         this.inputField.writeText(this.foundPlayerNames.get(this.autocompleteIndex++));
     }
 
-    private void sendAutocompleteRequest(String p_146405_1_, String p_146405_2_) {
-        if (p_146405_1_.length() >= 1) {
+    private void sendAutocompleteRequest(String msg, String p_146405_2_) {
+        if (!msg.isEmpty()) {
             BlockPos blockpos = null;
 
             if (this.mc.objectMouseOver != null && this.mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
                 blockpos = this.mc.objectMouseOver.getBlockPos();
             }
 
-            this.mc.thePlayer.sendQueue.addToSendQueue(new C14PacketTabComplete(p_146405_1_, blockpos));
+            this.mc.thePlayer.sendQueue.addToSendQueue(new C14PacketTabComplete(msg, blockpos));
             this.waitingOnAutocomplete = true;
         }
     }

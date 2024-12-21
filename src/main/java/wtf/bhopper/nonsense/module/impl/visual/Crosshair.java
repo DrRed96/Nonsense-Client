@@ -21,6 +21,10 @@ public class Crosshair extends Module {
 
     public void draw(float delta) {
 
+        if (mc.gameSettings.thirdPersonView != 0) {
+            return;
+        }
+
         int x = Display.getWidth() / 2;
         int y = Display.getHeight() / 2;
 

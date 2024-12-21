@@ -314,7 +314,9 @@ public class NonsenseMainMenu extends GuiScreen {
     private static void loadSplashes() {
         try {
             splashes = new ArrayList<>();
-            IResource resource = Minecraft.getMinecraft().getResourceManager().getResource(new ResourceLocation("nonsense/splashes.txt"));
+            IResource resource = Minecraft.getMinecraft()
+                    .getResourceManager()
+                    .getResource(new ResourceLocation("nonsense/splashes.txt"));
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
                 while (reader.ready()) {
                     splashes.add(reader.readLine());

@@ -497,12 +497,12 @@ public class AutoSpeedBuilders extends Module {
                     }, 0.0);
                 } else {
                     if (data.face == EnumFacing.UP) {
-                        if (half != BlockSlab.EnumBlockHalf.BOTTOM) {
+                        if (half == BlockSlab.EnumBlockHalf.TOP) {
                             return CheckResult.FALSE;
                         }
                         return CheckResult.TRUE;
                     } else if (data.face == EnumFacing.DOWN) {
-                        if (half != BlockSlab.EnumBlockHalf.TOP) {
+                        if (half == BlockSlab.EnumBlockHalf.BOTTOM) {
                             return CheckResult.FALSE;
                         }
                         return CheckResult.TRUE;

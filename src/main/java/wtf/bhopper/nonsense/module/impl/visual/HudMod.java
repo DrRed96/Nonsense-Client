@@ -62,6 +62,7 @@ public class HudMod extends Module {
     public final ColorProperty color = new ColorProperty("Color", "HUD color.", ColorUtil.NONSENSE);
     public final EnumProperty<Font> font = new EnumProperty<>("Font", "Which font to use for the HUD", Font.ARIAL);
     public final NumberProperty fontSize = new NumberProperty("Font Size", "Size of the custom font", () -> !this.font.is(Font.MINECRAFT), 18.0, 11.0, 24.0, 1.0, NumberProperty.FORMAT_PIXELS);
+    public final BooleanProperty tabGui = new BooleanProperty("Tab GUI", "Displays the Tab GUI", true);
     public final ButtonProperty moveComponents = new ButtonProperty("Move Components", "Click to move the HUD components.", () -> mc.displayGuiScreen(new GuiMoveHudComponents()));
     public final BooleanProperty hideInF3 = new BooleanProperty("Hide In F3", "Hides the HUD while in F3", true);
     
@@ -82,7 +83,24 @@ public class HudMod extends Module {
         this.information.addProperties(this.armorHud, this.coords, this.angles, this.speed, this.tps, this.pots, this.fps);
         this.notificationGroup.addProperties(this.notificationEnabled, this.notificationSound, this.toggleNotify);
         this.targetHudGroup.addProperties(this.targetHudEnabled, this.targetHudMode, this.targetHudColorMode);
-        this.addProperties(this.moduleListGroup, this.watermarkGroup, this.information, this.notificationGroup, this.targetHudGroup, this.color, this.font, this.fontSize, this.moveComponents, this.hideInF3);
+        this.addProperties(this.moduleListGroup,
+                this.watermarkGroup,
+                this.information,
+                this.notificationGroup,
+                this.targetHudGroup,
+                this.color,
+                this.font,
+                this.fontSize,
+                this.tabGui,
+                this.moveComponents,
+                this.hideInF3);
+    }
+
+    public int fontSize() {
+        if (this.font.is(Font.MINECRAFT)) {
+            return 18;
+        }
+        return this.fontSize.getInt();
     }
 
     public enum ModuleListMode {

@@ -1,6 +1,5 @@
 package wtf.bhopper.nonsense.alt.mslogin;
 
-import com.mojang.util.UUIDTypeAdapter;
 import com.sun.net.httpserver.HttpServer;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.alt.Alt;
@@ -177,11 +176,13 @@ public class MSAuthScheme {
         return Nonsense.GSON.fromJson(http.body(), ProfileResponse.class);
     }
 
+    @SuppressWarnings("unused")
     public static class AuthTokenResponse {
         public String access_token;
         public String refresh_token;
     }
 
+    @SuppressWarnings("unused")
     public static class XblXstsResponse {
         public String Token;
         public DisplayClaims DisplayClaims;
@@ -195,10 +196,12 @@ public class MSAuthScheme {
         }
     }
 
+    @SuppressWarnings("unused")
     public static class McResponse {
         public String access_token;
     }
 
+    @SuppressWarnings("unused")
     public static class GameOwnershipResponse {
         public Item[] items;
 
@@ -222,6 +225,7 @@ public class MSAuthScheme {
         }
     }
 
+    @SuppressWarnings("unused")
     public static class ProfileResponse {
         public String id;
         public String name;

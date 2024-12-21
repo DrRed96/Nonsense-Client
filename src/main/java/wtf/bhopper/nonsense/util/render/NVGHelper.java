@@ -286,7 +286,7 @@ public class NVGHelper {
     public static void drawImage(float x, float y, float width, float height, float imageWidth, float imageHeight, int image) {
         beginPath();
         rect(x, y, width, height);
-        fillPaint(imagePattern(0.0F, 0.0F, imageWidth, imageHeight, 0.0F, image, 1.0F));
+        fillPaint(imagePattern(x, y, x + imageWidth, y + imageHeight, 0.0F, image, 1.0F));
         fill();
         closePath();
     }
