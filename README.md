@@ -1,5 +1,6 @@
 # Nonsense Client
-Nonsense Client is a free and open source hack client for Minecraft 1.8.8.
+Nonsense Client is a free and open source hack client for Minecraft 1.8.8.<br>
+More information at https://bhopper.wtf/nonsense
 
 ![Click GUI](/.github/images/clickgui.png)
 
