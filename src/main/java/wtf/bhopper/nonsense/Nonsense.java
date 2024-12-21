@@ -66,7 +66,7 @@ public enum Nonsense {
         this.dataDir = new File(Minecraft.getMinecraft().mcDataDir, NAME);
         if (!this.dataDir.exists()) {
             if (this.dataDir.mkdirs()) {
-                throw new RuntimeException("Failed to create data directory.");
+                throw new RuntimeException("Failed to create data directory: " + this.dataDir);
             }
         }
 

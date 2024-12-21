@@ -315,7 +315,7 @@ public abstract class MobSpawnerBaseLogic
                 nbt.setTag("SpawnData", this.getRandomEntity().nbtData.copy());
             }
 
-            if (this.getRandomEntity() != null || this.minecartToSpawn.size() > 0)
+            if (this.getRandomEntity() != null || !this.minecartToSpawn.isEmpty())
             {
                 NBTTagList nbttaglist = new NBTTagList();
 
@@ -392,6 +392,10 @@ public abstract class MobSpawnerBaseLogic
     public double getPrevMobRotation()
     {
         return this.prevMobRotation;
+    }
+
+    public int getSpawnDelay() {
+        return this.spawnDelay;
     }
 
     public class WeightedRandomMinecart extends WeightedRandom.Item

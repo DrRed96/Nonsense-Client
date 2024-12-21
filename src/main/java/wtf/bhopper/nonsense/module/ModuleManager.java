@@ -72,6 +72,7 @@ public class ModuleManager {
                 new Disabler(),
                 new ServerLagger(),
                 new ClientSpoofer(),
+                new ActivatedSpawners(),
                 new Plugins(),
                 new Popbob(),
 
