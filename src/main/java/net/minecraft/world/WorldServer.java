@@ -33,7 +33,7 @@ import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S19PacketEntityStatus;
+import net.minecraft.network.play.server.S1APacketEntityStatus;
 import net.minecraft.network.play.server.S24PacketBlockAction;
 import net.minecraft.network.play.server.S27PacketExplosion;
 import net.minecraft.network.play.server.S2APacketParticles;
@@ -976,7 +976,7 @@ public class WorldServer extends World implements IThreadListener
      */
     public void setEntityState(Entity entityIn, byte state)
     {
-        this.getEntityTracker().func_151248_b(entityIn, new S19PacketEntityStatus(entityIn, state));
+        this.getEntityTracker().func_151248_b(entityIn, new S1APacketEntityStatus(entityIn, state));
     }
 
     /**

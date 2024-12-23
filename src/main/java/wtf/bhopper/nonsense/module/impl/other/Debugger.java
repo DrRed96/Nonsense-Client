@@ -4,11 +4,9 @@ import com.google.common.base.Objects;
 import com.google.common.collect.EvictingQueue;
 import io.netty.buffer.Unpooled;
 import net.minecraft.event.ClickEvent;
-import net.minecraft.network.EnumConnectionState;
-import net.minecraft.network.EnumPacketDirection;
-import net.minecraft.network.Packet;
-import net.minecraft.network.PacketBuffer;
+import net.minecraft.network.*;
 import net.minecraft.network.play.client.*;
+import net.minecraft.network.play.server.S0BPacketAnimation;
 import net.minecraft.network.play.server.S2FPacketSetSlot;
 import net.minecraft.util.EnumChatFormatting;
 import wtf.bhopper.nonsense.Nonsense;
@@ -223,6 +221,10 @@ public class Debugger extends Module {
 
         if (packet instanceof C19PacketResourcePackStatus c19) {
             return String.valueOf(c19.getStatus());
+        }
+
+        if (packet instanceof S0BPacketAnimation s0b) {
+            return s0b.getEntityID() + " " + s0b.getAnimationType();
         }
 
         if (packet instanceof S2FPacketSetSlot s2f) {

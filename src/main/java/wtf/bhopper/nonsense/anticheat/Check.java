@@ -1,6 +1,8 @@
 package wtf.bhopper.nonsense.anticheat;
 
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.Packet;
+import net.minecraft.network.play.server.S14PacketEntity;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
 
@@ -16,10 +18,10 @@ public abstract class Check implements MinecraftInstance {
 
     private final Map<UUID, Integer> violations = new HashMap<>();
 
-    protected abstract CheckResult performCheck(EntityPlayer player, PlayerData data);
+    protected abstract CheckResult check(EntityPlayer player, PlayerData data, Packet<?> packet);
 
-    public boolean check(EntityPlayer player, PlayerData data) {
-        switch (this.performCheck(player, data)) {
+    public boolean performCheckAndUpdate(EntityPlayer player, PlayerData data, Packet<?> packet) {
+        switch (this.check(player, data, packet)) {
             case VIOLATE -> {
                 data.violationLevel++;
                 this.violations.put(player.getUniqueID(), this.violations.getOrDefault(player.getUniqueID(), 0) + 1);
@@ -42,6 +44,10 @@ public abstract class Check implements MinecraftInstance {
 
     public String displayName() {
         return this.name + " " + this.classifier;
+    }
+
+    protected static boolean isUpdate(EntityPlayer player, Packet<?> packet) {
+        return packet instanceof S14PacketEntity p && p.getEntity(mc.theWorld) == player;
     }
 
 }

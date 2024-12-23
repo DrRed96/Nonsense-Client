@@ -10,23 +10,23 @@ import net.minecraft.network.play.INetHandlerPlayClient;
 public class S1CPacketEntityMetadata implements Packet<INetHandlerPlayClient>
 {
     private int entityId;
-    private List<DataWatcher.WatchableObject> field_149378_b;
+    private List<DataWatcher.WatchableObject> metadata;
 
     public S1CPacketEntityMetadata()
     {
     }
 
-    public S1CPacketEntityMetadata(int entityIdIn, DataWatcher watcher, boolean p_i45217_3_)
+    public S1CPacketEntityMetadata(int entityIdIn, DataWatcher watcher, boolean all)
     {
         this.entityId = entityIdIn;
 
-        if (p_i45217_3_)
+        if (all)
         {
-            this.field_149378_b = watcher.getAllWatched();
+            this.metadata = watcher.getAllWatched();
         }
         else
         {
-            this.field_149378_b = watcher.getChanged();
+            this.metadata = watcher.getChanged();
         }
     }
 
@@ -36,7 +36,7 @@ public class S1CPacketEntityMetadata implements Packet<INetHandlerPlayClient>
     public void readPacketData(PacketBuffer buf) throws IOException
     {
         this.entityId = buf.readVarIntFromBuffer();
-        this.field_149378_b = DataWatcher.readWatchedListFromPacketBuffer(buf);
+        this.metadata = DataWatcher.readWatchedListFromPacketBuffer(buf);
     }
 
     /**
@@ -45,7 +45,7 @@ public class S1CPacketEntityMetadata implements Packet<INetHandlerPlayClient>
     public void writePacketData(PacketBuffer buf) throws IOException
     {
         buf.writeVarIntToBuffer(this.entityId);
-        DataWatcher.writeWatchedListToPacketBuffer(this.field_149378_b, buf);
+        DataWatcher.writeWatchedListToPacketBuffer(this.metadata, buf);
     }
 
     /**
@@ -56,9 +56,9 @@ public class S1CPacketEntityMetadata implements Packet<INetHandlerPlayClient>
         handler.handleEntityMetadata(this);
     }
 
-    public List<DataWatcher.WatchableObject> func_149376_c()
+    public List<DataWatcher.WatchableObject> getMetadata()
     {
-        return this.field_149378_b;
+        return this.metadata;
     }
 
     public int getEntityId()

@@ -54,7 +54,7 @@ public enum EnumConnectionState {
             this.registerPacket(EnumPacketDirection.CLIENTBOUND, S14PacketEntity.S17PacketEntityLookMove.class);
             this.registerPacket(EnumPacketDirection.CLIENTBOUND, S18PacketEntityTeleport.class);
             this.registerPacket(EnumPacketDirection.CLIENTBOUND, S19PacketEntityHeadLook.class);
-            this.registerPacket(EnumPacketDirection.CLIENTBOUND, S19PacketEntityStatus.class);
+            this.registerPacket(EnumPacketDirection.CLIENTBOUND, S1APacketEntityStatus.class);
             this.registerPacket(EnumPacketDirection.CLIENTBOUND, S1BPacketEntityAttach.class);
             this.registerPacket(EnumPacketDirection.CLIENTBOUND, S1CPacketEntityMetadata.class);
             this.registerPacket(EnumPacketDirection.CLIENTBOUND, S1DPacketEntityEffect.class);

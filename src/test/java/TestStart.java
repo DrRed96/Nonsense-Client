@@ -2,7 +2,7 @@ import net.minecraft.client.main.Main;
 
 import java.util.Arrays;
 
-public class Start {
+public class TestStart {
     public static void main(String[] args) {
         Main.main(concat(new String[]{
                 "--version", "mcp",

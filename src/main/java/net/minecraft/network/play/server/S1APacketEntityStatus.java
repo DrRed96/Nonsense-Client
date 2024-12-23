@@ -7,16 +7,16 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.INetHandlerPlayClient;
 import net.minecraft.world.World;
 
-public class S19PacketEntityStatus implements Packet<INetHandlerPlayClient>
+public class S1APacketEntityStatus implements Packet<INetHandlerPlayClient>
 {
     private int entityId;
     private byte logicOpcode;
 
-    public S19PacketEntityStatus()
+    public S1APacketEntityStatus()
     {
     }
 
-    public S19PacketEntityStatus(Entity entityIn, byte opCodeIn)
+    public S1APacketEntityStatus(Entity entityIn, byte opCodeIn)
     {
         this.entityId = entityIn.getEntityId();
         this.logicOpcode = opCodeIn;

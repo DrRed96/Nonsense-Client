@@ -7,7 +7,7 @@ public class EventReceivePacket extends Cancellable {
 
     public Packet packet;
 
-    public EventReceivePacket(Packet<?> packet) {
+    public EventReceivePacket(Packet packet) {
         this.packet = packet;
     }
 

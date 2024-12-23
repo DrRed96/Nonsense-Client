@@ -39,6 +39,7 @@ import java.util.Queue;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 import javax.crypto.SecretKey;
 
+import net.minecraft.network.play.INetHandlerPlayClient;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.CryptManager;
@@ -63,7 +64,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
     private static final Logger logger = LogManager.getLogger();
     public static final Marker logMarkerNetwork = MarkerManager.getMarker("NETWORK");
     public static final Marker logMarkerPackets = MarkerManager.getMarker("NETWORK_PACKETS", logMarkerNetwork);
-    public static final AttributeKey<EnumConnectionState> attrKeyConnectionState = AttributeKey.<EnumConnectionState>valueOf("protocol");
+    public static final AttributeKey<EnumConnectionState> attrKeyConnectionState = AttributeKey.valueOf("protocol");
     public static final LazyLoadBase<NioEventLoopGroup> CLIENT_NIO_EVENTLOOP = new LazyLoadBase<>() {
         protected NioEventLoopGroup load() {
             return new NioEventLoopGroup(0, (new ThreadFactoryBuilder()).setNameFormat("Netty Client IO #%d").setDaemon(true).build());
@@ -150,11 +151,15 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
         if (this.channel.isOpen()) {
             try {
                 EventReceivePacket event = new EventReceivePacket(packet);
-                Nonsense.getEventBus().post(event);
+                if (this.packetListener instanceof INetHandlerPlayClient) {
+                    Nonsense.getEventBus().post(event);
+                }
                 if (!event.isCancelled()) {
                     event.packet.processPacket(this.packetListener);
                 }
-                Nonsense.getEventBus().post(new Debugger.EventPacketDebug(packet, event.isCancelled() ? Debugger.State.CANCELED : Debugger.State.NORMAL, Debugger.EventPacketDebug.Direction.INCOMING));
+                if (this.packetListener instanceof INetHandlerPlayClient) {
+                    Nonsense.getEventBus().post(new Debugger.EventPacketDebug(packet, event.isCancelled() ? Debugger.State.CANCELED : Debugger.State.NORMAL, Debugger.EventPacketDebug.Direction.INCOMING));
+                }
             } catch (ThreadQuickExitException ignored) {
 
             }

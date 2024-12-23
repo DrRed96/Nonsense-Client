@@ -24,7 +24,7 @@ import net.minecraft.network.play.server.S13PacketDestroyEntities;
 import net.minecraft.network.play.server.S14PacketEntity;
 import net.minecraft.network.play.server.S18PacketEntityTeleport;
 import net.minecraft.network.play.server.S19PacketEntityHeadLook;
-import net.minecraft.network.play.server.S19PacketEntityStatus;
+import net.minecraft.network.play.server.S1APacketEntityStatus;
 import net.minecraft.network.play.server.S1BPacketEntityAttach;
 import net.minecraft.network.play.server.S1CPacketEntityMetadata;
 import net.minecraft.network.play.server.S1DPacketEntityEffect;
@@ -230,7 +230,7 @@ public interface INetHandlerPlayClient extends INetHandler
      * (spawn particles), Zombie (villager transformation), Animal (breeding mode particles), Horse (breeding/smoke
      * particles), Sheep (...), Tameable (...), Villager (particles for breeding mode, angry and happy), Wolf (...)
      */
-    void handleEntityStatus(S19PacketEntityStatus packetIn);
+    void handleEntityStatus(S1APacketEntityStatus packetIn);
 
     void handleEntityAttach(S1BPacketEntityAttach packetIn);
 

@@ -5,7 +5,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import org.reflections.Reflections;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.anticheat.checks.NoSlowA;
+import wtf.bhopper.nonsense.anticheat.checks.RotationA;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
 import wtf.bhopper.nonsense.event.impl.player.EventJoinGame;
@@ -31,7 +31,7 @@ public class AntiCheat implements MinecraftInstance {
     private int nextChatLine = 0x2000;
 
     public AntiCheat() {
-        new Reflections(NoSlowA.class.getPackage().getName())
+        new Reflections(RotationA.class.getPackage().getName())
                 .getSubTypesOf(Check.class)
                 .stream()
                 .sorted(Comparator.comparing(check -> check.getAnnotation(CheckInfo.class).name()))
@@ -58,7 +58,7 @@ public class AntiCheat implements MinecraftInstance {
     public final Listener<EventJoinGame> onJoin = _ -> this.reset();
 
     @EventLink
-    public final Listener<EventUpdate> onUpdate = _ -> {
+    public final Listener<EventReceivePacket> onReceivePacket = event -> {
 
         AntiCheatMod mod = Nonsense.module(AntiCheatMod.class);
 
@@ -68,13 +68,12 @@ public class AntiCheat implements MinecraftInstance {
 
         for (EntityPlayer player : mc.theWorld.getEntities(EntityPlayer.class, player -> !Nonsense.module(AntiBot.class).isBot(player) && !player.isClientPlayer() && !player.isFake)) {
             PlayerData data = this.players.getOrDefault(player.getUniqueID(), new PlayerData(++this.nextChatLine));
-            data.update(player);
             List<String> violated = new ArrayList<>();
             for (Check check : this.checks) {
                 if (violated.contains(check.name) || (check.unreliable && !mod.unreliable.get())) {
                     continue;
                 }
-                if (check.check(player, data)) {
+                if (check.performCheckAndUpdate(player, data, event.packet)) {
                     violated.add(check.name);
                 }
             }
@@ -83,13 +82,6 @@ public class AntiCheat implements MinecraftInstance {
             if (this.nextChatLine >= 0x3000) {
                 this.nextChatLine = 0x2000;
             }
-        }
-    };
-
-    @EventLink
-    public final Listener<EventReceivePacket> onReceivePacket = event -> {
-        for (PlayerData data : this.players.values()) {
-            data.onPacket(event.packet);
         }
     };
 

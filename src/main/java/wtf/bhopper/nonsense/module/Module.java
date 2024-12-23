@@ -47,9 +47,9 @@ public abstract class Module implements PropertyContainer, MinecraftInstance {
             }
 
             try {
-                Object property = field.get(this);
-                if (property instanceof Property<?>) {
-                    this.properties.add((Property<?>)property);
+                Object object = field.get(this);
+                if (object instanceof Property<?> property) {
+                    this.properties.add(property);
                 }
             } catch (IllegalAccessException ignored) {}
         }

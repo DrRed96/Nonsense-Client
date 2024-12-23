@@ -323,8 +323,8 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
         PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.gameController);
         Entity entity = this.clientWorldController.getEntityByID(packetIn.getEntityId());
 
-        if (entity != null && packetIn.func_149376_c() != null) {
-            entity.getDataWatcher().updateWatchedObjectsFromList(packetIn.func_149376_c());
+        if (entity != null && packetIn.getMetadata() != null) {
+            entity.getDataWatcher().updateWatchedObjectsFromList(packetIn.getMetadata());
         }
     }
 
@@ -407,16 +407,16 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
         Entity entity = packetIn.getEntity(this.clientWorldController);
 
         if (entity != null) {
-            entity.serverPosX += packetIn.func_149062_c();
-            entity.serverPosY += packetIn.func_149061_d();
-            entity.serverPosZ += packetIn.func_149064_e();
-            double d0 = (double) entity.serverPosX / 32.0D;
-            double d1 = (double) entity.serverPosY / 32.0D;
-            double d2 = (double) entity.serverPosZ / 32.0D;
-            float f = packetIn.func_149060_h() ? (float) (packetIn.func_149066_f() * 360) / 256.0F : entity.rotationYaw;
-            float f1 = packetIn.func_149060_h() ? (float) (packetIn.func_149063_g() * 360) / 256.0F : entity.rotationPitch;
-            entity.setPositionAndRotation2(d0, d1, d2, f, f1, 3, false);
-            entity.onGround = packetIn.getOnGround();
+            entity.serverPosX += packetIn.getX();
+            entity.serverPosY += packetIn.getY();
+            entity.serverPosZ += packetIn.getZ();
+            double x = (double) entity.serverPosX / 32.0D;
+            double y = (double) entity.serverPosY / 32.0D;
+            double z = (double) entity.serverPosZ / 32.0D;
+            float yaw = packetIn.didRotate() ? (float) (packetIn.getYaw() * 360) / 256.0F : entity.rotationYaw;
+            float pitch = packetIn.didRotate() ? (float) (packetIn.getPitch() * 360) / 256.0F : entity.rotationPitch;
+            entity.setPositionAndRotation2(x, y, z, yaw, pitch, 3, false);
+            entity.onGround = packetIn.isOnGround();
         }
     }
 
@@ -742,7 +742,7 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
      * (spawn particles), Zombie (villager transformation), Animal (breeding mode particles), Horse (breeding/smoke
      * particles), Sheep (...), Tameable (...), Villager (particles for breeding mode, angry and happy), Wolf (...)
      */
-    public void handleEntityStatus(S19PacketEntityStatus packetIn) {
+    public void handleEntityStatus(S1APacketEntityStatus packetIn) {
         PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.gameController);
         Entity entity = packetIn.getEntity(this.clientWorldController);
 

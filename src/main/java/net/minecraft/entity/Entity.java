@@ -1924,7 +1924,7 @@ public abstract class Entity implements ICommandSender {
      * For EntityLivingBase subclasses, returning false when invisible will render the entity semitransparent.
      */
     public boolean isInvisibleToPlayer(EntityPlayer player) {
-        return player.isSpectator() ? false : this.isInvisible();
+        return !player.isSpectator() && this.isInvisible();
     }
 
     public void setInvisible(boolean invisible) {

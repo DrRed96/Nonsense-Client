@@ -47,7 +47,7 @@ public class CommandTeleport extends CommandBase
     {
         if (args.length < 1)
         {
-            throw new WrongUsageException("commands.tp.usage", new Object[0]);
+            throw new WrongUsageException("commands.tp.usage");
         }
         else
         {

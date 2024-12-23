@@ -192,7 +192,7 @@ public abstract class EntityPlayer extends EntityLivingBase
     {
         super.applyEntityAttributes();
         this.getAttributeMap().registerAttribute(SharedMonsterAttributes.attackDamage).setBaseValue(1.0D);
-        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.10000000149011612D);
+        this.getEntityAttribute(SharedMonsterAttributes.movementSpeed).setBaseValue(0.1D);
     }
 
     protected void entityInit()
@@ -2181,7 +2181,7 @@ public abstract class EntityPlayer extends EntityLivingBase
 
         this.xpSeed = oldPlayer.xpSeed;
         this.theInventoryEnderChest = oldPlayer.theInventoryEnderChest;
-        this.getDataWatcher().updateObject(10, Byte.valueOf(oldPlayer.getDataWatcher().getWatchableObjectByte(10)));
+        this.getDataWatcher().updateObject(10, oldPlayer.getDataWatcher().getWatchableObjectByte(10));
     }
 
     /**

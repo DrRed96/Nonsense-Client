@@ -43,7 +43,7 @@ import net.minecraft.network.play.server.S06PacketUpdateHealth;
 import net.minecraft.network.play.server.S0APacketUseBed;
 import net.minecraft.network.play.server.S0BPacketAnimation;
 import net.minecraft.network.play.server.S13PacketDestroyEntities;
-import net.minecraft.network.play.server.S19PacketEntityStatus;
+import net.minecraft.network.play.server.S1APacketEntityStatus;
 import net.minecraft.network.play.server.S1BPacketEntityAttach;
 import net.minecraft.network.play.server.S1DPacketEntityEffect;
 import net.minecraft.network.play.server.S1EPacketRemoveEntityEffect;
@@ -1013,7 +1013,7 @@ public class EntityPlayerMP extends EntityPlayer implements ICrafting
      */
     protected void onItemUseFinish()
     {
-        this.playerNetServerHandler.sendPacket(new S19PacketEntityStatus(this, (byte)9));
+        this.playerNetServerHandler.sendPacket(new S1APacketEntityStatus(this, (byte)9));
         super.onItemUseFinish();
     }
 
