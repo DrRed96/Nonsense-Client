@@ -17,13 +17,12 @@ public class RotationA extends Check {
     protected CheckResult check(EntityPlayer player, PlayerData data, Packet<?> packet) {
         if (packet instanceof S14PacketEntity p) {
             if (p.getEntity(mc.theWorld) == player && p.didRotate()) {
-                float pitch = (float)(p.getPitch() * 360) / 256.0F;
-                if (pitch < -90.0F || pitch > 90.0F) {
-                    return CheckResult.VIOLATE;
+                if (Math.abs((float)(p.getPitch() * 360) / 256.0F) > 90.0F) {
+                    return CheckResult.VIOLATION;
                 }
             }
         }
 
-        return CheckResult.RESET;
+        return CheckResult.IDLE;
     }
 }

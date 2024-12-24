@@ -322,8 +322,8 @@ public abstract class Entity implements ICommandSender {
         this.dataWatcher = new DataWatcher(this);
         this.dataWatcher.addObject(0, (byte) 0);
         this.dataWatcher.addObject(1, (short) 300);
-        this.dataWatcher.addObject(3, (byte) 0);
         this.dataWatcher.addObject(2, "");
+        this.dataWatcher.addObject(3, (byte) 0);
         this.dataWatcher.addObject(4, (byte) 0);
         this.entityInit();
     }
@@ -2216,30 +2216,14 @@ public abstract class Entity implements ICommandSender {
     }
 
     public void addEntityCrashInfo(CrashReportCategory category) {
-        category.addCrashSectionCallable("Entity Type", new Callable<String>() {
-            public String call() throws Exception {
-                return EntityList.getEntityString(Entity.this) + " (" + Entity.this.getClass().getCanonicalName() + ")";
-            }
-        });
+        category.addCrashSectionCallable("Entity Type", () -> EntityList.getEntityString(Entity.this) + " (" + Entity.this.getClass().getCanonicalName() + ")");
         category.addCrashSection("Entity ID", Integer.valueOf(this.entityId));
-        category.addCrashSectionCallable("Entity Name", new Callable<String>() {
-            public String call() throws Exception {
-                return Entity.this.getName();
-            }
-        });
+        category.addCrashSectionCallable("Entity Name", () -> Entity.this.getName());
         category.addCrashSection("Entity\'s Exact location", String.format("%.2f, %.2f, %.2f", new Object[]{Double.valueOf(this.posX), Double.valueOf(this.posY), Double.valueOf(this.posZ)}));
         category.addCrashSection("Entity\'s Block location", CrashReportCategory.getCoordinateInfo((double) MathHelper.floor_double(this.posX), (double) MathHelper.floor_double(this.posY), (double) MathHelper.floor_double(this.posZ)));
         category.addCrashSection("Entity\'s Momentum", String.format("%.2f, %.2f, %.2f", new Object[]{Double.valueOf(this.motionX), Double.valueOf(this.motionY), Double.valueOf(this.motionZ)}));
-        category.addCrashSectionCallable("Entity\'s Rider", new Callable<String>() {
-            public String call() throws Exception {
-                return Entity.this.riddenByEntity.toString();
-            }
-        });
-        category.addCrashSectionCallable("Entity\'s Vehicle", new Callable<String>() {
-            public String call() throws Exception {
-                return Entity.this.ridingEntity.toString();
-            }
-        });
+        category.addCrashSectionCallable("Entity\'s Rider", () -> Entity.this.riddenByEntity.toString());
+        category.addCrashSectionCallable("Entity\'s Vehicle", () -> Entity.this.ridingEntity.toString());
     }
 
     /**

@@ -360,11 +360,11 @@ public class DataWatcher
         return list;
     }
 
-    public void updateWatchedObjectsFromList(List<DataWatcher.WatchableObject> p_75687_1_)
+    public void updateWatchedObjectsFromList(List<DataWatcher.WatchableObject> objects)
     {
         this.lock.writeLock().lock();
 
-        for (DataWatcher.WatchableObject watchableObject : p_75687_1_)
+        for (DataWatcher.WatchableObject watchableObject : objects)
         {
             DataWatcher.WatchableObject datawatcher$watchableobject1 = this.watchedObjects.get(watchableObject.getDataValueId());
 

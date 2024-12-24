@@ -22,7 +22,7 @@ public abstract class Check implements MinecraftInstance {
 
     public boolean performCheckAndUpdate(EntityPlayer player, PlayerData data, Packet<?> packet) {
         switch (this.check(player, data, packet)) {
-            case VIOLATE -> {
+            case VIOLATION -> {
                 data.violationLevel++;
                 this.violations.put(player.getUniqueID(), this.violations.getOrDefault(player.getUniqueID(), 0) + 1);
                 if (this.violations.get(player.getUniqueID()) >= this.maxViolations) {

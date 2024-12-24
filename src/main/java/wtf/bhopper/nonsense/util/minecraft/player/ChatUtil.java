@@ -257,7 +257,11 @@ public class ChatUtil implements MinecraftInstance {
         }
 
         public void send() {
-            ChatUtil.raw(build());
+            ChatUtil.raw(this.build());
+        }
+
+        public void send(int chatLine) {
+            mc.ingameGUI.getChatGUI().printChatMessageWithOptionalDeletion(this.build(), chatLine);
         }
 
         public enum Inheritance {

@@ -9,14 +9,14 @@ import wtf.bhopper.nonsense.anticheat.PlayerData;
 
 @CheckInfo(name = "No Slow",
         classifier = "A",
-        description = "Impossible combination of statuses.",
+        description = "Impossible \"Sprinting\" and \"Eating/Drinking/Blocking\" status combination.",
         maxViolations = 10)
 public class NoSlowA extends Check {
     @Override
     protected CheckResult check(EntityPlayer player, PlayerData data, Packet<?> packet) {
         if (isUpdate(player, packet)) {
             if (player.isSprinting() && player.isEating()) {
-                return CheckResult.VIOLATE;
+                return CheckResult.VIOLATION;
             }
             return CheckResult.RESET;
         }

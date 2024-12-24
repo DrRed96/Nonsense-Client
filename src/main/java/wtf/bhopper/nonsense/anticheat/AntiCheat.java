@@ -62,7 +62,7 @@ public class AntiCheat implements MinecraftInstance {
 
         AntiCheatMod mod = Nonsense.module(AntiCheatMod.class);
 
-        if (!mod.isToggled()) {
+        if (!mod.isToggled() || mc.isSingleplayer()) {
             return;
         }
 
@@ -95,14 +95,12 @@ public class AntiCheat implements MinecraftInstance {
 
     public void notifyViolation(EntityPlayer player, PlayerData data, Check check, int amount) {
         String playerName = this.flagged.contains(player.getUniqueID()) ? "\247c" + player.getName() : player.getName();
-        IChatComponent component = ChatUtil.Builder.of("%s%s \2477failed check \2476%s \2477\247ox%d", ChatUtil.ANTICHEAT_PREFIX, playerName, check.displayName(), amount)
+        ChatUtil.Builder.of("%s%s \2477failed check \2476%s \2477\247ox%d", ChatUtil.ANTICHEAT_PREFIX, playerName, check.displayName(), amount)
                 .setColor(EnumChatFormatting.GRAY)
                 .setHoverEvent(GeneralUtil.paragraph(
                         "\247c\247l" + check.displayName(),
-                        "\2477" + check.description + " \2478(" + check.maxViolations + " violations to flag)"
-                )).build();
-
-        mc.ingameGUI.getChatGUI().printChatMessageWithOptionalDeletion(component, data.chatLine);
+                        "\2477" + check.description + " \2478(VL: " + check.maxViolations + ")"
+                )).send(data.chatLine);
     }
 
     public List<Check> getChecks() {

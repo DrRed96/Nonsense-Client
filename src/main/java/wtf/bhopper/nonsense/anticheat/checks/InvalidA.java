@@ -2,23 +2,21 @@ package wtf.bhopper.nonsense.anticheat.checks;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.Packet;
-import net.minecraft.network.play.server.S0BPacketAnimation;
 import wtf.bhopper.nonsense.anticheat.Check;
 import wtf.bhopper.nonsense.anticheat.CheckInfo;
 import wtf.bhopper.nonsense.anticheat.CheckResult;
 import wtf.bhopper.nonsense.anticheat.PlayerData;
 
-@CheckInfo(name = "Auto Block",
+@CheckInfo(name = "Invalid",
         classifier = "A",
-        description = "Swing shouldn't have been allowed.")
-public class AutoBlockA extends Check {
+        description = "Impossible \"Sneaking\" and \"Sprinting\" status combination.",
+        maxViolations = 10)
+public class InvalidA extends Check {
     @Override
     protected CheckResult check(EntityPlayer player, PlayerData data, Packet<?> packet) {
-        if (packet instanceof S0BPacketAnimation p) {
-            if (p.getEntityID() == player.getEntityId()) {
-                if (p.getAnimationType() == 0 && player.isUsingItem()) {
-                    return CheckResult.VIOLATION;
-                }
+        if (isUpdate(player, packet)) {
+            if (player.isSneaking() && player.isSprinting()) {
+                return CheckResult.VIOLATION;
             }
         }
 
