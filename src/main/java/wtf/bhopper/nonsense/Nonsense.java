@@ -18,9 +18,9 @@ import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleManager;
 import wtf.bhopper.nonsense.module.impl.visual.ClickGui;
 import wtf.bhopper.nonsense.network.NonsenseNetHandler;
-import wtf.bhopper.nonsense.util.minecraft.AntiExploit;
-import wtf.bhopper.nonsense.util.minecraft.player.BlinkUtil;
-import wtf.bhopper.nonsense.util.minecraft.world.TickRate;
+import wtf.bhopper.nonsense.component.AntiExploitComponent;
+import wtf.bhopper.nonsense.component.BlinkComponent;
+import wtf.bhopper.nonsense.component.TickRateComponent;
 import wtf.bhopper.nonsense.util.render.Fonts;
 import wtf.bhopper.nonsense.util.render.ImGuiHelper;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
@@ -46,14 +46,13 @@ public enum Nonsense {
     private AltManager altManager;
     private NonsenseNetHandler netHandler;
 
-    // Module Components
+    // Components
     private Hud hud;
     private AntiCheat antiCheat;
 
     // Util
     private long startTime;
     private File dataDir;
-    private TickRate tickRate;
 
     public void setup() {
         LOGGER.info("Loading {} {}", NAME, VERSION);
@@ -70,6 +69,7 @@ public enum Nonsense {
             }
         }
 
+        // Managers initialization
         this.eventBus = new EventBus();
         this.moduleManager = new ModuleManager();
         this.commandManager = new CommandManager();
@@ -78,17 +78,19 @@ public enum Nonsense {
         this.altManager.tryLoad();
         this.netHandler = new NonsenseNetHandler();
 
+        // Rendering initialization
         NVGHelper.init();
         ImGuiHelper.init(Display.getHandle());
         Fonts.init();
+
+        // Components initialization
         this.hud = new Hud();
         module(ClickGui.class).initGuis();
-
         this.antiCheat = new AntiCheat();
 
-        this.tickRate = new TickRate();
-        BlinkUtil.init();
-        this.eventBus.subscribe(AntiExploit.INSTANCE);
+        this.eventBus.subscribe(AntiExploitComponent.INSTANCE);
+        this.eventBus.subscribe(BlinkComponent.INSTANCE);
+        this.eventBus.subscribe(TickRateComponent.INSTANCE);
 
         this.configManager.loadDefaultConfig();
     }
@@ -135,10 +137,6 @@ public enum Nonsense {
 
     public static File getDataDir() {
         return INSTANCE.dataDir;
-    }
-
-    public static TickRate getTickRate() {
-        return INSTANCE.tickRate;
     }
 
 }

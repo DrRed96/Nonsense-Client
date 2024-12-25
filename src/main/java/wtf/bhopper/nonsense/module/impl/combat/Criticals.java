@@ -26,11 +26,12 @@ public class Criticals extends Module {
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Criticals method.", Mode.PACKET);
     private final NumberProperty delay = new NumberProperty("Delay", "Delay between critical hits in ticks.", 15, 0, 20, 1);
     private final BooleanProperty safe = new BooleanProperty("Safe", "Prevents you from doing a critical hit if the target is on damage cool-down.", false);
+    private final NumberProperty offset = new NumberProperty("Offset", "Edit offset", () -> this.mode.is(Mode.EDIT), 0.15, 0.01, 0.42, 0.01);
 
     private int ticks = 0;
 
     public Criticals() {
-        this.addProperties(this.mode, this.delay, this.safe);
+        this.addProperties(this.mode, this.delay, this.safe, this.offset);
         this.setSuffix(() -> this.mode.getDisplayValue() + " " + (this.safe.get() ? "Safe" : delay.getDisplayValue()));
     }
 
@@ -72,12 +73,13 @@ public class Criticals extends Module {
                     PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, false));
                 }
 
-                case PACKET_JUMP -> {
+                case HEAD_HIT -> {
                     PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.2, mc.thePlayer.posZ, false));
                     PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.1216, mc.thePlayer.posZ, false));
                     PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, false));
                 }
 
+                case EDIT -> mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + this.offset.getDouble(), mc.thePlayer.posZ);
 
             }
 
@@ -88,7 +90,8 @@ public class Criticals extends Module {
     private enum Mode {
         PACKET,
         PACKET_LOW,
-        PACKET_JUMP
+        HEAD_HIT,
+        EDIT
     }
 
 }

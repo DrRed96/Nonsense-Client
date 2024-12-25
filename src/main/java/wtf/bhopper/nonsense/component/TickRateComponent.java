@@ -1,4 +1,4 @@
-package wtf.bhopper.nonsense.util.minecraft.world;
+package wtf.bhopper.nonsense.component;
 
 import net.minecraft.network.play.server.S03PacketTimeUpdate;
 import net.minecraft.util.MathHelper;
@@ -11,16 +11,13 @@ import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 
 import java.util.Arrays;
 
-public class TickRate {
+public enum TickRateComponent {
+    INSTANCE;
 
     private final float[] tickRates = new float[20];
     private int nextIndex = 0;
     private long lastUpdateTime = -1;
     private long gameJoinTime;
-
-    public TickRate() {
-        Nonsense.getEventBus().subscribe(this);
-    }
 
     @EventLink
     public final Listener<EventReceivePacket> onReceivePacket = event -> {
@@ -40,18 +37,18 @@ public class TickRate {
         this.gameJoinTime = this.lastUpdateTime = System.currentTimeMillis();
     };
 
-    public float getTickRate() {
+    public static float getTickRate() {
         if (!PlayerUtil.canUpdate()) {
             return 0.0F;
         }
 
-        if (System.currentTimeMillis() - this.gameJoinTime < 4000L) {
+        if (System.currentTimeMillis() - INSTANCE.gameJoinTime < 4000L) {
             return 20.0F;
         }
 
         int ticks = 0;
         float sumTickRates = 0.0F;
-        for (float tickRate : this.tickRates) {
+        for (float tickRate : INSTANCE.tickRates) {
             if (tickRate > 0) {
                 sumTickRates += tickRate;
                 ticks++;
@@ -61,12 +58,12 @@ public class TickRate {
         return sumTickRates / ticks;
     }
 
-    public long timeSinceLastTickMS() {
+    public static long timeSinceLastTickMS() {
         long now = System.currentTimeMillis();
-        if (now - this.gameJoinTime < 4000L) {
+        if (now - INSTANCE.gameJoinTime < 4000L) {
             return 0L;
         }
-        return now - this.lastUpdateTime;
+        return now - INSTANCE.lastUpdateTime;
     }
 
 }

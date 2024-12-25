@@ -71,3 +71,5 @@ atlassian-ide-plugin.xml
 .nbattrs
 
 !gradle/wrapper/gradle-wrapper.jar
+
+src/main/java/wtf/bhopper/nonsense/module/impl/exploit/MinibloxDisabler.java

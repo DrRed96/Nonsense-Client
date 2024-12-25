@@ -36,6 +36,7 @@ public class ModuleManager {
                 new InfiniteAura(),
                 new NoClickDelay(),
                 new AutoCopsAndCrims(),
+                new AutoZombies(),
 
                 // Movement
                 new Sprint(),
@@ -75,6 +76,10 @@ public class ModuleManager {
                 new ActivatedSpawners(),
                 new Plugins(),
                 new Popbob(),
+
+                // My apologies, I was told not to leak it.
+                // - CalculusHvH
+                this.loadPrivateModule("exploit.MinibloxDisabler"),
 
                 // Other
                 new AntiCheatMod(),
@@ -132,7 +137,11 @@ public class ModuleManager {
     @SuppressWarnings("unchecked")
     private ClassToInstanceMap<Module> addModules(Module... modules) {
         ImmutableClassToInstanceMap.Builder<Module> modulesBuilder = ImmutableClassToInstanceMap.builder();
-        Arrays.stream(modules).forEach(module -> modulesBuilder.put((Class<Module>)module.getClass(), module));
+        Arrays.stream(modules).forEach(module -> {
+            if (module != null) {
+                modulesBuilder.put((Class<Module>) module.getClass(), module);
+            }
+        });
         return modulesBuilder.build();
     }
 
@@ -175,6 +184,15 @@ public class ModuleManager {
                 .stream()
                 .filter(Module::isToggled)
                 .count();
+    }
+
+    private Module loadPrivateModule(String name) {
+        try {
+            Class<?> clazz = Class.forName(this.getClass().getPackageName() + ".impl." + name);
+            return (Module)clazz.getConstructor().newInstance();
+        } catch (Exception _) {
+            return null;
+        }
     }
 
 }

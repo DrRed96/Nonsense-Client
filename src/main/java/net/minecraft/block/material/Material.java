@@ -36,8 +36,7 @@ public class Material
     public static final Material dragonEgg = (new Material(MapColor.foliageColor)).setNoPushMobility();
     public static final Material portal = (new MaterialPortal(MapColor.airColor)).setImmovableMobility();
     public static final Material cake = (new Material(MapColor.airColor)).setNoPushMobility();
-    public static final Material web = (new Material(MapColor.clothColor)
-    {
+    public static final Material web = (new Material(MapColor.clothColor) {
         public boolean blocksMovement()
         {
             return false;

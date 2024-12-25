@@ -13,6 +13,7 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import org.lwjglx.opengl.Display;
 import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.component.TickRateComponent;
 import wtf.bhopper.nonsense.module.impl.visual.HudMod;
 import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
 import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
@@ -89,7 +90,7 @@ public class InfoDisplay implements MinecraftInstance {
         }
 
         if (mod.tps.get()) {
-            this.components.add(new Component("TPS", String.format("%.2f", Nonsense.getTickRate().getTickRate())));
+            this.components.add(new Component("TPS", String.format("%.2f", TickRateComponent.getTickRate())));
         }
 
         if (mod.fps.get()) {

@@ -17,15 +17,15 @@ public class TileEntityChestRenderer extends TileEntitySpecialRenderer<TileEntit
     private static final ResourceLocation textureTrapped = new ResourceLocation("textures/entity/chest/trapped.png");
     private static final ResourceLocation textureChristmas = new ResourceLocation("textures/entity/chest/christmas.png");
     private static final ResourceLocation textureNormal = new ResourceLocation("textures/entity/chest/normal.png");
-    private ModelChest simpleChest = new ModelChest();
-    private ModelChest largeChest = new ModelLargeChest();
+    private final ModelChest simpleChest = new ModelChest();
+    private final ModelChest largeChest = new ModelLargeChest();
     private boolean isChristams;
 
     public TileEntityChestRenderer()
     {
         Calendar calendar = Calendar.getInstance();
 
-        if (calendar.get(2) + 1 == 12 && calendar.get(5) >= 24 && calendar.get(5) <= 26)
+        if (calendar.get(Calendar.MONTH) + 1 == 12 && calendar.get(Calendar.DATE) >= 24 && calendar.get(Calendar.DATE) <= 26)
         {
             this.isChristams = true;
         }

@@ -25,7 +25,7 @@ import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
-import wtf.bhopper.nonsense.util.minecraft.player.BlinkUtil;
+import wtf.bhopper.nonsense.component.BlinkComponent;
 import wtf.bhopper.nonsense.util.minecraft.player.PacketUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.RotationUtil;
@@ -83,7 +83,7 @@ public class AutoBlock extends Module {
 
         if (this.blinking) {
             this.blinking = false;
-            BlinkUtil.disableBlink();
+            BlinkComponent.disableBlink();
         }
 
     }
@@ -118,8 +118,8 @@ public class AutoBlock extends Module {
             case LEGIT -> {
                 if (event.button == EventPreClick.Button.LEFT && this.blocking && this.blockItem()) {
 
-                    if (this.canBlock() && this.blink.get() && !BlinkUtil.isBlinking()) {
-                        BlinkUtil.enableBlink();
+                    if (this.canBlock() && this.blink.get() && !BlinkComponent.isBlinking()) {
+                        BlinkComponent.enableBlink();
                         this.blinking = true;
                     }
 
@@ -158,8 +158,8 @@ public class AutoBlock extends Module {
             case LEGIT -> {
                 if (event.button == EventPostClick.Button.LEFT) {
 
-                    if (this.blink.get() && BlinkUtil.isBlinking() && !this.blocking) {
-                        BlinkUtil.disableBlink();
+                    if (this.blink.get() && BlinkComponent.isBlinking() && !this.blocking) {
+                        BlinkComponent.disableBlink();
                         this.blinking = false;
                     }
 
@@ -191,7 +191,7 @@ public class AutoBlock extends Module {
         }
 
         if (!this.canBlock() && this.blinking) {
-            BlinkUtil.disableBlink();
+            BlinkComponent.disableBlink();
             this.blinking = false;
         }
 

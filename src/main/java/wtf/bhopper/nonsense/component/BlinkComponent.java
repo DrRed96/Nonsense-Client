@@ -1,4 +1,4 @@
-package wtf.bhopper.nonsense.util.minecraft.player;
+package wtf.bhopper.nonsense.component;
 
 import net.minecraft.network.Packet;
 import wtf.bhopper.nonsense.Nonsense;
@@ -7,11 +7,13 @@ import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
 import wtf.bhopper.nonsense.event.impl.packet.EventSendPacket;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
+import wtf.bhopper.nonsense.util.minecraft.player.PacketUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-public enum BlinkUtil {
+public enum BlinkComponent {
     INSTANCE;
 
     private boolean blink = false;
@@ -59,10 +61,6 @@ public enum BlinkUtil {
         while (!INSTANCE.chokedPackets.isEmpty()) {
             PacketUtil.sendNoEvent(INSTANCE.chokedPackets.poll());
         }
-    }
-
-    public static void init() {
-        Nonsense.getEventBus().subscribe(INSTANCE);
     }
 
 }
