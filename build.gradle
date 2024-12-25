@@ -207,7 +207,7 @@ tasks.processResources.dependsOn(tasks.extractNatives)
 
 idea.project.settings.runConfigurations {
     "Start"(Application) {
-        mainClass = 'Start'
+        mainClass = 'TestStart'
         workingDirectory = "${project.rootDir}/run"
         jvmArgs = "-Xmx4G -Xms512m -Djava.library.path=../build/libs/natives/${os.getFamilyName()}"
         moduleName = "Nonsense-Client.test"

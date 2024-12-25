@@ -17,18 +17,21 @@ import wtf.bhopper.nonsense.module.impl.combat.AntiBot;
 import wtf.bhopper.nonsense.module.impl.other.AntiCheatMod;
 import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
+import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 import wtf.bhopper.nonsense.util.misc.GeneralUtil;
 
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class AntiCheat implements MinecraftInstance {
 
-    private final List<Check> checks = new ArrayList<>();
+    private final List<Check> checks = new CopyOnWriteArrayList<>();
     private final Map<UUID, PlayerData> players = new ConcurrentHashMap<>();
-    private final List<UUID> flagged = new ArrayList<>();
+    private final List<UUID> flagged = new CopyOnWriteArrayList<>();
 
-    private int nextChatLine = 0x2000;
+    private final AtomicInteger nextChatLine = new AtomicInteger(0x2000);
 
     public AntiCheat() {
         new Reflections(RotationA.class.getPackage().getName())
@@ -62,12 +65,12 @@ public class AntiCheat implements MinecraftInstance {
 
         AntiCheatMod mod = Nonsense.module(AntiCheatMod.class);
 
-        if (!mod.isToggled() || mc.isSingleplayer()) {
+        if (!mod.isToggled() || mc.isSingleplayer() || !PlayerUtil.canUpdate()) {
             return;
         }
 
         for (EntityPlayer player : mc.theWorld.getEntities(EntityPlayer.class, player -> !Nonsense.module(AntiBot.class).isBot(player) && !player.isClientPlayer() && !player.isFake)) {
-            PlayerData data = this.players.getOrDefault(player.getUniqueID(), new PlayerData(++this.nextChatLine));
+            PlayerData data = this.players.getOrDefault(player.getUniqueID(), new PlayerData(this.nextChatLine.addAndGet(1)));
             List<String> violated = new ArrayList<>();
             for (Check check : this.checks) {
                 if (violated.contains(check.name) || (check.unreliable && !mod.unreliable.get())) {
@@ -79,8 +82,8 @@ public class AntiCheat implements MinecraftInstance {
             }
             this.players.put(player.getUniqueID(), data);
 
-            if (this.nextChatLine >= 0x3000) {
-                this.nextChatLine = 0x2000;
+            if (this.nextChatLine.get() >= 0x3000) {
+                this.nextChatLine.set(0x2000);
             }
         }
     };
