@@ -13,7 +13,7 @@ public class RotationA extends Check {
     @Override
     public void handleRelMove(PlayerData data, S14PacketEntity packet) {
         if (packet.isRotating()) {
-            if (Math.abs(data.getRotationYaw()) > 90.0F) {
+            if (Math.abs(data.getRotationPitch()) > 90.0F) {
                 data.incrementVl(this);
             }
         }
