@@ -57,7 +57,6 @@ public class AutoBlockA extends Check {
         return -1;
     }
 
-    private static class Buffer extends AbstractCheckBuffer {
-    }
+    private static class Buffer extends AbstractCheckBuffer { }
 
 }
