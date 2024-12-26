@@ -1,9 +1,9 @@
 package wtf.bhopper.nonsense.event.impl.player;
 
 import wtf.bhopper.nonsense.event.Event;
-import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
+import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 
-public class EventStrafe implements Event, MinecraftInstance {
+public class EventStrafe implements Event, IMinecraft {
 
     public float forward;
     public float strafe;

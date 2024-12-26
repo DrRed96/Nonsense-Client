@@ -9,10 +9,10 @@ import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.*;
-import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
+import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 import wtf.bhopper.nonsense.util.minecraft.world.BlockUtil;
 
-public class PlayerUtil implements MinecraftInstance {
+public class PlayerUtil implements IMinecraft {
 
     public static boolean canUpdate() {
         return mc.thePlayer != null && mc.theWorld != null;
@@ -217,5 +217,10 @@ public class PlayerUtil implements MinecraftInstance {
         return mc.thePlayer.onGround && mc.thePlayer.isCollidedVertically;
     }
 
+    public static AxisAlignedBB getPlayerBoundingBoxForPosition(Vec3 pos) {
+        float w = mc.thePlayer.width / 2.0F;
+        float h = mc.thePlayer.height;
+        return new AxisAlignedBB(pos.xCoord - w, pos.yCoord, pos.zCoord - w, pos.xCoord + w, pos.yCoord + h, pos.zCoord + w);
+    }
 
 }

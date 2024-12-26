@@ -5,10 +5,9 @@ import net.minecraft.client.renderer.GlStateManager;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.gui.hud.Hud;
 import wtf.bhopper.nonsense.module.impl.visual.HudMod;
-import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
+import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 import wtf.bhopper.nonsense.util.misc.Clock;
 import wtf.bhopper.nonsense.util.render.ColorUtil;
-import wtf.bhopper.nonsense.util.render.Fonts;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
 import wtf.bhopper.nonsense.util.render.RenderUtil;
 
@@ -16,7 +15,7 @@ import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_MIDDLE;
 import static org.lwjgl.opengl.GL11.*;
 
-public class Notification implements MinecraftInstance {
+public class Notification implements IMinecraft {
 
     private static final float OFFSET = 30.0F;
     private static final float HEIGHT = 48.0F;

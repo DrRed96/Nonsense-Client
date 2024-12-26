@@ -2,14 +2,13 @@ package wtf.bhopper.nonsense.module;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import org.luaj.vm2.ast.Str;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.gui.hud.Hud;
 import wtf.bhopper.nonsense.gui.hud.notification.Notification;
 import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
 import wtf.bhopper.nonsense.module.property.Property;
 import wtf.bhopper.nonsense.module.property.PropertyContainer;
-import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
+import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 import wtf.bhopper.nonsense.util.misc.GeneralUtil;
 
 import java.lang.reflect.Field;
@@ -17,10 +16,9 @@ import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 
-public abstract class Module implements PropertyContainer, MinecraftInstance {
+public abstract class Module implements PropertyContainer, IMinecraft {
 
     public final String name = this.getClass().getAnnotation(ModuleInfo.class).name().replace(" ", "").toLowerCase();
     public final String displayName = this.getClass().getAnnotation(ModuleInfo.class).name();

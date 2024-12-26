@@ -90,7 +90,7 @@ public class S14PacketEntity implements Packet<INetHandlerPlayClient>
         return this.pitch;
     }
 
-    public boolean didRotate()
+    public boolean isRotating()
     {
         return this.field_149069_g;
     }

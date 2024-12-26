@@ -12,10 +12,9 @@ import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import org.lwjglx.opengl.Display;
-import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.component.TickRateComponent;
 import wtf.bhopper.nonsense.module.impl.visual.HudMod;
-import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
+import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 import wtf.bhopper.nonsense.util.render.Fonts;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
@@ -27,7 +26,7 @@ import java.util.List;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_BOTTOM;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
 
-public class InfoDisplay implements MinecraftInstance {
+public class InfoDisplay implements IMinecraft {
 
     private final List<Component> components = new ArrayList<>();
     private final List<PotionComponent> potionComponents = new ArrayList<>();

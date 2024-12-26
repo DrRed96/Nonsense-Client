@@ -9,7 +9,7 @@ import wtf.bhopper.nonsense.event.impl.render.EventRenderGui;
 import wtf.bhopper.nonsense.gui.components.RenderComponent;
 import wtf.bhopper.nonsense.gui.hud.notification.NotificationManager;
 import wtf.bhopper.nonsense.module.impl.visual.HudMod;
-import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
+import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 import wtf.bhopper.nonsense.util.misc.InputUtil;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
 
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class Hud implements MinecraftInstance {
+public class Hud implements IMinecraft {
 
     // Separate variable for loading the components since the HUD won't have been loaded yet
     private static final List<RenderComponent> componentsToAdd = new ArrayList<>();

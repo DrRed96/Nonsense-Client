@@ -413,8 +413,8 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
             double x = (double) entity.serverPosX / 32.0D;
             double y = (double) entity.serverPosY / 32.0D;
             double z = (double) entity.serverPosZ / 32.0D;
-            float yaw = packetIn.didRotate() ? (float) (packetIn.getYaw() * 360) / 256.0F : entity.rotationYaw;
-            float pitch = packetIn.didRotate() ? (float) (packetIn.getPitch() * 360) / 256.0F : entity.rotationPitch;
+            float yaw = packetIn.isRotating() ? (float) (packetIn.getYaw() * 360) / 256.0F : entity.rotationYaw;
+            float pitch = packetIn.isRotating() ? (float) (packetIn.getPitch() * 360) / 256.0F : entity.rotationPitch;
             entity.setPositionAndRotation2(x, y, z, yaw, pitch, 3, false);
             entity.onGround = packetIn.isOnGround();
         }

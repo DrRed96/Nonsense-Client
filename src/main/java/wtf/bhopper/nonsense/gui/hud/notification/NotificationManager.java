@@ -5,12 +5,12 @@ import net.minecraft.client.renderer.GlStateManager;
 import org.lwjglx.opengl.Display;
 import wtf.bhopper.nonsense.gui.hud.Hud;
 import wtf.bhopper.nonsense.module.impl.visual.HudMod;
-import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
+import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-public class NotificationManager implements MinecraftInstance {
+public class NotificationManager implements IMinecraft {
 
     private final List<Notification> notifications = new CopyOnWriteArrayList<>();
 

@@ -13,9 +13,9 @@ import wtf.bhopper.nonsense.event.impl.player.EventPostClick;
 import wtf.bhopper.nonsense.event.impl.player.EventPreClick;
 import wtf.bhopper.nonsense.event.impl.packet.EventReceivePacket;
 import wtf.bhopper.nonsense.module.impl.other.Debugger;
-import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
+import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 
-public class PacketUtil implements MinecraftInstance {
+public class PacketUtil implements IMinecraft {
 
     public static void send(Packet<?> packet) {
         mc.thePlayer.sendQueue.addToSendQueue(packet);

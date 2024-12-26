@@ -10,9 +10,9 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.network.Account;
-import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
+import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 
-public class ChatUtil implements MinecraftInstance {
+public class ChatUtil implements IMinecraft {
 
     public static final String CHAT_PREFIX = "\2478\247l[\247c\247lNonsense\2478\247l] \247r\2477";
     public static final String CHAT_PREFIX_SHORT = "\247f> \2477";

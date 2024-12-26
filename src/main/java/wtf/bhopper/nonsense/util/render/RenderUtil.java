@@ -10,14 +10,13 @@ import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.RenderManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
 import org.lwjglx.opengl.Display;
 import org.lwjglx.util.glu.GLU;
 import wtf.bhopper.nonsense.module.property.impl.ColorProperty;
 import wtf.bhopper.nonsense.util.minecraft.world.BlockUtil;
-import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
+import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 import wtf.bhopper.nonsense.util.misc.MathUtil;
 
 import javax.vecmath.Vector3d;
@@ -29,7 +28,7 @@ import java.util.Map;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class RenderUtil implements MinecraftInstance {
+public class RenderUtil implements IMinecraft {
 
     private static final Frustum frustum = new Frustum();
 

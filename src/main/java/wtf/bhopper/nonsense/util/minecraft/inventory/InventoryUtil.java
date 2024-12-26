@@ -2,10 +2,10 @@ package wtf.bhopper.nonsense.util.minecraft.inventory;
 
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.C10PacketCreativeInventoryAction;
-import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
+import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 import wtf.bhopper.nonsense.util.minecraft.player.PacketUtil;
 
-public class InventoryUtil implements MinecraftInstance {
+public class InventoryUtil implements IMinecraft {
 
     // Constants for slots in the inventory (https://wiki.vg/File:Inventory-slots.png)
     public static final int INCLUDE_ARMOR_BEGIN = 5;

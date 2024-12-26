@@ -1,16 +1,23 @@
 package wtf.bhopper.nonsense.util.minecraft.world;
 
+import com.google.common.collect.Lists;
 import io.netty.util.internal.ThreadLocalRandom;
 import net.minecraft.block.*;
 import net.minecraft.block.material.Material;
 import net.minecraft.block.properties.IProperty;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.init.Blocks;
+import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
+import net.minecraft.util.MathHelper;
 import net.minecraft.world.World;
-import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
+import net.minecraft.world.border.WorldBorder;
+import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 
-public class BlockUtil implements MinecraftInstance {
+import java.util.List;
+
+public class BlockUtil implements IMinecraft {
 
     public static IBlockState getState(BlockPos blockPos) {
         return mc.theWorld.getBlockState(blockPos);
@@ -120,6 +127,44 @@ public class BlockUtil implements MinecraftInstance {
         }
 
         return true;
+    }
+    
+    public static boolean hasAnyCollisionsUnder(AxisAlignedBB bb, double posY) {
+        List<AxisAlignedBB> list = Lists.newArrayList();
+        int minX = MathHelper.floor_double(bb.minX);
+        int maxX = MathHelper.floor_double(bb.maxX + 1.0D);
+        int minY = MathHelper.floor_double(bb.minY);
+        int maxY = MathHelper.floor_double(bb.maxY + 1.0D);
+        int minZ = MathHelper.floor_double(bb.minZ);
+        int maxZ = MathHelper.floor_double(bb.maxZ + 1.0D);
+        WorldBorder border = mc.theWorld.getWorldBorder();
+        IBlockState state = Blocks.stone.getDefaultState();
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+
+        for (int x = minX; x < maxX; ++x) {
+            for (int z = minZ; z < maxZ; ++z) {
+                if (mc.theWorld.isBlockLoaded(pos.setPos(x, 64, z))) {
+                    for (int y = minY - 1; y < maxY; ++y) {
+
+                        if (y >= posY) {
+                            continue;
+                        }
+
+                        pos.setPos(x, y, z);
+
+                        IBlockState newState = state;
+
+                        if (border.contains(pos)) {
+                            newState = mc.theWorld.getBlockState(pos);
+                        }
+
+                        newState.getBlock().addCollisionBoxesToList(mc.theWorld, pos, newState, bb, list, null);
+                    }
+                }
+            }
+        }
+
+        return !list.isEmpty();
     }
 
 }
