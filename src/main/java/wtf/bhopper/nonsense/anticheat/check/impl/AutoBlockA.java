@@ -12,7 +12,7 @@ import wtf.bhopper.nonsense.anticheat.check.data.AbstractCheckBuffer;
 
 @CheckInfo(
         name = "Auto-Block A",
-        description = "Impossibly fast blocking and un-blocking.",
+        description = "Auto sword blocking.",
         maxVl = 3
 )
 public class AutoBlockA extends Check {

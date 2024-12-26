@@ -84,9 +84,9 @@ public enum Nonsense {
         Fonts.init();
 
         // Components initialization
+        this.antiCheat = new AntiCheat();
         this.hud = new Hud();
         module(ClickGui.class).initGuis();
-        this.antiCheat = new AntiCheat();
 
         this.eventBus.subscribe(AntiExploitComponent.INSTANCE);
         this.eventBus.subscribe(BlinkComponent.INSTANCE);

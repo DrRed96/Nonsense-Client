@@ -18,7 +18,6 @@ import wtf.bhopper.nonsense.module.impl.other.AntiCheatMod;
 import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
@@ -31,12 +30,20 @@ public class AntiCheat implements IMinecraft {
 
     public AntiCheat() {
         Nonsense.getEventBus().subscribe(this);
-        this.checks.addAll(Arrays.asList(
+        this.addChecks(
                 new AutoBlockA(),
                 new AutoBlockB(),
                 new AutoBlockC(),
                 new RotationA()
-        ));
+        );
+    }
+
+    private void addChecks(Check... checks) {
+        AntiCheatMod mod = Nonsense.module(AntiCheatMod.class);
+        for (Check check : checks) {
+            this.checks.add(check);
+            mod.addCheckProperty(check);
+        }
     }
 
     @EventLink
@@ -67,7 +74,9 @@ public class AntiCheat implements IMinecraft {
 
                 data.handleRelMove(packet);
                 for (Check check : this.checks) {
-                    check.handleRelMove(data, packet);
+                    if (mod.checkEnabled(check)) {
+                        check.handleRelMove(data, packet);
+                    }
                 }
 
                 this.playerData.put(entity.getEntityId(), data);
@@ -83,7 +92,9 @@ public class AntiCheat implements IMinecraft {
 
                 data.handleTeleport(packet);
                 for (Check check : this.checks) {
-                    check.handleTeleport(data, packet);
+                    if (mod.checkEnabled(check)) {
+                        check.handleTeleport(data, packet);
+                    }
                 }
 
                 this.playerData.put(entity.getEntityId(), data);
@@ -99,7 +110,9 @@ public class AntiCheat implements IMinecraft {
 
                 data.handleAnimation(packet);
                 for (Check check : this.checks) {
-                    check.handleAnimation(data, packet);
+                    if (mod.checkEnabled(check)) {
+                        check.handleAnimation(data, packet);
+                    }
                 }
 
                 this.playerData.put(entity.getEntityId(), data);
@@ -115,7 +128,9 @@ public class AntiCheat implements IMinecraft {
 
                 data.handleEquipment(packet);
                 for (Check check : this.checks) {
-                    check.handleEquipment(data, packet);
+                    if (mod.checkEnabled(check)) {
+                        check.handleEquipment(data, packet);
+                    }
                 }
 
                 this.playerData.put(entity.getEntityId(), data);
@@ -131,7 +146,9 @@ public class AntiCheat implements IMinecraft {
 
                 data.handleHeadLook(packet);
                 for (Check check : this.checks) {
-                    check.handleHeadLook(data, packet);
+                    if (mod.checkEnabled(check)) {
+                        check.handleHeadLook(data, packet);
+                    }
                 }
 
                 this.playerData.put(entity.getEntityId(), data);
@@ -147,7 +164,9 @@ public class AntiCheat implements IMinecraft {
 
                 data.handleEntityMetadata(packet);
                 for (Check check : this.checks) {
-                    check.handleEntityMetadata(data, packet);
+                    if (mod.checkEnabled(check)) {
+                        check.handleEntityMetadata(data, packet);
+                    }
                 }
 
                 this.playerData.put(entity.getEntityId(), data);
@@ -162,7 +181,9 @@ public class AntiCheat implements IMinecraft {
                 PlayerData data = this.getPlayerData((EntityPlayer)entity);
 
                 for (Check check : this.checks) {
-                    check.handleBlockiBreakAnim(data, packet);
+                    if (mod.checkEnabled(check)) {
+                        check.handleBlockiBreakAnim(data, packet);
+                    }
                 }
 
                 this.playerData.put(entity.getEntityId(), data);

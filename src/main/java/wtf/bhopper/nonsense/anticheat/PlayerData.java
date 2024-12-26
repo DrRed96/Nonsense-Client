@@ -275,7 +275,7 @@ public class PlayerData implements IMinecraft {
 
         boolean flagged = vl >= check.maxVl;
 
-        ChatUtil.Builder.of("\247d\247cAnti-Cheat %s%s \247rhas failed check \2476%s \2477\247ox%,d",
+        ChatUtil.Builder.of("\247d\247lAnti-Cheat %s%s \247rhas failed check \2476%s \2477\247ox%,d",
                         this.hacking || flagged ? EnumChatFormatting.RED : EnumChatFormatting.WHITE, this.entity.getName(), check.name, (int)vl)
                 .setColor(EnumChatFormatting.GRAY)
                 .setHoverEvent(GeneralUtil.paragraph(

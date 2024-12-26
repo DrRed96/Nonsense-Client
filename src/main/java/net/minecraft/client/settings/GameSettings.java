@@ -3343,19 +3343,19 @@ public class GameSettings
             return null;
         }
 
-        private Options(String p_i0_3_, int p_i0_4_, String p_i0_5_, boolean p_i0_6_, boolean p_i0_7_)
+        private Options(String name, int ordinal, String unlocalizedName, boolean enumFloat, boolean enumBoolean)
         {
-            this(p_i0_3_, p_i0_4_, p_i0_5_, p_i0_6_, p_i0_7_, 0.0F, 1.0F, 0.0F);
+            this(name, ordinal, unlocalizedName, enumFloat, enumBoolean, 0.0F, 1.0F, 0.0F);
         }
 
-        private Options(String p_i1_3_, int p_i1_4_, String p_i1_5_, boolean p_i1_6_, boolean p_i1_7_, float p_i1_8_, float p_i1_9_, float p_i1_10_)
+        private Options(String name, int ordinal, String unlocalizedName, boolean enumFloat, boolean enumBoolean, float min, float max, float step)
         {
-            this.enumString = p_i1_5_;
-            this.enumFloat = p_i1_6_;
-            this.enumBoolean = p_i1_7_;
-            this.valueMin = p_i1_8_;
-            this.valueMax = p_i1_9_;
-            this.valueStep = p_i1_10_;
+            this.enumString = unlocalizedName;
+            this.enumFloat = enumFloat;
+            this.enumBoolean = enumBoolean;
+            this.valueMin = min;
+            this.valueMax = max;
+            this.valueStep = step;
         }
 
         public boolean getEnumFloat()
