@@ -1,0 +1,20 @@
+package wtf.bhopper.nonsense.anticheat.check;
+
+import net.minecraft.network.play.server.*;
+import wtf.bhopper.nonsense.anticheat.PlayerData;
+
+public abstract class Check {
+
+    public final String name = this.getClass().getAnnotation(CheckInfo.class).name();
+    public final String description = this.getClass().getAnnotation(CheckInfo.class).description();
+    public final int maxVl = this.getClass().getAnnotation(CheckInfo.class).maxVl();
+
+    public void handleRelMove(PlayerData data, S14PacketEntity packet) { }
+    public void handleTeleport(PlayerData data, S18PacketEntityTeleport packet) { }
+    public void handleAnimation(PlayerData data, S0BPacketAnimation packet) { }
+    public void handleEquipment(PlayerData data, S04PacketEntityEquipment packet) { }
+    public void handleHeadLook(PlayerData data, S19PacketEntityHeadLook packet) { }
+    public void handleEntityMetadata(PlayerData data, S1CPacketEntityMetadata packet) { }
+    public void handleBlockiBreakAnim(PlayerData data, S25PacketBlockBreakAnim packet) { }
+
+}

@@ -3,12 +3,12 @@ package wtf.bhopper.nonsense.util.minecraft.player;
 import com.google.common.base.Predicates;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.*;
-import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
+import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 import wtf.bhopper.nonsense.util.misc.MathUtil;
 
 import java.util.List;
 
-public class RotationUtil implements MinecraftInstance {
+public class RotationUtil implements IMinecraft {
 
     public static float serverYaw = 0.0F;
     public static float serverPitch = 0.0F;

@@ -2,9 +2,9 @@ package wtf.bhopper.nonsense.util.minecraft.world;
 
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.entity.player.EntityPlayer;
-import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
+import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 
-public class ServerUtil implements MinecraftInstance {
+public class ServerUtil implements IMinecraft {
 
     public static String lastServer = null;
     public static int lastPort = 0;

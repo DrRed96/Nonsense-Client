@@ -1,9 +1,9 @@
 package wtf.bhopper.nonsense.util.misc;
 
 import org.lwjglx.input.Mouse;
-import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
+import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 
-public class InputUtil implements MinecraftInstance {
+public class InputUtil implements IMinecraft {
 
     public static int[] getUnscaledMousePositions() {
         return new int[]{ Mouse.getX(), mc.displayHeight - Mouse.getY() };

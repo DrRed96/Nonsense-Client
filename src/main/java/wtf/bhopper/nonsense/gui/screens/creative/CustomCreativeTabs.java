@@ -9,12 +9,12 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.*;
 import net.minecraft.potion.Potion;
 import wtf.bhopper.nonsense.util.minecraft.inventory.ItemBuilder;
-import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
+import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 
 import java.util.List;
 
 @SuppressWarnings("unused")
-public class CustomCreativeTabs extends CreativeTabs implements MinecraftInstance {
+public class CustomCreativeTabs extends CreativeTabs implements IMinecraft {
     public static final CreativeTabs[] TABS = new CreativeTabs[12];
 
     public static final CustomCreativeTabs tabOperator = new CustomCreativeTabs(0, "Operator", Item.getItemFromBlock(Blocks.barrier), items -> {

@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.component.TickRateComponent;
 import wtf.bhopper.nonsense.module.impl.visual.HudMod;
-import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
+import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 import wtf.bhopper.nonsense.util.render.ColorUtil;
 import wtf.bhopper.nonsense.util.render.Fonts;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
@@ -20,7 +20,7 @@ import java.util.Date;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_LEFT;
 import static org.lwjgl.nanovg.NanoVG.NVG_ALIGN_TOP;
 
-public class Watermark implements MinecraftInstance {
+public class Watermark implements IMinecraft {
 
     private static final NumberFormat TPS_FORMAT = new DecimalFormat("#0.00");
     private static final DateFormat DATE_FORMAT = new SimpleDateFormat("h:mm a");

@@ -13,10 +13,10 @@ import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
         searchAlias = {"Hacker Detector", "Cheater Detector"})
 public class AntiCheatMod extends Module {
 
-    public final BooleanProperty unreliable = new BooleanProperty("Unreliable Checks", "Use checks that are likely to false flag depending on server conditions", true);
+    public final BooleanProperty unreliable = new BooleanProperty("Unreliable Checks", "Use checks that are likely to false flag depending on server conditions.", true);
 
     public AntiCheatMod() {
-        this.autoAddProperties();
+        this.addProperties(this.unreliable);
     }
 
 }

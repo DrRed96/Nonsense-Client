@@ -1,15 +1,13 @@
 package wtf.bhopper.nonsense.gui.components;
 
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.GlStateManager;
 import org.lwjglx.util.vector.Vector2f;
-import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.gui.hud.Hud;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
-import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
+import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
 
-public abstract class RenderComponent implements MinecraftInstance {
+public abstract class RenderComponent implements IMinecraft {
 
     private final String name;
     private final NumberProperty x;

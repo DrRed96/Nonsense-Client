@@ -1,7 +1,7 @@
 package wtf.bhopper.nonsense.command.impl;
 
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.anticheat.Check;
+import wtf.bhopper.nonsense.anticheat.check.Check;
 import wtf.bhopper.nonsense.command.Command;
 import wtf.bhopper.nonsense.command.CommandInfo;
 import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
@@ -15,10 +15,10 @@ public class Checks extends Command {
     public void execute(String[] args, String rawCommand) throws Exception {
         ChatUtil.title("Checks");
         for (Check check : Nonsense.getAntiCheat().getChecks()) {
-            ChatUtil.Builder.of("%s\247c%s\2477: %s", ChatUtil.CHAT_PREFIX_SHORT, check.displayName(), check.description)
+            ChatUtil.Builder.of("%s\247c%s\2477: %s", ChatUtil.CHAT_PREFIX_SHORT, check.name, check.description)
                     .setHoverEvent(GeneralUtil.paragraph(
-                            "\247c\247l" + check.displayName(),
-                            "\2477" + check.description + " \2478(" + check.maxViolations + " violations to flag)"
+                            "\247c\247l" + check.name,
+                            "\2477" + check.description + " \2478(VL: " + check.maxVl + ")"
                     ))
                     .send();
         }

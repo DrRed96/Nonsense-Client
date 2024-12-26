@@ -1,9 +1,9 @@
 package wtf.bhopper.nonsense.command;
 
-import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
+import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 import wtf.bhopper.nonsense.util.misc.GeneralUtil;
 
-public abstract class Command implements MinecraftInstance {
+public abstract class Command implements IMinecraft {
 
     public final String name = this.getClass().getAnnotation(CommandInfo.class).name();
     public final String description = this.getClass().getAnnotation(CommandInfo.class).description();

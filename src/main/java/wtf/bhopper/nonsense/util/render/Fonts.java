@@ -2,7 +2,7 @@ package wtf.bhopper.nonsense.util.render;
 
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.util.ResourceLocation;
-import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
+import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 import wtf.bhopper.nonsense.util.misc.ResourceUtil;
 
 import java.io.IOException;
@@ -12,7 +12,7 @@ import java.nio.ByteBuffer;
 import static org.lwjgl.nanovg.NanoVG.nvgCreateFont;
 import static org.lwjgl.nanovg.NanoVG.nvgCreateFontMem;
 
-public enum Fonts implements MinecraftInstance {
+public enum Fonts implements IMinecraft {
     ARIAL("arial", "arial.ttf"),
     CASCADIA_MONO("cascadiamono", "CascadiaMono.ttf"),
     COMIC_SANS("comicsans", "comic.ttf"),

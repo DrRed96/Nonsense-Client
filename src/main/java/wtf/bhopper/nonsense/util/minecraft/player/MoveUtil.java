@@ -8,12 +8,12 @@ import wtf.bhopper.nonsense.event.impl.player.EventSlowDown;
 import wtf.bhopper.nonsense.event.impl.player.EventSpeed;
 import wtf.bhopper.nonsense.module.impl.movement.NoSlow;
 import wtf.bhopper.nonsense.module.impl.movement.Terrain;
-import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
+import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class MoveUtil implements MinecraftInstance {
+public class MoveUtil implements IMinecraft {
 
     public static final double WALK_SPEED = 2.221;
     public static final double SPRINT_MOD = 1.3;

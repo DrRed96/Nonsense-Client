@@ -1,109 +1,184 @@
 package wtf.bhopper.nonsense.anticheat;
 
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
-import org.reflections.Reflections;
+import net.minecraft.network.play.server.*;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.anticheat.checks.RotationA;
+import wtf.bhopper.nonsense.anticheat.check.Check;
+import wtf.bhopper.nonsense.anticheat.check.impl.AutoBlockA;
+import wtf.bhopper.nonsense.anticheat.check.impl.AutoBlockB;
+import wtf.bhopper.nonsense.anticheat.check.impl.AutoBlockC;
+import wtf.bhopper.nonsense.anticheat.check.impl.RotationA;
 import wtf.bhopper.nonsense.event.bus.EventLink;
 import wtf.bhopper.nonsense.event.bus.Listener;
-import wtf.bhopper.nonsense.event.impl.player.EventJoinGame;
 import wtf.bhopper.nonsense.event.impl.packet.EventReceivePacket;
-import wtf.bhopper.nonsense.event.impl.player.EventUpdate;
-import wtf.bhopper.nonsense.gui.hud.notification.Notification;
-import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
+import wtf.bhopper.nonsense.event.impl.player.EventJoinGame;
 import wtf.bhopper.nonsense.module.impl.combat.AntiBot;
 import wtf.bhopper.nonsense.module.impl.other.AntiCheatMod;
-import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
-import wtf.bhopper.nonsense.util.minecraft.MinecraftInstance;
+import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
-import wtf.bhopper.nonsense.util.misc.GeneralUtil;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.CopyOnWriteArrayList;
-import java.util.concurrent.atomic.AtomicInteger;
 
-public class AntiCheat implements MinecraftInstance {
+public class AntiCheat implements IMinecraft {
 
     private final List<Check> checks = new CopyOnWriteArrayList<>();
-    private final Map<UUID, PlayerData> players = new ConcurrentHashMap<>();
-    private final List<UUID> flagged = new CopyOnWriteArrayList<>();
-
-    private final AtomicInteger nextChatLine = new AtomicInteger(0x2000);
+    private final Map<Integer, PlayerData> playerData = new ConcurrentHashMap<>();
 
     public AntiCheat() {
-        new Reflections(RotationA.class.getPackage().getName())
-                .getSubTypesOf(Check.class)
-                .stream()
-                .sorted(Comparator.comparing(check -> check.getAnnotation(CheckInfo.class).name()))
-                .forEach(check -> {
-                    try {
-                        this.checks.add(check.getConstructor().newInstance());
-                    } catch (ReflectiveOperationException e) {
-                        throw new RuntimeException(e);
-                    }
-                });
-
         Nonsense.getEventBus().subscribe(this);
-    }
-
-    private void reset() {
-        for (Check check : this.checks) {
-            check.reset();
-        }
-        this.players.clear();
-        this.flagged.clear();
+        this.checks.addAll(Arrays.asList(
+                new AutoBlockA(),
+                new AutoBlockB(),
+                new AutoBlockC(),
+                new RotationA()
+        ));
     }
 
     @EventLink
-    public final Listener<EventJoinGame> onJoin = _ -> this.reset();
+    public final Listener<EventJoinGame> onJoin = _ -> {
+        this.playerData.clear();
+    };
 
     @EventLink
     public final Listener<EventReceivePacket> onReceivePacket = event -> {
 
-        AntiCheatMod mod = Nonsense.module(AntiCheatMod.class);
-
-        if (!mod.isToggled() || mc.isSingleplayer() || !PlayerUtil.canUpdate()) {
+        if (!PlayerUtil.canUpdate() || mc.isSingleplayer()) {
             return;
         }
 
-        for (EntityPlayer player : mc.theWorld.getEntities(EntityPlayer.class, player -> !Nonsense.module(AntiBot.class).isBot(player) && !player.isClientPlayer() && !player.isFake)) {
-            PlayerData data = this.players.getOrDefault(player.getUniqueID(), new PlayerData(this.nextChatLine.addAndGet(1)));
-            List<String> violated = new ArrayList<>();
-            for (Check check : this.checks) {
-                if (violated.contains(check.name) || (check.unreliable && !mod.unreliable.get())) {
-                    continue;
-                }
-                if (check.performCheckAndUpdate(player, data, event.packet)) {
-                    violated.add(check.name);
-                }
-            }
-            this.players.put(player.getUniqueID(), data);
-
-            if (this.nextChatLine.get() >= 0x3000) {
-                this.nextChatLine.set(0x2000);
-            }
+        AntiCheatMod mod = Nonsense.module(AntiCheatMod.class);
+        if (!mod.isToggled()) {
+            return;
         }
+
+        switch (event.packet) {
+            case S14PacketEntity packet -> {
+                Entity entity = packet.getEntity(mc.theWorld);
+                if (!this.isEntityValid(entity)) {
+                    return;
+                }
+
+                PlayerData data = this.getPlayerData((EntityPlayer)entity);
+
+                data.handleRelMove(packet);
+                for (Check check : this.checks) {
+                    check.handleRelMove(data, packet);
+                }
+
+                this.playerData.put(entity.getEntityId(), data);
+            }
+
+            case S18PacketEntityTeleport packet -> {
+                Entity entity = mc.theWorld.getEntityByID(packet.getEntityId());
+                if (!this.isEntityValid(entity)) {
+                    return;
+                }
+
+                PlayerData data = this.getPlayerData((EntityPlayer)entity);;
+
+                data.handleTeleport(packet);
+                for (Check check : this.checks) {
+                    check.handleTeleport(data, packet);
+                }
+
+                this.playerData.put(entity.getEntityId(), data);
+            }
+
+            case S0BPacketAnimation packet -> {
+                Entity entity = mc.theWorld.getEntityByID(packet.getEntityID());
+                if (!this.isEntityValid(entity)) {
+                    return;
+                }
+
+                PlayerData data = this.getPlayerData((EntityPlayer)entity);
+
+                data.handleAnimation(packet);
+                for (Check check : this.checks) {
+                    check.handleAnimation(data, packet);
+                }
+
+                this.playerData.put(entity.getEntityId(), data);
+            }
+
+            case S04PacketEntityEquipment packet -> {
+                Entity entity = mc.theWorld.getEntityByID(packet.getEntityID());
+                if (!this.isEntityValid(entity)) {
+                    return;
+                }
+
+                PlayerData data = this.getPlayerData((EntityPlayer)entity);
+
+                data.handleEquipment(packet);
+                for (Check check : this.checks) {
+                    check.handleEquipment(data, packet);
+                }
+
+                this.playerData.put(entity.getEntityId(), data);
+            }
+
+            case S19PacketEntityHeadLook packet -> {
+                Entity entity = packet.getEntity(mc.theWorld);
+                if (!this.isEntityValid(entity)) {
+                    return;
+                }
+
+                PlayerData data = this.getPlayerData((EntityPlayer)entity);
+
+                data.handleHeadLook(packet);
+                for (Check check : this.checks) {
+                    check.handleHeadLook(data, packet);
+                }
+
+                this.playerData.put(entity.getEntityId(), data);
+            }
+
+            case S1CPacketEntityMetadata packet -> {
+                Entity entity = mc.theWorld.getEntityByID(packet.getEntityId());
+                if (!this.isEntityValid(entity)) {
+                    return;
+                }
+
+                PlayerData data = this.getPlayerData((EntityPlayer)entity);
+
+                data.handleEntityMetadata(packet);
+                for (Check check : this.checks) {
+                    check.handleEntityMetadata(data, packet);
+                }
+
+                this.playerData.put(entity.getEntityId(), data);
+            }
+
+            case S25PacketBlockBreakAnim packet -> {
+                Entity entity = mc.theWorld.getEntityByID(packet.getBreakerId());
+                if (!this.isEntityValid(entity)) {
+                    return;
+                }
+
+                PlayerData data = this.getPlayerData((EntityPlayer)entity);
+
+                for (Check check : this.checks) {
+                    check.handleBlockiBreakAnim(data, packet);
+                }
+
+                this.playerData.put(entity.getEntityId(), data);
+            }
+
+            default -> {}
+        }
+
     };
 
-    public void flag(EntityPlayer player) {
-        if (this.flagged.contains(player.getUniqueID())) {
-            return;
-        }
-        this.flagged.add(player.getUniqueID());
-        Notification.send("Anti Cheat", player.getName() + " is cheating", NotificationType.WARNING, 5000);
+    private PlayerData getPlayerData(EntityPlayer entity) {
+        return this.playerData.containsKey(entity.getEntityId()) ? this.playerData.get(entity.getEntityId()) : new PlayerData(entity);
     }
 
-    public void notifyViolation(EntityPlayer player, PlayerData data, Check check, int amount) {
-        String playerName = this.flagged.contains(player.getUniqueID()) ? "\247c" + player.getName() : player.getName();
-        ChatUtil.Builder.of("%s%s \2477failed check \2476%s \2477\247ox%d", ChatUtil.ANTICHEAT_PREFIX, playerName, check.displayName(), amount)
-                .setColor(EnumChatFormatting.GRAY)
-                .setHoverEvent(GeneralUtil.paragraph(
-                        "\247c\247l" + check.displayName(),
-                        "\2477" + check.description + " \2478(VL: " + check.maxViolations + ")"
-                )).send(data.chatLine);
+    private boolean isEntityValid(Entity entity) {
+        return entity instanceof EntityPlayer player && !player.isClientPlayer() && !player.isFake && !Nonsense.module(AntiBot.class).isBot(player);
     }
 
     public List<Check> getChecks() {
