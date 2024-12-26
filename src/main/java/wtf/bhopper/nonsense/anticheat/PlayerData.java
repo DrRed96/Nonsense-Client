@@ -497,7 +497,6 @@ public class PlayerData implements IMinecraft {
         return (T)this.checkData.computeIfAbsent(clazz, _ -> Objects.requireNonNull(supplier.get()));
     }
 
-    @SuppressWarnings("unchecked")
     public <T extends ICheckData> T getCheckData(Class<T> clazz) {
         return this.getCheckData(clazz, null);
     }
