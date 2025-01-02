@@ -1,6 +1,6 @@
 package wtf.bhopper.nonsense.module.impl.visual;
 
-import org.lwjglx.opengl.Display;
+import org.lwjgl.opengl.Display;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;

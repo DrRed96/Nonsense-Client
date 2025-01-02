@@ -4,13 +4,15 @@ import de.florianmichael.viamcp.fixes.AttackOrder;
 import io.netty.buffer.Unpooled;
 import net.minecraft.block.material.Material;
 import net.minecraft.item.ItemStack;
+import net.minecraft.network.EnumConnectionState;
+import net.minecraft.network.EnumPacketDirection;
 import net.minecraft.network.Packet;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.event.impl.player.EventPostClick;
-import wtf.bhopper.nonsense.event.impl.player.EventPreClick;
+import wtf.bhopper.nonsense.event.impl.player.interact.EventPostClick;
+import wtf.bhopper.nonsense.event.impl.player.interact.EventPreClick;
 import wtf.bhopper.nonsense.event.impl.packet.EventReceivePacket;
 import wtf.bhopper.nonsense.module.impl.other.Debugger;
 import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
@@ -33,6 +35,18 @@ public class PacketUtil implements IMinecraft {
             event.packet.processPacket(mc.getNetHandler());
         }
         Nonsense.getEventBus().post(new Debugger.EventPacketDebug(packet, event.isCancelled() ? Debugger.State.CANCELED : Debugger.State.NORMAL, Debugger.EventPacketDebug.Direction.INCOMING));
+    }
+
+    public static void queue(Packet<?> packet) {
+        try {
+            if (EnumConnectionState.PLAY.getPacketId(EnumPacketDirection.SERVERBOUND, packet) != null) {
+                send(packet);
+            } else {
+                receive(packet);
+            }
+        } catch (Exception _) {
+            receive(packet);
+        }
     }
 
     public static void leftClickPackets(MovingObjectPosition objectMouseOver, boolean swing) {
@@ -147,6 +161,29 @@ public class PacketUtil implements IMinecraft {
 
     public static PacketBuffer createByteBuffer(String data) {
         return new PacketBuffer(Unpooled.wrappedBuffer(data.getBytes()));
+    }
+
+    public static class TimedPacket {
+        private final Packet<?> packet;
+        private final long time;
+
+        public TimedPacket(final Packet<?> packet, final long time) {
+            this.packet = packet;
+            this.time = time;
+        }
+
+        public TimedPacket(final Packet<?> packet) {
+            this.packet = packet;
+            this.time = System.currentTimeMillis();
+        }
+
+        public Packet<?> getPacket() {
+            return packet;
+        }
+
+        public long getTime() {
+            return time;
+        }
     }
 
 }

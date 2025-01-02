@@ -2,8 +2,8 @@ package wtf.bhopper.nonsense.module.impl.player;
 
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
-import wtf.bhopper.nonsense.event.bus.EventLink;
-import wtf.bhopper.nonsense.event.bus.Listener;
+import wtf.bhopper.nonsense.event.EventLink;
+import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.player.EventPreMotion;
 import wtf.bhopper.nonsense.event.impl.packet.EventReceivePacket;
 import wtf.bhopper.nonsense.module.Module;

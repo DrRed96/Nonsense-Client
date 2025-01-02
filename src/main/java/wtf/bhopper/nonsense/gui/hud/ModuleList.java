@@ -2,7 +2,7 @@ package wtf.bhopper.nonsense.gui.hud;
 
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
-import org.lwjglx.opengl.Display;
+import org.lwjgl.opengl.Display;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.impl.visual.HudMod;

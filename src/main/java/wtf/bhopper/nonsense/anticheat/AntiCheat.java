@@ -5,12 +5,9 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.server.*;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.anticheat.check.Check;
-import wtf.bhopper.nonsense.anticheat.check.impl.AutoBlockA;
-import wtf.bhopper.nonsense.anticheat.check.impl.AutoBlockB;
-import wtf.bhopper.nonsense.anticheat.check.impl.AutoBlockC;
-import wtf.bhopper.nonsense.anticheat.check.impl.RotationA;
-import wtf.bhopper.nonsense.event.bus.EventLink;
-import wtf.bhopper.nonsense.event.bus.Listener;
+import wtf.bhopper.nonsense.anticheat.check.impl.*;
+import wtf.bhopper.nonsense.event.EventLink;
+import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.packet.EventReceivePacket;
 import wtf.bhopper.nonsense.event.impl.player.EventJoinGame;
 import wtf.bhopper.nonsense.module.impl.combat.AntiBot;
@@ -34,7 +31,8 @@ public class AntiCheat implements IMinecraft {
                 new AutoBlockA(),
                 new AutoBlockB(),
                 new AutoBlockC(),
-                new RotationA()
+                new RotationA(),
+                new VelocityA()
         );
     }
 
@@ -182,7 +180,7 @@ public class AntiCheat implements IMinecraft {
 
                 for (Check check : this.checks) {
                     if (mod.checkEnabled(check)) {
-                        check.handleBlockiBreakAnim(data, packet);
+                        check.handleBlockBreakAnim(data, packet);
                     }
                 }
 

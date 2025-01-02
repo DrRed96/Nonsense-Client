@@ -6,8 +6,8 @@ import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraft.network.play.server.S2EPacketCloseWindow;
 import net.minecraft.util.IChatComponent;
 import wtf.bhopper.nonsense.event.EventPriorities;
-import wtf.bhopper.nonsense.event.bus.EventLink;
-import wtf.bhopper.nonsense.event.bus.Listener;
+import wtf.bhopper.nonsense.event.EventLink;
+import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.packet.EventReceivePacket;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
@@ -28,7 +28,7 @@ public class BetterChat extends Module {
         this.autoAddProperties();
     }
 
-    @EventLink(EventPriorities.HIGH)
+    @EventLink(EventPriorities.LOW)
     public final Listener<EventReceivePacket> onReceivePacket = event -> {
         if (event.packet instanceof S02PacketChat packet) {
             if (packet.getType() == (byte) 0 && this.chatStacker.get() && !event.isCancelled()) {

@@ -3,14 +3,16 @@ package wtf.bhopper.nonsense.command;
 import org.reflections.Reflections;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.command.impl.Help;
-import wtf.bhopper.nonsense.event.bus.EventLink;
-import wtf.bhopper.nonsense.event.bus.Listener;
+import wtf.bhopper.nonsense.event.EventLink;
+import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.player.EventChat;
 import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 
 import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
 
 public class CommandManager {
 
@@ -37,6 +39,14 @@ public class CommandManager {
         return this.commands;
     }
 
+    public List<String> possibleMatches(String arg0) {
+        return this.commands.stream().collect(ArrayList::new, (strings, command) -> {
+            if (command.name.toLowerCase().startsWith(arg0.toLowerCase())) {
+                strings.add(command.name);
+            }
+        }, List::addAll);
+    }
+
     @EventLink
     private final Listener<EventChat> onChat = event -> {
         if (event.message.startsWith(PREFIX)) {
@@ -59,7 +69,12 @@ public class CommandManager {
                 }
             }
 
-            ChatUtil.error("'%s' is not a command.", commandName.toLowerCase());
+            List<String> possibleMatches = this.possibleMatches(args[0].substring(1));
+            if (possibleMatches.isEmpty()) {
+                ChatUtil.error("'%s' is not a command.", commandName.toLowerCase());
+            } else {
+                ChatUtil.error("'%s' is not a command, did you mean: %s?", commandName.toLowerCase(), String.join(", ", possibleMatches));
+            }
         }
     };
 

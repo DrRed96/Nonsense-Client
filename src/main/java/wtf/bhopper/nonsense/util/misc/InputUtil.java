@@ -1,6 +1,6 @@
 package wtf.bhopper.nonsense.util.misc;
 
-import org.lwjglx.input.Mouse;
+import org.lwjgl.input.Mouse;
 import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 
 public class InputUtil implements IMinecraft {

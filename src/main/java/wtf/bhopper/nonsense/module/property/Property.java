@@ -1,12 +1,12 @@
 package wtf.bhopper.nonsense.module.property;
 
-import com.google.gson.JsonElement;
+import wtf.bhopper.nonsense.config.ISerializable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public abstract class Property<T> {
+public abstract class Property<T> implements ISerializable {
 
     public final String name;
     public final String displayName;
@@ -49,22 +49,18 @@ public abstract class Property<T> {
         }
     }
 
-
     public abstract String getDisplayValue();
 
     public abstract void parseString(String str);
 
-    public abstract JsonElement serialize();
-    public abstract void deserialize(JsonElement element);
-
     public void callFirstTime() {
-        for (ValueChangeListener<T> valueChangeListener : valueChangeListeners) {
-            valueChangeListener.onValueChange(value, value);
+        for (ValueChangeListener<T> valueChangeListener : this.valueChangeListeners) {
+            valueChangeListener.onValueChange(this.value, this.value);
         }
     }
 
     public Class<?> getType() {
-        return value.getClass();
+        return this.value.getClass();
     }
 
 }

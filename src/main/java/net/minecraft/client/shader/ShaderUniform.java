@@ -6,7 +6,7 @@ import net.minecraft.client.renderer.OpenGlHelper;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.BufferUtils;
-import org.lwjglx.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Matrix4f;
 
 public class ShaderUniform
 {

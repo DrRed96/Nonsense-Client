@@ -5,7 +5,6 @@ import imgui.ImGuiIO;
 import imgui.flag.ImGuiConfigFlags;
 import imgui.gl3.ImGuiImplGl3;
 import imgui.glfw.ImGuiImplGlfw;
-import org.lwjglx.opengl.Display;
 
 public class ImGuiHelper {
 

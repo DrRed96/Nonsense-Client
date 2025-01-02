@@ -2,7 +2,8 @@ package wtf.bhopper.nonsense.module.impl.visual;
 
 import net.minecraft.client.renderer.GlStateManager;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.component.TickRateComponent;
+import wtf.bhopper.nonsense.component.impl.BlinkComponent;
+import wtf.bhopper.nonsense.component.impl.TickRateComponent;
 import wtf.bhopper.nonsense.gui.components.RenderComponent;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
@@ -44,7 +45,7 @@ public class LagNotifier extends Module {
 
         @Override
         public void draw(float delta, int mouseX, int mouseY, boolean bypass) {
-            long timeSinceLastTick = TickRateComponent.timeSinceLastTickMS();
+            long timeSinceLastTick = Nonsense.component(TickRateComponent.class).timeSinceLastTickMS();
 
             if (timeSinceLastTick > LagNotifier.this.threshold.get() || bypass) {
 

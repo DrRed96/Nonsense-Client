@@ -317,7 +317,7 @@ public class CustomCreativeTabs extends CreativeTabs implements IMinecraft {
         menu1Attributes.setString("HOUSING_MENU", "OWNER");
         items.add(ItemBuilder.of(Items.nether_star)
                 .setDisplayName("\247dHousing Menu\2477 (Right Click)")
-                .setHideFlags(254)
+                .setHideFlags(0xFE)
                 .addTag("ExtraAttributes", menu1Attributes)
                 .build());
 
@@ -325,7 +325,7 @@ public class CustomCreativeTabs extends CreativeTabs implements IMinecraft {
         menu2Attributes.setString("HOUSING_MENU", "TRUSTED_BUILDER");
         items.add(ItemBuilder.of(Items.ghast_tear)
                 .setDisplayName("\247aHousing Menu\2477 (Right Click)")
-                .setHideFlags(254)
+                .setHideFlags(0xFE)
                 .addTag("ExtraAttributes", menu2Attributes)
                 .build());
 
@@ -333,7 +333,7 @@ public class CustomCreativeTabs extends CreativeTabs implements IMinecraft {
         menu3Attributes.setString("HOUSING_MENU", "GUEST");
         items.add(ItemBuilder.of(Items.dark_oak_door)
                 .setDisplayName("\247aHousing Menu\2477 (Right Click)")
-                .setHideFlags(254)
+                .setHideFlags(0xFE)
                 .addTag("ExtraAttributes", menu3Attributes)
                 .build());
 

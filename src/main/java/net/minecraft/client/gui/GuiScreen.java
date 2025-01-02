@@ -5,7 +5,6 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 
 import java.awt.Toolkit;
-import java.awt.datatransfer.ClipboardOwner;
 import java.awt.datatransfer.DataFlavor;
 import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.Transferable;
@@ -41,8 +40,8 @@ import net.minecraft.util.IChatComponent;
 import org.apache.commons.lang3.StringUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjglx.input.Keyboard;
-import org.lwjglx.input.Mouse;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import wtf.bhopper.nonsense.Nonsense;
 
 public abstract class GuiScreen extends Gui implements GuiYesNoCallback {
@@ -69,7 +68,7 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback {
      * The height of the screen object.
      */
     public int height;
-    protected List<GuiButton> buttonList = Lists.<GuiButton>newArrayList();
+    protected List<GuiButton> buttonList = Lists.newCopyOnWriteArrayList();
     protected List<GuiLabel> labelList = Lists.<GuiLabel>newArrayList();
     public boolean allowUserInput;
 

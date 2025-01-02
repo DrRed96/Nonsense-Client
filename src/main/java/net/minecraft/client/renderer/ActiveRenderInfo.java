@@ -12,7 +12,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import org.lwjgl.opengl.GL11;
-import org.lwjglx.util.glu.GLU;
+import org.lwjgl.util.glu.GLU;
 
 public class ActiveRenderInfo
 {

@@ -11,7 +11,7 @@ import net.minecraft.client.settings.GameSettings;
 import optifine.Config;
 import optifine.Lang;
 
-import org.lwjglx.Sys;
+import org.lwjgl.Sys;
 
 public class GuiShaders extends GuiScreen
 {

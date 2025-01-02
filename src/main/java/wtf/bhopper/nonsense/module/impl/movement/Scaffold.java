@@ -12,10 +12,13 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
-import wtf.bhopper.nonsense.event.bus.EventLink;
-import wtf.bhopper.nonsense.event.bus.Listener;
+import wtf.bhopper.nonsense.event.EventLink;
+import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
 import wtf.bhopper.nonsense.event.impl.player.*;
+import wtf.bhopper.nonsense.event.impl.player.interact.EventClickAction;
+import wtf.bhopper.nonsense.event.impl.player.movement.EventMove;
+import wtf.bhopper.nonsense.event.impl.player.movement.EventMovementInput;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
@@ -26,7 +29,7 @@ import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
 import wtf.bhopper.nonsense.util.minecraft.player.*;
 import wtf.bhopper.nonsense.util.minecraft.world.BlockUtil;
-import wtf.bhopper.nonsense.util.misc.Clock;
+import wtf.bhopper.nonsense.util.misc.Stopwatch;
 import wtf.bhopper.nonsense.util.misc.MathUtil;
 
 import java.util.Arrays;
@@ -78,7 +81,7 @@ public class Scaffold extends Module {
 
     private int towerStage = 0;
     private boolean spoofGround = false;
-    private final Clock towerTimer = new Clock();
+    private final Stopwatch towerTimer = new Stopwatch();
 
     public Scaffold() {
         this.rotationGroup.addProperties(this.rotationsMode, this.rotationsAiming, this.rotationsHitVec, this.rotationRayCast);

@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.WorldRenderer;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.util.ChatAllowedCharacters;
 import net.minecraft.util.MathHelper;
-import org.lwjglx.input.Keyboard;
+import org.lwjgl.input.Keyboard;
 
 public class GuiTextField extends Gui {
     private final int id;

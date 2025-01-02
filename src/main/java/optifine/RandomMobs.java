@@ -16,6 +16,8 @@ import net.minecraft.entity.EntityLiving;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
+import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.event.impl.client.EventWorldChange;
 
 public class RandomMobs
 {
@@ -60,6 +62,7 @@ public class RandomMobs
 
     public static void worldChanged(World p_worldChanged_0_, World p_worldChanged_1_)
     {
+        Nonsense.getEventBus().post(new EventWorldChange());
         if (p_worldChanged_1_ != null)
         {
             List list = p_worldChanged_1_.getLoadedEntityList();

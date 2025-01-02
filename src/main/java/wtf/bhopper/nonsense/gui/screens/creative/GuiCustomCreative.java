@@ -28,8 +28,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import org.lwjglx.input.Keyboard;
-import org.lwjglx.input.Mouse;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 
 import java.io.IOException;
 import java.util.Iterator;
@@ -39,7 +39,7 @@ import java.util.Map;
 public class GuiCustomCreative extends InventoryEffectRenderer {
 
     private static final ResourceLocation creativeInventoryTabs = new ResourceLocation("textures/gui/container/creative_inventory/tabs.png");
-    private static InventoryBasic field_147060_v = new InventoryBasic("tmp", true, 45);
+    private static final InventoryBasic tempInventory = new InventoryBasic("tmp", true, 45);
 
     /** Currently selected creative inventory tab index. */
     private static int selectedTabIndex = CustomCreativeTabs.tabOperator.getTabIndex();
@@ -55,7 +55,7 @@ public class GuiCustomCreative extends InventoryEffectRenderer {
      */
     private boolean wasClicking;
     private GuiTextField searchField;
-    private List<Slot> field_147063_B;
+    private List<Slot> slots;
     private Slot field_147064_C;
     private boolean field_147057_D;
     private CreativeCrafting field_147059_E;
@@ -148,7 +148,7 @@ public class GuiCustomCreative extends InventoryEffectRenderer {
                 this.mc.thePlayer.inventoryContainer.detectAndSendChanges();
             }
         }
-        else if (clickType != 5 && slotIn.inventory == field_147060_v)
+        else if (clickType != 5 && slotIn.inventory == tempInventory)
         {
             InventoryPlayer inventoryplayer = this.mc.thePlayer.inventory;
             ItemStack itemstack1 = inventoryplayer.getItemStack();
@@ -470,9 +470,9 @@ public class GuiCustomCreative extends InventoryEffectRenderer {
         {
             Container container = this.mc.thePlayer.inventoryContainer;
 
-            if (this.field_147063_B == null)
+            if (this.slots == null)
             {
-                this.field_147063_B = guicontainercreative$containercreative.inventorySlots;
+                this.slots = guicontainercreative$containercreative.inventorySlots;
             }
 
             guicontainercreative$containercreative.inventorySlots = Lists.newArrayList();
@@ -513,13 +513,13 @@ public class GuiCustomCreative extends InventoryEffectRenderer {
                 }
             }
 
-            this.field_147064_C = new Slot(field_147060_v, 0, 173, 112);
+            this.field_147064_C = new Slot(tempInventory, 0, 173, 112);
             guicontainercreative$containercreative.inventorySlots.add(this.field_147064_C);
         }
         else if (i == CustomCreativeTabs.tabInventory.getTabIndex())
         {
-            guicontainercreative$containercreative.inventorySlots = this.field_147063_B;
-            this.field_147063_B = null;
+            guicontainercreative$containercreative.inventorySlots = this.slots;
+            this.slots = null;
         }
 
         if (this.searchField != null)
@@ -870,7 +870,7 @@ public class GuiCustomCreative extends InventoryEffectRenderer {
             {
                 for (int j = 0; j < 9; ++j)
                 {
-                    this.addSlotToContainer(new Slot(field_147060_v, i * 9 + j, 9 + j * 18, 18 + i * 18));
+                    this.addSlotToContainer(new Slot(tempInventory, i * 9 + j, 9 + j * 18, 18 + i * 18));
                 }
             }
 
@@ -905,11 +905,11 @@ public class GuiCustomCreative extends InventoryEffectRenderer {
 
                     if (i1 >= 0 && i1 < this.itemList.size())
                     {
-                        field_147060_v.setInventorySlotContents(l + k * 9, this.itemList.get(i1));
+                        tempInventory.setInventorySlotContents(l + k * 9, this.itemList.get(i1));
                     }
                     else
                     {
-                        field_147060_v.setInventorySlotContents(l + k * 9, null);
+                        tempInventory.setInventorySlotContents(l + k * 9, null);
                     }
                 }
             }

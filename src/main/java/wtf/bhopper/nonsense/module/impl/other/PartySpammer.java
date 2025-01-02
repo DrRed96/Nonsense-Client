@@ -1,8 +1,8 @@
 package wtf.bhopper.nonsense.module.impl.other;
 
 import net.minecraft.network.play.server.S02PacketChat;
-import wtf.bhopper.nonsense.event.bus.EventLink;
-import wtf.bhopper.nonsense.event.bus.Listener;
+import wtf.bhopper.nonsense.event.EventLink;
+import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.player.EventJoinGame;
 import wtf.bhopper.nonsense.event.impl.packet.EventReceivePacket;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
@@ -16,7 +16,7 @@ import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
 import wtf.bhopper.nonsense.module.property.impl.StringProperty;
 import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
-import wtf.bhopper.nonsense.util.misc.Clock;
+import wtf.bhopper.nonsense.util.misc.Stopwatch;
 
 @ModuleInfo(name = "Party Spammer",
         description = "Spams someone with party invites",
@@ -27,7 +27,7 @@ public class PartySpammer extends Module {
     private final NumberProperty delay = new NumberProperty("Delay", "Delay between invites", 250, 1, 1000, 50, NumberProperty.FORMAT_MS);
     private final BooleanProperty cleanChat = new BooleanProperty("Clean Chat", "Hides the party messages", true);
 
-    private final Clock timer = new Clock();
+    private final Stopwatch timer = new Stopwatch();
     private boolean inParty = false;
 
     public PartySpammer() {

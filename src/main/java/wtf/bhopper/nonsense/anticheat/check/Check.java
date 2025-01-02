@@ -2,8 +2,9 @@ package wtf.bhopper.nonsense.anticheat.check;
 
 import net.minecraft.network.play.server.*;
 import wtf.bhopper.nonsense.anticheat.PlayerData;
+import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 
-public abstract class Check {
+public abstract class Check implements IMinecraft {
 
     public final String name = this.getClass().getAnnotation(CheckInfo.class).name();
     public final String description = this.getClass().getAnnotation(CheckInfo.class).description();
@@ -15,6 +16,6 @@ public abstract class Check {
     public void handleEquipment(PlayerData data, S04PacketEntityEquipment packet) { }
     public void handleHeadLook(PlayerData data, S19PacketEntityHeadLook packet) { }
     public void handleEntityMetadata(PlayerData data, S1CPacketEntityMetadata packet) { }
-    public void handleBlockiBreakAnim(PlayerData data, S25PacketBlockBreakAnim packet) { }
+    public void handleBlockBreakAnim(PlayerData data, S25PacketBlockBreakAnim packet) { }
 
 }

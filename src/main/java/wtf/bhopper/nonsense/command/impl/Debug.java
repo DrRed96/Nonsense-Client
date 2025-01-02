@@ -23,7 +23,7 @@ import java.io.File;
 import java.util.ArrayList;
 
 @CommandInfo(name = "Debug",
-        description = "Helps with debugging",
+        description = "Helps with debugging.",
         syntax = ".debug <args>")
 public class Debug extends Command {
     @Override

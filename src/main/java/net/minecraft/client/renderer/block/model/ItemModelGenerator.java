@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.ResourceLocation;
-import org.lwjglx.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector3f;
 
 public class ItemModelGenerator
 {

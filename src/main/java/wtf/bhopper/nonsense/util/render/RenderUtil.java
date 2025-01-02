@@ -12,8 +12,8 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.*;
-import org.lwjglx.opengl.Display;
-import org.lwjglx.util.glu.GLU;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.util.glu.GLU;
 import wtf.bhopper.nonsense.module.property.impl.ColorProperty;
 import wtf.bhopper.nonsense.util.minecraft.world.BlockUtil;
 import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
@@ -324,6 +324,19 @@ public class RenderUtil implements IMinecraft {
         );
     }
 
+    public static void drawOutlineString(FontRenderer font, String text, float x, float y, int color, int outlineColor) {
+        String outlineText = EnumChatFormatting.getTextWithoutFormattingCodes(text);
+        font.drawString(outlineText, x + 1.0F, y, outlineColor, false);
+        font.drawString(outlineText, x - 1.0F, y, outlineColor, false);
+        font.drawString(outlineText, x, y + 1.0F, outlineColor, false);
+        font.drawString(outlineText, x, y - 1.0F, outlineColor, false);
+        font.drawString(text, x, y, color, false);
+    }
+
+    public static void drawOutlineString(String text, float x, float y, int color, int outlineColor) {
+        drawOutlineString(mc.fontRendererObj, text, x, y, color, outlineColor);
+    }
+
     public static void drawScaledString(FontRenderer font, String text, float x, float y, int color, boolean shadow, float scale) {
         GlStateManager.pushMatrix();
         GlStateManager.translate(x, y, 0.0F);
@@ -334,6 +347,18 @@ public class RenderUtil implements IMinecraft {
 
     public static void drawScaledString(String text, float x, float y, int color, boolean shadow, float scale) {
         drawScaledString(mc.fontRendererObj, text, x, y, color, shadow, scale);
+    }
+
+    public static void drawScaledOutlineString(FontRenderer font, String text, float x, float y, int color, int outlineColor, float scale) {
+        GlStateManager.pushMatrix();
+        GlStateManager.translate(x, y, 0.0F);
+        GlStateManager.scale(scale, scale, scale);
+        drawOutlineString(font, text, 0.0F, 0.0F, color, outlineColor);
+        GlStateManager.popMatrix();
+    }
+
+    public static void drawScaledOutlineString(String text, float x, float y, int color, int outlineColor, float scale) {
+        drawScaledOutlineString(mc.fontRendererObj, text, x, y, color, outlineColor, scale);
     }
 
     public static void glColor(final int red, final int green, final int blue, final int alpha) {

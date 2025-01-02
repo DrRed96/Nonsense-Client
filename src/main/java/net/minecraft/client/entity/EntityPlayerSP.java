@@ -46,10 +46,15 @@ import net.minecraft.util.*;
 import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
 import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.component.impl.SilentRotationsComponent;
+import wtf.bhopper.nonsense.event.impl.packet.EventActionStates;
 import wtf.bhopper.nonsense.event.impl.player.*;
+import wtf.bhopper.nonsense.event.impl.player.movement.EventMove;
+import wtf.bhopper.nonsense.event.impl.player.movement.EventPushOutOfBlocks;
+import wtf.bhopper.nonsense.event.impl.player.movement.EventSlowDown;
 import wtf.bhopper.nonsense.module.impl.movement.NoSlow;
+import wtf.bhopper.nonsense.module.impl.movement.Sprint;
 import wtf.bhopper.nonsense.module.impl.player.HorseJump;
-import wtf.bhopper.nonsense.util.minecraft.player.RotationUtil;
 
 public class EntityPlayerSP extends AbstractClientPlayer {
     public final NetHandlerPlayClient sendQueue;
@@ -188,28 +193,28 @@ public class EntityPlayerSP extends AbstractClientPlayer {
      * called every tick when the player is on foot. Performs all the things that normally happen during movement.
      */
     public void onUpdateWalkingPlayer() {
-        boolean flag = this.isSprinting();
 
-        if (flag != this.serverSprintState) {
-            if (flag) {
+        EventActionStates actionEvent = new EventActionStates(this.isSprinting(), this.isSneaking());
+        Nonsense.getEventBus().post(actionEvent);
+
+        if (actionEvent.sprinting != this.serverSprintState) {
+            if (actionEvent.sprinting) {
                 this.sendQueue.addToSendQueue(new C0BPacketEntityAction(this, C0BPacketEntityAction.Action.START_SPRINTING));
             } else {
                 this.sendQueue.addToSendQueue(new C0BPacketEntityAction(this, C0BPacketEntityAction.Action.STOP_SPRINTING));
             }
 
-            this.serverSprintState = flag;
+            this.serverSprintState = actionEvent.sprinting;
         }
 
-        boolean flag1 = this.isSneaking();
-
-        if (flag1 != this.serverSneakState) {
-            if (flag1) {
+        if (actionEvent.sneaking != this.serverSneakState) {
+            if (actionEvent.sneaking) {
                 this.sendQueue.addToSendQueue(new C0BPacketEntityAction(this, C0BPacketEntityAction.Action.START_SNEAKING));
             } else {
                 this.sendQueue.addToSendQueue(new C0BPacketEntityAction(this, C0BPacketEntityAction.Action.STOP_SNEAKING));
             }
 
-            this.serverSneakState = flag1;
+            this.serverSneakState = actionEvent.sneaking;
         }
 
         EventPreMotion event = new EventPreMotion(
@@ -220,7 +225,7 @@ public class EntityPlayerSP extends AbstractClientPlayer {
                 this.rotationPitch,
                 this.onGround);
         Nonsense.getEventBus().post(event);
-        RotationUtil.updateServerRotations(event.yaw, event.pitch);
+        SilentRotationsComponent.updateServerRotations(event.yaw, event.pitch);
 
         if (this.isCurrentViewEntity()) {
             double d0 = event.x - this.lastReportedPosX;
@@ -410,6 +415,13 @@ public class EntityPlayerSP extends AbstractClientPlayer {
             double d1 = z - (double) blockpos.getZ();
 
             if (!this.isOpenBlockSpace(blockpos)) {
+
+                EventPushOutOfBlocks event = new EventPushOutOfBlocks();
+                Nonsense.getEventBus().post(event);
+                if (event.isCancelled()) {
+                    return false;
+                }
+
                 int i = -1;
                 double d2 = 9999.0D;
 
@@ -709,7 +721,7 @@ public class EntityPlayerSP extends AbstractClientPlayer {
             this.setSprinting(true);
         }
 
-        if (this.isSprinting() && (this.movementInput.moveForward < f || this.isCollidedHorizontally || !flag3)) {
+        if (this.isSprinting() && (this.movementInput.moveForward < f || this.isCollidedHorizontally || !flag3) && !Nonsense.module(Sprint.class).omni()) {
             this.setSprinting(false);
         }
 
@@ -790,12 +802,13 @@ public class EntityPlayerSP extends AbstractClientPlayer {
 
     @Override
     public Vec3 getLook(float partialTicks) {
-        if (partialTicks == 1.0F) {
-            return this.getVectorForRotation(RotationUtil.serverPitch, RotationUtil.serverYaw);
-        } else {
-            float pitch = RotationUtil.prevServerPitch + (RotationUtil.serverPitch - RotationUtil.prevServerPitch) * partialTicks;
-            float yaw = RotationUtil.prevServerYaw + (RotationUtil.serverYaw - RotationUtil.prevServerYaw) * partialTicks;
-            return this.getVectorForRotation(pitch, yaw);
-        }
+        return SilentRotationsComponent.getLook(partialTicks, this);
+//        if (partialTicks == 1.0F) {
+//            return this.getVectorForRotation(RotationUtil.serverPitch, RotationUtil.serverYaw);
+//        } else {
+//            float pitch = RotationUtil.prevServerPitch + (RotationUtil.serverPitch - RotationUtil.prevServerPitch) * partialTicks;
+//            float yaw = RotationUtil.prevServerYaw + (RotationUtil.serverYaw - RotationUtil.prevServerYaw) * partialTicks;
+//            return this.getVectorForRotation(pitch, yaw);
+//        }
     }
 }

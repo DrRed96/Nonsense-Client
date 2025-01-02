@@ -17,7 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import org.lwjglx.input.Keyboard;
+import org.lwjgl.input.Keyboard;
 
 public abstract class GuiContainer extends GuiScreen
 {

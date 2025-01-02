@@ -2,12 +2,14 @@ package wtf.bhopper.nonsense.module.impl.visual;
 
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.util.Vec3;
+import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.component.impl.SilentRotationsComponent;
 import wtf.bhopper.nonsense.event.EventPriorities;
-import wtf.bhopper.nonsense.event.bus.EventLink;
-import wtf.bhopper.nonsense.event.bus.Listener;
+import wtf.bhopper.nonsense.event.EventLink;
+import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
-import wtf.bhopper.nonsense.event.impl.player.EventMovementInput;
-import wtf.bhopper.nonsense.event.impl.player.EventPreClick;
+import wtf.bhopper.nonsense.event.impl.player.movement.EventMovementInput;
+import wtf.bhopper.nonsense.event.impl.player.interact.EventPreClick;
 import wtf.bhopper.nonsense.event.impl.player.EventPreMotion;
 import wtf.bhopper.nonsense.event.impl.render.EventPostRenderWorld;
 import wtf.bhopper.nonsense.event.impl.render.EventPreRenderWorld;
@@ -19,7 +21,6 @@ import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
 import wtf.bhopper.nonsense.util.minecraft.player.MoveUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.Rotation;
-import wtf.bhopper.nonsense.util.minecraft.player.RotationUtil;
 
 @ModuleInfo(name = "Free Camera",
         description = "Silent spectator mode",
@@ -143,7 +144,7 @@ public class FreeCamera extends Module {
         }
 
         if (this.silentEntity != null) {
-            this.silentEntity.setPositionAndRotation(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, RotationUtil.serverYaw, RotationUtil.serverPitch);
+            this.silentEntity.setPositionAndRotation(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, Nonsense.component(SilentRotationsComponent.class).serverYaw, Nonsense.component(SilentRotationsComponent.class).serverPitch);
             this.silentEntity.prevPosX = mc.thePlayer.prevPosX;
             this.silentEntity.prevPosY = mc.thePlayer.prevPosY;
             this.silentEntity.prevPosZ = mc.thePlayer.prevPosZ;

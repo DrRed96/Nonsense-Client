@@ -2,10 +2,10 @@ package wtf.bhopper.nonsense.module.impl.movement;
 
 import net.minecraft.network.play.client.C03PacketPlayer;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.event.bus.EventLink;
-import wtf.bhopper.nonsense.event.bus.Listener;
-import wtf.bhopper.nonsense.event.impl.player.EventPostStep;
-import wtf.bhopper.nonsense.event.impl.player.EventPreStep;
+import wtf.bhopper.nonsense.event.EventLink;
+import wtf.bhopper.nonsense.event.Listener;
+import wtf.bhopper.nonsense.event.impl.player.movement.EventPostStep;
+import wtf.bhopper.nonsense.event.impl.player.movement.EventPreStep;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
@@ -52,7 +52,7 @@ public class Step extends Module {
     @EventLink
     public final Listener<EventPreStep> onPreStep = event -> {
         if (!mc.thePlayer.movementInput.jump && mc.thePlayer.isCollidedVertically && (!this.speedDisable.get() || !Nonsense.module(Speed.class).isToggled())) {
-            event.height = mode.isAny(Mode.NCP, Mode.MOTION) ? 1.0 : this.height.get();
+            event.height = mode.isAny(Mode.NCP, Mode.MOTION, Mode.WATCHDOG) ? 1.0 : this.height.get();
         }
     };
 
@@ -61,19 +61,26 @@ public class Step extends Module {
         if (event.realHeight >= 0.68) {
             switch (this.mode.get()) {
                 case NCP -> {
-                    for (int i = 1; i <= 2; i++) {
-                        PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + MoveUtil.getPosYForJumpTick(i), mc.thePlayer.posZ, mc.thePlayer.onGround));
-                    }
+                    PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.42, mc.thePlayer.posZ, mc.thePlayer.onGround));
+                    PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.75, mc.thePlayer.posZ, mc.thePlayer.onGround));
                 }
                 case MOTION -> {
                     for (int i = 1; i <= packets.getInt(); i++) {
                         PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + MoveUtil.getPosYForJumpTick(i), mc.thePlayer.posZ, mc.thePlayer.onGround));
                     }
                 }
+                case WATCHDOG -> {
+                    PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.42, mc.thePlayer.posZ, mc.thePlayer.onGround));
+                    PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 0.75, mc.thePlayer.posZ, mc.thePlayer.onGround));
+                    PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY + 1.0, mc.thePlayer.posZ, mc.thePlayer.onGround));
+                }
             }
         }
 
-        if (event.realHeight > 0.6 && this.timerEnable.get()) {
+        if (mode.is(Mode.WATCHDOG)) {
+            mc.timer.timerSpeed = 0.25F;
+            this.resetTimer = true;
+        } else if (event.realHeight > 0.6 && this.timerEnable.get()) {
             mc.timer.timerSpeed = this.timerSpeed.getFloat();
             this.resetTimer = true;
         }
@@ -82,7 +89,8 @@ public class Step extends Module {
     private enum Mode {
         VANILLA,
         @DisplayName("NCP") NCP,
-        MOTION
+        MOTION,
+        WATCHDOG
     }
 
 }

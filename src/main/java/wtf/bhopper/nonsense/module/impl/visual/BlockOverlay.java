@@ -10,20 +10,20 @@ import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MovingObjectPosition;
-import wtf.bhopper.nonsense.event.bus.EventLink;
-import wtf.bhopper.nonsense.event.bus.Listener;
+import wtf.bhopper.nonsense.event.EventLink;
+import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.render.EventRenderWorld;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
-import wtf.bhopper.nonsense.module.property.PropertyContainer;
+import wtf.bhopper.nonsense.module.property.IPropertyContainer;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.ColorProperty;
 import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
 import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
-import wtf.bhopper.nonsense.util.misc.Clock;
+import wtf.bhopper.nonsense.util.misc.Stopwatch;
 import wtf.bhopper.nonsense.util.render.RenderUtil;
 
 import java.awt.*;
@@ -46,7 +46,7 @@ public class BlockOverlay extends Module {
     private final BlockOverlayProperty jukeBox = new BlockOverlayProperty("Juke Box", false, 0xFF55FF, this);
     private final NumberProperty searchRange = new NumberProperty("Search Range", "Search range for non tile blocks", 30, 5, 100, 5);
 
-    private final Clock searchTimer = new Clock();
+    private final Stopwatch searchTimer = new Stopwatch();
     private final List<AxisAlignedBB> beds = new ArrayList<>();
     private final List<BlockPos> jukeBoxes = new ArrayList<>();
 
@@ -192,7 +192,7 @@ public class BlockOverlay extends Module {
         private final BooleanProperty box;
         private final BooleanProperty outline;
 
-        public BlockOverlayProperty(String displayName, boolean enabled, int color, boolean box, boolean outline, PropertyContainer owner) {
+        public BlockOverlayProperty(String displayName, boolean enabled, int color, boolean box, boolean outline, IPropertyContainer owner) {
             super(displayName, displayName, owner);
             this.enable = new BooleanProperty("Enable", "Enable " + displayName, enabled);
             this.color = new ColorProperty("Color", displayName + " color", color | 0xFF000000);
@@ -201,7 +201,7 @@ public class BlockOverlay extends Module {
             this.addProperties(this.enable, this.color, this.box, this.outline);
         }
 
-        public BlockOverlayProperty(String displayName, boolean enabled, int color, PropertyContainer owner) {
+        public BlockOverlayProperty(String displayName, boolean enabled, int color, IPropertyContainer owner) {
             this(displayName, enabled, color, true, false, owner);
         }
 

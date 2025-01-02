@@ -13,19 +13,18 @@ public class ModelPlayer extends ModelBiped
     private ModelRenderer bipedCape;
     private ModelRenderer bipedDeadmau5Head;
     private boolean smallArms;
-    private static final String __OBFID = "CL_00002626";
 
-    public ModelPlayer(float p_i46304_1_, boolean p_i46304_2_)
+    public ModelPlayer(float p_i46304_1_, boolean smallArms)
     {
         super(p_i46304_1_, 0.0F, 64, 64);
-        this.smallArms = p_i46304_2_;
+        this.smallArms = smallArms;
         this.bipedDeadmau5Head = new ModelRenderer(this, 24, 0);
         this.bipedDeadmau5Head.addBox(-3.0F, -6.0F, -1.0F, 6, 6, 1, p_i46304_1_);
         this.bipedCape = new ModelRenderer(this, 0, 0);
         this.bipedCape.setTextureSize(64, 32);
         this.bipedCape.addBox(-5.0F, 0.0F, -1.0F, 10, 16, 1, p_i46304_1_);
 
-        if (p_i46304_2_)
+        if (smallArms)
         {
             this.bipedLeftArm = new ModelRenderer(this, 32, 48);
             this.bipedLeftArm.addBox(-1.0F, -2.0F, -2.0F, 3, 12, 4, p_i46304_1_);

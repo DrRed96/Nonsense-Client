@@ -15,7 +15,7 @@ import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 import wtf.bhopper.nonsense.util.minecraft.world.BlockUtil;
-import wtf.bhopper.nonsense.util.misc.Clock;
+import wtf.bhopper.nonsense.util.misc.Stopwatch;
 import wtf.bhopper.nonsense.util.misc.EvictingArrayList;
 import wtf.bhopper.nonsense.util.misc.GeneralUtil;
 
@@ -65,18 +65,18 @@ public class PlayerData implements IMinecraft {
     private boolean sprinting;
     private boolean usingItem;
     private int blocks;
-    private Clock useClock;
+    private Stopwatch useClock;
 
     private final List<Long> updateDelayList = new EvictingArrayList<>(40);
     private final List<Long> closeUpdateDelayList = new EvictingArrayList<>(2);
-    private final Clock updateClock = new Clock();
-    private final Clock lastGroundCollision = new Clock();
+    private final Stopwatch updateClock = new Stopwatch();
+    private final Stopwatch lastGroundCollision = new Stopwatch();
     private long lastUpdateTime;
 
     private boolean hacking;
-    private final Clock lastSwing = new Clock();
-    private final Clock lastVelocity = new Clock();
-    private final Clock firstSeen = new Clock();
+    private final Stopwatch lastSwing = new Stopwatch();
+    private final Stopwatch lastVelocity = new Stopwatch();
+    private final Stopwatch firstSeen = new Stopwatch();
 
     private Item recentItem;
 
@@ -94,20 +94,20 @@ public class PlayerData implements IMinecraft {
         }
     }
 
-    public Clock getFirstSeen() {
+    public Stopwatch getFirstSeen() {
         return firstSeen;
     }
 
-    public Clock getLastVelocity() {
+    public Stopwatch getLastVelocity() {
         return lastVelocity;
     }
 
     private void updateDelay() {
         if (!this.updateClock.hasReached(3000L)) {
-            this.updateDelayList.add(this.updateClock.getTime());
-            this.closeUpdateDelayList.add(this.updateClock.getTime());
+            this.updateDelayList.add(this.updateClock.passedTime());
+            this.closeUpdateDelayList.add(this.updateClock.passedTime());
         }
-        this.lastUpdateTime = this.updateClock.getTime();
+        this.lastUpdateTime = this.updateClock.passedTime();
         this.updateClock.reset();
     }
 
@@ -200,7 +200,7 @@ public class PlayerData implements IMinecraft {
                     boolean using = (flagValue & (1 << 4)) != 0;
                     if (using) {
                         if (!this.usingItem) {
-                            this.useClock = new Clock();
+                            this.useClock = new Stopwatch();
                             this.usingItem = true;
                         }
                         if (sneaking == this.sneaking && sprinting == this.sprinting) {
@@ -432,7 +432,7 @@ public class PlayerData implements IMinecraft {
         return this.blocks;
     }
 
-    public Clock getUseClock() {
+    public Stopwatch getUseClock() {
         return this.useClock;
     }
 
@@ -476,7 +476,7 @@ public class PlayerData implements IMinecraft {
         return this.lastUpdateTime;
     }
 
-    public Clock getUpdateClock() {
+    public Stopwatch getUpdateClock() {
         return this.updateClock;
     }
 
@@ -488,7 +488,7 @@ public class PlayerData implements IMinecraft {
         return this.recentItem;
     }
 
-    public Clock getLastSwing() {
+    public Stopwatch getLastSwing() {
         return this.lastSwing;
     }
 
@@ -501,8 +501,8 @@ public class PlayerData implements IMinecraft {
         return this.getCheckData(clazz, null);
     }
 
-    public boolean hasCheckData(Class<? extends ICheckData> dataClazz) {
-        return this.checkData.containsKey(dataClazz);
+    public boolean hasCheckData(Class<? extends ICheckData> clazz) {
+        return this.checkData.containsKey(clazz);
     }
 
     public Map<Check, Float> getViolations() {

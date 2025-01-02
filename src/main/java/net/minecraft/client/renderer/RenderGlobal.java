@@ -103,16 +103,13 @@ import optifine.RenderInfoLazy;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjglx.input.Keyboard;
+import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
-import org.lwjglx.util.vector.Vector3f;
-import org.lwjglx.util.vector.Vector4f;
+import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 import shadersmod.client.Shaders;
 import shadersmod.client.ShadersRender;
 import shadersmod.client.ShadowUtils;
-import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.module.impl.visual.FreeCamera;
-import wtf.bhopper.nonsense.module.impl.visual.Xray;
 
 public class RenderGlobal implements IWorldAccess, IResourceManagerReloadListener
 {

@@ -68,6 +68,7 @@ import net.minecraft.world.storage.MapData;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.event.impl.packet.EventTeleport;
 import wtf.bhopper.nonsense.event.impl.player.EventJoinGame;
 import wtf.bhopper.nonsense.event.impl.packet.EventSendPacket;
 import wtf.bhopper.nonsense.module.impl.other.Debugger;
@@ -455,40 +456,59 @@ public class NetHandlerPlayClient implements INetHandlerPlayClient {
     public void handlePlayerPosLook(S08PacketPlayerPosLook packetIn) {
         PacketThreadUtil.checkThreadAndEnqueue(packetIn, this, this.gameController);
         EntityPlayer entityplayer = this.gameController.thePlayer;
-        double d0 = packetIn.getX();
-        double d1 = packetIn.getY();
-        double d2 = packetIn.getZ();
-        float f = packetIn.getYaw();
-        float f1 = packetIn.getPitch();
+        double x = packetIn.getX();
+        double y = packetIn.getY();
+        double z = packetIn.getZ();
+        float yaw = packetIn.getYaw();
+        float pitch = packetIn.getPitch();
+
+        EventTeleport event = new EventTeleport(new C03PacketPlayer.C06PacketPlayerPosLook(entityplayer.posX, entityplayer.posY, entityplayer.posZ, entityplayer.rotationYaw, entityplayer.rotationPitch, false),
+                x,
+                y,
+                z,
+                yaw,
+                pitch);
+
+        Nonsense.getEventBus().post(event);
+
+        if (event.isCancelled()) {
+            return;
+        }
+
+        x = event.x;
+        y = event.y;
+        z = event.z;
+        yaw = event.yaw;
+        pitch = event.pitch;
 
         if (packetIn.getFlags().contains(S08PacketPlayerPosLook.EnumFlags.X)) {
-            d0 += entityplayer.posX;
+            x += entityplayer.posX;
         } else {
             entityplayer.motionX = 0.0D;
         }
 
         if (packetIn.getFlags().contains(S08PacketPlayerPosLook.EnumFlags.Y)) {
-            d1 += entityplayer.posY;
+            y += entityplayer.posY;
         } else {
             entityplayer.motionY = 0.0D;
         }
 
         if (packetIn.getFlags().contains(S08PacketPlayerPosLook.EnumFlags.Z)) {
-            d2 += entityplayer.posZ;
+            z += entityplayer.posZ;
         } else {
             entityplayer.motionZ = 0.0D;
         }
 
         if (packetIn.getFlags().contains(S08PacketPlayerPosLook.EnumFlags.X_ROT)) {
-            f1 += entityplayer.rotationPitch;
+            pitch += entityplayer.rotationPitch;
         }
 
         if (packetIn.getFlags().contains(S08PacketPlayerPosLook.EnumFlags.Y_ROT)) {
-            f += entityplayer.rotationYaw;
+            yaw += entityplayer.rotationYaw;
         }
 
-        entityplayer.setPositionAndRotation(d0, d1, d2, f, f1);
-        this.netManager.sendPacket(new C03PacketPlayer.C06PacketPlayerPosLook(entityplayer.posX, entityplayer.getEntityBoundingBox().minY, entityplayer.posZ, entityplayer.rotationYaw, entityplayer.rotationPitch, false));
+        entityplayer.setPositionAndRotation(x, y, z, yaw, pitch);
+        this.netManager.sendPacket(new C03PacketPlayer.C06PacketPlayerPosLook(x, y, z, yaw, pitch, false));
 
         if (!this.doneLoadingTerrain) {
             this.gameController.thePlayer.prevPosX = this.gameController.thePlayer.posX;

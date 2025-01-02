@@ -15,6 +15,8 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ReportedException;
+import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.component.impl.SilentSlotComponent;
 import wtf.bhopper.nonsense.util.minecraft.inventory.InventoryUtil;
 
 public class InventoryPlayer implements IInventory
@@ -51,7 +53,7 @@ public class InventoryPlayer implements IInventory
     public ItemStack getCurrentItem()
     {
         if (this.player.isClientPlayer()) {
-            return InventoryUtil.currentItem() < 9 && InventoryUtil.currentItem() >= 0 ? this.mainInventory[InventoryUtil.currentItem()] : null;
+            return SilentSlotComponent.getSlot() < 9 && SilentSlotComponent.getSlot() >= 0 ? this.mainInventory[SilentSlotComponent.getSlot()] : null;
         }
         return this.currentItem < 9 && this.currentItem >= 0 ? this.mainInventory[this.currentItem] : null;
     }
@@ -559,9 +561,9 @@ public class InventoryPlayer implements IInventory
     {
         float f = 1.0F;
 
-        if (this.mainInventory[InventoryUtil.serverItem] != null)
+        if (this.mainInventory[SilentSlotComponent.getSlot()] != null)
         {
-            f *= this.mainInventory[InventoryUtil.serverItem].getStrVsBlock(blockIn);
+            f *= this.mainInventory[SilentSlotComponent.getSlot()].getStrVsBlock(blockIn);
         }
 
         return f;
@@ -691,7 +693,7 @@ public class InventoryPlayer implements IInventory
         }
         else
         {
-            ItemStack itemstack = this.getStackInSlot(InventoryUtil.serverItem);
+            ItemStack itemstack = this.getStackInSlot(SilentSlotComponent.getSlot());
             return itemstack != null && itemstack.canHarvestBlock(blockIn);
         }
     }

@@ -11,8 +11,9 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
-import org.lwjglx.opengl.Display;
-import wtf.bhopper.nonsense.component.TickRateComponent;
+import org.lwjgl.opengl.Display;
+import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.component.impl.TickRateComponent;
 import wtf.bhopper.nonsense.module.impl.visual.HudMod;
 import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
@@ -89,7 +90,7 @@ public class InfoDisplay implements IMinecraft {
         }
 
         if (mod.tps.get()) {
-            this.components.add(new Component("TPS", String.format("%.2f", TickRateComponent.getTickRate())));
+            this.components.add(new Component("TPS", String.format("%.2f", Nonsense.component(TickRateComponent.class).getTickRate())));
         }
 
         if (mod.fps.get()) {

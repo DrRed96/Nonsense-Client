@@ -1,26 +1,16 @@
 package wtf.bhopper.nonsense.util.minecraft.player;
 
+import com.google.common.base.Predicate;
 import com.google.common.base.Predicates;
 import net.minecraft.entity.Entity;
 import net.minecraft.util.*;
+import org.jetbrains.annotations.Nullable;
 import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 import wtf.bhopper.nonsense.util.misc.MathUtil;
 
 import java.util.List;
 
 public class RotationUtil implements IMinecraft {
-
-    public static float serverYaw = 0.0F;
-    public static float serverPitch = 0.0F;
-    public static float prevServerYaw = 0.0F;
-    public static float prevServerPitch = 0.0F;
-
-    public static void updateServerRotations(float yaw, float pitch) {
-        prevServerYaw = serverYaw;
-        prevServerPitch = serverPitch;
-        serverYaw = mc.thePlayer.rotationYawHead = mc.thePlayer.renderYawOffset = yaw;
-        serverPitch = mc.thePlayer.rotationPitchHead = pitch;
-    }
 
     public static Rotation getRotations(double rotX, double rotY, double rotZ, double startX, double startY, double startZ) {
         double x = rotX - startX;
@@ -272,6 +262,48 @@ public class RotationUtil implements IMinecraft {
         }
 
         return objectMouseOver;
+    }
+
+    public static MovingObjectPosition rayCastEntityCheck(Rotation rotation, double range, Entity entity, Entity target) {
+
+        Vec3 hitVec = null;
+        Vec3 start = entity.getPositionEyes(1.0F);
+        Vec3 look = entity.getVectorForRotation(rotation.pitch, rotation.yaw);
+        Vec3 end = start.addVector(look.xCoord * range, look.yCoord * range, look.zCoord * range);
+
+        List<Entity> possibleEntities = mc.theWorld.getEntitiesInAABBexcluding(entity,
+                entity.getEntityBoundingBox().addCoord(look.xCoord * range, look.yCoord * range, look.zCoord * range).expand(1.0F, 1.0F, 1.0F),
+                Predicates.and(EntitySelectors.NOT_SPECTATING, Entity::canBeCollidedWith));
+
+        if (!possibleEntities.contains(target)) {
+            return new MovingObjectPosition(MovingObjectPosition.MovingObjectType.MISS, end, null, null);
+        }
+
+        float collisionBoarderSize = target.getCollisionBorderSize();
+        AxisAlignedBB boundingBox = target.getEntityBoundingBox().expand(collisionBoarderSize, collisionBoarderSize, collisionBoarderSize);
+        MovingObjectPosition intercept = boundingBox.calculateIntercept(start, end);
+
+        boolean ok = false;
+
+        if (boundingBox.isVecInside(start)) {
+            if (range >= 0.0) {
+                ok = true;
+                hitVec = intercept != null ? intercept.hitVec : start;
+            }
+        } else if (intercept != null) {
+            double distance = start.distanceTo(intercept.hitVec);
+
+            if (distance < range || range == 0.0) {
+                ok = true;
+                hitVec = intercept.hitVec;
+            }
+        }
+
+        if (ok) {
+            return new MovingObjectPosition(target, hitVec);
+        }
+
+        return new MovingObjectPosition(MovingObjectPosition.MovingObjectType.MISS, end, null, null);
     }
 
 }

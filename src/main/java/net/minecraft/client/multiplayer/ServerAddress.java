@@ -27,7 +27,7 @@ public class ServerAddress
         return this.serverPort;
     }
 
-    public static ServerAddress func_78860_a(String p_78860_0_)
+    public static ServerAddress fromString(String p_78860_0_)
     {
         if (p_78860_0_ == null)
         {

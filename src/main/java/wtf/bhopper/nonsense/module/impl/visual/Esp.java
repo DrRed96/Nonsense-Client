@@ -14,8 +14,8 @@ import net.minecraft.potion.Potion;
 import net.minecraft.util.AxisAlignedBB;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.EventPriorities;
-import wtf.bhopper.nonsense.event.bus.EventLink;
-import wtf.bhopper.nonsense.event.bus.Listener;
+import wtf.bhopper.nonsense.event.EventLink;
+import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.render.EventRenderGui;
 import wtf.bhopper.nonsense.event.impl.render.EventRenderNameTag;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
@@ -63,6 +63,7 @@ public class Esp extends Module {
     private final BooleanProperty displayNames = new BooleanProperty("Display Names", "Render display names", true);
     private final BooleanProperty nameHealth = new BooleanProperty("Health", "Display health in name tags", true);
     private final BooleanProperty nameBackground = new BooleanProperty("Background", "Display background", true);
+    private final BooleanProperty nameOutline = new BooleanProperty("Outline", "Draws outlined strings", false);
     private final BooleanProperty heldItem = new BooleanProperty("Held Item", "Displays the entities held item", true);
 
     private final GroupProperty barGroup = new GroupProperty("Health Bar", "Health bars", this);
@@ -75,7 +76,7 @@ public class Esp extends Module {
     public Esp() {
         this.targetsGroup.addProperties(this.players, this.mobs, this.animals, this.others, this.invis, this.self);
         this.boxGroup.addProperties(this.boxEnable, this.boxCorners, this.boxOutline, this.boxCornerFactor, this.boxColor);
-        this.nameGroup.addProperties(this.nameEnable, this.nameColor, this.displayNames, this.nameHealth, this.nameBackground, this.heldItem);
+        this.nameGroup.addProperties(this.nameEnable, this.nameColor, this.displayNames, this.nameHealth, this.nameBackground, this.nameOutline, this.heldItem);
         this.barGroup.addProperties(this.barEnable, this.barColorMode, this.barColor);
         this.addProperties(this.targetsGroup, this.boxGroup, this.nameGroup, this.barGroup);
     }
@@ -364,7 +365,11 @@ public class Esp extends Module {
 
             GlStateManager.pushMatrix();
             scale.scaleToOne();
-            font.drawStringWithShadow(display, tagX, tagY - 1.0F, nameColor.getRGB());
+            if (nameOutline.get()) {
+                RenderUtil.drawOutlineString(font, display, tagX, tagY - 1.0F, nameColor.getRGB(), ColorUtil.BLACK);
+            } else {
+                font.drawStringWithShadow(display, tagX, tagY - 1.0F, nameColor.getRGB());
+            }
             GlStateManager.popMatrix();
 
             if (heldItem.get() && entity.getHeldItem() != null) {
@@ -381,7 +386,11 @@ public class Esp extends Module {
 
                 GlStateManager.pushMatrix();
                 scale.scaleToOne();
-                font.drawStringWithShadow(itemDisplay, itemX, itemY - 1.0F, ColorUtil.WHITE);
+                if (nameOutline.get()) {
+                    RenderUtil.drawOutlineString(font, itemDisplay, itemX, itemY - 1.0F, ColorUtil.WHITE, ColorUtil.BLACK);
+                } else {
+                    font.drawStringWithShadow(itemDisplay, itemX, itemY - 1.0F, ColorUtil.WHITE);
+                }
                 GlStateManager.popMatrix();
             }
 

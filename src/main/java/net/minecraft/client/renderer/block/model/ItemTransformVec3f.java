@@ -9,7 +9,7 @@ import com.google.gson.JsonParseException;
 import java.lang.reflect.Type;
 import net.minecraft.util.JsonUtils;
 import net.minecraft.util.MathHelper;
-import org.lwjglx.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector3f;
 
 public class ItemTransformVec3f
 {

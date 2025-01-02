@@ -29,6 +29,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldSettings;
 import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.component.impl.SilentSlotComponent;
 import wtf.bhopper.nonsense.module.impl.other.AntiDesync;
 import wtf.bhopper.nonsense.module.impl.player.FastMine;
 import wtf.bhopper.nonsense.util.minecraft.inventory.InventoryUtil;
@@ -329,7 +330,7 @@ public class PlayerControllerMP {
      * Syncs the current player item with the server
      */
     public void syncCurrentPlayItem() {
-        int slot = InventoryUtil.currentItem();
+        int slot = SilentSlotComponent.getSlot();
 
         if (slot != this.currentPlayerItem) {
             this.currentPlayerItem = slot;

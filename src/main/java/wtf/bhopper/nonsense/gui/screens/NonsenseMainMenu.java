@@ -12,7 +12,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
-import org.lwjglx.util.glu.Project;
+import org.lwjgl.util.glu.Project;
 import wtf.bhopper.nonsense.gui.screens.altmanager.GuiAltManager;
 import wtf.bhopper.nonsense.util.misc.GeneralUtil;
 import wtf.bhopper.nonsense.util.misc.InputUtil;

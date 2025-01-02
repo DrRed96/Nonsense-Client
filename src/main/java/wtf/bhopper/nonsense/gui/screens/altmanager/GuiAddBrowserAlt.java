@@ -2,26 +2,16 @@ package wtf.bhopper.nonsense.gui.screens.altmanager;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.resources.I18n;
-import org.lwjgl.PointerBuffer;
-import org.lwjgl.system.MemoryStack;
-import org.lwjglx.Sys;
+import org.lwjgl.Sys;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.alt.Alt;
 import wtf.bhopper.nonsense.alt.AltManager;
 import wtf.bhopper.nonsense.alt.loginthread.BrowserLoginThread;
-import wtf.bhopper.nonsense.alt.loginthread.CookieLoginThread;
-import wtf.bhopper.nonsense.alt.loginthread.LoginDataCallback;
-import wtf.bhopper.nonsense.alt.mslogin.LoginData;
 import wtf.bhopper.nonsense.alt.mslogin.MSAuthScheme;
 import wtf.bhopper.nonsense.gui.hud.notification.Notification;
 import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
-import wtf.bhopper.nonsense.util.misc.ErrorCallback;
 
-import java.awt.*;
-import java.io.File;
 import java.io.IOException;
 
 import static org.lwjgl.util.tinyfd.TinyFileDialogs.tinyfd_openFileDialog;

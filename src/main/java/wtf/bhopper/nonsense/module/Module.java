@@ -7,9 +7,10 @@ import wtf.bhopper.nonsense.gui.hud.Hud;
 import wtf.bhopper.nonsense.gui.hud.notification.Notification;
 import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
 import wtf.bhopper.nonsense.module.property.Property;
-import wtf.bhopper.nonsense.module.property.PropertyContainer;
+import wtf.bhopper.nonsense.module.property.IPropertyContainer;
 import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 import wtf.bhopper.nonsense.util.misc.GeneralUtil;
+import wtf.bhopper.nonsense.config.ISerializable;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
@@ -18,7 +19,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
-public abstract class Module implements PropertyContainer, IMinecraft {
+public abstract class Module implements IPropertyContainer, ISerializable, IMinecraft {
 
     public final String name = this.getClass().getAnnotation(ModuleInfo.class).name().replace(" ", "").toLowerCase();
     public final String displayName = this.getClass().getAnnotation(ModuleInfo.class).name();
@@ -147,7 +148,8 @@ public abstract class Module implements PropertyContainer, IMinecraft {
         return this.suffix.get();
     }
 
-    public JsonObject serialize() {
+    @Override
+    public JsonElement serialize() {
         JsonObject moduleObject = new JsonObject();
         moduleObject.addProperty("toggled", this.toggled);
         moduleObject.addProperty("bind", this.bind);
@@ -164,9 +166,10 @@ public abstract class Module implements PropertyContainer, IMinecraft {
         return moduleObject;
     }
 
-    public void deserialize(JsonObject moduleObject) {
+    @Override
+    public void deserialize(JsonElement element) {
 
-        if (moduleObject == null) {
+        if (!(element instanceof JsonObject moduleObject)) {
             return;
         }
 

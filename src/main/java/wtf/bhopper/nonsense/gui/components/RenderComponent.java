@@ -1,7 +1,7 @@
 package wtf.bhopper.nonsense.gui.components;
 
 import net.minecraft.client.gui.Gui;
-import org.lwjglx.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector2f;
 import wtf.bhopper.nonsense.gui.hud.Hud;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
 import wtf.bhopper.nonsense.util.minecraft.IMinecraft;

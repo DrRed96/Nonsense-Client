@@ -1,7 +1,7 @@
 package wtf.bhopper.nonsense.gui.click.novoline;
 
 import net.minecraft.client.Minecraft;
-import org.lwjglx.util.vector.Vector2f;
+import org.lwjgl.util.vector.Vector2f;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
 

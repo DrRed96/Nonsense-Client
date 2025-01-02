@@ -2,35 +2,37 @@ package wtf.bhopper.nonsense.module.impl.combat;
 
 import io.netty.util.internal.ThreadLocalRandom;
 import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.potion.Potion;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.event.bus.EventLink;
-import wtf.bhopper.nonsense.event.bus.Listener;
-import wtf.bhopper.nonsense.event.impl.player.EventPreMotion;
-import wtf.bhopper.nonsense.event.impl.render.EventRenderWorld;
+import wtf.bhopper.nonsense.event.EventLink;
+import wtf.bhopper.nonsense.event.EventPriorities;
+import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
-import wtf.bhopper.nonsense.event.impl.player.EventUpdate;
+import wtf.bhopper.nonsense.event.impl.player.EventPreMotion;
+import wtf.bhopper.nonsense.event.impl.player.interact.EventClickAction;
+import wtf.bhopper.nonsense.event.impl.render.EventRenderWorld;
 import wtf.bhopper.nonsense.gui.hud.Hud;
 import wtf.bhopper.nonsense.gui.hud.notification.Notification;
 import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
+import wtf.bhopper.nonsense.module.property.ValueChangeListener;
 import wtf.bhopper.nonsense.module.property.impl.*;
-import wtf.bhopper.nonsense.util.minecraft.player.PacketUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.Rotation;
 import wtf.bhopper.nonsense.util.minecraft.player.RotationUtil;
-import wtf.bhopper.nonsense.util.misc.Clock;
 import wtf.bhopper.nonsense.util.misc.MathUtil;
+import wtf.bhopper.nonsense.util.misc.Stopwatch;
 import wtf.bhopper.nonsense.util.render.ColorUtil;
 import wtf.bhopper.nonsense.util.render.RenderUtil;
 
@@ -69,8 +71,6 @@ public class KillAura extends Module {
 
     private final GroupProperty rotsGroup = new GroupProperty("Rotations", "Kill Aura Rotations", this);
     private final EnumProperty<RotationMode> rotationMode = new EnumProperty<>("Mode", "Rotations method", RotationMode.INSTANT);
-    private final EnumProperty<HitVecMode> hitVecMode = new EnumProperty<>("Hit Vector", "Hit vector of the entity", HitVecMode.CLOSEST);
-    private final BooleanProperty rayCast = new BooleanProperty("Ray Cast", "Performs a ray-cast check", false);
     private final NumberProperty linear = new NumberProperty("Linear Amount", "Amount to change by with linear rotations", () -> this.rotationMode.is(RotationMode.LINEAR), 80.0, 1.0, 100.0, 1.0, NumberProperty.FORMAT_PERCENT);
 
     private final GroupProperty renderGroup = new GroupProperty("Render", "Rendering options", this);
@@ -92,17 +92,28 @@ public class KillAura extends Module {
 
     private int nextDelay = -1;
 
-    private final Clock attackTimer = new Clock();
-    private final Clock switchTimer = new Clock();
+    private final Stopwatch attackTimer = new Stopwatch();
+    private final Stopwatch switchTimer = new Stopwatch();
 
-    private Vec3 hitVec = null;
     private Rotation targetRotations = null;
     private Rotation rotations = null;
+    private Vec3 hitVec = null;
 
+    @Override
+    public void onEnable() {
+        this.cleanup();
+    }
+
+    @Override
+    public void onDisable() {
+        this.cleanup();
+    }
+    
     public KillAura() {
+
         this.targetsGroup.addProperties(this.players, this.mobs, this.animals, this.others, this.invis, this.dead, this.teams, this.existed);
         this.rangeGroup.addProperties(this.playerRange, this.otherRange, this.rotRange, this.swingRange, this.fov);
-        this.rotsGroup.addProperties(this.rotationMode, this.hitVecMode, this.rayCast, this.linear);
+        this.rotsGroup.addProperties(this.rotationMode, this.linear);
         this.renderGroup.addProperties(this.rangeIndicator, this.attackColor);
         this.addProperties(this.mode, this.sorting, this.minAps, this.maxAps, this.targetsGroup, this.rangeGroup, this.rotsGroup, this.renderGroup, this.swingMode, this.autoDisable, this.switchDelay, this.maxTargets, this.particles);
         this.setSuffix(this.mode::getDisplayValue);
@@ -118,22 +129,13 @@ public class KillAura extends Module {
                 this.minAps.set(value);
             }
         });
-    }
 
-    @Override
-    public void onEnable() {
-        this.cleanup();
-    }
-
-    @Override
-    public void onDisable() {
-        this.cleanup();
     }
 
     @EventLink
     public final Listener<EventTick> onTick = _ -> {
-
         if (!PlayerUtil.canUpdate()) {
+            this.cleanup();
             return;
         }
 
@@ -144,7 +146,7 @@ public class KillAura extends Module {
         }
 
         if (this.nextDelay == -1) {
-            this.nextDelay = (int)(1000.0F / (float)ThreadLocalRandom.current().nextInt(this.minAps.getInt(), this.maxAps.getInt() + 1));
+            this.nextDelay = (int) (1000.0F / (float) ThreadLocalRandom.current().nextInt(this.minAps.getInt(), this.maxAps.getInt() + 1));
         }
 
         this.updateTargetList();
@@ -165,90 +167,109 @@ public class KillAura extends Module {
             this.sortTargets(this.targets);
             this.target = this.targets.get(this.targetIndex);
             this.isTargetValid = true;
+
         } else if (!this.invalidTargets.isEmpty()) {
             this.target = this.invalidTargets.getFirst();
             this.isTargetValid = false;
+
         } else {
             this.target = null;
+            this.isTargetValid = false;
         }
-
     };
 
-    @EventLink
-    public final Listener<EventUpdate> onUpdate = _ -> {
+    @EventLink(EventPriorities.HIGH)
+    public final Listener<EventClickAction> onClick = event -> {
+
         if (this.target == null) {
-            this.rotations = new Rotation(mc.thePlayer);
+            this.targetRotations = new Rotation(mc.thePlayer);
+            this.rotations = null;
             return;
         }
 
-        this.hitVec = this.getHitVec(this.target);
-        this.targetRotations = RotationUtil.getRotations(this.hitVec);
+        if (this.targetRotations == null) {
+            this.targetRotations = this.getTargetRotations(this.target);
+
+        } else {
+            Rotation rotationsToTarget = this.getTargetRotations(this.target);
+            this.targetRotations.yaw = rotationsToTarget.yaw;
+
+            if (RotationUtil.rayCastEntityCheck(this.targetRotations, 999, mc.thePlayer, this.target).entityHit == null) {
+                this.targetRotations.pitch = rotationsToTarget.pitch;
+            }
+
+        }
+
+        boolean canSwing = this.getHitVec(this.target).distanceTo(PlayerUtil.eyesPos()) <= this.swingRange.getDouble();
+        float range = this.target instanceof EntityPlayer ? this.playerRange.getFloat() : this.otherRange.getFloat();
+
+        if (this.rotations == null) {
+            this.rotations = new Rotation(mc.thePlayer);
+        }
 
         this.rotations = switch (this.rotationMode.get()) {
             case INSTANT -> this.targetRotations;
             case LINEAR -> RotationUtil.lerp(this.rotations, this.targetRotations, this.linear.getFloat() / 100.0F);
         };
 
-        if (this.rayCast.get()) {
-            float range = this.target instanceof EntityPlayer ? this.playerRange.getFloat() : this.otherRange.getFloat();
-            Vec3 start = mc.thePlayer.getPositionEyes(1.0F);
-            Vec3 look = RotationUtil.getRotationVec(this.rotations);
-            Vec3 end = start.addVector(look.xCoord * range, look.yCoord * range, look.zCoord * range);
-            MovingObjectPosition intercept = this.target.getEntityBoundingBox().calculateIntercept(start, end);
-            if (intercept == null) {
-                this.isTargetValid = false;
-            }
-        }
+        if (this.attackTimer.hasReached(this.nextDelay)) {
 
-        boolean canSwing = hitVec.distanceTo(PlayerUtil.eyesPos()) <= this.swingRange.getDouble();
+            MovingObjectPosition intercept = RotationUtil.rayCastEntity(this.rotations, range, mc.thePlayer);
 
-        if (this.isTargetValid && this.target.hurtResistantTime <= 15) {
-            PacketUtil.leftClickPackets(new MovingObjectPosition(this.target, hitVec), switch (this.swingMode.get()) {
-                case CLIENT, ATTACK_ONLY -> true;
-                case SILENT -> false;
-            });
+            if (intercept != null && intercept.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && this.isTargetValid(intercept.entityHit) == TargetValidity.ATTACK) {
 
-            if (this.particles.get()) {
-                if (Nonsense.module(Criticals.class).isToggled() || (mc.thePlayer.fallDistance > 0.0F && !mc.thePlayer.onGround && !mc.thePlayer.isOnLadder() && !mc.thePlayer.isInWater() && !mc.thePlayer.isPotionActive(Potion.blindness) && mc.thePlayer.ridingEntity == null)) {
-                    mc.thePlayer.onCriticalHit(this.target);
+                this.target = (EntityLivingBase)intercept.entityHit;
+                this.hitVec = intercept.hitVec;
+
+                event.left = true;
+                event.leftSwing = switch (this.swingMode.get()) {
+                    case CLIENT, ATTACK_ONLY -> true;
+                    case SILENT -> false;
+                };
+                event.mouseOver = new MovingObjectPosition(this.target, this.hitVec);
+
+                this.doParticles(this.target);
+
+            } else {
+
+                event.mouseOver = RotationUtil.rayCast(this.rotations, 3.0, mc.thePlayer);
+
+                if (canSwing) {
+                    event.left = true;
+
+                    event.leftSwing = switch (this.swingMode.get()) {
+                        case CLIENT -> true;
+                        case SILENT -> false;
+                        case ATTACK_ONLY -> event.mouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY;
+                    };
                 }
-
-                if (EnchantmentHelper.getLivingModifier(mc.thePlayer.getHeldItem(), this.target.getCreatureAttribute()) > 0.0F) {
-                    mc.thePlayer.onEnchantmentCritical(this.target);
-                }
-
             }
 
-        } else if (canSwing) {
-            PacketUtil.leftClickPackets(new MovingObjectPosition(MovingObjectPosition.MovingObjectType.MISS, hitVec, null, new BlockPos(hitVec)), switch (this.swingMode.get()) {
-                case CLIENT -> true;
-                case SILENT, ATTACK_ONLY -> false;
-            });
+            this.attackTimer.reset();
+            this.nextDelay = 20 / (int) ((Math.random() * (this.maxAps.getDouble() - this.minAps.getDouble())) + this.minAps.getDouble());
         }
-
-        this.attackTimer.reset();
-        this.nextDelay = 20 / (int) ((Math.random() * (this.maxAps.getDouble() - this.minAps.getDouble())) + this.minAps.getDouble());
 
     };
 
     @EventLink
     public final Listener<EventPreMotion> onPre = event -> {
-        if (this.target == null || this.rotations == null) {
-            return;
-        }
-
-        if (hitVec.distanceTo(PlayerUtil.eyesPos()) <= this.rotRange.getDouble()) {
+        if (this.rotations != null) {
             event.setRotations(this.rotations);
         }
-
-
     };
 
-    private Vec3 getHitVec(EntityLivingBase entity) {
-        return switch (this.hitVecMode.get()) {
-            case CLOSEST -> MathUtil.closestPoint(entity.getEntityBoundingBox(), PlayerUtil.eyesPos());
-            case HEAD -> new Vec3(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ);
-        };
+    private Rotation getTargetRotations(Entity target) {
+        Vec3 hitVec = this.getHitVec(target);
+        if (hitVec.distanceTo(PlayerUtil.eyesPos()) > this.rotRange.getDouble()) {
+            return new Rotation(mc.thePlayer);
+        }
+
+        return RotationUtil.getRotations(hitVec);
+    }
+
+
+    private Vec3 getHitVec(Entity target) {
+        return MathUtil.closestPoint(target.getEntityBoundingBox(), PlayerUtil.eyesPos());
     }
 
     private void incrementTargetIndex() {
@@ -269,17 +290,17 @@ public class KillAura extends Module {
         targets.sort(switch (this.sorting.get()) {
             case ANGLE -> Comparator.comparingDouble(entity -> Math.abs(RotationUtil.getYawChange(entity.posX, entity.posZ)));
             case RANGE -> Comparator.comparingDouble(entity -> entity.getDistanceToEntity(mc.thePlayer));
-            case ARMOR -> Comparator.comparingInt(entity -> entity instanceof EntityPlayer ? ((EntityPlayer) entity).inventory.getTotalArmorValue() : (int) entity.getHealth());
-            case HEALTH -> Comparator.comparingDouble(EntityLivingBase::getHealth);
+            case ARMOR -> Comparator.<EntityLivingBase>comparingInt(entity -> entity instanceof EntityPlayer ? ((EntityPlayer) entity).inventory.getTotalArmorValue() : (int) entity.getHealth()).reversed();
+            case HEALTH -> Comparator.comparingDouble(EntityLivingBase::getHealth).reversed();
         });
     }
 
-    private TargetValidity isTargetValid(EntityLivingBase target) {
-        if (target == null || target.isClientPlayer() || target.isFake) {
+    private TargetValidity isTargetValid(Entity target) {
+        if (!(target instanceof EntityLivingBase living) || target.isClientPlayer() || target.isFake) {
             return TargetValidity.INVALID;
         }
 
-        if ((target.getHealth() <= 0.0F || target.isDead) && !this.dead.get()) {
+        if ((living.getHealth() <= 0.0F || target.isDead) && !this.dead.get()) {
             return TargetValidity.INVALID;
         }
 
@@ -327,7 +348,7 @@ public class KillAura extends Module {
             return result;
         }
 
-        if (target instanceof EntityMob || this.target instanceof EntitySlime) {
+        if (target instanceof EntityMob || target instanceof EntitySlime) {
             return this.mobs.get() ? result : TargetValidity.INVALID;
         } else if (target instanceof EntityAnimal) {
             return this.animals.get() ? result : TargetValidity.INVALID;
@@ -337,9 +358,22 @@ public class KillAura extends Module {
 
     }
 
-    private boolean isInFov(EntityLivingBase entity) {
+    private boolean isInFov(Entity entity) {
         float fov = this.fov.getFloat();
         return RotationUtil.getYawChange(entity.posX, entity.posZ) <= fov && RotationUtil.getPitchChange(entity, entity.posY) <= fov;
+    }
+
+    private void doParticles(EntityLivingBase target) {
+        if (this.particles.get()) {
+            if (Nonsense.module(Criticals.class).isToggled() || (mc.thePlayer.fallDistance > 0.0F && !mc.thePlayer.onGround && !mc.thePlayer.isOnLadder() && !mc.thePlayer.isInWater() && !mc.thePlayer.isPotionActive(Potion.blindness) && mc.thePlayer.ridingEntity == null)) {
+                mc.thePlayer.onCriticalHit(target);
+            }
+
+            if (EnchantmentHelper.getLivingModifier(mc.thePlayer.getHeldItem(), target.getCreatureAttribute()) > 0.0F) {
+                mc.thePlayer.onEnchantmentCritical(target);
+            }
+
+        }
     }
 
     private void cleanup() {
@@ -408,5 +442,5 @@ public class KillAura extends Module {
         TARGET,
         INVALID
     }
-
+    
 }

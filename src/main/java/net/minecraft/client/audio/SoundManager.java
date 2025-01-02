@@ -129,7 +129,7 @@ public class SoundManager
                                 }
                             }
                         });
-                        SoundManager.this.sndSystem = SoundManager.this.new SoundSystemStarterThread();
+                        SoundManager.this.sndSystem = new SoundSystemStarterThread();
                         SoundManager.this.loaded = true;
                         SoundManager.this.sndSystem.setMasterVolume(SoundManager.this.options.getSoundLevel(SoundCategory.MASTER));
                         SoundManager.logger.info(SoundManager.LOG_MARKER, "Sound engine started");
@@ -484,7 +484,7 @@ public class SoundManager
 
         try
         {
-            return new URL((URL)null, s, urlstreamhandler);
+            return new URL(null, s, urlstreamhandler);
         }
         catch (MalformedURLException var4)
         {
@@ -519,7 +519,7 @@ public class SoundManager
         }
     }
 
-    class SoundSystemStarterThread extends SoundSystem
+    static class SoundSystemStarterThread extends SoundSystem
     {
         private SoundSystemStarterThread()
         {
@@ -535,8 +535,8 @@ public class SoundManager
                 }
                 else
                 {
-                    Source source = (Source)this.soundLibrary.getSources().get(p_playing_1_);
-                    return source == null ? false : source.playing() || source.paused() || source.preLoad;
+                    Source source = this.soundLibrary.getSources().get(p_playing_1_);
+                    return source != null && (source.playing() || source.paused() || source.preLoad);
                 }
             }
         }

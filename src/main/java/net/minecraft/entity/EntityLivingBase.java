@@ -53,9 +53,9 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.event.impl.player.EventJump;
+import wtf.bhopper.nonsense.component.impl.SilentRotationsComponent;
+import wtf.bhopper.nonsense.event.impl.player.movement.EventJump;
 import wtf.bhopper.nonsense.module.impl.visual.ItemAnimations;
-import wtf.bhopper.nonsense.util.minecraft.player.RotationUtil;
 
 public abstract class EntityLivingBase extends Entity {
     private static final UUID sprintingSpeedBoostModifierUUID = UUID.fromString("662A6B8D-DA3E-4C1C-8813-96EA6097278D");
@@ -1671,7 +1671,7 @@ public abstract class EntityLivingBase extends Entity {
             f1 = 75.0F;
         }
 
-        this.renderYawOffset = (this.isClientPlayer() ? RotationUtil.serverYaw : this.rotationYaw) - f1;
+        this.renderYawOffset = (this.isClientPlayer() ? Nonsense.component(SilentRotationsComponent.class).serverYaw : this.rotationYaw) - f1;
 
         if (f1 * f1 > 2500.0F) {
             this.renderYawOffset += f1 * 0.2F;

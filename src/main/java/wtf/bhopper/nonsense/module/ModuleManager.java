@@ -3,8 +3,8 @@ package wtf.bhopper.nonsense.module;
 import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.ImmutableClassToInstanceMap;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.event.bus.EventLink;
-import wtf.bhopper.nonsense.event.bus.Listener;
+import wtf.bhopper.nonsense.event.EventLink;
+import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.client.EventKeyPress;
 import wtf.bhopper.nonsense.module.impl.combat.*;
 import wtf.bhopper.nonsense.module.impl.exploit.*;
@@ -27,6 +27,7 @@ public class ModuleManager {
         this.modules = this.addModules(
                 // Combat
                 new KillAura(),
+//                new KillAuraOld(),
                 new AntiBot(),
                 new Velocity(),
                 new AutoBlock(),
@@ -62,6 +63,7 @@ public class ModuleManager {
                 new InventoryManager(),
                 new NoRotate(),
                 new AutoRespawn(),
+                new FastUse(),
                 new FastMine(),
                 new FastPlace(),
                 new AntiCactus(),
@@ -136,13 +138,13 @@ public class ModuleManager {
 
     @SuppressWarnings("unchecked")
     private ClassToInstanceMap<Module> addModules(Module... modules) {
-        ImmutableClassToInstanceMap.Builder<Module> modulesBuilder = ImmutableClassToInstanceMap.builder();
+        ImmutableClassToInstanceMap.Builder<Module> builder = ImmutableClassToInstanceMap.builder();
         Arrays.stream(modules).forEach(module -> {
             if (module != null) {
-                modulesBuilder.put((Class<Module>) module.getClass(), module);
+                builder.put((Class<Module>) module.getClass(), module);
             }
         });
-        return modulesBuilder.build();
+        return builder.build();
     }
 
     public Collection<Module> getModules() {

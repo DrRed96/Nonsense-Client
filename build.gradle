@@ -117,6 +117,7 @@ dependencies {
     library 'org.reflections:reflections:0.10.2'
     library 'com.github.Vatuu:discord-rpc:1.6.2'
     library 'org.luaj:luaj-jse:3.0.1'
+    library 'org.javassist:javassist:3.29.2-GA'
 
     // ImGUI
     library 'io.github.spair:imgui-java-binding:1.87.5'
@@ -128,7 +129,6 @@ dependencies {
     library 'com.viaversion:viarewind:4.0.1-SNAPSHOT'
     library 'com.viaversion:viaversion:5.0.2-SNAPSHOT'
     library 'org.yaml:snakeyaml:2.2'
-
 
     implementation 'org.jetbrains:annotations:24.1.0'
 

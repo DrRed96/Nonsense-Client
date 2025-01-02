@@ -19,7 +19,7 @@ import java.awt.*;
 
 import static org.lwjgl.opengl.GL11.*;
 
-public class LayerCape implements LayerRenderer
+public class LayerCape implements LayerRenderer<AbstractClientPlayer>
 {
     protected static final ResourceLocation ENCHANTED_ITEM_GLINT_RES = new ResourceLocation("textures/misc/enchanted_item_glint.png");
     private final RenderPlayer playerRenderer;
@@ -164,13 +164,18 @@ public class LayerCape implements LayerRenderer
         }
     }
 
+    @Override
+    public void doRenderLayer(AbstractClientPlayer entitylivingbaseIn, float p_177141_2_, float p_177141_3_, float partialTicks, float p_177141_5_, float p_177141_6_, float p_177141_7_, float scale) {
+        this.doRenderLayer(entitylivingbaseIn, partialTicks);
+    }
+
     public boolean shouldCombineTextures()
     {
         return false;
     }
 
-    public void doRenderLayer(EntityLivingBase entitylivingbaseIn, float p_177141_2_, float p_177141_3_, float partialTicks, float p_177141_5_, float p_177141_6_, float p_177141_7_, float scale)
-    {
-        this.doRenderLayer((AbstractClientPlayer)entitylivingbaseIn, partialTicks);
-    }
+//    public void doRenderLayer(EntityLivingBase entitylivingbaseIn, float p_177141_2_, float p_177141_3_, float partialTicks, float p_177141_5_, float p_177141_6_, float p_177141_7_, float scale)
+//    {
+//        this.doRenderLayer((AbstractClientPlayer)entitylivingbaseIn, partialTicks);
+//    }
 }

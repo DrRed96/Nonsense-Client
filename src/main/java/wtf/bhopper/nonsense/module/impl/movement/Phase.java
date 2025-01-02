@@ -1,9 +1,9 @@
 package wtf.bhopper.nonsense.module.impl.movement;
 
-import wtf.bhopper.nonsense.event.bus.EventLink;
-import wtf.bhopper.nonsense.event.bus.Listener;
+import wtf.bhopper.nonsense.event.EventLink;
+import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.world.EventBlockBounds;
-import wtf.bhopper.nonsense.event.impl.player.EventMove;
+import wtf.bhopper.nonsense.event.impl.player.movement.EventMove;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;

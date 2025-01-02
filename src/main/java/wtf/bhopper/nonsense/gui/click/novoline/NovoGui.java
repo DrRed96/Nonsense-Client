@@ -1,8 +1,8 @@
 package wtf.bhopper.nonsense.gui.click.novoline;
 
 import net.minecraft.client.gui.GuiScreen;
-import org.lwjglx.input.Keyboard;
-import org.lwjglx.input.Mouse;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.impl.visual.ClickGui;
@@ -28,6 +28,8 @@ public class NovoGui extends GuiScreen {
         for (ModuleCategory category : ModuleCategory.values()) {
             panels.add(new NovoPanel(this, category, 10 + category.ordinal() * (NovoComponent.WIDTH + 10)));
         }
+
+        this.allowUserInput = true;
     }
 
     @Override

@@ -13,9 +13,13 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.MovingObjectPosition;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.event.bus.EventLink;
-import wtf.bhopper.nonsense.event.bus.Listener;
+import wtf.bhopper.nonsense.event.EventLink;
+import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.player.*;
+import wtf.bhopper.nonsense.event.impl.player.interact.EventClickAction;
+import wtf.bhopper.nonsense.event.impl.player.interact.EventPostClick;
+import wtf.bhopper.nonsense.event.impl.player.interact.EventPreClick;
+import wtf.bhopper.nonsense.event.impl.player.movement.EventSlowDown;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
@@ -25,7 +29,8 @@ import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
-import wtf.bhopper.nonsense.component.BlinkComponent;
+import wtf.bhopper.nonsense.component.impl.BlinkComponent;
+import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.PacketUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.RotationUtil;
@@ -37,8 +42,6 @@ import wtf.bhopper.nonsense.util.minecraft.player.RotationUtil;
         searchAlias = "Block Hit")
 public class AutoBlock extends Module {
 
-    private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Autoblock method", Mode.BLOCK);
-
     private final GroupProperty targetsGroup = new GroupProperty("Targets", "What entities Kill Aura should target", this);
     private final BooleanProperty players = new BooleanProperty("Players", "Target Players.", true);
     private final BooleanProperty mobs = new BooleanProperty("Mobs", "Target Mobs (Zombies, Skeletons, etc.)", false);
@@ -49,215 +52,24 @@ public class AutoBlock extends Module {
     private final BooleanProperty teams = new BooleanProperty("Teams", "Prevents you from attacking teammates", true);
 
     private final NumberProperty range = new NumberProperty("Range", "Auto block range", 7.0, 0.0, 16.0, 0.05, NumberProperty.FORMAT_DISTANCE);
-    private final BooleanProperty noSlow = new BooleanProperty("No Slow", "Applies No Slow to the sword blocking", true);
     private final BooleanProperty auraOnly = new BooleanProperty("Kill Aura Only", "Only blocks when Kill Aura is enabled", true);
-    private final EnumProperty<BlockPacket> blockPacket = new EnumProperty<>("Block Packet", "When to send the block packet.", BlockPacket.PRE, () -> false);
-    private final BooleanProperty blink = new BooleanProperty("Blink", "uses blink to help make auto-block full", false, () -> this.mode.is(Mode.LEGIT));
 
-    private boolean blocking = false;
-    private MovingObjectPosition mouseOver = null;
-    private boolean blinking = false;
 
     public AutoBlock() {
         this.targetsGroup.addProperties(this.players, this.mobs, this.animals, this.others, this.invis, this.dead, this.teams);
-        this.addProperties(this.mode, this.targetsGroup, this.range, this.noSlow, this.auraOnly, this.blockPacket, this.blink);
-        this.setSuffix(() -> {
-            if (this.mode.is(Mode.LEGIT) && this.blink.get()) {
-                return "Blink";
-            }
-
-            return this.mode.getDisplayValue();
-        });
-    }
-
-    @Override
-    public void onEnable() {
-        this.blocking = false;
-        this.mouseOver = null;
-    }
-
-    @Override
-    public void onDisable() {
-        this.blocking = false;
-        this.mouseOver = null;
-
-        if (this.blinking) {
-            this.blinking = false;
-            BlinkComponent.disableBlink();
-        }
-
+        this.addProperties(this.targetsGroup, this.range, this.auraOnly);
     }
 
     @EventLink
-    public final Listener<EventPreClick> onPreClick = event -> {
-
-        if (this.canBlock() && event.button == EventPreClick.Button.RIGHT && !event.artificial) {
-            event.cancel();
-            return;
-        }
-
-        switch (this.mode.get()) {
-            case NCP -> {
-                if (event.button == EventPreClick.Button.LEFT && this.blocking && this.blockItem()) {
-                    PacketUtil.send(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
-                    this.blocking = false;
-                    if (event.mouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
-                        this.mouseOver = event.mouseOver;
-                    }
-                }
+    public final Listener<EventClickAction> onClick = event -> {
+        if (!event.usingItem) {
+            if (this.canBlock()) {
+                event.right = true;
             }
-
-            case PACKET -> {
-                if (event.button == EventPreClick.Button.LEFT && this.blocking && this.blockItem()) {
-                    if (event.mouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
-                        this.mouseOver = event.mouseOver;
-                    }
-                }
-            }
-
-            case LEGIT -> {
-                if (event.button == EventPreClick.Button.LEFT && this.blocking && this.blockItem()) {
-
-                    if (this.canBlock() && this.blink.get() && !BlinkComponent.isBlinking()) {
-                        BlinkComponent.enableBlink();
-                        this.blinking = true;
-                    }
-
-                    PacketUtil.send(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
-                    event.cancel();
-                    this.blocking = false;
-
-                    if (event.mouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
-                        this.mouseOver = event.mouseOver;
-                    }
-                }
-            }
-        }
-    };
-
-    @EventLink
-    public final Listener<EventPostClick> onPostClick = event -> {
-
-        switch (this.mode.get()) {
-
-            case PACKET -> {
-                if (event.button == EventPostClick.Button.LEFT && this.canBlock() && this.blockPacket.is(BlockPacket.PRE)) {
-
-                    if (event.mouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY) {
-                        if (this.mouseOver != null) {
-                            PacketUtil.send(new C02PacketUseEntity(this.mouseOver.entityHit, this.mouseOver.hitVec));
-                            PacketUtil.send(new C02PacketUseEntity(this.mouseOver.entityHit, C02PacketUseEntity.Action.INTERACT));
-                            this.mouseOver = null;
-                        }
-
-                        PacketUtil.send(new C08PacketPlayerBlockPlacement(mc.thePlayer.getHeldItem()));
-                    }
-                }
-            }
-
-            case LEGIT -> {
-                if (event.button == EventPostClick.Button.LEFT) {
-
-                    if (this.blink.get() && BlinkComponent.isBlinking() && !this.blocking) {
-                        BlinkComponent.disableBlink();
-                        this.blinking = false;
-                    }
-
-                    if (this.canBlock() && event.mouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.ENTITY && !this.blocking) {
-
-                        if (this.mouseOver != null) {
-                            PacketUtil.send(new C02PacketUseEntity(this.mouseOver.entityHit, this.mouseOver.hitVec));
-                            PacketUtil.send(new C02PacketUseEntity(this.mouseOver.entityHit, C02PacketUseEntity.Action.INTERACT));
-                            this.mouseOver = null;
-                        }
-
-                        PacketUtil.send(new C08PacketPlayerBlockPlacement(mc.thePlayer.getHeldItem()));
-                        this.blocking = true;
-                    }
-                }
-            }
-
-        }
-    };
-
-    @EventLink
-    public final Listener<EventUpdate> onUpdate = _ -> {
-
-        if (this.canBlock()) {
-            // Creates the client side blocking animation, will also apply slow-down
-            mc.thePlayer.setItemInUse(mc.thePlayer.getHeldItem(), 72000);
         } else {
-            this.mouseOver = null;
-        }
-
-        if (!this.canBlock() && this.blinking) {
-            BlinkComponent.disableBlink();
-            this.blinking = false;
-        }
-
-        switch (this.mode.get()) {
-            case BLOCK -> {
-                if (this.canBlock()) {
-                    PacketUtil.send(new C08PacketPlayerBlockPlacement(mc.thePlayer.getHeldItem()));
-                    this.blocking = true;
-                }
+            if (event.releaseButton) {
+                event.release = !this.canBlock();
             }
-
-            case NCP -> {
-                if (this.blocking && this.blockItem()) {
-                    PacketUtil.send(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
-                    this.blocking = false;
-                }
-            }
-        }
-    };
-
-    @EventLink
-    public final Listener<EventPostMotion> onPost = _ -> {
-        switch (this.mode.get()) {
-
-            case PACKET -> {
-                if (this.canBlock() && this.blockPacket.is(BlockPacket.POST)) {
-
-                    if (this.mouseOver != null) {
-                        PacketUtil.send(new C02PacketUseEntity(this.mouseOver.entityHit, this.mouseOver.hitVec));
-                        PacketUtil.send(new C02PacketUseEntity(this.mouseOver.entityHit, C02PacketUseEntity.Action.INTERACT));
-                        this.mouseOver = null;
-                    }
-
-                    PacketUtil.send(new C08PacketPlayerBlockPlacement(mc.thePlayer.getHeldItem()));
-                    this.blocking = true;
-                }
-            }
-
-
-            case NCP -> {
-                if (!this.blocking && this.canBlock()) {
-
-                    if (this.mouseOver != null) {
-                        PacketUtil.send(new C02PacketUseEntity(this.mouseOver.entityHit, this.mouseOver.hitVec));
-                        PacketUtil.send(new C02PacketUseEntity(this.mouseOver.entityHit, C02PacketUseEntity.Action.INTERACT));
-                        this.mouseOver = null;
-                    }
-
-                    PacketUtil.send(new C08PacketPlayerBlockPlacement(mc.thePlayer.getHeldItem()));
-                    this.blocking = true;
-                }
-            }
-        }
-    };
-
-    @EventLink
-    public final Listener<EventReleaseItem> onRelease = event -> {
-        if (this.canBlock()) {
-            event.cancel();
-        }
-    };
-
-    @EventLink
-    public final Listener<EventSlowDown> onSlow = event -> {
-        if (this.canBlock() && this.noSlow.get()) {
-            event.cancel();
         }
     };
 
@@ -300,19 +112,6 @@ public class AutoBlock extends Module {
             case EntityAnimal _ -> this.animals.get();
             default -> this.others.get();
         };
-    }
-
-    private enum Mode {
-        BLOCK,
-        PACKET,
-        @DisplayName("NCP") NCP,
-        @Description("Will limit your APS to 10") LEGIT,
-        @Description("Enable the 'No Slow' option with this") FAKE
-    }
-
-    private enum BlockPacket {
-        PRE,
-        POST
     }
 
 }

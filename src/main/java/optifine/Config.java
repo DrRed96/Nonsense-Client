@@ -47,17 +47,16 @@ import net.minecraft.world.WorldServer;
 import org.apache.commons.io.IOUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjglx.LWJGLException;
-import org.lwjglx.Sys;
-import org.lwjglx.opengl.Display;
-import org.lwjglx.opengl.DisplayMode;
+import org.lwjgl.LWJGLException;
+import org.lwjgl.Sys;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.opengl.DisplayMode;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL20;
-import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GL30;
-import org.lwjglx.opengl.GLContext;
-import org.lwjglx.opengl.PixelFormat;
-import org.lwjglx.util.glu.GLU;
+import org.lwjgl.opengl.GLContext;
+import org.lwjgl.opengl.PixelFormat;
+import org.lwjgl.util.glu.GLU;
 import shadersmod.client.Shaders;
 
 public class Config
@@ -1769,7 +1768,7 @@ public class Config
             {
                 Display.destroy();
                 Display.setDisplayMode(displaymode);
-                Display.create((new PixelFormat()).withDepthBits(24).withSamples(i));
+                Display.create((new PixelFormat()).withDepthBits(24));
                 Display.setResizable(false);
                 Display.setResizable(true);
             }

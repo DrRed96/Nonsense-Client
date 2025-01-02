@@ -1,14 +1,14 @@
 package wtf.bhopper.nonsense.module.impl.other;
 
 import net.minecraft.entity.player.EnumPlayerModelParts;
-import wtf.bhopper.nonsense.event.bus.EventLink;
-import wtf.bhopper.nonsense.event.bus.Listener;
+import wtf.bhopper.nonsense.event.EventLink;
+import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
-import wtf.bhopper.nonsense.util.misc.Clock;
+import wtf.bhopper.nonsense.util.misc.Stopwatch;
 
 import java.util.Set;
 
@@ -20,7 +20,7 @@ public class SkinBlinker extends Module {
 
     public final NumberProperty delay = new NumberProperty("Delay", "Delay between changing", 250, 50, 1000, 50, NumberProperty.FORMAT_MS);
 
-    private final Clock timer = new Clock();
+    private final Stopwatch timer = new Stopwatch();
 
     public SkinBlinker() {
         this.autoAddProperties();

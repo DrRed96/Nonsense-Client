@@ -2,8 +2,8 @@ package wtf.bhopper.nonsense.util.render;
 
 import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NVGPaint;
-import org.lwjglx.opengl.Display;
-import org.lwjglx.util.vector.Vector2f;
+import org.lwjgl.opengl.Display;
+import org.lwjgl.util.vector.Vector2f;
 
 import java.awt.*;
 import java.nio.ByteBuffer;

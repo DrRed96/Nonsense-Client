@@ -2,12 +2,14 @@ package wtf.bhopper.nonsense.gui.hud;
 
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
-import org.lwjglx.input.Keyboard;
-import wtf.bhopper.nonsense.event.bus.EventLink;
-import wtf.bhopper.nonsense.event.bus.Listener;
+import org.lwjgl.input.Keyboard;
+import wtf.bhopper.nonsense.event.EventLink;
+import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.client.EventKeyPress;
+import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.impl.visual.HudMod;
+import wtf.bhopper.nonsense.module.property.Property;
 import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 import wtf.bhopper.nonsense.util.render.*;
 
@@ -16,6 +18,8 @@ import static org.lwjgl.nanovg.NanoVG.*;
 public class TabGui implements IMinecraft {
 
     private ModuleCategory selectedCategory = ModuleCategory.values()[0];
+    private Module selectedModule = null;
+    private Property<?> selectedProperty = null;
 
     private boolean isInCategory = false;
     private boolean isInModule = false;

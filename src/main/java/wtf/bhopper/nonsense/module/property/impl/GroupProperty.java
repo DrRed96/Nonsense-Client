@@ -3,7 +3,7 @@ package wtf.bhopper.nonsense.module.property.impl;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import wtf.bhopper.nonsense.module.property.Property;
-import wtf.bhopper.nonsense.module.property.PropertyContainer;
+import wtf.bhopper.nonsense.module.property.IPropertyContainer;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -11,16 +11,16 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class GroupProperty extends Property<List<Property<?>>> implements PropertyContainer {
+public class GroupProperty extends Property<List<Property<?>>> implements IPropertyContainer {
 
-    private final PropertyContainer owner;
+    private final IPropertyContainer owner;
 
-    public GroupProperty(String displayName, String description, PropertyContainer owner, Supplier<Boolean> dependency) {
+    public GroupProperty(String displayName, String description, IPropertyContainer owner, Supplier<Boolean> dependency) {
         super(displayName, description, new ArrayList<>(), dependency);
         this.owner = owner;
     }
 
-    public GroupProperty(String displayName, String description, PropertyContainer owner) {
+    public GroupProperty(String displayName, String description, IPropertyContainer owner) {
         this(displayName, description, owner, () -> true);
     }
 
@@ -72,7 +72,7 @@ public class GroupProperty extends Property<List<Property<?>>> implements Proper
     @Override
     public String getContainerId() {
         List<String> id = new ArrayList<>(Collections.singletonList(this.name));
-        PropertyContainer owner = this.getOwner();
+        IPropertyContainer owner = this.getOwner();
         while (owner != null) {
             id.add(owner.getContainerId());
             owner = owner.getOwner();
@@ -81,7 +81,7 @@ public class GroupProperty extends Property<List<Property<?>>> implements Proper
     }
 
     @Override
-    public PropertyContainer getOwner() {
+    public IPropertyContainer getOwner() {
         return this.owner;
     }
 

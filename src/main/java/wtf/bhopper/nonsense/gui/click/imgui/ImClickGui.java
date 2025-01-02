@@ -6,7 +6,7 @@ import imgui.flag.ImGuiWindowFlags;
 import imgui.type.ImFloat;
 import imgui.type.ImString;
 import net.minecraft.client.gui.GuiScreen;
-import org.lwjglx.input.Keyboard;
+import org.lwjgl.input.Keyboard;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;

@@ -1,10 +1,6 @@
 package wtf.bhopper.nonsense.gui.click.novoline;
 
 import net.minecraft.client.Minecraft;
-import org.lwjglx.opengl.Display;
-import org.lwjglx.util.vector.Vector2f;
-import wtf.bhopper.nonsense.module.impl.visual.ClickGui;
-import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.ButtonProperty;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
 

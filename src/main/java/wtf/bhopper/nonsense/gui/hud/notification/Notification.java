@@ -6,7 +6,7 @@ import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.gui.hud.Hud;
 import wtf.bhopper.nonsense.module.impl.visual.HudMod;
 import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
-import wtf.bhopper.nonsense.util.misc.Clock;
+import wtf.bhopper.nonsense.util.misc.Stopwatch;
 import wtf.bhopper.nonsense.util.render.ColorUtil;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
 import wtf.bhopper.nonsense.util.render.RenderUtil;
@@ -34,7 +34,7 @@ public class Notification implements IMinecraft {
 
     private int stage = 0;
     private float positionFactor = 0.0F;
-    private final Clock clock = new Clock();
+    private final Stopwatch clock = new Stopwatch();
 
     public Notification(String title, String message, NotificationType type, int displayTimeMS) {
         this.title = title;
@@ -137,7 +137,7 @@ public class Notification implements IMinecraft {
     }
 
     private float doneFactor() {
-        return Math.min((float)this.clock.getTime() / (float)this.displayTimeMS, 1.0F);
+        return Math.min((float)this.clock.passedTime() / (float)this.displayTimeMS, 1.0F);
     }
 
     public static void send(String title, String message, NotificationType type, int displayTimeMS) {

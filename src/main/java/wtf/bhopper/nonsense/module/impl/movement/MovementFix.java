@@ -1,16 +1,17 @@
 package wtf.bhopper.nonsense.module.impl.movement;
 
 import net.minecraft.util.MathHelper;
-import wtf.bhopper.nonsense.event.bus.EventLink;
-import wtf.bhopper.nonsense.event.bus.Listener;
-import wtf.bhopper.nonsense.event.impl.player.EventMovementInput;
-import wtf.bhopper.nonsense.event.impl.player.EventStrafe;
+import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.component.impl.SilentRotationsComponent;
+import wtf.bhopper.nonsense.event.EventLink;
+import wtf.bhopper.nonsense.event.Listener;
+import wtf.bhopper.nonsense.event.impl.player.movement.EventMovementInput;
+import wtf.bhopper.nonsense.event.impl.player.movement.EventStrafe;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.util.minecraft.player.MoveUtil;
-import wtf.bhopper.nonsense.util.minecraft.player.RotationUtil;
 import wtf.bhopper.nonsense.util.misc.MathUtil;
 
 @ModuleInfo(name = "Movement Fix",
@@ -25,7 +26,7 @@ public class MovementFix extends Module {
     }
 
     @EventLink
-    public final Listener<EventStrafe> onStrafe = event -> event.yaw = RotationUtil.serverYaw;
+    public final Listener<EventStrafe> onStrafe = event -> event.yaw = Nonsense.component(SilentRotationsComponent.class).serverYaw;
 
     @EventLink
     public final Listener<EventMovementInput> onMovementInput = event -> {
@@ -47,7 +48,7 @@ public class MovementFix extends Module {
                         continue;
                     }
 
-                    final double predictedAngle = MathHelper.wrapAngleTo180_double(Math.toDegrees(MoveUtil.direction(RotationUtil.serverYaw, predictedForward, predictedStrafe)));
+                    final double predictedAngle = MathHelper.wrapAngleTo180_double(Math.toDegrees(MoveUtil.direction(Nonsense.component(SilentRotationsComponent.class).serverYaw, predictedForward, predictedStrafe)));
                     final double difference = MathUtil.wrappedDifference(angle, predictedAngle);
 
                     if (difference < closestDifference) {

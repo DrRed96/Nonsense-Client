@@ -29,7 +29,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
-import org.lwjglx.opengl.GLContext;
+import org.lwjgl.opengl.GLContext;
 import shadersmod.client.MultiTexID;
 import shadersmod.client.Shaders;
 

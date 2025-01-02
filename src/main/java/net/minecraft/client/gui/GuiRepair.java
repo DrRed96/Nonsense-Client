@@ -18,7 +18,7 @@ import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.C17PacketCustomPayload;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.world.World;
-import org.lwjglx.input.Keyboard;
+import org.lwjgl.input.Keyboard;
 
 public class GuiRepair extends GuiContainer implements ICrafting
 {

@@ -13,7 +13,7 @@ import net.minecraft.client.resources.model.IBakedModel;
 import net.minecraft.client.resources.model.ModelRotation;
 import net.minecraft.client.resources.model.SimpleBakedModel;
 import net.minecraft.util.EnumFacing;
-import org.lwjglx.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector3f;
 
 public class BlockModelUtils
 {

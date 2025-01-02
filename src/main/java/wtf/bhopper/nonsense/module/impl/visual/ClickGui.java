@@ -3,7 +3,7 @@ package wtf.bhopper.nonsense.module.impl.visual;
 import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.util.ResourceLocation;
-import org.lwjglx.input.Keyboard;
+import org.lwjgl.input.Keyboard;
 import wtf.bhopper.nonsense.gui.click.imgui.ImClickGui;
 import wtf.bhopper.nonsense.gui.click.novoline.NovoGui;
 import wtf.bhopper.nonsense.module.Module;

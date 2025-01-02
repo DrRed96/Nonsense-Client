@@ -13,12 +13,6 @@ public class InventoryUtil implements IMinecraft {
     public static final int HOTBAR_BEGIN = 36;
     public static final int END = 45;
 
-    public static int serverItem = 0;
-
-    public static int currentItem() {
-        return serverItem;
-    }
-
     public static ItemStack getStackInSlot(int slot) {
         return mc.thePlayer.inventoryContainer.getSlot(slot).getStack();
     }

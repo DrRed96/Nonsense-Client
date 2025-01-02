@@ -25,7 +25,7 @@ public class KeyBinding implements Comparable<KeyBinding>
     {
         if (keyCode != 0)
         {
-            KeyBinding keybinding = (KeyBinding)hash.lookup(keyCode);
+            KeyBinding keybinding = hash.lookup(keyCode);
 
             if (keybinding != null)
             {

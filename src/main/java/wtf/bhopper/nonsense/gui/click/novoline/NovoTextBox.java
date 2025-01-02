@@ -2,9 +2,9 @@ package wtf.bhopper.nonsense.gui.click.novoline;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ChatAllowedCharacters;
-import org.lwjglx.input.Keyboard;
+import org.lwjgl.input.Keyboard;
 import wtf.bhopper.nonsense.module.property.impl.StringProperty;
-import wtf.bhopper.nonsense.util.misc.Clock;
+import wtf.bhopper.nonsense.util.misc.Stopwatch;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
 
 import static org.lwjgl.nanovg.NanoVG.*;
@@ -18,7 +18,7 @@ public class NovoTextBox extends NovoComponent {
     private boolean expanded = false;
 
     private boolean showType = true;
-    private final Clock typeTimer = new Clock();
+    private final Stopwatch typeTimer = new Stopwatch();
 
     public NovoTextBox(NovoPanel panel, StringProperty property, int indention) {
         super(panel, indention);

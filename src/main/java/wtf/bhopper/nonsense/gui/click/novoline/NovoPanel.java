@@ -1,6 +1,6 @@
 package wtf.bhopper.nonsense.gui.click.novoline;
 
-import org.lwjglx.opengl.Display;
+import org.lwjgl.opengl.Display;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;

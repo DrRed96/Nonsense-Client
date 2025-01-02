@@ -29,8 +29,8 @@ import org.apache.commons.io.Charsets;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.lwjgl.opengl.GL11;
-import org.lwjglx.opengl.GLContext;
-import org.lwjglx.util.glu.Project;
+import org.lwjgl.opengl.GLContext;
+import org.lwjgl.util.glu.Project;
 import wtf.bhopper.nonsense.gui.screens.NonsenseMainMenu;
 import wtf.bhopper.nonsense.gui.screens.altmanager.GuiAltManager;
 

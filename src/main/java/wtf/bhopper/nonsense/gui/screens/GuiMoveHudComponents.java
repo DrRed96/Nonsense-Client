@@ -2,7 +2,7 @@ package wtf.bhopper.nonsense.gui.screens;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
-import org.lwjglx.opengl.Display;
+import org.lwjgl.opengl.Display;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.gui.components.RenderComponent;
 import wtf.bhopper.nonsense.gui.hud.Hud;

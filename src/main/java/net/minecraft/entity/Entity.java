@@ -3,7 +3,6 @@ package net.minecraft.entity;
 import java.util.List;
 import java.util.Random;
 import java.util.UUID;
-import java.util.concurrent.Callable;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockFence;
@@ -49,12 +48,12 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.component.impl.SilentRotationsComponent;
 import wtf.bhopper.nonsense.event.impl.world.EventBlockCollision;
-import wtf.bhopper.nonsense.event.impl.player.EventPostStep;
-import wtf.bhopper.nonsense.event.impl.player.EventPreStep;
-import wtf.bhopper.nonsense.event.impl.player.EventStrafe;
+import wtf.bhopper.nonsense.event.impl.player.movement.EventPostStep;
+import wtf.bhopper.nonsense.event.impl.player.movement.EventPreStep;
+import wtf.bhopper.nonsense.event.impl.player.movement.EventStrafe;
 import wtf.bhopper.nonsense.module.impl.movement.Terrain;
-import wtf.bhopper.nonsense.util.minecraft.player.RotationUtil;
 
 public abstract class Entity implements ICommandSender {
     private static final AxisAlignedBB ZERO_AABB = new AxisAlignedBB(0.0D, 0.0D, 0.0D, 0.0D, 0.0D, 0.0D);
@@ -2292,7 +2291,7 @@ public abstract class Entity implements ICommandSender {
     }
 
     public EnumFacing getHorizontalFacing() {
-        return EnumFacing.getHorizontal(MathHelper.floor_double((double) ((this.isClientPlayer() ? RotationUtil.serverYaw : this.rotationYaw) * 4.0F / 360.0F) + 0.5D) & 3);
+        return EnumFacing.getHorizontal(MathHelper.floor_double((double) ((this.isClientPlayer() ? Nonsense.component(SilentRotationsComponent.class).serverYaw : this.rotationYaw) * 4.0F / 360.0F) + 0.5D) & 3);
     }
 
     protected HoverEvent getHoverEvent() {

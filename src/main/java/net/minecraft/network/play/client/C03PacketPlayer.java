@@ -84,7 +84,7 @@ public class C03PacketPlayer implements Packet<INetHandlerPlayServer>
         return this.moving;
     }
 
-    public boolean getRotating()
+    public boolean isRotating()
     {
         return this.rotating;
     }

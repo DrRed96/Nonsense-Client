@@ -2,11 +2,11 @@ package wtf.bhopper.nonsense.module.impl.combat;
 
 import net.minecraft.entity.EntityLivingBase;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.event.bus.EventLink;
-import wtf.bhopper.nonsense.event.bus.Listener;
-import wtf.bhopper.nonsense.event.impl.player.EventMovementInput;
+import wtf.bhopper.nonsense.event.EventLink;
+import wtf.bhopper.nonsense.event.Listener;
+import wtf.bhopper.nonsense.event.impl.player.movement.EventMovementInput;
 import wtf.bhopper.nonsense.event.impl.render.EventRenderWorld;
-import wtf.bhopper.nonsense.event.impl.player.EventSpeed;
+import wtf.bhopper.nonsense.event.impl.player.movement.EventSpeed;
 import wtf.bhopper.nonsense.event.impl.player.EventUpdate;
 import wtf.bhopper.nonsense.gui.hud.Hud;
 import wtf.bhopper.nonsense.module.Module;

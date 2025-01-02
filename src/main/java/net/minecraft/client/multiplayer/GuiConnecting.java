@@ -18,6 +18,8 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
+import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.event.impl.client.EventJoinServer;
 import wtf.bhopper.nonsense.util.minecraft.world.ServerUtil;
 
 public class GuiConnecting extends GuiScreen
@@ -32,7 +34,7 @@ public class GuiConnecting extends GuiScreen
     {
         this.mc = mcIn;
         this.previousGuiScreen = p_i1181_1_;
-        ServerAddress serveraddress = ServerAddress.func_78860_a(serverData.serverIP);
+        ServerAddress serveraddress = ServerAddress.fromString(serverData.serverIP);
         mcIn.loadWorld(null);
         mcIn.setServerData(serverData);
         this.connect(serveraddress.getIP(), serveraddress.getPort());
@@ -48,6 +50,8 @@ public class GuiConnecting extends GuiScreen
 
     private void connect(final String ip, final int port)
     {
+        Nonsense.getEventBus().post(new EventJoinServer(ip, port));
+
         ServerUtil.lastServer = ip;
         ServerUtil.lastPort = port;
         logger.info("Connecting to " + ip + ", " + port);

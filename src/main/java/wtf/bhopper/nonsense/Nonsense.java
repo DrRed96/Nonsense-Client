@@ -7,20 +7,19 @@ import de.florianmichael.viamcp.ViaMCP;
 import net.minecraft.client.Minecraft;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjglx.opengl.Display;
+import org.lwjgl.opengl.Display;
 import wtf.bhopper.nonsense.alt.AltManager;
 import wtf.bhopper.nonsense.anticheat.AntiCheat;
 import wtf.bhopper.nonsense.command.CommandManager;
+import wtf.bhopper.nonsense.component.Component;
+import wtf.bhopper.nonsense.component.ComponentManager;
 import wtf.bhopper.nonsense.config.ConfigManager;
-import wtf.bhopper.nonsense.event.bus.EventBus;
+import wtf.bhopper.nonsense.event.EventBus;
 import wtf.bhopper.nonsense.gui.hud.Hud;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleManager;
 import wtf.bhopper.nonsense.module.impl.visual.ClickGui;
 import wtf.bhopper.nonsense.network.NonsenseNetHandler;
-import wtf.bhopper.nonsense.component.AntiExploitComponent;
-import wtf.bhopper.nonsense.component.BlinkComponent;
-import wtf.bhopper.nonsense.component.TickRateComponent;
 import wtf.bhopper.nonsense.util.render.Fonts;
 import wtf.bhopper.nonsense.util.render.ImGuiHelper;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
@@ -42,6 +41,7 @@ public enum Nonsense {
     // Managers
     private ModuleManager moduleManager;
     private CommandManager commandManager;
+    private ComponentManager componentManager;
     private ConfigManager configManager;
     private AltManager altManager;
     private NonsenseNetHandler netHandler;
@@ -73,6 +73,7 @@ public enum Nonsense {
         this.eventBus = new EventBus();
         this.moduleManager = new ModuleManager();
         this.commandManager = new CommandManager();
+        this.componentManager = new ComponentManager();
         this.configManager = new ConfigManager();
         this.altManager = new AltManager();
         this.altManager.tryLoad();
@@ -87,10 +88,6 @@ public enum Nonsense {
         this.antiCheat = new AntiCheat();
         this.hud = new Hud();
         module(ClickGui.class).initGuis();
-
-        this.eventBus.subscribe(AntiExploitComponent.INSTANCE);
-        this.eventBus.subscribe(BlinkComponent.INSTANCE);
-        this.eventBus.subscribe(TickRateComponent.INSTANCE);
 
         this.configManager.loadDefaultConfig();
     }
@@ -109,6 +106,14 @@ public enum Nonsense {
 
     public static CommandManager getCommandManager() {
         return INSTANCE.commandManager;
+    }
+
+    public static ComponentManager getComponentManager() {
+        return INSTANCE.componentManager;
+    }
+
+    public static <T extends Component> T component(Class<T> clazz) {
+        return INSTANCE.componentManager.get(clazz);
     }
 
     public static ConfigManager getConfigManager() {

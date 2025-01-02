@@ -28,7 +28,7 @@ import net.minecraft.world.WorldType;
 import net.minecraft.world.chunk.Chunk;
 import optifine.Reflector;
 
-import org.lwjglx.opengl.Display;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
 
 public class GuiOverlayDebug extends Gui

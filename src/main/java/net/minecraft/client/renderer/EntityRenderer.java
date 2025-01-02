@@ -78,12 +78,12 @@ import optifine.TextureUtils;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjglx.input.Mouse;
-import org.lwjglx.opengl.Display;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.Display;
 import org.lwjgl.opengl.GL11;
-import org.lwjglx.opengl.GLContext;
-import org.lwjglx.util.glu.GLU;
-import org.lwjglx.util.glu.Project;
+import org.lwjgl.opengl.GLContext;
+import org.lwjgl.util.glu.GLU;
+import org.lwjgl.util.glu.Project;
 import shadersmod.client.Shaders;
 import shadersmod.client.ShadersRender;
 import wtf.bhopper.nonsense.Nonsense;
@@ -476,14 +476,14 @@ public class EntityRenderer implements IResourceManagerReloadListener {
             this.pointedEntity = null;
             Vec3 vec33 = null;
             float f = 1.0F;
-            List<Entity> list = this.mc.theWorld.getEntitiesInAABBexcluding(
+            List<Entity> entitiesInBounds = this.mc.theWorld.getEntitiesInAABBexcluding(
                     entity,
                     entity.getEntityBoundingBox().addCoord(look.xCoord * reachDistance, look.yCoord * reachDistance, look.zCoord * reachDistance).expand(f, f, f),
                     Predicates.and(EntitySelectors.NOT_SPECTATING, new EntityRenderer$1(this), input -> !input.isClientPlayer() && !input.isFake)
             );
             double d2 = d1;
 
-            for (Entity entity1 : list) {
+            for (Entity entity1 : entitiesInBounds) {
 
                 float f1 = entity1.getCollisionBorderSize();
                 AxisAlignedBB axisalignedbb = entity1.getEntityBoundingBox().expand(f1, f1, f1);
@@ -1141,19 +1141,19 @@ public class EntityRenderer implements IResourceManagerReloadListener {
             this.prevFrameTime = Minecraft.getSystemTime();
         }
 
-//        if (flag && Minecraft.isRunningOnMac && this.mc.inGameHasFocus && !Mouse.isInsideWindow())
-//        {
-//            Mouse.setGrabbed(false);
-//            Mouse.setCursorPosition(Display.getWidth() / 2, Display.getHeight() / 2);
-//            Mouse.setGrabbed(true);
-//        }
+        if (flag && Minecraft.isRunningOnMac && this.mc.inGameHasFocus && !Mouse.isInsideWindow())
+        {
+            Mouse.setGrabbed(false);
+            Mouse.setCursorPosition(Display.getWidth() / 2, Display.getHeight() / 2);
+            Mouse.setGrabbed(true);
+        }
 
         if (this.mc.inGameHasFocus && flag) {
             this.mc.mouseHelper.mouseXYChange();
             float f = this.mc.gameSettings.mouseSensitivity * 0.6F + 0.2F;
             float f1 = f * f * f * 8.0F;
             float yaw = (float) this.mc.mouseHelper.deltaX * f1;
-            float f3 = (float) this.mc.mouseHelper.deltaY * f1;
+            float pitch = (float) this.mc.mouseHelper.deltaY * f1;
             byte b0 = 1;
 
             if (this.mc.gameSettings.invertMouse) {
@@ -1162,16 +1162,16 @@ public class EntityRenderer implements IResourceManagerReloadListener {
 
             if (this.mc.gameSettings.smoothCamera) {
                 this.smoothCamYaw += yaw;
-                this.smoothCamPitch += f3;
+                this.smoothCamPitch += pitch;
                 float f4 = partialTicks - this.smoothCamPartialTicks;
                 this.smoothCamPartialTicks = partialTicks;
                 yaw = this.smoothCamFilterX * f4;
-                f3 = this.smoothCamFilterY * f4;
+                pitch = this.smoothCamFilterY * f4;
             } else {
                 this.smoothCamYaw = 0.0F;
                 this.smoothCamPitch = 0.0F;
             }
-            this.mc.thePlayer.setAngles(yaw, f3 * (float) b0);
+            this.mc.thePlayer.setAngles(yaw, pitch * (float) b0);
         }
 
         if (!this.mc.skipRenderWorld) {

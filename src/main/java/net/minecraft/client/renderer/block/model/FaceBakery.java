@@ -10,9 +10,9 @@ import net.minecraftforge.client.model.ITransformation;
 import optifine.Config;
 import optifine.Reflector;
 
-import org.lwjglx.util.vector.Matrix4f;
-import org.lwjglx.util.vector.Vector3f;
-import org.lwjglx.util.vector.Vector4f;
+import org.lwjgl.util.vector.Matrix4f;
+import org.lwjgl.util.vector.Vector3f;
+import org.lwjgl.util.vector.Vector4f;
 import shadersmod.client.Shaders;
 
 public class FaceBakery

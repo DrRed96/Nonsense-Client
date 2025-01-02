@@ -3,9 +3,9 @@ package wtf.bhopper.nonsense.module.impl.movement;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C0BPacketEntityAction;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
-import wtf.bhopper.nonsense.event.bus.EventLink;
-import wtf.bhopper.nonsense.event.bus.Listener;
-import wtf.bhopper.nonsense.event.impl.player.EventMove;
+import wtf.bhopper.nonsense.event.EventLink;
+import wtf.bhopper.nonsense.event.Listener;
+import wtf.bhopper.nonsense.event.impl.player.movement.EventMove;
 import wtf.bhopper.nonsense.event.impl.player.EventPreMotion;
 import wtf.bhopper.nonsense.event.impl.packet.EventReceivePacket;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
@@ -21,7 +21,7 @@ import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
 import wtf.bhopper.nonsense.util.minecraft.player.MoveUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.PacketUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
-import wtf.bhopper.nonsense.util.misc.Clock;
+import wtf.bhopper.nonsense.util.misc.Stopwatch;
 
 @ModuleInfo(name = "Flight",
         description = "Allows you to fly.",
@@ -55,7 +55,7 @@ public class Flight extends Module {
     private double lastDist = 0.0;
 
     private boolean stopTimer = false;
-    private final Clock timerClock = new Clock();
+    private final Stopwatch timerClock = new Stopwatch();
 
     public Flight() {
         this.boostGroup.addProperties(this.useBoost, this.useTimer, this.timerFactor, this.timerTime, this.damage, this.timerStart, this.pushUp, this.quickStop);

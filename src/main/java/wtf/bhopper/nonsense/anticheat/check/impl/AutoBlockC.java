@@ -8,7 +8,7 @@ import wtf.bhopper.nonsense.anticheat.PlayerData;
 import wtf.bhopper.nonsense.anticheat.check.Check;
 import wtf.bhopper.nonsense.anticheat.check.CheckInfo;
 import wtf.bhopper.nonsense.anticheat.check.data.AbstractCheckBuffer;
-import wtf.bhopper.nonsense.util.misc.Clock;
+import wtf.bhopper.nonsense.util.misc.Stopwatch;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -39,14 +39,14 @@ public class AutoBlockC extends Check {
             return;
         }
 
-        Iterator<Clock> it = buffer.swingList.iterator();
+        Iterator<Stopwatch> it = buffer.swingList.iterator();
         while (it.hasNext()) {
-            Clock clock = it.next();
-            if (!clock.hasReached(140L)) {
+            Stopwatch clock = it.next();
+            if (!clock.hasReached(150L)) {
                 continue;
             }
 
-            if (data.getUseClock() == null || !data.getUseClock().hasReached(clock.getTime())) {
+            if (data.getUseClock() == null || !data.getUseClock().hasReached(clock.passedTime())) {
                 it.remove();
                 return;
             }
@@ -70,7 +70,7 @@ public class AutoBlockC extends Check {
         if (packet.getAnimationType() == 0) {
             if (data.isUsingItem() && this.isItemSupported(data.getEntity())) {
                 Buffer buffer = data.getCheckData(Buffer.class, Buffer::new);
-                buffer.swingList.add(new Clock());
+                buffer.swingList.add(new Stopwatch());
             } else if (data.hasCheckData(Buffer.class)) {
                 data.getCheckData(Buffer.class).decrementBuffer(0.5F);
             }
@@ -78,7 +78,7 @@ public class AutoBlockC extends Check {
     }
 
     @Override
-    public void handleBlockiBreakAnim(PlayerData data, S25PacketBlockBreakAnim packet) {
+    public void handleBlockBreakAnim(PlayerData data, S25PacketBlockBreakAnim packet) {
         if (data.hasCheckData(Buffer.class)) {
             data.getCheckData(Buffer.class).swingList.clear();
         }
@@ -94,7 +94,7 @@ public class AutoBlockC extends Check {
     }
 
     private static final class Buffer extends AbstractCheckBuffer {
-        private final List<Clock> swingList = new ArrayList<>();
+        private final List<Stopwatch> swingList = new ArrayList<>();
     }
 
 }

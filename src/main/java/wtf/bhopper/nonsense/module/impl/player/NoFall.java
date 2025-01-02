@@ -1,10 +1,14 @@
 package wtf.bhopper.nonsense.module.impl.player;
 
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.C03PacketPlayer;
+import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
-import wtf.bhopper.nonsense.event.bus.EventLink;
-import wtf.bhopper.nonsense.event.bus.Listener;
+import wtf.bhopper.nonsense.event.EventLink;
+import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.player.EventPreMotion;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
@@ -81,6 +85,17 @@ public class NoFall extends Module {
                 }
             }
 
+            case WATCHDOG -> {
+                if (this.willTakeDamage()) {
+                    event.y += 1.0E-13;
+                    mc.timer.timerSpeed = 0.5F;
+                    PacketUtil.send(new C08PacketPlayerBlockPlacement(BlockPos.ORIGIN, 0, new ItemStack(Items.water_bucket, 1), 0.5F, 0.5F, 0.5F));
+                    PacketUtil.send(new C03PacketPlayer(true));
+                    this.lastFallDistance = mc.thePlayer.fallDistance;
+                    this.timerSetBack = true;
+                }
+            }
+
             case MINIBLOX -> {
                 try {
                     if (this.willTakeDamage()) {
@@ -106,6 +121,7 @@ public class NoFall extends Module {
         PACKET,
         NO_GROUND,
         VERUS,
+        WATCHDOG,
         MINIBLOX
     }
 

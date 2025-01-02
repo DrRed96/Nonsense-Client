@@ -3,7 +3,7 @@ package wtf.bhopper.nonsense.gui.screens.altmanager;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
-import org.lwjglx.input.Keyboard;
+import org.lwjgl.input.Keyboard;
 
 public class GuiAddAlt extends GuiScreen {
 

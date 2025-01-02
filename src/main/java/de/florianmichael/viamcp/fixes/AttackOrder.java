@@ -29,9 +29,9 @@ import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 public class AttackOrder {
     private final static Minecraft mc = Minecraft.getMinecraft();
 
-    public static void sendConditionalSwing(MovingObjectPosition mop) {
+    public static void sendConditionalSwing(MovingObjectPosition mop, boolean silentSwing) {
         if (mop != null && mop.typeOfHit != MovingObjectPosition.MovingObjectType.ENTITY) {
-            mc.thePlayer.swingItem();
+            PlayerUtil.swing(silentSwing);
         }
     }
 

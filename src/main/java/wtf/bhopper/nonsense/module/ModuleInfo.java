@@ -1,6 +1,6 @@
 package wtf.bhopper.nonsense.module;
 
-import org.lwjglx.input.Keyboard;
+import org.lwjgl.input.Keyboard;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

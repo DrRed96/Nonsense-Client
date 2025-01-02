@@ -4,8 +4,8 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
 import wtf.bhopper.nonsense.event.EventPriorities;
-import wtf.bhopper.nonsense.event.bus.EventLink;
-import wtf.bhopper.nonsense.event.bus.Listener;
+import wtf.bhopper.nonsense.event.EventLink;
+import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
@@ -17,7 +17,7 @@ import wtf.bhopper.nonsense.util.minecraft.world.ServerUtil;
 import java.util.HashSet;
 import java.util.Set;
 
-@ModuleInfo(name = "Anti Bot", description = "Prevents bot targetting", category = ModuleCategory.COMBAT)
+@ModuleInfo(name = "Anti Bot", description = "Prevents bot targeting", category = ModuleCategory.COMBAT)
 public class AntiBot extends Module {
 
     private static final String VALID_USERNAME_REGEX = "^[a-zA-Z0-9_]{1,16}+$";
@@ -31,7 +31,7 @@ public class AntiBot extends Module {
         this.setSuffix(this.mode::getDisplayValue);
     }
 
-    @EventLink(EventPriorities.VERY_LOW)
+    @EventLink(EventPriorities.VERY_HIGH)
     public final Listener<EventTick> onTick = _ -> {
         if (!PlayerUtil.canUpdate()) {
             this.bots.clear();

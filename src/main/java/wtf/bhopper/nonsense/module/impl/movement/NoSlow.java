@@ -1,18 +1,15 @@
 package wtf.bhopper.nonsense.module.impl.movement;
 
 import net.minecraft.item.EnumAction;
-import net.minecraft.network.play.client.C07PacketPlayerDigging;
-import net.minecraft.network.play.client.C08PacketPlayerBlockPlacement;
 import net.minecraft.network.play.client.C09PacketHeldItemChange;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.event.bus.EventLink;
-import wtf.bhopper.nonsense.event.bus.Listener;
-import wtf.bhopper.nonsense.event.impl.player.EventClickAction;
+import wtf.bhopper.nonsense.event.EventLink;
+import wtf.bhopper.nonsense.event.EventPriorities;
+import wtf.bhopper.nonsense.event.Listener;
+import wtf.bhopper.nonsense.event.impl.player.interact.EventClickAction;
 import wtf.bhopper.nonsense.event.impl.player.EventPostMotion;
 import wtf.bhopper.nonsense.event.impl.player.EventPreMotion;
-import wtf.bhopper.nonsense.event.impl.player.EventSlowDown;
+import wtf.bhopper.nonsense.event.impl.player.movement.EventSlowDown;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
@@ -20,6 +17,7 @@ import wtf.bhopper.nonsense.module.impl.combat.AutoBlock;
 import wtf.bhopper.nonsense.module.property.annotations.DisplayName;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
+import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.MoveUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.PacketUtil;
 
@@ -36,35 +34,39 @@ public class NoSlow extends Module {
 
     private boolean ground = false;
 
+    private boolean ncpBlock = false;
+
     public NoSlow() {
         this.addProperties(this.mode, this.sprintReset, this.spoofMode, this.groundCheck);
         this.setSuffix(this.mode::getDisplayValue);
     }
 
+    @Override
+    public void onEnable() {
+        this.ncpBlock = false;
+    }
+
     @EventLink
     public final Listener<EventSlowDown> onSlowDown = event -> {
-        if (!Nonsense.module(AutoBlock.class).canBlock()) {
-            switch (this.mode.get()) {
-                case VANILLA, NCP, SWITCH -> event.cancel();
-                case SPOOF -> {
-                    if (this.ground && mc.thePlayer.isUsingItem()) {
-                        event.cancel();
-                    }
+        switch (this.mode.get()) {
+            case VANILLA, NCP, SWITCH -> event.cancel();
+            case SPOOF -> {
+                if (this.ground && mc.thePlayer.isUsingItem()) {
+                    event.cancel();
                 }
             }
         }
+
     };
 
-    @EventLink
+    @EventLink(EventPriorities.LOW)
     public final Listener<EventClickAction> onClick = event -> {
 
-        if (!Nonsense.module(AutoBlock.class).canBlock()) {
-            switch (this.mode.get()) {
-                case NCP -> {
-                    if (this.isBlocking() && MoveUtil.isMoving()) {
-                        PacketUtil.send(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.RELEASE_USE_ITEM, BlockPos.ORIGIN, EnumFacing.DOWN));
-                    }
-                }
+        if (this.mode.is(Mode.NCP)) {
+//            ChatUtil.print("%s && %s && %s && %s", event.usingItem, this.blockItem(), !event.release, MoveUtil.isMoving() || event.left);
+            if (event.usingItem && this.blockItem() && !event.release && (MoveUtil.isMoving() || event.left)) {
+                event.release = true;
+                this.ncpBlock = true;
             }
         }
     };
@@ -119,21 +121,17 @@ public class NoSlow extends Module {
     };
 
     @EventLink
-    public final Listener<EventPostMotion> onPost = event -> {
-
-        if (!Nonsense.module(AutoBlock.class).canBlock()) {
-            switch (this.mode.get()) {
-                case NCP -> {
-                    if (this.isBlocking() && MoveUtil.isMoving()) {
-                        PacketUtil.send(new C08PacketPlayerBlockPlacement(mc.thePlayer.getHeldItem()));
-                    }
-                }
+    public final Listener<EventPostMotion> onPost = _ -> {
+        if (this.mode.is(Mode.NCP)) {
+            if (this.ncpBlock) {
+                PacketUtil.rightClickPackets(mc.objectMouseOver, true, true);
+                this.ncpBlock = false;
             }
         }
     };
 
-    public boolean isBlocking() {
-        return mc.thePlayer.isUsingItem() && mc.thePlayer.getHeldItem() != null && mc.thePlayer.getHeldItem().getItemUseAction() == EnumAction.BLOCK;
+    public boolean blockItem() {
+        return mc.thePlayer.getHeldItem() != null && mc.thePlayer.getHeldItem().getItemUseAction() == EnumAction.BLOCK;
     }
 
     public boolean usingItemFixed() {

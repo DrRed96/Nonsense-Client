@@ -123,4 +123,8 @@ public class MathUtil {
         return MathHelper.sqrt_double(x * x + y * y + z * z);
     }
 
+    public static int random(int min, int max) {
+        return lerp(min, max, (float)Math.random());
+    }
+
 }

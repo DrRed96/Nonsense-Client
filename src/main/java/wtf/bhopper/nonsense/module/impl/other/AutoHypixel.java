@@ -2,8 +2,8 @@ package wtf.bhopper.nonsense.module.impl.other;
 
 import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraft.util.EnumChatFormatting;
-import wtf.bhopper.nonsense.event.bus.EventLink;
-import wtf.bhopper.nonsense.event.bus.Listener;
+import wtf.bhopper.nonsense.event.EventLink;
+import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.player.EventJoinGame;
 import wtf.bhopper.nonsense.event.impl.packet.EventReceivePacket;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
@@ -15,7 +15,7 @@ import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
 import wtf.bhopper.nonsense.module.property.impl.StringProperty;
 import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
-import wtf.bhopper.nonsense.util.misc.Clock;
+import wtf.bhopper.nonsense.util.misc.Stopwatch;
 
 import java.util.regex.Pattern;
 
@@ -51,7 +51,7 @@ public class AutoHypixel extends Module {
     private final BooleanProperty lobbyJoin = new BooleanProperty("Hide Lobby Join", "Removes lobby join messages.", false);
     private final BooleanProperty autoTip = new BooleanProperty("Auto Tip", "Automatically tips players with active network boosters.", true);
 
-    private final Clock autoGgTimer = new Clock();
+    private final Stopwatch autoGgTimer = new Stopwatch();
     private boolean joined = false;
 
     public AutoHypixel() {

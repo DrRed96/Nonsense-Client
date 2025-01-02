@@ -18,6 +18,6 @@ public class Vclip extends Command {
 
         double offset = CommandBase.parseDouble(args[1]);
         mc.thePlayer.setPosition(mc.thePlayer.posX, mc.thePlayer.posY + offset, mc.thePlayer.posZ);
-        ChatUtil.info("Teleported %s %s blocks", offset >= 0.0 ? "up" : "down", offset, String.valueOf(Math.abs(offset)));
+        ChatUtil.info("Teleported %s %.1f blocks", offset >= 0.0 ? "up" : "down", Math.abs(offset));
     }
 }

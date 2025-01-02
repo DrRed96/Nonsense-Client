@@ -12,8 +12,8 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Vec3;
-import wtf.bhopper.nonsense.event.bus.EventLink;
-import wtf.bhopper.nonsense.event.bus.Listener;
+import wtf.bhopper.nonsense.event.EventLink;
+import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
 import wtf.bhopper.nonsense.event.impl.packet.EventReceivePacket;
 import wtf.bhopper.nonsense.event.impl.player.EventJoinGame;
@@ -32,7 +32,7 @@ import wtf.bhopper.nonsense.util.minecraft.world.BlockUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.PacketUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.RotationUtil;
-import wtf.bhopper.nonsense.util.misc.Clock;
+import wtf.bhopper.nonsense.util.misc.Stopwatch;
 import wtf.bhopper.nonsense.util.render.RenderUtil;
 
 import java.awt.*;
@@ -76,7 +76,7 @@ public class AutoSpeedBuilders extends Module {
     private BlockData blockData;
     private Vec3 hitVec = null;
 
-    private final Clock timer = new Clock();
+    private final Stopwatch timer = new Stopwatch();
 
     public AutoSpeedBuilders() {
         this.silent.addProperties(this.silentSwing, this.silentSwap);
