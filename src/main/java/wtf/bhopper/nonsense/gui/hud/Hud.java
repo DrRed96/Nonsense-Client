@@ -96,6 +96,30 @@ public class Hud implements IMinecraft {
         return mod().color.getRGB();
     }
 
+    public static int secondary() {
+        return mod().secondary.getRGB();
+    }
+
+    public static boolean enableSecondary() {
+        return mod().enableSecondary.get();
+    }
+
+    public static void rect(float x, float y, float width, float height) {
+        if (enableSecondary()) {
+            NVGHelper.drawGradientRectSideways(x, y, width, height, color(), secondary());
+        } else {
+            NVGHelper.drawRect(x, y, width, height, color());
+        }
+    }
+
+    public static void text(String text, float x, float y) {
+        if (enabled()) {
+            NVGHelper.drawGradientText(text, x, y, color(), secondary(), true);
+        } else {
+            NVGHelper.drawText(text, x, y, color(), true);
+        }
+    }
+
     public static boolean enabled() {
         return mod().isToggled() && (!mod().hideInF3.get() || !mc.gameSettings.showDebugInfo);
     }
@@ -104,6 +128,7 @@ public class Hud implements IMinecraft {
         NVGHelper.fontFace(mod().font.get().font);
     }
 
+    @FunctionalInterface
     public interface WidthMethod {
         float getWidth(String text);
     }

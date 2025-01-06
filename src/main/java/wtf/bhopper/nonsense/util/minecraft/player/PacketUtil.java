@@ -155,6 +155,10 @@ public class PacketUtil implements IMinecraft {
         }
     }
 
+    public static PacketBuffer createBuffer() {
+        return new PacketBuffer(Unpooled.buffer());
+    }
+
     public static PacketBuffer createStringBuffer(String data) {
         return new PacketBuffer(Unpooled.buffer()).writeString(data);
     }

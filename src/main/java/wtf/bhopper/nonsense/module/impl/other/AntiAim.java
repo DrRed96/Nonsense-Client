@@ -1,6 +1,7 @@
 package wtf.bhopper.nonsense.module.impl.other;
 
 import io.netty.util.internal.ThreadLocalRandom;
+import wtf.bhopper.nonsense.component.impl.player.RotationsComponent;
 import wtf.bhopper.nonsense.event.EventPriorities;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
@@ -57,8 +58,7 @@ public class AntiAim extends Module {
             case DEATH -> pitch = 180.0F;
         }
 
-        event.yaw = yaw;
-        event.pitch = pitch;
+        RotationsComponent.updateServerRotations(yaw, pitch);
 
         if (lockView.get()) {
             mc.thePlayer.rotationYaw = yaw;

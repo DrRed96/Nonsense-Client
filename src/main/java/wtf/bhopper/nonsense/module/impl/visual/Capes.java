@@ -17,6 +17,7 @@ import wtf.bhopper.nonsense.util.render.CapeLocation;
 import wtf.bhopper.nonsense.util.render.ColorUtil;
 
 import java.awt.*;
+import java.util.function.Supplier;
 
 @ModuleInfo(name = "Capes", description = "Client capes.", category = ModuleCategory.VISUAL, toggled = true)
 public class Capes extends Module {
@@ -122,9 +123,9 @@ public class Capes extends Module {
 
         private final ResourceLocation location;
         private final ResourceLocation overlay;
-        private final OverlayColor color;
+        private final Supplier<Color> color;
 
-        public OverlayCape(String name, OverlayColor color) {
+        public OverlayCape(String name, Supplier<Color> color) {
             this.location = new ResourceLocation(String.format("nonsense/capes/%s.png", name));
             this.overlay = new ResourceLocation(String.format("nonsense/capes/%s_overlay.png", name));
             this.color = color;
@@ -132,11 +133,7 @@ public class Capes extends Module {
 
         @Override
         public CapeLocation getResource() {
-            return new CapeLocation(location, overlay, color.getColor());
-        }
-
-        public interface OverlayColor {
-            Color getColor();
+            return new CapeLocation(location, overlay, color.get());
         }
     }
 

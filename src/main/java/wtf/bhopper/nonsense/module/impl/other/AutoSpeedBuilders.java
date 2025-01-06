@@ -12,12 +12,12 @@ import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.EnumFacing;
 import net.minecraft.util.Vec3;
+import wtf.bhopper.nonsense.component.impl.player.RotationsComponent;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
 import wtf.bhopper.nonsense.event.impl.packet.EventReceivePacket;
 import wtf.bhopper.nonsense.event.impl.player.EventJoinGame;
-import wtf.bhopper.nonsense.event.impl.player.EventPreMotion;
 import wtf.bhopper.nonsense.event.impl.player.EventSelectItem;
 import wtf.bhopper.nonsense.event.impl.player.EventUpdate;
 import wtf.bhopper.nonsense.event.impl.render.EventRenderWorld;
@@ -180,13 +180,10 @@ public class AutoSpeedBuilders extends Module {
             }
         }
 
-    };
-
-    @EventLink
-    public final Listener<EventPreMotion> onPre = event -> {
         if (this.hitVec != null) {
-            event.setRotations(RotationUtil.getRotations(this.hitVec));
+            RotationsComponent.updateServerRotations(RotationUtil.getRotations(this.hitVec));
         }
+
     };
 
     private BlockData getBlockData() {

@@ -48,6 +48,11 @@ public class ColorUtil {
         return Color.HSBtoRGB(hsb[0], hsb[1], hsb[2] * factor);
     }
 
+    public static int wave(int color, int color2, long timeMS, int count) {
+        float factor = Math.abs((((timeMS * 2L) - count * 500L) % 8001) / 4000.0F - 1.0F);
+        return interpolate(new Color(color), new Color(color2), factor).getRGB();
+    }
+
     public static int astolfo(long timeMS, int count) {
         float hue = Math.abs(((((timeMS * 2L) - count * 500L) % 8001) / 8000.0F) - 0.5f) + 0.5F;
         return Color.HSBtoRGB(hue, 0.5F, 1.0F);
@@ -63,6 +68,15 @@ public class ColorUtil {
 
     public static int health(EntityLivingBase entity) {
         return health(entity.getHealth(), entity.getMaxHealth());
+    }
+
+    public static Color interpolate(Color current, Color target, float factor) {
+        return new Color(
+                MathUtil.lerp(current.getRed(), target.getRed(), factor),
+                MathUtil.lerp(current.getGreen(), target.getGreen(), factor),
+                MathUtil.lerp(current.getBlue(), target.getBlue(), factor),
+                MathUtil.lerp(current.getAlpha(), target.getAlpha(), factor)
+        );
     }
 
     public static Color interpolate(Color current, Color target, int speed, float delta) {

@@ -63,6 +63,7 @@ public class Block {
         public String getBreakSound() {
             return "dig.glass";
         }
+
         public String getPlaceSound() {
             return "step.stone";
         }
@@ -79,6 +80,7 @@ public class Block {
         public String getBreakSound() {
             return "dig.stone";
         }
+
         public String getPlaceSound() {
             return "random.anvil_land";
         }
@@ -87,9 +89,11 @@ public class Block {
         public String getBreakSound() {
             return "mob.slime.big";
         }
+
         public String getPlaceSound() {
             return "mob.slime.big";
         }
+
         public String getStepSound() {
             return "mob.slime.small";
         }
@@ -632,94 +636,95 @@ public class Block {
         this.setBlockBoundsBasedOnState(worldIn, pos);
         start = start.addVector(-pos.getX(), -pos.getY(), -pos.getZ());
         end = end.addVector(-pos.getX(), -pos.getY(), -pos.getZ());
-        Vec3 vec3 = start.getIntermediateWithXValue(end, this.minX);
-        Vec3 vec31 = start.getIntermediateWithXValue(end, this.maxX);
-        Vec3 vec32 = start.getIntermediateWithYValue(end, this.minY);
-        Vec3 vec33 = start.getIntermediateWithYValue(end, this.maxY);
-        Vec3 vec34 = start.getIntermediateWithZValue(end, this.minZ);
-        Vec3 vec35 = start.getIntermediateWithZValue(end, this.maxZ);
+        Vec3 minX = start.getIntermediateWithXValue(end, this.minX);
+        Vec3 maxX = start.getIntermediateWithXValue(end, this.maxX);
+        Vec3 minY = start.getIntermediateWithYValue(end, this.minY);
+        Vec3 maxY = start.getIntermediateWithYValue(end, this.maxY);
+        Vec3 minZ = start.getIntermediateWithZValue(end, this.minZ);
+        Vec3 maxZ = start.getIntermediateWithZValue(end, this.maxZ);
 
-        if (!this.isVecInsideYZBounds(vec3)) {
-            vec3 = null;
+        if (!this.isVecInsideYZBounds(minX)) {
+            minX = null;
         }
 
-        if (!this.isVecInsideYZBounds(vec31)) {
-            vec31 = null;
+        if (!this.isVecInsideYZBounds(maxX)) {
+            maxX = null;
         }
 
-        if (!this.isVecInsideXZBounds(vec32)) {
-            vec32 = null;
+        if (!this.isVecInsideXZBounds(minY)) {
+            minY = null;
         }
 
-        if (!this.isVecInsideXZBounds(vec33)) {
-            vec33 = null;
+        if (!this.isVecInsideXZBounds(maxY)) {
+            maxY = null;
         }
 
-        if (!this.isVecInsideXYBounds(vec34)) {
-            vec34 = null;
+        if (!this.isVecInsideXYBounds(minZ)) {
+            minZ = null;
         }
 
-        if (!this.isVecInsideXYBounds(vec35)) {
-            vec35 = null;
+        if (!this.isVecInsideXYBounds(maxZ)) {
+            maxZ = null;
         }
 
-        Vec3 vec36 = null;
+        Vec3 offset = null;
 
-        if (vec3 != null && (vec36 == null || start.squareDistanceTo(vec3) < start.squareDistanceTo(vec36))) {
-            vec36 = vec3;
+        if (minX != null && (offset == null || start.squareDistanceTo(minX) < start.squareDistanceTo(offset))) {
+            offset = minX;
         }
 
-        if (vec31 != null && (vec36 == null || start.squareDistanceTo(vec31) < start.squareDistanceTo(vec36))) {
-            vec36 = vec31;
+        if (maxX != null && (offset == null || start.squareDistanceTo(maxX) < start.squareDistanceTo(offset))) {
+            offset = maxX;
         }
 
-        if (vec32 != null && (vec36 == null || start.squareDistanceTo(vec32) < start.squareDistanceTo(vec36))) {
-            vec36 = vec32;
+        if (minY != null && (offset == null || start.squareDistanceTo(minY) < start.squareDistanceTo(offset))) {
+            offset = minY;
         }
 
-        if (vec33 != null && (vec36 == null || start.squareDistanceTo(vec33) < start.squareDistanceTo(vec36))) {
-            vec36 = vec33;
+        if (maxY != null && (offset == null || start.squareDistanceTo(maxY) < start.squareDistanceTo(offset))) {
+            offset = maxY;
         }
 
-        if (vec34 != null && (vec36 == null || start.squareDistanceTo(vec34) < start.squareDistanceTo(vec36))) {
-            vec36 = vec34;
+        if (minZ != null && (offset == null || start.squareDistanceTo(minZ) < start.squareDistanceTo(offset))) {
+            offset = minZ;
         }
 
-        if (vec35 != null && (vec36 == null || start.squareDistanceTo(vec35) < start.squareDistanceTo(vec36))) {
-            vec36 = vec35;
+        if (maxZ != null && (offset == null || start.squareDistanceTo(maxZ) < start.squareDistanceTo(offset))) {
+            offset = maxZ;
         }
 
-        if (vec36 == null) {
+        if (offset == null) {
             return null;
-        } else {
-            EnumFacing enumfacing = null;
-
-            if (vec36 == vec3) {
-                enumfacing = EnumFacing.WEST;
-            }
-
-            if (vec36 == vec31) {
-                enumfacing = EnumFacing.EAST;
-            }
-
-            if (vec36 == vec32) {
-                enumfacing = EnumFacing.DOWN;
-            }
-
-            if (vec36 == vec33) {
-                enumfacing = EnumFacing.UP;
-            }
-
-            if (vec36 == vec34) {
-                enumfacing = EnumFacing.NORTH;
-            }
-
-            if (vec36 == vec35) {
-                enumfacing = EnumFacing.SOUTH;
-            }
-
-            return new MovingObjectPosition(vec36.addVector((double) pos.getX(), (double) pos.getY(), (double) pos.getZ()), enumfacing, pos);
         }
+
+        EnumFacing facing = null;
+
+        if (offset == minX) {
+            facing = EnumFacing.WEST;
+        }
+
+        if (offset == maxX) {
+            facing = EnumFacing.EAST;
+        }
+
+        if (offset == minY) {
+            facing = EnumFacing.DOWN;
+        }
+
+        if (offset == maxY) {
+            facing = EnumFacing.UP;
+        }
+
+        if (offset == minZ) {
+            facing = EnumFacing.NORTH;
+        }
+
+        if (offset == maxZ) {
+            facing = EnumFacing.SOUTH;
+        }
+
+        return new MovingObjectPosition(offset.addVector(pos.getX(), pos.getY(), pos.getZ()), facing, pos);
+
     }
 
     /**

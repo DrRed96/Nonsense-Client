@@ -21,9 +21,4 @@ public class EventPreMotion implements Event {
         this.onGround = onGround;
     }
 
-    public void setRotations(Rotation rotation) {
-        this.yaw = rotation.yaw;
-        this.pitch = rotation.pitch;
-    }
-
 }

@@ -2,8 +2,7 @@ package wtf.bhopper.nonsense.module.impl.visual;
 
 import net.minecraft.client.renderer.GlStateManager;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.component.impl.BlinkComponent;
-import wtf.bhopper.nonsense.component.impl.TickRateComponent;
+import wtf.bhopper.nonsense.component.impl.world.TickRateComponent;
 import wtf.bhopper.nonsense.gui.components.RenderComponent;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;

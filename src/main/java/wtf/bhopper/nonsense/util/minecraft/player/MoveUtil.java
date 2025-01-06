@@ -309,26 +309,29 @@ public class MoveUtil implements IMinecraft {
     }
 
     public static double direction(float rotationYaw, final double moveForward, final double moveStrafing) {
-        if (moveForward < 0F) {
-            rotationYaw += 180F;
+
+        float yaw = rotationYaw;
+
+        if (moveForward < 0.0F) {
+            yaw += 180.0F;
         }
 
-        float forward = 1F;
+        float forward = 1.0F;
 
-        if (moveForward < 0F) {
+        if (moveForward < 0.0F) {
             forward = -0.5F;
-        } else if (moveForward > 0F) {
+        } else if (moveForward > 0.0F) {
             forward = 0.5F;
         }
 
-        if (moveStrafing > 0F) {
-            rotationYaw -= 90F * forward;
+        if (moveStrafing > 0.0F) {
+            yaw -= 90.0F * forward;
         }
-        if (moveStrafing < 0F) {
-            rotationYaw += 90F * forward;
+        if (moveStrafing < 0.0F) {
+            yaw += 90.0F * forward;
         }
 
-        return Math.toRadians(rotationYaw);
+        return Math.toRadians(yaw);
     }
 
     public static double getPosYForJumpTick(int tick) {

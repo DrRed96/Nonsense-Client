@@ -66,6 +66,7 @@ public class ModuleManager {
                 new FastUse(),
                 new FastMine(),
                 new FastPlace(),
+                new Breaker(),
                 new AntiCactus(),
                 new GameSpeed(),
                 new HorseJump(),
@@ -76,6 +77,7 @@ public class ModuleManager {
                 new ServerLagger(),
                 new ClientSpoofer(),
                 new ActivatedSpawners(),
+                new JoinClaim(),
                 new Plugins(),
                 new Popbob(),
 

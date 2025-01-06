@@ -1,7 +1,6 @@
-package wtf.bhopper.nonsense.component.impl;
+package wtf.bhopper.nonsense.component.impl.packet;
 
 import net.minecraft.client.multiplayer.ServerAddress;
-import net.minecraft.scoreboard.Score;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.component.Component;
 import wtf.bhopper.nonsense.event.EventLink;

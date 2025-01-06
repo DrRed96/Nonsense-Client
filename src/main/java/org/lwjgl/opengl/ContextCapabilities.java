@@ -33,14 +33,9 @@ package org.lwjgl.opengl;
 
 import org.lwjgl.LWJGLException;
 import org.lwjgl.LWJGLUtil;
-import org.lwjgl.opengl.GL;
-import org.lwjgl.opengl.GLCapabilities;
-import org.lwjgl.opengl.OpenGLException;
-import org.lwjgl.opengl.Util;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.Modifier;
-import java.security.AccessController;
 import java.security.PrivilegedAction;
 import java.util.*;
 
@@ -5742,7 +5737,7 @@ public class ContextCapabilities{
     }
 
     static long getPlatformSpecificFunctionAddress(String function_prefix, String[] os_prefixes, String[] os_function_prefixes, String function) {
-        String os_name = AccessController.doPrivileged((PrivilegedAction<String>)()->System.getProperty("os.name"));
+        String os_name = System.getProperty("os.name");
         for ( int i = 0; i < os_prefixes.length; i++ )
             if ( os_name.startsWith(os_prefixes[i]) ) {
                 String platform_function_name = function.replaceFirst(function_prefix, os_function_prefixes[i]);

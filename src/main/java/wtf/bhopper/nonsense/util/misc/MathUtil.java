@@ -112,6 +112,14 @@ public class MathUtil {
         return closestPointOnFace(aabb, face, vec.xCoord, vec.yCoord, vec.zCoord);
     }
 
+    public static Vec3 centrePoint(AxisAlignedBB aabb) {
+        return new Vec3(
+                lerp(aabb.minX, aabb.maxX, 0.5),
+                lerp(aabb.minY, aabb.maxY, 0.5),
+                lerp(aabb.minZ, aabb.maxZ, 0.5)
+        );
+    }
+
     public static double wrappedDifference(double number1, double number2) {
         return Math.min(Math.abs(number1 - number2), Math.min(Math.abs(number1 - 360) - Math.abs(number2 - 0), Math.abs(number2 - 360) - Math.abs(number1 - 0)));
     }

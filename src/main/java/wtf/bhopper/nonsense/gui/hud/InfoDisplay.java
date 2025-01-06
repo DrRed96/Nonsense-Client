@@ -13,7 +13,8 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import org.lwjgl.opengl.Display;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.component.impl.TickRateComponent;
+import wtf.bhopper.nonsense.component.impl.packet.PingComponent;
+import wtf.bhopper.nonsense.component.impl.world.TickRateComponent;
 import wtf.bhopper.nonsense.module.impl.visual.HudMod;
 import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
@@ -87,6 +88,10 @@ public class InfoDisplay implements IMinecraft {
                 case MPH -> String.format("%.2f mph", speed * 44.74);
                 default -> String.format("%.2f", speed);
             }));
+        }
+
+        if (mod.ping.get()) {
+            this.components.add(new Component("Ping", String.format("%dms", PingComponent.getPing())));
         }
 
         if (mod.tps.get()) {

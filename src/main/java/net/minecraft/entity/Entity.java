@@ -48,7 +48,7 @@ import net.minecraft.world.Explosion;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.component.impl.SilentRotationsComponent;
+import wtf.bhopper.nonsense.component.impl.player.RotationsComponent;
 import wtf.bhopper.nonsense.event.impl.world.EventBlockCollision;
 import wtf.bhopper.nonsense.event.impl.player.movement.EventPostStep;
 import wtf.bhopper.nonsense.event.impl.player.movement.EventPreStep;
@@ -277,6 +277,9 @@ public abstract class Entity implements ICommandSender {
     private boolean invulnerable;
     protected UUID entityUniqueID;
 
+    public float movementYaw;
+    public float lastTickMovementYaw;
+    public float velocityYaw;
     public boolean isFake = false;
 
     /**
@@ -1103,7 +1106,7 @@ public abstract class Entity implements ICommandSender {
      */
     public void moveFlying(float strafe, float forward, float friction) {
 
-        EventStrafe event = new EventStrafe(forward, strafe, friction, this.rotationYaw);
+        EventStrafe event = new EventStrafe(forward, strafe, friction, this.movementYaw);
         if (this.isClientPlayer()) {
             Nonsense.getEventBus().post(event);
         }
@@ -2291,7 +2294,7 @@ public abstract class Entity implements ICommandSender {
     }
 
     public EnumFacing getHorizontalFacing() {
-        return EnumFacing.getHorizontal(MathHelper.floor_double((double) ((this.isClientPlayer() ? Nonsense.component(SilentRotationsComponent.class).serverYaw : this.rotationYaw) * 4.0F / 360.0F) + 0.5D) & 3);
+        return EnumFacing.getHorizontal(MathHelper.floor_double((double) ((this.isClientPlayer() ? Nonsense.component(RotationsComponent.class).serverYaw : this.rotationYaw) * 4.0F / 360.0F) + 0.5D) & 3);
     }
 
     protected HoverEvent getHoverEvent() {

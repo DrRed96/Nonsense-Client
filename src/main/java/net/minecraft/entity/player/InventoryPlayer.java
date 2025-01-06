@@ -15,9 +15,7 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ReportedException;
-import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.component.impl.SilentSlotComponent;
-import wtf.bhopper.nonsense.util.minecraft.inventory.InventoryUtil;
+import wtf.bhopper.nonsense.component.impl.player.SilentSlotComponent;
 
 public class InventoryPlayer implements IInventory
 {

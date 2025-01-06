@@ -14,6 +14,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * Utility class used to create an ItemStack
+ */
 public class ItemBuilder {
 
     private final Item item;

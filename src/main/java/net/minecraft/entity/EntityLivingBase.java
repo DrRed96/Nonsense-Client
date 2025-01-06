@@ -53,7 +53,7 @@ import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 import net.minecraft.world.WorldServer;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.component.impl.SilentRotationsComponent;
+import wtf.bhopper.nonsense.component.impl.player.RotationsComponent;
 import wtf.bhopper.nonsense.event.impl.player.movement.EventJump;
 import wtf.bhopper.nonsense.module.impl.visual.ItemAnimations;
 
@@ -850,7 +850,7 @@ public abstract class EntityLivingBase extends Entity {
                             d1 = (Math.random() - Math.random()) * 0.01D;
                         }
 
-                        this.attackedAtYaw = (float) (MathHelper.func_181159_b(d0, d1) * 180.0D / Math.PI - (double) this.rotationYaw);
+                        this.attackedAtYaw = (float) (MathHelper.func_181159_b(d0, d1) * 180.0D / Math.PI - (double) this.movementYaw);
                         this.knockBack(entity, amount, d1, d0);
                     } else {
                         this.attackedAtYaw = (float) ((int) (Math.random() * 2.0D) * 180);
@@ -1372,18 +1372,20 @@ public abstract class EntityLivingBase extends Entity {
         }
 
         if (this.isClientPlayer()) {
-            EventJump event = new EventJump(motion);
+            EventJump event = new EventJump(motion, this.movementYaw);
             Nonsense.getEventBus().post(event);
             if (event.isCancelled()) {
                 return;
             }
             motion = event.motion;
+            this.movementYaw = event.yaw;
+            this.velocityYaw = event.yaw;
         }
 
         this.motionY = motion;
 
         if (this.isSprinting()) {
-            float f = this.rotationYaw * 0.017453292F;
+            float f = this.movementYaw * 0.017453292F;
             this.motionX -= MathHelper.sin(f) * 0.2F;
             this.motionZ += MathHelper.cos(f) * 0.2F;
         }
@@ -1671,7 +1673,7 @@ public abstract class EntityLivingBase extends Entity {
             f1 = 75.0F;
         }
 
-        this.renderYawOffset = (this.isClientPlayer() ? Nonsense.component(SilentRotationsComponent.class).serverYaw : this.rotationYaw) - f1;
+        this.renderYawOffset = (this.isClientPlayer() ? Nonsense.component(RotationsComponent.class).serverYaw : this.rotationYaw) - f1;
 
         if (f1 * f1 > 2500.0F) {
             this.renderYawOffset += f1 * 0.2F;

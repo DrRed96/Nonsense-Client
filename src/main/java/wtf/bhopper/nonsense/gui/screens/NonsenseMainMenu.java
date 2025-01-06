@@ -47,11 +47,15 @@ public class NonsenseMainMenu extends GuiScreen {
 
     private static List<String> splashes = null;
 
+    private static List<String> tips = null;
+
     private ResourceLocation backgroundTexture;
     private String splashText;
     private int panoramaTimer;
 
     private ScaledResolution scaledRes;
+
+    private Theme theme = Theme.MINECRAFT;
 
     private final Button[] buttons = new Button[]{
             new Button("Singleplayer", () -> this.mc.displayGuiScreen(new GuiSelectWorld(this))),
@@ -99,9 +103,13 @@ public class NonsenseMainMenu extends GuiScreen {
         int width = this.scaledRes.getScaledWidth() * this.scaledRes.getScaleFactor();
         int height = this.scaledRes.getScaledHeight() * this.scaledRes.getScaleFactor();
 
-        GlStateManager.disableAlpha();
-        this.renderSkybox(partialTicks);
-        GlStateManager.enableAlpha();
+        switch (this.theme) {
+            case MINECRAFT -> {
+                GlStateManager.disableAlpha();
+                this.renderSkybox(partialTicks);
+                GlStateManager.enableAlpha();
+            }
+        }
 
         GlStateManager.pushMatrix();
         this.scaledRes.scaleToFactor(1.0F);
@@ -325,6 +333,34 @@ public class NonsenseMainMenu extends GuiScreen {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
+    }
+
+    private static void loadTips() {
+        try {
+            tips = new ArrayList<>();
+            IResource resource = Minecraft.getMinecraft()
+                    .getResourceManager()
+                    .getResource(new ResourceLocation("nonsense/tips.txt"));
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
+                while (reader.ready()) {
+                    tips.add(reader.readLine());
+                }
+            }
+        } catch (IOException exception) {
+            throw new RuntimeException(exception);
+        }
+    }
+
+    public static String randomTip() {
+        if (tips == null) {
+            loadTips();
+        }
+
+        return GeneralUtil.randomElement(tips);
+    }
+
+    private enum Theme {
+        MINECRAFT
     }
 
     private static class Button {

@@ -19,6 +19,7 @@ public class NumberProperty extends Property<Double> {
     public static final NumberFormat FORMAT_ANGLE = new DecimalFormat("#0.##'\u00B0'");
     public static final NumberFormat FORMAT_APS = new DecimalFormat("#0 'APS'");
     public static final NumberFormat FORMAT_PIXELS = new DecimalFormat("#0.##'px'");
+    public static final NumberFormat FORMAT_TICKS = new DecimalFormat("#0 ticks");
 
     private final double min;
     private final double max;

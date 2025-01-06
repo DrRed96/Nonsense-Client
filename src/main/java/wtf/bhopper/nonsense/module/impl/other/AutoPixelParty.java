@@ -84,7 +84,7 @@ public class AutoPixelParty extends Module {
         if (event.packet instanceof S2FPacketSetSlot packet) {
             if (packet.getWindowId() == 0 && packet.getSlot() == 44) {
 
-                if (InventoryUtil.getStackInSlot(44) == null) {
+                if (InventoryUtil.getStack(44) == null) {
                     ItemStack item = packet.getItem();
                     if (item != null && item.getItem() instanceof ItemBlock itemBlock) {
                         this.block = itemBlock.getBlock().getStateFromMeta(item.getMetadata());

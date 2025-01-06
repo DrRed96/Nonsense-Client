@@ -1,4 +1,4 @@
-package wtf.bhopper.nonsense.component.impl;
+package wtf.bhopper.nonsense.component.impl.packet;
 
 import net.minecraft.client.gui.GuiDownloadTerrain;
 import net.minecraft.network.Packet;

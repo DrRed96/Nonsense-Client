@@ -2,10 +2,11 @@ package wtf.bhopper.nonsense.module.impl.player;
 
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
+import wtf.bhopper.nonsense.component.impl.player.RotationsComponent;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
-import wtf.bhopper.nonsense.event.impl.player.EventPreMotion;
 import wtf.bhopper.nonsense.event.impl.packet.EventReceivePacket;
+import wtf.bhopper.nonsense.event.impl.player.EventUpdate;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
@@ -44,9 +45,9 @@ public class NoRotate extends Module {
     };
 
     @EventLink
-    public final Listener<EventPreMotion> onPre = event -> {
+    public final Listener<EventUpdate> onPre = event -> {
         if (this.rotation != null) {
-            event.setRotations(this.rotation);
+            RotationsComponent.updateServerRotations(this.rotation);
             this.rotation = null;
         }
     };

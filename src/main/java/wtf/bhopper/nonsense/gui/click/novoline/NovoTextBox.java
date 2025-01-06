@@ -53,13 +53,20 @@ public class NovoTextBox extends NovoComponent {
 
             this.panel.yOff += MOD_HEIGHT;
 
-            this.drawBackground(this.panel.yOff, EXPANDED_HEIGHT, this.indentColor(BG_COLOR));
-
             NVGHelper.fontSize(14.0F);
             NVGHelper.textAlign(NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);
-            NVGHelper.drawText(this.property.get() + (this.showType ? "|" : ""), this.getIndentionOffset(), this.panel.yOff + EXPANDED_HEIGHT / 2.0F + 1.0F, 0xFFDDDDDD, true);
 
-            this.panel.yOff += EXPANDED_HEIGHT;
+            String displayValue = this.property.get() + (this.showType ? "|" : "");
+            float lineBreakWidth = WIDTH - this.getIndentionOffset() * 2;
+            float[] bounds = new float[4];
+            NVGHelper.textBoxBounds(this.getIndentionOffset(), this.panel.yOff + EXPANDED_HEIGHT / 2.0F + 1.0F, lineBreakWidth, displayValue, bounds);
+            float height = bounds[3] - bounds[1] + 5.0F;
+
+            this.drawBackground(this.panel.yOff, height, this.indentColor(BG_COLOR));
+
+            NVGHelper.drawTextBox(this.property.get() + (this.showType ? "|" : ""), this.getIndentionOffset(), this.panel.yOff + EXPANDED_HEIGHT / 2.0F + 1.0F, 0xFFDDDDDD, true, lineBreakWidth);
+
+            this.panel.yOff += (int)height;
         } else {
             float offset = this.getIndentionOffset() + NVGHelper.getStringWidth(this.property.displayName + ": ");
 

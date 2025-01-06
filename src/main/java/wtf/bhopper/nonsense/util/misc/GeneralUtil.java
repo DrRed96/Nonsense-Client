@@ -22,6 +22,7 @@ public class GeneralUtil {
     public static final String USERNAME = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890_";
     public static final String VOWELS = "aeiou";
     public static final Pattern LINK_REGEX = Pattern.compile("^(?:(ftp|http|https)://)?(?:[\\w-]+\\.)+[a-z]{2,6}$");
+    public static final String ASCII = " !\"#$%&'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~";
 
     public static String capitalize(String str) {
         char prevChar = ' ';
@@ -78,6 +79,25 @@ public class GeneralUtil {
             builder.append(randomElement(USERNAME));
         }
         return builder.toString();
+    }
+
+    public static String randomString(int length) {
+        StringBuilder builder = new StringBuilder();
+        for (int i = 0; i < length; i++) {
+            builder.append(randomElement(ASCII));
+        }
+        return builder.toString();
+    }
+
+    @SuppressWarnings("unchecked")
+    public static <T extends Enum<T>> T nextValue(T val) {
+        Class<T> clazz = (Class<T>)val.getClass();
+        T[] vals = clazz.getEnumConstants();
+        int ordinal = val.ordinal() + 1;
+        if (ordinal >= vals.length) {
+            return vals[0];
+        }
+        return vals[ordinal];
     }
 
 }

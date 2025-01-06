@@ -51,7 +51,8 @@ public class TabGui implements IMinecraft {
         NVGHelper.translate(4.0F, minY + 4.0F);
 
         NVGHelper.drawRect(0.0F, 0.0F, tabSize, tabSize, ColorUtil.BACKGROUND);
-        NVGHelper.drawRect(0.0F, this.categoryTranslate.getY(), tabSize, tabHeight, Hud.color());
+
+        Hud.rect(0.0F, this.categoryTranslate.getY(), tabSize, tabHeight);
 
         if (mod.font.is(HudMod.Font.MINECRAFT)) {
             NVGHelper.end();

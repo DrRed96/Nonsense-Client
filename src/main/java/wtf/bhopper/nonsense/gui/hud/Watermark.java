@@ -4,7 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.component.impl.TickRateComponent;
+import wtf.bhopper.nonsense.component.impl.world.TickRateComponent;
 import wtf.bhopper.nonsense.module.impl.visual.HudMod;
 import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 import wtf.bhopper.nonsense.util.render.ColorUtil;
@@ -34,7 +34,7 @@ public class Watermark implements IMinecraft {
         }
 
         return switch (mod.watermarkMode.get()) {
-            case EXHIBITION -> {
+            case GENERIC -> {
                 String text = this.getText(mod);
                 int color = switch (mod.watermarkColorMode.get()) {
                     case WHITE -> ColorUtil.WHITE;
@@ -68,8 +68,12 @@ public class Watermark implements IMinecraft {
                     String part2 = text.substring(1);
                     float valueX = 4.0F + NVGHelper.getStringWidth(part1);
 
-                    NVGHelper.drawText(part1, 4.0F, 4.0F, color, true);
-                    NVGHelper.drawText(part2, valueX, 4.0F, mod.watermarkColorMode.is(HudMod.WatermarkColorMode.SOLID) ? color : ColorUtil.WHITE, true);
+                    if (mod.watermarkColorMode.is(HudMod.WatermarkColorMode.SOLID)) {
+                        Hud.text(text, 4.0F, 4.0F);
+                    } else {
+                        NVGHelper.drawText(part1, 4.0F, 4.0F, color, true);
+                        NVGHelper.drawText(part2, valueX, 4.0F, ColorUtil.WHITE, true);
+                    }
 
                     NVGHelper.end();
 

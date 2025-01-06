@@ -95,7 +95,7 @@ public class NovoColorPicker extends NovoComponent {
             // Alpha
             NVGHelper.drawRect(PICKER_OFFSET + 149.0F, pos - 1.0F, 22.0F, 122.0F, OUTLINE_COLOR);
             NVGHelper.drawImage(PICKER_OFFSET + 150.0F, pos, 20.0F, 120.0F, 400.0F, 400.0F, transparent);
-            NVGHelper.drawGraidentRect(PICKER_OFFSET + 150.0F, pos, 20.0F, 120.0F,
+            NVGHelper.drawGradientRect(PICKER_OFFSET + 150.0F, pos, 20.0F, 120.0F,
                     Color.HSBtoRGB(hsb[0], 1.0F, 1.0F),
                     ColorUtil.alpha(Color.HSBtoRGB(hsb[0], 1.0F, 1.0F), 0));
             NVGHelper.drawRect(PICKER_OFFSET + 153.0F, pos + (1.0F - alpha) * 120.0F, 14.0F, 1.0F, OUTLINE_COLOR);

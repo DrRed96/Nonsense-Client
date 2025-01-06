@@ -22,22 +22,22 @@ public class HudMod extends Module {
 
     private final GroupProperty moduleListGroup = new GroupProperty("Module List", "Displays what modules are enabled", this);
     public final BooleanProperty moduleListEnabled = new BooleanProperty("Enable", "Enable the module list.", true);
-    public final EnumProperty<ModuleListMode> moduleListMode = new EnumProperty<>("Mode", "Style of the module list", ModuleListMode.EXHIBITION);
-    public final EnumProperty<ModuleListColor> moduleListColor = new EnumProperty<>("Color", "Color mode for the module list.", ModuleListColor.STATIC, () -> moduleListMode.is(ModuleListMode.EXHIBITION));
+    public final EnumProperty<ModuleListMode> moduleListMode = new EnumProperty<>("Mode", "Style of the module list", ModuleListMode.GENERIC);
+    public final EnumProperty<ModuleListColor> moduleListColor = new EnumProperty<>("Color", "Color mode for the module list.", ModuleListColor.STATIC, () -> moduleListMode.is(ModuleListMode.GENERIC));
     public final BooleanProperty moduleListDisplay = new BooleanProperty("Display Names", "Uses display names.", true);
-    public final EnumProperty<ModuleListSuffix> moduleListSuffix = new EnumProperty<>("Suffixes", "Displays module suffixes", ModuleListSuffix.NORMAL, () -> moduleListMode.is(ModuleListMode.EXHIBITION));
-    public final ColorProperty moduleListSuffixColor = new ColorProperty("Suffix Color", "Color for the suffixes", ColorUtil.GRAY, () -> moduleListMode.is(ModuleListMode.EXHIBITION) && !this.moduleListSuffix.is(ModuleListSuffix.NONE));
+    public final EnumProperty<ModuleListSuffix> moduleListSuffix = new EnumProperty<>("Suffixes", "Displays module suffixes", ModuleListSuffix.NORMAL, () -> moduleListMode.is(ModuleListMode.GENERIC));
+    public final ColorProperty moduleListSuffixColor = new ColorProperty("Suffix Color", "Color for the suffixes", ColorUtil.GRAY, () -> moduleListMode.is(ModuleListMode.GENERIC) && !this.moduleListSuffix.is(ModuleListSuffix.NONE));
     public final BooleanProperty moduleListLowerCase = new BooleanProperty("Lower Case", "Converts the module list to lower case.", false);
     public final BooleanProperty moduleListAnimated = new BooleanProperty("Animated", "Animate the module list.", true);
-    public final NumberProperty moduleListSpacing = new NumberProperty("Spacing", "Space between modules", () -> moduleListMode.is(ModuleListMode.EXHIBITION), 1.0, 0.0, 2.0, 1.0, NumberProperty.FORMAT_INT);
-    public final NumberProperty moduleListBackground = new NumberProperty("Background", "Background transparency.", () -> moduleListMode.is(ModuleListMode.EXHIBITION), 120.0, 0.0, 255.0, 1.0, NumberProperty.FORMAT_INT);
+    public final NumberProperty moduleListSpacing = new NumberProperty("Spacing", "Space between modules", () -> moduleListMode.is(ModuleListMode.GENERIC), 1.0, 0.0, 2.0, 1.0, NumberProperty.FORMAT_INT);
+    public final NumberProperty moduleListBackground = new NumberProperty("Background", "Background transparency.", () -> moduleListMode.is(ModuleListMode.GENERIC), 120.0, 0.0, 255.0, 1.0, NumberProperty.FORMAT_INT);
     public final EnumProperty<ModuleListOutline> moduleListOutline = new EnumProperty<>("Outline", "Outline the module list", ModuleListOutline.NONE);
     public final EnumProperty<ModuleListSorting> moduleListSorting = new EnumProperty<>("Sorting", "How the module list should be sorted", ModuleListSorting.LENGTH);
 
     private final GroupProperty watermarkGroup = new GroupProperty("Watermark", "Client Watermark", this);
     public final BooleanProperty watermarkEnabled = new BooleanProperty("Enabled", "Enables the water mark", true);
-    public final EnumProperty<WatermarkMode> watermarkMode = new EnumProperty<>("Mode", "Watermark mode.", WatermarkMode.EXHIBITION);
-    public final EnumProperty<WatermarkColorMode> watermarkColorMode = new EnumProperty<>("Color Mode", "Watermark color mode.", WatermarkColorMode.STATIC, () -> this.watermarkMode.is(WatermarkMode.EXHIBITION));
+    public final EnumProperty<WatermarkMode> watermarkMode = new EnumProperty<>("Mode", "Watermark mode.", WatermarkMode.GENERIC);
+    public final EnumProperty<WatermarkColorMode> watermarkColorMode = new EnumProperty<>("Color Mode", "Watermark color mode.", WatermarkColorMode.STATIC, () -> this.watermarkMode.is(WatermarkMode.GENERIC));
     public final StringProperty watermarkText = new StringProperty("Text", "Oh look mom, I can rename a client!", Nonsense.NAME);
 
     private final GroupProperty information = new GroupProperty("Information", "HUD Information", this);
@@ -46,6 +46,7 @@ public class HudMod extends Module {
     public final BooleanProperty angles = new BooleanProperty("Angles", "Displays your pitch and yaw.", false);
     public final EnumProperty<Speed> speed = new EnumProperty<>("Speed", "Display your move speed.", Speed.MPS);
     public final BooleanProperty tps = new BooleanProperty("TPS", "Displays the servers ticks per second.", false);
+    public final BooleanProperty ping = new BooleanProperty("Ping", "Displays your ping.", false);
     public final BooleanProperty pots = new BooleanProperty("Potions", "Displays your active potion effects.", true);
     public final BooleanProperty fps = new BooleanProperty("FPS", "Displays your FPS.", false);
 
@@ -60,6 +61,8 @@ public class HudMod extends Module {
     public final EnumProperty<TargetColor> targetHudColorMode = new EnumProperty<>("Color Mode", "Target HUD color mode", TargetColor.STATIC);
 
     public final ColorProperty color = new ColorProperty("Color", "HUD color.", ColorUtil.NONSENSE);
+    public final BooleanProperty enableSecondary = new BooleanProperty("Enable Secondary", "Use a secondary color.", false);
+    public final ColorProperty secondary = new ColorProperty("Secondary", "Secondary color", 0xFFFF55FF, this.enableSecondary::get);
     public final EnumProperty<Font> font = new EnumProperty<>("Font", "Which font to use for the HUD", Font.ARIAL);
     public final NumberProperty fontSize = new NumberProperty("Font Size", "Size of the custom font", () -> !this.font.is(Font.MINECRAFT), 18.0, 11.0, 24.0, 1.0, NumberProperty.FORMAT_PIXELS);
     public final BooleanProperty tabGui = new BooleanProperty("Tab GUI", "Displays the Tab GUI", true);
@@ -80,7 +83,7 @@ public class HudMod extends Module {
                 this.moduleListOutline,
                 this.moduleListSorting);
         this.watermarkGroup.addProperties(this.watermarkEnabled, this.watermarkMode, this.watermarkColorMode, this.watermarkText);
-        this.information.addProperties(this.armorHud, this.coords, this.angles, this.speed, this.tps, this.pots, this.fps);
+        this.information.addProperties(this.armorHud, this.coords, this.angles, this.speed, this.tps, this.ping, this.pots, this.fps);
         this.notificationGroup.addProperties(this.notificationEnabled, this.notificationSound, this.toggleNotify);
         this.targetHudGroup.addProperties(this.targetHudEnabled, this.targetHudMode, this.targetHudColorMode);
         this.addProperties(this.moduleListGroup,
@@ -89,6 +92,8 @@ public class HudMod extends Module {
                 this.notificationGroup,
                 this.targetHudGroup,
                 this.color,
+                this.enableSecondary,
+                this.secondary,
                 this.font,
                 this.fontSize,
                 this.tabGui,
@@ -104,7 +109,7 @@ public class HudMod extends Module {
     }
 
     public enum ModuleListMode {
-        EXHIBITION,
+        GENERIC,
     }
 
     public enum ModuleListColor {
@@ -142,7 +147,7 @@ public class HudMod extends Module {
     }
 
     public enum WatermarkMode {
-        EXHIBITION,
+        GENERIC,
         NEVERLOSE
     }
 

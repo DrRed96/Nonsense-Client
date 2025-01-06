@@ -707,18 +707,21 @@ public abstract class World implements IBlockAccess {
     public MovingObjectPosition rayTraceBlocks(Vec3 start, Vec3 end, boolean stopOnLiquid, boolean ignoreBlockWithoutBoundingBox, boolean returnLastUncollidableBlock) {
         if (!Double.isNaN(start.xCoord) && !Double.isNaN(start.yCoord) && !Double.isNaN(start.zCoord)) {
             if (!Double.isNaN(end.xCoord) && !Double.isNaN(end.yCoord) && !Double.isNaN(end.zCoord)) {
-                int i = MathHelper.floor_double(end.xCoord);
-                int j = MathHelper.floor_double(end.yCoord);
-                int k = MathHelper.floor_double(end.zCoord);
-                int l = MathHelper.floor_double(start.xCoord);
-                int i1 = MathHelper.floor_double(start.yCoord);
-                int j1 = MathHelper.floor_double(start.zCoord);
-                BlockPos blockpos = new BlockPos(l, i1, j1);
-                IBlockState iblockstate = this.getBlockState(blockpos);
-                Block block = iblockstate.getBlock();
 
-                if ((!ignoreBlockWithoutBoundingBox || block.getCollisionBoundingBox(this, blockpos, iblockstate) != null) && block.canCollideCheck(iblockstate, stopOnLiquid)) {
-                    MovingObjectPosition movingobjectposition = block.collisionRayTrace(this, blockpos, start, end);
+                int endX = MathHelper.floor_double(end.xCoord);
+                int endY = MathHelper.floor_double(end.yCoord);
+                int endZ = MathHelper.floor_double(end.zCoord);
+
+                int startX = MathHelper.floor_double(start.xCoord);
+                int startY = MathHelper.floor_double(start.yCoord);
+                int startZ = MathHelper.floor_double(start.zCoord);
+
+                BlockPos pos = new BlockPos(startX, startY, startZ);
+                IBlockState state = this.getBlockState(pos);
+                Block block = state.getBlock();
+
+                if ((!ignoreBlockWithoutBoundingBox || block.getCollisionBoundingBox(this, pos, state) != null) && block.canCollideCheck(state, stopOnLiquid)) {
+                    MovingObjectPosition movingobjectposition = block.collisionRayTrace(this, pos, start, end);
 
                     if (movingobjectposition != null) {
                         return movingobjectposition;
@@ -733,7 +736,7 @@ public abstract class World implements IBlockAccess {
                         return null;
                     }
 
-                    if (l == i && i1 == j && j1 == k) {
+                    if (startX == endX && startY == endY && startZ == endZ) {
                         return returnLastUncollidableBlock ? movingobjectposition2 : null;
                     }
 
@@ -744,26 +747,26 @@ public abstract class World implements IBlockAccess {
                     double d1 = 999.0D;
                     double d2 = 999.0D;
 
-                    if (i > l) {
-                        d0 = (double) l + 1.0D;
-                    } else if (i < l) {
-                        d0 = (double) l + 0.0D;
+                    if (endX > startX) {
+                        d0 = (double) startX + 1.0D;
+                    } else if (endX < startX) {
+                        d0 = (double) startX + 0.0D;
                     } else {
                         flag2 = false;
                     }
 
-                    if (j > i1) {
-                        d1 = (double) i1 + 1.0D;
-                    } else if (j < i1) {
-                        d1 = (double) i1 + 0.0D;
+                    if (endY > startY) {
+                        d1 = (double) startY + 1.0D;
+                    } else if (endY < startY) {
+                        d1 = (double) startY + 0.0D;
                     } else {
                         flag = false;
                     }
 
-                    if (k > j1) {
-                        d2 = (double) j1 + 1.0D;
-                    } else if (k < j1) {
-                        d2 = (double) j1 + 0.0D;
+                    if (endZ > startZ) {
+                        d2 = (double) startZ + 1.0D;
+                    } else if (endZ < startZ) {
+                        d2 = (double) startZ + 0.0D;
                     } else {
                         flag1 = false;
                     }
@@ -802,32 +805,32 @@ public abstract class World implements IBlockAccess {
                     EnumFacing enumfacing;
 
                     if (d3 < d4 && d3 < d5) {
-                        enumfacing = i > l ? EnumFacing.WEST : EnumFacing.EAST;
+                        enumfacing = endX > startX ? EnumFacing.WEST : EnumFacing.EAST;
                         start = new Vec3(d0, start.yCoord + d7 * d3, start.zCoord + d8 * d3);
                     } else if (d4 < d5) {
-                        enumfacing = j > i1 ? EnumFacing.DOWN : EnumFacing.UP;
+                        enumfacing = endY > startY ? EnumFacing.DOWN : EnumFacing.UP;
                         start = new Vec3(start.xCoord + d6 * d4, d1, start.zCoord + d8 * d4);
                     } else {
-                        enumfacing = k > j1 ? EnumFacing.NORTH : EnumFacing.SOUTH;
+                        enumfacing = endZ > startZ ? EnumFacing.NORTH : EnumFacing.SOUTH;
                         start = new Vec3(start.xCoord + d6 * d5, start.yCoord + d7 * d5, d2);
                     }
 
-                    l = MathHelper.floor_double(start.xCoord) - (enumfacing == EnumFacing.EAST ? 1 : 0);
-                    i1 = MathHelper.floor_double(start.yCoord) - (enumfacing == EnumFacing.UP ? 1 : 0);
-                    j1 = MathHelper.floor_double(start.zCoord) - (enumfacing == EnumFacing.SOUTH ? 1 : 0);
-                    blockpos = new BlockPos(l, i1, j1);
-                    IBlockState iblockstate1 = this.getBlockState(blockpos);
+                    startX = MathHelper.floor_double(start.xCoord) - (enumfacing == EnumFacing.EAST ? 1 : 0);
+                    startY = MathHelper.floor_double(start.yCoord) - (enumfacing == EnumFacing.UP ? 1 : 0);
+                    startZ = MathHelper.floor_double(start.zCoord) - (enumfacing == EnumFacing.SOUTH ? 1 : 0);
+                    pos = new BlockPos(startX, startY, startZ);
+                    IBlockState iblockstate1 = this.getBlockState(pos);
                     Block block1 = iblockstate1.getBlock();
 
-                    if (!ignoreBlockWithoutBoundingBox || block1.getCollisionBoundingBox(this, blockpos, iblockstate1) != null) {
+                    if (!ignoreBlockWithoutBoundingBox || block1.getCollisionBoundingBox(this, pos, iblockstate1) != null) {
                         if (block1.canCollideCheck(iblockstate1, stopOnLiquid)) {
-                            MovingObjectPosition movingobjectposition1 = block1.collisionRayTrace(this, blockpos, start, end);
+                            MovingObjectPosition movingobjectposition1 = block1.collisionRayTrace(this, pos, start, end);
 
                             if (movingobjectposition1 != null) {
                                 return movingobjectposition1;
                             }
                         } else {
-                            movingobjectposition2 = new MovingObjectPosition(MovingObjectPosition.MovingObjectType.MISS, start, enumfacing, blockpos);
+                            movingobjectposition2 = new MovingObjectPosition(MovingObjectPosition.MovingObjectType.MISS, start, enumfacing, pos);
                         }
                     }
                 }

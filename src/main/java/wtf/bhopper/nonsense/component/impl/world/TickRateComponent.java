@@ -1,4 +1,4 @@
-package wtf.bhopper.nonsense.component.impl;
+package wtf.bhopper.nonsense.component.impl.world;
 
 import net.minecraft.network.play.server.S03PacketTimeUpdate;
 import net.minecraft.util.MathHelper;

@@ -8,15 +8,18 @@ import net.minecraft.entity.monster.EntityMob;
 import net.minecraft.entity.monster.EntitySlime;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.network.play.server.S07PacketRespawn;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.MovingObjectPosition;
 import net.minecraft.util.Vec3;
 import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.component.impl.player.RotationsComponent;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.EventPriorities;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
-import wtf.bhopper.nonsense.event.impl.player.EventPreMotion;
+import wtf.bhopper.nonsense.event.impl.packet.EventReceivePacket;
+import wtf.bhopper.nonsense.event.impl.player.EventUpdate;
 import wtf.bhopper.nonsense.event.impl.player.interact.EventClickAction;
 import wtf.bhopper.nonsense.event.impl.render.EventRenderWorld;
 import wtf.bhopper.nonsense.gui.hud.Hud;
@@ -25,9 +28,7 @@ import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
-import wtf.bhopper.nonsense.module.property.ValueChangeListener;
 import wtf.bhopper.nonsense.module.property.impl.*;
-import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.Rotation;
 import wtf.bhopper.nonsense.util.minecraft.player.RotationUtil;
@@ -69,9 +70,7 @@ public class KillAura extends Module {
     private final NumberProperty swingRange = new NumberProperty("Swing", "Swing range", 5.2, 3.0, 16.0, 0.05, NumberProperty.FORMAT_DISTANCE);
     private final NumberProperty fov = new NumberProperty("FOV", "Targets must be in FOV.", 360.0, 0.0, 360.0, 1.0, NumberProperty.FORMAT_ANGLE);
 
-    private final GroupProperty rotsGroup = new GroupProperty("Rotations", "Kill Aura Rotations", this);
-    private final EnumProperty<RotationMode> rotationMode = new EnumProperty<>("Mode", "Rotations method", RotationMode.INSTANT);
-    private final NumberProperty linear = new NumberProperty("Linear Amount", "Amount to change by with linear rotations", () -> this.rotationMode.is(RotationMode.LINEAR), 80.0, 1.0, 100.0, 1.0, NumberProperty.FORMAT_PERCENT);
+    private final RotationsProperty rotationsProperty = new RotationsProperty("Rotations", "Kill Aura Rotations", this);
 
     private final GroupProperty renderGroup = new GroupProperty("Render", "Rendering options", this);
     private final EnumProperty<RangeIndiactor> rangeIndicator = new EnumProperty<>("Range Indicator", "Draws a circle to indicate your range", RangeIndiactor.NONE);
@@ -113,9 +112,8 @@ public class KillAura extends Module {
 
         this.targetsGroup.addProperties(this.players, this.mobs, this.animals, this.others, this.invis, this.dead, this.teams, this.existed);
         this.rangeGroup.addProperties(this.playerRange, this.otherRange, this.rotRange, this.swingRange, this.fov);
-        this.rotsGroup.addProperties(this.rotationMode, this.linear);
         this.renderGroup.addProperties(this.rangeIndicator, this.attackColor);
-        this.addProperties(this.mode, this.sorting, this.minAps, this.maxAps, this.targetsGroup, this.rangeGroup, this.rotsGroup, this.renderGroup, this.swingMode, this.autoDisable, this.switchDelay, this.maxTargets, this.particles);
+        this.addProperties(this.mode, this.sorting, this.minAps, this.maxAps, this.targetsGroup, this.rangeGroup, this.rotationsProperty, this.renderGroup, this.swingMode, this.autoDisable, this.switchDelay, this.maxTargets, this.particles);
         this.setSuffix(this.mode::getDisplayValue);
 
         this.minAps.addValueChangeListener((oldValue, value) -> {
@@ -207,10 +205,7 @@ public class KillAura extends Module {
             this.rotations = new Rotation(mc.thePlayer);
         }
 
-        this.rotations = switch (this.rotationMode.get()) {
-            case INSTANT -> this.targetRotations;
-            case LINEAR -> RotationUtil.lerp(this.rotations, this.targetRotations, this.linear.getFloat() / 100.0F);
-        };
+        this.rotations = this.rotationsProperty.rotate(this.rotations, this.targetRotations);
 
         if (this.attackTimer.hasReached(this.nextDelay)) {
 
@@ -252,9 +247,17 @@ public class KillAura extends Module {
     };
 
     @EventLink
-    public final Listener<EventPreMotion> onPre = event -> {
+    public final Listener<EventUpdate> onUpdate = _ -> {
         if (this.rotations != null) {
-            event.setRotations(this.rotations);
+            RotationsComponent.updateServerRotations(this.rotations);
+        }
+    };
+
+    @EventLink
+    public final Listener<EventReceivePacket> onReceive = event -> {
+        if (event.packet instanceof S07PacketRespawn) {
+            this.toggle(false);
+            Notification.send("Respawn", "Kill Aura was automatically disabled", NotificationType.WARNING, 3000);
         }
     };
 

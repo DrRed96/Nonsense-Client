@@ -12,7 +12,7 @@ public abstract class Property<T> implements ISerializable {
     public final String displayName;
     public final String description;
     protected final Supplier<Boolean> dependency;
-    private final List<ValueChangeListener<T>> valueChangeListeners = new ArrayList<>();
+    private final List<IValueChangeListener<T>> valueChangeListeners = new ArrayList<>();
     protected T value;
 
     public Property(String displayName, String description, T value, Supplier<Boolean> dependency) {
@@ -27,7 +27,7 @@ public abstract class Property<T> implements ISerializable {
         this(displayName, description, value, () -> true);
     }
 
-    public void addValueChangeListener(ValueChangeListener<T> valueChangeListener) {
+    public void addValueChangeListener(IValueChangeListener<T> valueChangeListener) {
         this.valueChangeListeners.add(valueChangeListener);
     }
 
@@ -43,7 +43,7 @@ public abstract class Property<T> implements ISerializable {
         T oldValue = this.value;
         this.value = value;
         if (oldValue != this.value) {
-            for (ValueChangeListener<T> valueChangeListener : this.valueChangeListeners) {
+            for (IValueChangeListener<T> valueChangeListener : this.valueChangeListeners) {
                 valueChangeListener.onValueChange(oldValue, value);
             }
         }
@@ -54,7 +54,7 @@ public abstract class Property<T> implements ISerializable {
     public abstract void parseString(String str);
 
     public void callFirstTime() {
-        for (ValueChangeListener<T> valueChangeListener : this.valueChangeListeners) {
+        for (IValueChangeListener<T> valueChangeListener : this.valueChangeListeners) {
             valueChangeListener.onValueChange(this.value, this.value);
         }
     }

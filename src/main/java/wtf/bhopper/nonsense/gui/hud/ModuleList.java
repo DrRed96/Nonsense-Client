@@ -36,13 +36,13 @@ public class ModuleList {
 
         int right = Display.getWidth() - (mod.moduleListOutline.is(HudMod.ModuleListOutline.RIGHT) ? 2 : 0);
         float yOff = switch (mod.moduleListMode.get()) {
-            case EXHIBITION -> 0.0F;
+            case GENERIC -> 0.0F;
         };
 
         NVGHelper.begin();
 
         switch (mod.moduleListMode.get()) {
-            case EXHIBITION -> {
+            case GENERIC -> {
                 if (!mod.font.is(HudMod.Font.MINECRAFT)) {
                     Hud.bindFont();
                     NVGHelper.fontSize(mod.fontSize.getFloat());
@@ -145,7 +145,7 @@ public class ModuleList {
             }
 
             return switch (hudMod.moduleListMode.get()) {
-                case EXHIBITION -> {
+                case GENERIC -> {
                     float fontSize = hudMod.font.is(HudMod.Font.MINECRAFT) ? 18.0F : hudMod.fontSize.getFloat();
                     float textX = right - (this.width + 2.0F + hudMod.moduleListSpacing.getFloat()) * this.animateFactor;
                     float textY = yOff + hudMod.moduleListSpacing.getFloat() + 1.0F;
@@ -280,7 +280,7 @@ public class ModuleList {
             assert name != null; // Just to get rid of an annoying error
             if (rawSuffix != null) {
                 this.suffix = switch (hudMod.moduleListMode.get()) {
-                    case EXHIBITION -> switch (hudMod.moduleListSuffix.get()) {
+                    case GENERIC -> switch (hudMod.moduleListSuffix.get()) {
                         case NORMAL -> module.getSuffix();
                         case HYPHEN -> "- " + module.getSuffix();
                         case BRACKET -> "(" + module.getSuffix() + ")";
@@ -302,7 +302,7 @@ public class ModuleList {
             }
 
             Hud.WidthMethod getWidth = switch (hudMod.moduleListMode.get()) {
-                case EXHIBITION -> hudMod.font.is(HudMod.Font.MINECRAFT)
+                case GENERIC -> hudMod.font.is(HudMod.Font.MINECRAFT)
                         ? text -> Fonts.mc().getStringWidthF(text) * 2.0F
                         : NVGHelper::getStringWidth;
             };
@@ -320,9 +320,9 @@ public class ModuleList {
         public void updateColor(HudMod mod, long timeMS, int count) {
 
             this.color = switch (mod.moduleListMode.get()) {
-                case EXHIBITION -> switch (mod.moduleListColor.get()) {
+                case GENERIC -> switch (mod.moduleListColor.get()) {
                     case STATIC -> mod.color.getRGB();
-                    case WAVY -> ColorUtil.wave(mod.color.getRGB(), timeMS, count);
+                    case WAVY -> Hud.enableSecondary() ? ColorUtil.wave(mod.color.getRGB(), mod.secondary.getRGB(), timeMS, count) : ColorUtil.wave(mod.color.getRGB(), timeMS, count);
                     case RAINBOW -> ColorUtil.rainbow(timeMS, count, 0.5F, 1.0F);
                     case RAINBOW_2 -> ColorUtil.rainbow(timeMS, count, 1.0F, 1.0F);
                     case EXHIBITION_RAINBOW -> ColorUtil.exhiRainbow(timeMS, count);

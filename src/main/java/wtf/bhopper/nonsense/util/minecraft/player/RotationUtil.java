@@ -17,13 +17,13 @@ public class RotationUtil implements IMinecraft {
         double y = rotY - startY;
         double z = rotZ - startZ;
         double dist = MathHelper.sqrt_double(x * x + z * z);
-        float yaw = (float)(Math.atan2(z, x) * 180.0 / Math.PI) - 90.0F;
-        float pitch = (float)(-(Math.atan2(y, dist) * 180.0 / Math.PI));
+        float yaw = (float) (Math.atan2(z, x) * 180.0 / Math.PI) - 90.0F;
+        float pitch = (float) (-(Math.atan2(y, dist) * 180.0 / Math.PI));
         return new Rotation(yaw, pitch, new Vec3(rotX, rotY, rotZ));
     }
 
     public static Rotation getRotations(double posX, double posY, double posZ) {
-        return getRotations(posX, posY, posZ, mc.thePlayer.posX, mc.thePlayer.posY + (double)mc.thePlayer.getEyeHeight(), mc.thePlayer.posZ);
+        return getRotations(posX, posY, posZ, mc.thePlayer.posX, mc.thePlayer.posY + (double) mc.thePlayer.getEyeHeight(), mc.thePlayer.posZ);
     }
 
     public static Rotation getRotations(Vec3 vec) {
@@ -41,20 +41,21 @@ public class RotationUtil implements IMinecraft {
     public static Rotation getRotations(Entity entity) {
         return getRotations(entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ);
     }
+
     public static Rotation getRotations(Entity target, Entity entity) {
         return getRotations(target.posX, target.posY + target.getEyeHeight(), target.posZ, entity.posX, entity.posY + entity.getEyeHeight(), entity.posZ);
     }
 
     public static Rotation getRotationsOptimized(AxisAlignedBB boundingBox) {
         double eyeX = mc.thePlayer.posX;
-        double eyeY = mc.thePlayer.posY + (double)mc.thePlayer.getEyeHeight();
+        double eyeY = mc.thePlayer.posY + (double) mc.thePlayer.getEyeHeight();
         double eyeZ = mc.thePlayer.posZ;
         return getRotations(MathUtil.closestPoint(boundingBox, eyeX, eyeY, eyeZ));
     }
 
     public static float rayCastRange(Vec3 pos, AxisAlignedBB boundingBox) {
         Vec3 closestPoint = MathUtil.closestPoint(boundingBox, pos);
-        return (float)pos.distanceTo(closestPoint);
+        return (float) pos.distanceTo(closestPoint);
     }
 
     public static float rayCastRange(AxisAlignedBB boundingBox) {
@@ -80,8 +81,8 @@ public class RotationUtil implements IMinecraft {
     }
 
     public static Vec3 getRotationVec(float yaw, float pitch) {
-        float f = MathHelper.cos(-yaw * MathHelper.deg2Rad - (float)Math.PI);
-        float f1 = MathHelper.sin(-yaw * MathHelper.deg2Rad - (float)Math.PI);
+        float f = MathHelper.cos(-yaw * MathHelper.deg2Rad - (float) Math.PI);
+        float f1 = MathHelper.sin(-yaw * MathHelper.deg2Rad - (float) Math.PI);
         float f2 = -MathHelper.cos(-pitch * MathHelper.deg2Rad);
         float f3 = MathHelper.sin(-pitch * MathHelper.deg2Rad);
         return new Vec3(f1 * f2, f3, f * f2);
@@ -90,11 +91,11 @@ public class RotationUtil implements IMinecraft {
     public static Vec3 getHitVec(BlockPos blockPos, EnumFacing facing) {
         return new Vec3(blockPos)
                 .addVector(0.5, 0.5, 0.5)
-                .add(new Vec3(
+                .addVector(
                         facing.getDirectionVec().getX() * 0.5,
                         facing.getDirectionVec().getY() * 0.5,
                         facing.getDirectionVec().getZ() * 0.5
-                ));
+                );
     }
 
     public static Vec3 getHitVecOptimized(BlockPos blockPos, EnumFacing facing) {
@@ -116,16 +117,16 @@ public class RotationUtil implements IMinecraft {
             yawToEntity = Math.toDegrees(-Math.atan(deltaX / deltaZ));
         }
 
-        return MathHelper.wrapAngleTo180_float(-(mc.thePlayer.rotationYaw - (float)yawToEntity));
+        return MathHelper.wrapAngleTo180_float(-(mc.thePlayer.rotationYaw - (float) yawToEntity));
     }
 
     public static float getPitchChange(Entity entity, double posY) {
         double deltaX = entity.posX - mc.thePlayer.posX;
         double deltaZ = entity.posZ - mc.thePlayer.posZ;
-        double deltaY = posY - 2.2D + (double)entity.getEyeHeight() - mc.thePlayer.posY;
+        double deltaY = posY - 2.2D + (double) entity.getEyeHeight() - mc.thePlayer.posY;
         double distanceXZ = MathHelper.sqrt_double(deltaX * deltaX + deltaZ * deltaZ);
         double pitchToEntity = -Math.toDegrees(Math.atan(deltaY / distanceXZ));
-        return -MathHelper.wrapAngleTo180_float(mc.thePlayer.rotationPitch - (float)pitchToEntity) - 2.5F;
+        return -MathHelper.wrapAngleTo180_float(mc.thePlayer.rotationPitch - (float) pitchToEntity) - 2.5F;
     }
 
     public static Rotation lerp(Rotation start, Rotation end, float factor) {
@@ -144,6 +145,25 @@ public class RotationUtil implements IMinecraft {
                 MathHelper.wrapAngleTo180_float(startYaw + delta * factor),
                 MathUtil.lerp(start.pitch, end.pitch, factor)
         );
+    }
+
+    public static Rotation step(Rotation start, Rotation end, float maxAngle, float stepAngle) {
+
+        float yawDiff = MathHelper.wrapAngleTo180_float(end.yaw - start.yaw);
+        float pitchDiff = end.pitch - start.pitch;
+
+        float totalDiff = (float) Math.sqrt(yawDiff * yawDiff + pitchDiff * pitchDiff);
+        if (totalDiff <= maxAngle) {
+            return end;
+        }
+
+        float stepFactor = stepAngle / totalDiff;
+
+        float newYaw = MathHelper.wrapAngleTo180_float(start.yaw + yawDiff * stepFactor);
+        float newPitch = MathHelper.clamp_float(start.pitch * pitchDiff * stepFactor, -90.0F, 90.0F);
+
+        return new Rotation(newYaw, newPitch);
+
     }
 
     public static boolean isOverBlock(Rotation rotation, BlockPos pos, EnumFacing facing) {

@@ -177,7 +177,7 @@ public class Esp extends Module {
 
             this.name = displayNames.get() ? entity.getDisplayName().getFormattedText() : entity.getName();
             this.health = entity.getHealth();
-            this.healthFactor = this.health / entity.getMaxHealth();
+            this.healthFactor = Math.min(this.health / entity.getMaxHealth(), 1.0F);
             this.absorbFactor = Math.min(entity.getAbsorptionAmount() / entity.getMaxHealth(), 1.0F);
 
             this.items.clear();

@@ -4,5 +4,5 @@ import net.minecraft.item.ItemStack;
 
 @FunctionalInterface
 public interface ItemChecker {
-    boolean isValid(ItemStack stack);
+    boolean check(ItemStack stack);
 }

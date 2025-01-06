@@ -19,6 +19,7 @@ import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.*;
 import net.minecraft.client.gui.achievement.GuiAchievement;
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.client.main.GameConfiguration;
 import net.minecraft.client.multiplayer.GuiConnecting;
@@ -92,7 +93,7 @@ import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.*;
 import org.lwjgl.util.glu.GLU;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.component.impl.SilentSlotComponent;
+import wtf.bhopper.nonsense.component.impl.player.SilentSlotComponent;
 import wtf.bhopper.nonsense.event.impl.client.EventKeyPress;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
 import wtf.bhopper.nonsense.event.impl.player.*;
@@ -101,6 +102,7 @@ import wtf.bhopper.nonsense.event.impl.player.interact.EventMouseOver;
 import wtf.bhopper.nonsense.event.impl.player.interact.EventPostClick;
 import wtf.bhopper.nonsense.event.impl.player.interact.EventPreClick;
 import wtf.bhopper.nonsense.module.impl.movement.InventoryMove;
+import wtf.bhopper.nonsense.util.minecraft.inventory.InventoryUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 
 import javax.imageio.ImageIO;
@@ -1048,17 +1050,17 @@ public class Minecraft implements IThreadListener {
         }
     }
 
-    private void sendClickBlockToController(boolean leftClick) {
+    private void sendClickBlockToController(boolean leftClick, MovingObjectPosition objectMouseOver) {
         if (!leftClick) {
             this.leftClickCounter = 0;
         }
 
         if (this.leftClickCounter <= 0 && !this.thePlayer.isUsingItem()) {
-            if (leftClick && this.objectMouseOver != null && this.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-                BlockPos blockpos = this.objectMouseOver.getBlockPos();
+            if (leftClick && objectMouseOver != null && objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+                BlockPos blockpos = objectMouseOver.getBlockPos();
 
-                if (this.theWorld.getBlockState(blockpos).getBlock().getMaterial() != Material.air && this.playerController.onPlayerDamageBlock(blockpos, this.objectMouseOver.sideHit)) {
-                    this.effectRenderer.addBlockHitEffects(blockpos, this.objectMouseOver.sideHit);
+                if (this.theWorld.getBlockState(blockpos).getBlock().getMaterial() != Material.air && this.playerController.onPlayerDamageBlock(blockpos, objectMouseOver.sideHit)) {
+                    this.effectRenderer.addBlockHitEffects(blockpos, objectMouseOver.sideHit);
                     this.thePlayer.swingItem();
                 }
             } else {
@@ -1158,7 +1160,7 @@ public class Minecraft implements IThreadListener {
 
                             if (itemstack.stackSize == 0) {
                                 this.thePlayer.inventory.mainInventory[this.thePlayer.inventory.currentItem] = null;
-                            } else if (itemstack.stackSize != i || this.playerController.isInCreativeMode()) {
+                            } else if ((itemstack.stackSize != i || this.playerController.isInCreativeMode()) && itemstack == thePlayer.inventory.getClientItem()) {
                                 this.entityRenderer.itemRenderer.resetEquippedProgress();
                             }
                         }
@@ -1168,7 +1170,7 @@ public class Minecraft implements IThreadListener {
             if (flag) {
                 ItemStack itemstack1 = this.thePlayer.inventory.getCurrentItem();
 
-                if (itemstack1 != null && this.playerController.sendUseItem(this.thePlayer, this.theWorld, itemstack1)) {
+                if (itemstack1 != null && itemstack1 == this.thePlayer.inventory.getClientItem() && this.playerController.sendUseItem(this.thePlayer, this.theWorld, itemstack1)) {
                     this.entityRenderer.itemRenderer.resetEquippedProgress2();
                 }
             }
@@ -1259,6 +1261,11 @@ public class Minecraft implements IThreadListener {
     public void runTick() throws IOException {
         Nonsense.getEventBus().post(new EventTick());
 
+        if (thePlayer != null) {
+            thePlayer.lastTickMovementYaw = thePlayer.movementYaw;
+            thePlayer.movementYaw = thePlayer.velocityYaw = thePlayer.rotationYaw;
+        }
+
         if (this.rightClickDelayTimer > 0) {
             --this.rightClickDelayTimer;
         }
@@ -1320,6 +1327,19 @@ public class Minecraft implements IThreadListener {
                     throw new ReportedException(crashreport1);
                 }
             }
+        }
+
+        if (!EventWindowClick.wasTriggeredInWindow && PlayerUtil.canUpdate()) {
+            EventWindowClick eventWindowClick = new EventWindowClick(this.currentScreen instanceof GuiContainer container ? container.inventorySlots.windowId : -1);
+            Nonsense.getEventBus().post(eventWindowClick);
+            if (!eventWindowClick.isCancelled()) {
+                InventoryUtil.windowClick(eventWindowClick.windowId, eventWindowClick.slotId, eventWindowClick.button, eventWindowClick.mode);
+                for (EventWindowClick.InventoryAction action : eventWindowClick.secondaryActions) {
+                    InventoryUtil.windowClick(action.windowId(), action.slot(), action.button(), action.mode());
+                }
+            }
+        } else {
+            EventWindowClick.wasTriggeredInWindow = false;
         }
 
         if (this.currentScreen == null || this.currentScreen.allowUserInput || Nonsense.module(InventoryMove.class).canClick()) {
@@ -1539,6 +1559,8 @@ public class Minecraft implements IThreadListener {
                     this.gameSettings.keyBindAttack.isPressed(),
                     this.gameSettings.keyBindUseItem.isPressed(),
                     !this.gameSettings.keyBindUseItem.isKeyDown(),
+                    this.gameSettings.keyBindUseItem.isKeyDown(),
+                    this.gameSettings.keyBindAttack.isKeyDown(),
                     this.thePlayer.isUsingItem());
 
             Nonsense.getEventBus().post(event);
@@ -1582,11 +1604,11 @@ public class Minecraft implements IThreadListener {
                     }
                 }
 
-                if (this.gameSettings.keyBindUseItem.isKeyDown() && this.rightClickDelayTimer == 0 && !this.thePlayer.isUsingItem()) {
+                if (event.postRight && this.rightClickDelayTimer == 0 && !this.thePlayer.isUsingItem()) {
                     this.rightClickMouse(false);
                 }
 
-                this.sendClickBlockToController(this.currentScreen == null && this.gameSettings.keyBindAttack.isKeyDown() && this.inGameHasFocus);
+                this.sendClickBlockToController(this.currentScreen == null && event.blockClick && this.inGameHasFocus, event.blockClickTarget);
             }
         }
 

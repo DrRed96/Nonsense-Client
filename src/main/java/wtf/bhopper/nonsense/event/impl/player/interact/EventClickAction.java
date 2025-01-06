@@ -5,6 +5,8 @@ import wtf.bhopper.nonsense.event.Cancellable;
 
 public class EventClickAction extends Cancellable {
 
+    public MovingObjectPosition mouseOver;
+
     public final boolean leftButton;
     public boolean left;
     public boolean leftSwing;
@@ -16,11 +18,14 @@ public class EventClickAction extends Cancellable {
     public final boolean releaseButton;
     public boolean release;
 
-    public MovingObjectPosition mouseOver;
+    public boolean postRight;
+
+    public boolean blockClick;
+    public MovingObjectPosition blockClickTarget;
 
     public final boolean usingItem;
 
-    public EventClickAction(MovingObjectPosition mouseOver, boolean leftButton, boolean rightButton, boolean releaseButton, boolean usingItem) {
+    public EventClickAction(MovingObjectPosition mouseOver, boolean leftButton, boolean rightButton, boolean releaseButton, boolean postRight, boolean blockClick, boolean usingItem) {
         this.mouseOver = mouseOver;
         this.leftButton = leftButton;
         this.left = !usingItem && leftButton;
@@ -30,6 +35,9 @@ public class EventClickAction extends Cancellable {
         this.rightSwing = true;
         this.releaseButton = releaseButton;
         this.release = usingItem && releaseButton;
+        this.blockClick = blockClick;
+        this.blockClickTarget = mouseOver;
+        this.postRight = postRight;
         this.usingItem = usingItem;
     }
 

@@ -13,8 +13,8 @@ import net.minecraft.util.MathHelper;
 
 public abstract class Container
 {
-    public List<ItemStack> inventoryItemStacks = Lists.<ItemStack>newArrayList();
-    public List<Slot> inventorySlots = Lists.<Slot>newArrayList();
+    public List<ItemStack> inventoryItemStacks = Lists.newArrayList();
+    public List<Slot> inventorySlots = Lists.newArrayList();
     public int windowId;
     private short transactionID;
 
@@ -25,9 +25,9 @@ public abstract class Container
 
     /** The current drag event (0 : start, 1 : add slot : 2 : end) */
     private int dragEvent;
-    private final Set<Slot> dragSlots = Sets.<Slot>newHashSet();
-    protected List<ICrafting> crafters = Lists.<ICrafting>newArrayList();
-    private Set<EntityPlayer> playerList = Sets.<EntityPlayer>newHashSet();
+    private final Set<Slot> dragSlots = Sets.newHashSet();
+    protected List<ICrafting> crafters = Lists.newArrayList();
+    private Set<EntityPlayer> playerList = Sets.newHashSet();
 
     /**
      * Adds an item slot to this container

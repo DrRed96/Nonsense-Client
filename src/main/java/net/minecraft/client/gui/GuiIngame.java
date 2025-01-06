@@ -34,12 +34,11 @@ import optifine.Config;
 import optifine.CustomColors;
 import org.lwjgl.opengl.GL11;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.component.impl.SilentSlotComponent;
+import wtf.bhopper.nonsense.component.impl.player.SilentSlotComponent;
 import wtf.bhopper.nonsense.event.impl.render.EventRenderGui;
 import wtf.bhopper.nonsense.gui.screens.GuiMoveHudComponents;
 import wtf.bhopper.nonsense.module.impl.visual.Crosshair;
 import wtf.bhopper.nonsense.module.impl.visual.ScoreboardMod;
-import wtf.bhopper.nonsense.util.minecraft.inventory.InventoryUtil;
 
 import java.util.ArrayList;
 import java.util.Collection;

@@ -1,4 +1,4 @@
-package wtf.bhopper.nonsense.component.impl;
+package wtf.bhopper.nonsense.component.impl.packet;
 
 import net.minecraft.network.Packet;
 import wtf.bhopper.nonsense.component.Component;

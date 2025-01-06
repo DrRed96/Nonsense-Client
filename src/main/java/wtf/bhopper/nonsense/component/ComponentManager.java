@@ -3,7 +3,10 @@ package wtf.bhopper.nonsense.component;
 import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.ImmutableClassToInstanceMap;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.component.impl.*;
+import wtf.bhopper.nonsense.component.impl.packet.*;
+import wtf.bhopper.nonsense.component.impl.player.RotationsComponent;
+import wtf.bhopper.nonsense.component.impl.player.SilentSlotComponent;
+import wtf.bhopper.nonsense.component.impl.world.TickRateComponent;
 
 import java.util.Arrays;
 
@@ -20,7 +23,7 @@ public class ComponentManager {
                 new LastConnectionComponent(),
                 new PingComponent(),
                 new PingSpoofComponent(),
-                new SilentRotationsComponent(),
+                new RotationsComponent(),
                 new SilentSlotComponent(),
                 new TickRateComponent()
         );

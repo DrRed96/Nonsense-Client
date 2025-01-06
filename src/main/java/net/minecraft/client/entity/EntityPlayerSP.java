@@ -46,7 +46,7 @@ import net.minecraft.util.*;
 import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.component.impl.SilentRotationsComponent;
+import wtf.bhopper.nonsense.component.impl.player.RotationsComponent;
 import wtf.bhopper.nonsense.event.impl.packet.EventActionStates;
 import wtf.bhopper.nonsense.event.impl.player.*;
 import wtf.bhopper.nonsense.event.impl.player.movement.EventMove;
@@ -225,7 +225,7 @@ public class EntityPlayerSP extends AbstractClientPlayer {
                 this.rotationPitch,
                 this.onGround);
         Nonsense.getEventBus().post(event);
-        SilentRotationsComponent.updateServerRotations(event.yaw, event.pitch);
+        RotationsComponent.updateServerRotations(event.yaw, event.pitch);
 
         if (this.isCurrentViewEntity()) {
             double d0 = event.x - this.lastReportedPosX;
@@ -802,7 +802,7 @@ public class EntityPlayerSP extends AbstractClientPlayer {
 
     @Override
     public Vec3 getLook(float partialTicks) {
-        return SilentRotationsComponent.getLook(partialTicks, this);
+        return RotationsComponent.getLook(partialTicks, this);
 //        if (partialTicks == 1.0F) {
 //            return this.getVectorForRotation(RotationUtil.serverPitch, RotationUtil.serverYaw);
 //        } else {

@@ -5,7 +5,7 @@ import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.opengl.Display;
 import org.lwjgl.util.vector.Vector2f;
 
-import java.awt.*;
+import java.awt.Color;
 import java.nio.ByteBuffer;
 
 import static org.lwjgl.nanovg.NanoVG.*;
@@ -117,7 +117,7 @@ public class NVGHelper {
         nvgFontSize(context, size);
     }
 
-    public static void text(float x, float y, String string) {
+    public static void text(float x, float y, CharSequence string) {
         nvgText(context, x, y, string);
     }
 
@@ -125,12 +125,20 @@ public class NVGHelper {
         nvgTextAlign(context, align);
     }
 
-    public static float textBounds(float x, float y, String string, float[] bounds) {
+    public static float textBounds(float x, float y, CharSequence string, float[] bounds) {
         return nvgTextBounds(context, x, y, string, bounds);
     }
 
-    public static float textBounds(float x, float y, String string) {
-        return nvgTextBounds(context, x, y, string, new float[4]);
+    public static float textBounds(float x, float y, CharSequence string) {
+        return nvgTextBounds(context, x, y, string, (float[])null);
+    }
+
+    public static void textBox(float x, float y, float breakRowWidth, CharSequence string) {
+        nvgTextBox(context, x, y, breakRowWidth, string);
+    }
+
+    public static void textBoxBounds(float x, float y, float breakRowWidth, CharSequence string, float[] bounds) {
+        nvgTextBoxBounds(context, x, y, breakRowWidth, string, bounds);
     }
 
     public static NVGPaint linearGradient(float sx, float sy, float ex, float ey, int icol, int ocol) {
@@ -231,6 +239,22 @@ public class NVGHelper {
         closePath();
     }
 
+    public static void drawGradientRect(float x, float y, float width, float height, int startColor, int endColor) {
+        beginPath();
+        rect(x, y, width, height);
+        fillPaint(linearGradient(x, y, x, y + height, startColor, endColor));
+        fill();
+        closePath();
+    }
+
+    public static void drawGradientRectSideways(float x, float y, float width, float height, int startColor, int endColor) {
+        beginPath();
+        rect(x, y, width, height);
+        fillPaint(linearGradient(x, y, x + width, y, startColor, endColor));
+        fill();
+        closePath();
+    }
+
     public static void drawCircle(float x, float y, float radius, int color) {
         beginPath();
         circle(x, y, radius);
@@ -263,24 +287,36 @@ public class NVGHelper {
         drawText(text, x, y, color, false);
     }
 
+    public static void drawGradientText(String text, float x, float y, int startColor, int endColor, boolean shadow) {
+        float[] bounds = new float[4];
+        beginPath();
+        textBounds(x, y, text, bounds);
+        if (shadow) {
+            fillPaint(linearGradient(bounds[0] + 1.0F, bounds[1], bounds[2] + 1.0F, bounds[1], ColorUtil.dropShadow(startColor), ColorUtil.dropShadow(endColor)));
+            text(x + 1.0F, y + 1.0F, text);
+        }
+        fillPaint(linearGradient(bounds[0], bounds[1], bounds[2], bounds[1], startColor, endColor));
+        text(x, y, text);
+        closePath();
+    }
+
+    public static void drawTextBox(String text, float x, float y, int color, boolean shadow, float lineBreakWidth) {
+        beginPath();
+        if (shadow) {
+            fillColor(ColorUtil.dropShadow(color));
+            textBox(x + 1.0F, y + 1.0F, lineBreakWidth, text);
+        }
+        fillColor(color);
+        textBox(x, y, lineBreakWidth, text);
+        closePath();
+    }
+
+    public static void drawGradientText(String text, float x, float y, int startColor, int endColor) {
+        drawGradientText(text, x, y, startColor, endColor, false);
+    }
+
     public static float getStringWidth(String text) {
         return textBounds(0.0F, 0.0F, text);
-    }
-
-    public static void drawGraidentRect(float x, float y, float width, float height, int startColor, int endColor) {
-        beginPath();
-        rect(x, y, width, height);
-        fillPaint(linearGradient(x, y, x, y + height, startColor, endColor));
-        fill();
-        closePath();
-    }
-
-    public static void drawGraidentRectSideways(float x, float y, float width, float height, int startColor, int endColor) {
-        beginPath();
-        rect(x, y, width, height);
-        fillPaint(linearGradient(x, y, x + width, y, startColor, endColor));
-        fill();
-        closePath();
     }
 
     public static void drawImage(float x, float y, float width, float height, float imageWidth, float imageHeight, int image) {

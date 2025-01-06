@@ -18,6 +18,8 @@ import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
+import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.event.impl.player.EventWindowClick;
 
 public abstract class GuiContainer extends GuiScreen
 {
@@ -682,7 +684,17 @@ public abstract class GuiContainer extends GuiScreen
             slotId = slotIn.slotNumber;
         }
 
-        this.mc.playerController.windowClick(this.inventorySlots.windowId, slotId, clickedButton, clickType, this.mc.thePlayer);
+        EventWindowClick event = new EventWindowClick(this.inventorySlots.windowId, slotId, clickedButton, clickType);
+        Nonsense.getEventBus().post(event);
+        EventWindowClick.wasTriggeredInWindow = true;
+
+        if (!event.isCancelled()) {
+            this.mc.playerController.windowClick(event.windowId, event.slotId, event.button, event.mode, this.mc.thePlayer);
+
+            for (EventWindowClick.InventoryAction action : event.secondaryActions) {
+                this.mc.playerController.windowClick(action.windowId(), action.slot(), action.button(), action.mode(), this.mc.thePlayer);
+            }
+        }
     }
 
     /**
