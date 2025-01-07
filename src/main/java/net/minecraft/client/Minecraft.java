@@ -1332,7 +1332,7 @@ public class Minecraft implements IThreadListener {
         if (!EventWindowClick.wasTriggeredInWindow && PlayerUtil.canUpdate()) {
             EventWindowClick eventWindowClick = new EventWindowClick(this.currentScreen instanceof GuiContainer container ? container.inventorySlots.windowId : -1);
             Nonsense.getEventBus().post(eventWindowClick);
-            if (!eventWindowClick.isCancelled()) {
+            if (!eventWindowClick.isCancelled() && eventWindowClick.windowId != -1 && eventWindowClick.button != -1 && eventWindowClick.mode != -1) {
                 InventoryUtil.windowClick(eventWindowClick.windowId, eventWindowClick.slotId, eventWindowClick.button, eventWindowClick.mode);
                 for (EventWindowClick.InventoryAction action : eventWindowClick.secondaryActions) {
                     InventoryUtil.windowClick(action.windowId(), action.slot(), action.button(), action.mode());

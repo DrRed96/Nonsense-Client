@@ -141,4 +141,8 @@ public class ItemFood extends Item
         this.alwaysEdible = true;
         return this;
     }
+
+    public int getPotionId() {
+        return this.potionId;
+    }
 }
