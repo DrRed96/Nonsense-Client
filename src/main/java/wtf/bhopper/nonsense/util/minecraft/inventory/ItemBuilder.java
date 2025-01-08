@@ -28,6 +28,7 @@ public class ItemBuilder {
 
     private int hideFlags = -1;
     private boolean unbreakable = false;
+    private boolean fakeEnchanted = false;
 
     private final List<Tuple<Enchantment, Integer>> enchantments = new ArrayList<>();
     private final List<Tuple<Enchantment, Integer>> storedEnchantments = new ArrayList<>();
@@ -80,8 +81,8 @@ public class ItemBuilder {
         return this;
     }
 
-    public ItemBuilder setUnbreakable(boolean unbreakable) {
-        this.unbreakable = unbreakable;
+    public ItemBuilder setUnbreakable() {
+        this.unbreakable = true;
         return this;
     }
 
@@ -92,6 +93,11 @@ public class ItemBuilder {
 
     public ItemBuilder addEnchantment(Enchantment enchantment, int level) {
         this.enchantments.add(new Tuple<>(enchantment, level));
+        return this;
+    }
+
+    public ItemBuilder setFakeEnchanted() {
+        this.fakeEnchanted = true;
         return this;
     }
 
@@ -141,6 +147,10 @@ public class ItemBuilder {
                 display.setTag("Lore", loreList);
             }
             stack.setTagInfo("display", display);
+        }
+
+        if (this.fakeEnchanted) {
+            stack.setTagInfo("ench", new NBTTagList());
         }
 
         for (Tuple<Enchantment, Integer> enchantment : this.enchantments) {

@@ -39,7 +39,7 @@ public class Watermark implements IMinecraft {
                 int color = switch (mod.watermarkColorMode.get()) {
                     case WHITE -> ColorUtil.WHITE;
                     case STATIC, SOLID -> mod.color.getRGB();
-                    case BREATHING -> ColorUtil.wave(mod.color.getRGB(), System.currentTimeMillis(), 0);
+                    case BREATHING -> Hud.colorWave(System.currentTimeMillis(), 0);
                     case RAINBOW -> ColorUtil.rainbow(0.5F, 1.0F);
                     case RAINBOW_2 -> ColorUtil.rainbow(1.0F, 1.0F);
                 };

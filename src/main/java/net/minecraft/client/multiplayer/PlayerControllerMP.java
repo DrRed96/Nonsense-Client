@@ -30,7 +30,6 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldSettings;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.component.impl.player.SilentSlotComponent;
-import wtf.bhopper.nonsense.event.impl.player.EventWindowClick;
 import wtf.bhopper.nonsense.module.impl.other.AntiDesync;
 import wtf.bhopper.nonsense.module.impl.player.FastMine;
 

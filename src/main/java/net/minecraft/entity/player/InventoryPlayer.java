@@ -15,7 +15,9 @@ import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.util.ReportedException;
+import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.component.impl.player.SilentSlotComponent;
+import wtf.bhopper.nonsense.event.impl.player.inventory.EventChangeItem;
 
 public class InventoryPlayer implements IInventory
 {
@@ -168,19 +170,30 @@ public class InventoryPlayer implements IInventory
     /**
      * Switch the current item to the next one or the previous one
      */
-    public void changeCurrentItem(int p_70453_1_)
+    public void changeCurrentItem(int direction)
     {
-        if (p_70453_1_ > 0)
-        {
-            p_70453_1_ = 1;
+        EventChangeItem event = new EventChangeItem(direction);
+        if (this.player.isClientPlayer()) {
+            Nonsense.getEventBus().post(event);
         }
 
-        if (p_70453_1_ < 0)
-        {
-            p_70453_1_ = -1;
+        if (event.isCancelled()) {
+            return;
         }
 
-        for (this.currentItem -= p_70453_1_; this.currentItem < 0; this.currentItem += 9)
+        direction = event.direction;
+
+        if (direction > 0)
+        {
+            direction = 1;
+        }
+
+        if (direction < 0)
+        {
+            direction = -1;
+        }
+
+        for (this.currentItem -= direction; this.currentItem < 0; this.currentItem += 9)
         {
             ;
         }

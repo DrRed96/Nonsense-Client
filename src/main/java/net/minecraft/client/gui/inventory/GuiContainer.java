@@ -19,7 +19,7 @@ import net.minecraft.util.MathHelper;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.event.impl.player.EventWindowClick;
+import wtf.bhopper.nonsense.event.impl.player.inventory.EventWindowClick;
 
 public abstract class GuiContainer extends GuiScreen
 {

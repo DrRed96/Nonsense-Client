@@ -34,10 +34,10 @@ import optifine.Config;
 import optifine.CustomColors;
 import org.lwjgl.opengl.GL11;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.component.impl.player.SilentSlotComponent;
-import wtf.bhopper.nonsense.event.impl.render.EventRenderGui;
+import wtf.bhopper.nonsense.event.impl.render.*;
 import wtf.bhopper.nonsense.gui.screens.GuiMoveHudComponents;
 import wtf.bhopper.nonsense.module.impl.visual.Crosshair;
+import wtf.bhopper.nonsense.module.impl.visual.NoRender;
 import wtf.bhopper.nonsense.module.impl.visual.ScoreboardMod;
 
 import java.util.ArrayList;
@@ -130,6 +130,9 @@ public class GuiIngame extends Gui {
         ScaledResolution scaledRes = new ScaledResolution(this.mc);
         int scaledWidth = scaledRes.getScaledWidth();
         int scaledHeight = scaledRes.getScaledHeight();
+
+        Nonsense.getEventBus().post(new EventPreRenderGui());
+
         this.mc.entityRenderer.setupOverlayRendering();
         GlStateManager.enableBlend();
 
@@ -137,12 +140,12 @@ public class GuiIngame extends Gui {
             this.renderVignette(this.mc.thePlayer.getBrightness(partialTicks), scaledRes);
         } else {
             GlStateManager.enableDepth();
-            GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+            GlStateManager.tryBlendFuncSeparate(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA, 1, 0);
         }
 
-        ItemStack itemstack = this.mc.thePlayer.inventory.armorItemInSlot(3);
+        ItemStack helmet = this.mc.thePlayer.inventory.armorItemInSlot(3);
 
-        if (this.mc.gameSettings.thirdPersonView == 0 && itemstack != null && itemstack.getItem() == Item.getItemFromBlock(Blocks.pumpkin)) {
+        if (this.mc.gameSettings.thirdPersonView == 0 && helmet != null && helmet.getItem() == Item.getItemFromBlock(Blocks.pumpkin)) {
             this.renderPumpkinOverlay(scaledRes);
         }
 
@@ -194,7 +197,7 @@ public class GuiIngame extends Gui {
                 f2 = 1.0F - (float) (l - 100) / 10.0F;
             }
 
-            int k = (int) (220.0F * f2) << 24 | 1052704;
+            int k = (int) (220.0F * f2) << 24 | 0x101020;
             drawRect(0, 0, scaledWidth, scaledHeight, k);
             GlStateManager.enableAlpha();
             GlStateManager.enableDepth();
@@ -239,10 +242,10 @@ public class GuiIngame extends Gui {
                 int i1 = 16777215;
 
                 if (this.recordIsPlaying) {
-                    i1 = MathHelper.func_181758_c(f3 / 50.0F, 0.7F, 0.6F) & 16777215;
+                    i1 = MathHelper.func_181758_c(f3 / 50.0F, 0.7F, 0.6F) & 0xffffff;
                 }
 
-                this.getFontRenderer().drawString(this.recordPlaying, -this.getFontRenderer().getStringWidth(this.recordPlaying) / 2, -4, i1 + (k1 << 24 & -16777216));
+                this.getFontRenderer().drawString(this.recordPlaying, -this.getFontRenderer().getStringWidth(this.recordPlaying) / 2, -4, i1 + (k1 << 24 & 0xff000000));
                 GlStateManager.disableBlend();
                 GlStateManager.popMatrix();
             }
@@ -272,11 +275,11 @@ public class GuiIngame extends Gui {
                 GlStateManager.pushMatrix();
                 GlStateManager.scale(4.0F, 4.0F, 4.0F);
                 int j2 = l1 << 24 & 0xff000000;
-                this.getFontRenderer().drawString(this.field_175201_x, (float) (-this.getFontRenderer().getStringWidth(this.field_175201_x) / 2), -10.0F, 16777215 | j2, true);
+                this.getFontRenderer().drawString(this.field_175201_x, (float) (-this.getFontRenderer().getStringWidth(this.field_175201_x) / 2), -10.0F, 0xffffff | j2, true);
                 GlStateManager.popMatrix();
                 GlStateManager.pushMatrix();
                 GlStateManager.scale(2.0F, 2.0F, 2.0F);
-                this.getFontRenderer().drawString(this.field_175200_y, (float) (-this.getFontRenderer().getStringWidth(this.field_175200_y) / 2), 5.0F, 16777215 | j2, true);
+                this.getFontRenderer().drawString(this.field_175200_y, (float) (-this.getFontRenderer().getStringWidth(this.field_175200_y) / 2), 5.0F, 0xffffff | j2, true);
                 GlStateManager.popMatrix();
                 GlStateManager.disableBlend();
                 GlStateManager.popMatrix();
@@ -336,27 +339,30 @@ public class GuiIngame extends Gui {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         GlStateManager.disableLighting();
         GlStateManager.enableAlpha();
+
+        Nonsense.getEventBus().post(new EventPostRenderGui());
     }
 
     protected void renderTooltip(ScaledResolution sr, float partialTicks) {
-        if (this.mc.getRenderViewEntity() instanceof EntityPlayer entityplayer) {
+
+        if (this.mc.getRenderViewEntity() instanceof EntityPlayer renderViewEntity) {
             GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
             this.mc.getTextureManager().bindTexture(widgetsTexPath);
             int i = sr.getScaledWidth() / 2;
             float f = this.zLevel;
             this.zLevel = -90.0F;
             this.drawTexturedModalRect(i - 91, sr.getScaledHeight() - 22, 0, 0, 182, 22);
-            this.drawTexturedModalRect(i - 91 - 1 + SilentSlotComponent.getSlot() * 20, sr.getScaledHeight() - 22 - 1, 0, 22, 24, 22);
+            this.drawTexturedModalRect(i - 91 - 1 + renderViewEntity.getHeldItemSlot() * 20, sr.getScaledHeight() - 22 - 1, 0, 22, 24, 22);
             this.zLevel = f;
             GlStateManager.enableRescaleNormal();
             GlStateManager.enableBlend();
             GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
             RenderHelper.enableGUIStandardItemLighting();
 
-            for (int j = 0; j < 9; ++j) {
-                int k = sr.getScaledWidth() / 2 - 90 + j * 20 + 2;
-                int l = sr.getScaledHeight() - 16 - 3;
-                this.renderHotbarItem(j, k, l, partialTicks, entityplayer);
+            for (int index = 0; index < 9; ++index) {
+                int x = sr.getScaledWidth() / 2 - 90 + index * 20 + 2;
+                int y = sr.getScaledHeight() - 16 - 3;
+                this.renderHotbarItem(index, x, y, partialTicks, renderViewEntity);
             }
 
             Nonsense.getHud().infoDisplay.drawArmor(sr);
@@ -365,6 +371,7 @@ public class GuiIngame extends Gui {
             GlStateManager.disableRescaleNormal();
             GlStateManager.disableBlend();
         }
+
     }
 
     public void renderHorseJumpBar(ScaledResolution p_175186_1_, int p_175186_2_) {
@@ -381,14 +388,14 @@ public class GuiIngame extends Gui {
 
     }
 
-    public void renderExpBar(ScaledResolution p_175176_1_, int p_175176_2_) {
+    public void renderExpBar(ScaledResolution scaledRes, int p_175176_2_) {
         this.mc.getTextureManager().bindTexture(Gui.icons);
         int i = this.mc.thePlayer.xpBarCap();
 
         if (i > 0) {
             short short1 = 182;
             int k = (int) (this.mc.thePlayer.experience * (float) (short1 + 1));
-            int j = p_175176_1_.getScaledHeight() - 32 + 3;
+            int j = scaledRes.getScaledHeight() - 32 + 3;
             this.drawTexturedModalRect(p_175176_2_, j, 0, 64, short1, 5);
 
             if (k > 0) {
@@ -398,15 +405,15 @@ public class GuiIngame extends Gui {
 
 
         if (this.mc.thePlayer.experienceLevel > 0) {
-            int j1 = 8453920;
+            int j1 = 0x80ff20;
 
             if (Config.isCustomColors()) {
                 j1 = CustomColors.getExpBarTextColor(j1);
             }
 
             String s = "" + this.mc.thePlayer.experienceLevel;
-            int i1 = (p_175176_1_.getScaledWidth() - this.getFontRenderer().getStringWidth(s)) / 2;
-            int l = p_175176_1_.getScaledHeight() - 31 - 4;
+            int i1 = (scaledRes.getScaledWidth() - this.getFontRenderer().getStringWidth(s)) / 2;
+            int l = scaledRes.getScaledHeight() - 31 - 4;
             boolean flag = false;
             this.getFontRenderer().drawString(s, i1 + 1, l, 0);
             this.getFontRenderer().drawString(s, i1 - 1, l, 0);
@@ -451,7 +458,7 @@ public class GuiIngame extends Gui {
     }
 
     public void renderDemo(ScaledResolution p_175185_1_) {
-        String s = "";
+        String s;
 
         if (this.mc.theWorld.getTotalWorldTime() >= 120500L) {
             s = I18n.format("demo.demoExpired");
@@ -460,29 +467,30 @@ public class GuiIngame extends Gui {
         }
 
         int i = this.getFontRenderer().getStringWidth(s);
-        this.getFontRenderer().drawStringWithShadow(s, (float) (p_175185_1_.getScaledWidth() - i - 10), 5.0F, 16777215);
+        this.getFontRenderer().drawStringWithShadow(s, (float) (p_175185_1_.getScaledWidth() - i - 10), 5.0F, 0xffffff);
     }
 
     protected boolean showCrosshair() {
         if (this.mc.gameSettings.showDebugInfo && !this.mc.thePlayer.hasReducedDebug() && !this.mc.gameSettings.reducedDebugInfo) {
             return false;
-        } else if (this.mc.playerController.isSpectator()) {
+        }
+
+        if (this.mc.playerController.isSpectator()) {
             if (this.mc.pointedEntity != null) {
                 return true;
-            } else {
-                if (this.mc.objectMouseOver != null && this.mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-                    BlockPos blockpos = this.mc.objectMouseOver.getBlockPos();
-
-                    if (this.mc.theWorld.getTileEntity(blockpos) instanceof IInventory) {
-                        return true;
-                    }
-                }
-
-                return false;
             }
-        } else {
-            return true;
+
+            if (this.mc.objectMouseOver != null && this.mc.objectMouseOver.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+                BlockPos blockpos = this.mc.objectMouseOver.getBlockPos();
+
+                return this.mc.theWorld.getTileEntity(blockpos) instanceof IInventory;
+            }
+
+            return false;
+
         }
+
+        return true;
     }
 
     private void renderScoreboard(ScoreObjective objective, ScaledResolution scaledRes, int minY) {
@@ -709,9 +717,8 @@ public class GuiIngame extends Gui {
                         this.drawTexturedModalRect(k7, i8, j6 + 45, 27, 9, 9);
                     }
                 }
-            } else if (entity instanceof EntityLivingBase) {
-                EntityLivingBase entitylivingbase = (EntityLivingBase) entity;
-                int l7 = (int) Math.ceil((double) entitylivingbase.getHealth());
+            } else if (entity instanceof EntityLivingBase entitylivingbase) {
+                int l7 = (int) Math.ceil(entitylivingbase.getHealth());
                 float f3 = entitylivingbase.getMaxHealth();
                 int l6 = (int) (f3 + 0.5F) / 2;
 
@@ -800,7 +807,12 @@ public class GuiIngame extends Gui {
         }
     }
 
-    private void renderPumpkinOverlay(ScaledResolution p_180476_1_) {
+    private void renderPumpkinOverlay(ScaledResolution scaledRes) {
+
+        if (Nonsense.module(NoRender.class).pumpkin()) {
+            return;
+        }
+
         GlStateManager.disableDepth();
         GlStateManager.depthMask(false);
         GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
@@ -808,12 +820,12 @@ public class GuiIngame extends Gui {
         GlStateManager.disableAlpha();
         this.mc.getTextureManager().bindTexture(pumpkinBlurTexPath);
         Tessellator tessellator = Tessellator.getInstance();
-        WorldRenderer worldrenderer = tessellator.getWorldRenderer();
-        worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
-        worldrenderer.pos(0.0D, (double) p_180476_1_.getScaledHeight(), -90.0D).tex(0.0D, 1.0D).endVertex();
-        worldrenderer.pos((double) p_180476_1_.getScaledWidth(), (double) p_180476_1_.getScaledHeight(), -90.0D).tex(1.0D, 1.0D).endVertex();
-        worldrenderer.pos((double) p_180476_1_.getScaledWidth(), 0.0D, -90.0D).tex(1.0D, 0.0D).endVertex();
-        worldrenderer.pos(0.0D, 0.0D, -90.0D).tex(0.0D, 0.0D).endVertex();
+        WorldRenderer renderer = tessellator.getWorldRenderer();
+        renderer.begin(7, DefaultVertexFormats.POSITION_TEX);
+        renderer.pos(0.0D, scaledRes.getScaledHeight(), -90.0D).tex(0.0D, 1.0D).endVertex();
+        renderer.pos(scaledRes.getScaledWidth(), scaledRes.getScaledHeight(), -90.0D).tex(1.0D, 1.0D).endVertex();
+        renderer.pos(scaledRes.getScaledWidth(), 0.0D, -90.0D).tex(1.0D, 0.0D).endVertex();
+        renderer.pos(0.0D, 0.0D, -90.0D).tex(0.0D, 0.0D).endVertex();
         tessellator.draw();
         GlStateManager.depthMask(true);
         GlStateManager.enableDepth();
@@ -834,7 +846,7 @@ public class GuiIngame extends Gui {
             WorldBorder worldborder = this.mc.theWorld.getWorldBorder();
             float f = (float) worldborder.getClosestDistance(this.mc.thePlayer);
             double d0 = Math.min(worldborder.getResizeSpeed() * (double) worldborder.getWarningTime() * 1000.0D, Math.abs(worldborder.getTargetSize() - worldborder.getDiameter()));
-            double d1 = Math.max((double) worldborder.getWarningDistance(), d0);
+            double d1 = Math.max(worldborder.getWarningDistance(), d0);
 
             if ((double) f < d1) {
                 f = 1.0F - (float) ((double) f / d1);
@@ -857,9 +869,9 @@ public class GuiIngame extends Gui {
             Tessellator tessellator = Tessellator.getInstance();
             WorldRenderer worldrenderer = tessellator.getWorldRenderer();
             worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX);
-            worldrenderer.pos(0.0D, (double) p_180480_2_.getScaledHeight(), -90.0D).tex(0.0D, 1.0D).endVertex();
-            worldrenderer.pos((double) p_180480_2_.getScaledWidth(), (double) p_180480_2_.getScaledHeight(), -90.0D).tex(1.0D, 1.0D).endVertex();
-            worldrenderer.pos((double) p_180480_2_.getScaledWidth(), 0.0D, -90.0D).tex(1.0D, 0.0D).endVertex();
+            worldrenderer.pos(0.0D, p_180480_2_.getScaledHeight(), -90.0D).tex(0.0D, 1.0D).endVertex();
+            worldrenderer.pos(p_180480_2_.getScaledWidth(), p_180480_2_.getScaledHeight(), -90.0D).tex(1.0D, 1.0D).endVertex();
+            worldrenderer.pos(p_180480_2_.getScaledWidth(), 0.0D, -90.0D).tex(1.0D, 0.0D).endVertex();
             worldrenderer.pos(0.0D, 0.0D, -90.0D).tex(0.0D, 0.0D).endVertex();
             tessellator.draw();
             GlStateManager.depthMask(true);
@@ -905,8 +917,8 @@ public class GuiIngame extends Gui {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
     }
 
-    private void renderHotbarItem(int index, int xPos, int yPos, float partialTicks, EntityPlayer p_175184_5_) {
-        ItemStack itemstack = p_175184_5_.inventory.mainInventory[index];
+    private void renderHotbarItem(int index, int xPos, int yPos, float partialTicks, EntityPlayer player) {
+        ItemStack itemstack = player.inventory.mainInventory[index];
 
         if (itemstack != null) {
             float f = (float) itemstack.animationsToGo - partialTicks;
@@ -933,6 +945,9 @@ public class GuiIngame extends Gui {
      * The update tick for the ingame UI
      */
     public void updateTick() {
+
+        Nonsense.getEventBus().post(new EventPreUpdateGui());
+
         if (this.recordPlayingUpFor > 0) {
             --this.recordPlayingUpFor;
         }
@@ -948,12 +963,12 @@ public class GuiIngame extends Gui {
 
         ++this.updateCounter;
 
-        if (this.mc.thePlayer != null) {
-            ItemStack itemstack = this.mc.thePlayer.inventory.getCurrentItem();
+        if (this.mc.getRenderViewEntity() instanceof EntityPlayer player) {
+            ItemStack stack = player.inventory.getCurrentItem();
 
-            if (itemstack == null) {
+            if (stack == null) {
                 this.remainingHighlightTicks = 0;
-            } else if (this.highlightingItemStack != null && itemstack.getItem() == this.highlightingItemStack.getItem() && ItemStack.areItemStackTagsEqual(itemstack, this.highlightingItemStack) && (itemstack.isItemStackDamageable() || itemstack.getMetadata() == this.highlightingItemStack.getMetadata())) {
+            } else if (this.highlightingItemStack != null && stack.getItem() == this.highlightingItemStack.getItem() && ItemStack.areItemStackTagsEqual(stack, this.highlightingItemStack) && (stack.isItemStackDamageable() || stack.getMetadata() == this.highlightingItemStack.getMetadata())) {
                 if (this.remainingHighlightTicks > 0) {
                     --this.remainingHighlightTicks;
                 }
@@ -961,12 +976,14 @@ public class GuiIngame extends Gui {
                 this.remainingHighlightTicks = 40;
             }
 
-            this.highlightingItemStack = itemstack;
+            this.highlightingItemStack = stack;
         }
+
+        Nonsense.getEventBus().post(new EventPostUpdateGui());
     }
 
     public void setRecordPlayingMessage(String p_73833_1_) {
-        this.setRecordPlaying(I18n.format("record.nowPlaying", new Object[]{p_73833_1_}), true);
+        this.setRecordPlaying(I18n.format("record.nowPlaying", p_73833_1_), true);
     }
 
     public void setRecordPlaying(String p_110326_1_, boolean p_110326_2_) {

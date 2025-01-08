@@ -11,6 +11,7 @@ import wtf.bhopper.nonsense.gui.hud.notification.NotificationManager;
 import wtf.bhopper.nonsense.module.impl.visual.HudMod;
 import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 import wtf.bhopper.nonsense.util.misc.InputUtil;
+import wtf.bhopper.nonsense.util.render.ColorUtil;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
 
 import java.util.ArrayList;
@@ -117,6 +118,14 @@ public class Hud implements IMinecraft {
             NVGHelper.drawGradientText(text, x, y, color(), secondary(), true);
         } else {
             NVGHelper.drawText(text, x, y, color(), true);
+        }
+    }
+
+    public static int colorWave(long timeMS, int count) {
+        if (enableSecondary()) {
+            return ColorUtil.wave(color(), secondary(), timeMS, count);
+        } else {
+            return ColorUtil.wave(color(), timeMS, count);
         }
     }
 

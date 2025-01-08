@@ -47,6 +47,7 @@ import net.minecraft.world.IInteractionObject;
 import net.minecraft.world.World;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.component.impl.player.RotationsComponent;
+import wtf.bhopper.nonsense.component.impl.player.SilentSlotComponent;
 import wtf.bhopper.nonsense.event.impl.packet.EventActionStates;
 import wtf.bhopper.nonsense.event.impl.player.*;
 import wtf.bhopper.nonsense.event.impl.player.movement.EventMove;
@@ -810,5 +811,10 @@ public class EntityPlayerSP extends AbstractClientPlayer {
 //            float yaw = RotationUtil.prevServerYaw + (RotationUtil.serverYaw - RotationUtil.prevServerYaw) * partialTicks;
 //            return this.getVectorForRotation(pitch, yaw);
 //        }
+    }
+
+    @Override
+    public int getHeldItemSlot() {
+        return SilentSlotComponent.getSlot();
     }
 }

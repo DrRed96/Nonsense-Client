@@ -32,6 +32,7 @@ import optifine.Reflector;
 import org.lwjgl.opengl.GL11;
 import shadersmod.client.Shaders;
 import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.module.impl.visual.Freecam;
 import wtf.bhopper.nonsense.module.impl.visual.ItemAnimations;
 
 public class ItemRenderer {
@@ -514,19 +515,24 @@ public class ItemRenderer {
 
     public void updateEquippedItem() {
         this.prevEquippedProgress = this.equippedProgress;
-        EntityPlayerSP entityplayersp = this.mc.thePlayer;
-//        ItemStack itemstack = entityplayersp.inventory.getCurrentItem();
-        ItemStack itemstack = entityplayersp.inventory.getClientItem();
+        EntityPlayerSP player = this.mc.thePlayer;
+        ItemStack itemstack = player.inventory.getClientItem();
+
+        Freecam freeCamera = Nonsense.module(Freecam.class);
+        if (freeCamera.isToggled()) {
+            itemstack = freeCamera.getHeldItem();
+        }
+
         boolean flag = false;
 
         if (this.itemToRender != null && itemstack != null) {
             if (!this.itemToRender.getIsItemStackEqual(itemstack)) {
                 if (Reflector.ForgeItem_shouldCauseReequipAnimation.exists()) {
-                    boolean flag1 = Reflector.callBoolean(this.itemToRender.getItem(), Reflector.ForgeItem_shouldCauseReequipAnimation, new Object[]{this.itemToRender, itemstack, Boolean.valueOf(this.equippedItemSlot != entityplayersp.inventory.currentItem)});
+                    boolean flag1 = Reflector.callBoolean(this.itemToRender.getItem(), Reflector.ForgeItem_shouldCauseReequipAnimation, this.itemToRender, itemstack, this.equippedItemSlot != player.inventory.currentItem);
 
                     if (!flag1) {
                         this.itemToRender = itemstack;
-                        this.equippedItemSlot = entityplayersp.inventory.currentItem;
+                        this.equippedItemSlot = player.inventory.currentItem;
                         return;
                     }
                 }
@@ -550,7 +556,7 @@ public class ItemRenderer {
             }
 
             this.itemToRender = itemstack;
-            this.equippedItemSlot = entityplayersp.inventory.currentItem;
+            this.equippedItemSlot = player.inventory.currentItem;
         }
     }
 

@@ -1,4 +1,4 @@
-package wtf.bhopper.nonsense.event.impl.player;
+package wtf.bhopper.nonsense.event.impl.player.interact;
 
 import wtf.bhopper.nonsense.event.Cancellable;
 

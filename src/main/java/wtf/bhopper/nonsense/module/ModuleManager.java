@@ -107,7 +107,7 @@ public class ModuleManager {
                 new ClickGui(),
                 new Esp(),
                 new Chams(),
-                new FreeCamera(),
+                new Freecam(),
                 new Atmosphere(),
                 new BlockOverlay(),
                 new Xray(),

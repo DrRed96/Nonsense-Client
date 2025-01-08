@@ -4,6 +4,7 @@ import net.minecraft.client.gui.GuiScreen;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
 import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.gui.hud.Hud;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.impl.visual.ClickGui;
 import wtf.bhopper.nonsense.util.misc.InputUtil;
@@ -150,7 +151,7 @@ public class NovoGui extends GuiScreen {
         if (mod().categoryColors.get()) {
             return panel.getCategory().color;
         }
-        return mod().color.getRGB();
+        return Hud.color();
     }
 
     public static ClickGui mod() {

@@ -96,11 +96,9 @@ import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.component.impl.player.SilentSlotComponent;
 import wtf.bhopper.nonsense.event.impl.client.EventKeyPress;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
-import wtf.bhopper.nonsense.event.impl.player.*;
-import wtf.bhopper.nonsense.event.impl.player.interact.EventClickAction;
-import wtf.bhopper.nonsense.event.impl.player.interact.EventMouseOver;
-import wtf.bhopper.nonsense.event.impl.player.interact.EventPostClick;
-import wtf.bhopper.nonsense.event.impl.player.interact.EventPreClick;
+import wtf.bhopper.nonsense.event.impl.player.interact.*;
+import wtf.bhopper.nonsense.event.impl.player.inventory.EventSelectItem;
+import wtf.bhopper.nonsense.event.impl.player.inventory.EventWindowClick;
 import wtf.bhopper.nonsense.module.impl.movement.InventoryMove;
 import wtf.bhopper.nonsense.util.minecraft.inventory.InventoryUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
@@ -523,7 +521,7 @@ public class Minecraft implements IThreadListener {
 
     private void createDisplay() throws LWJGLException {
         Display.setResizable(true);
-        Display.setTitle(Nonsense.NAME + " " + Nonsense.VERSION);
+        Display.setTitle(Nonsense.NAME + " 1.8.8");
 
         try {
             Display.create(new PixelFormat().withDepthBits(24));
@@ -1513,17 +1511,21 @@ public class Minecraft implements IThreadListener {
                 }
             }
 
+            int prevItem = this.thePlayer.inventory.currentItem;
+            boolean swapped = false;
+
             for (int slot = 0; slot < 9; ++slot) {
                 if (this.gameSettings.keyBindsHotbar[slot].isPressed()) {
                     if (this.thePlayer.isSpectator()) {
                         this.ingameGUI.getSpectatorGui().func_175260_a(slot);
                     } else {
                         this.thePlayer.inventory.currentItem = slot;
+                        swapped = true;
                     }
                 }
             }
 
-            EventSelectItem eventItemSelect = new EventSelectItem(this.thePlayer.inventory.currentItem);
+            EventSelectItem eventItemSelect = new EventSelectItem(this.thePlayer.inventory.currentItem, prevItem, swapped);
             Nonsense.getEventBus().post(eventItemSelect);
             SilentSlotComponent.setSlot(eventItemSelect.slot);
             if (!eventItemSelect.silent) {

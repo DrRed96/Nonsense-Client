@@ -46,7 +46,7 @@ public class LagNotifier extends Module {
         public void draw(float delta, int mouseX, int mouseY, boolean bypass) {
             long timeSinceLastTick = Nonsense.component(TickRateComponent.class).timeSinceLastTickMS();
 
-            if (timeSinceLastTick > LagNotifier.this.threshold.get() || bypass) {
+            if ((timeSinceLastTick > LagNotifier.this.threshold.get() && !mc.isSingleplayer()) || bypass) {
 
                 int color;
                 if (timeSinceLastTick > 10000) {

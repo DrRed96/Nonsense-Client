@@ -24,7 +24,6 @@ public class ClickGui extends Module {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Which Click GUI to use.", Mode.NOVOLINE);
     public final BooleanProperty categoryColors = new BooleanProperty("Category Colors", "Category colors.", false);
-    public final ColorProperty color = new ColorProperty("Color", "Color of the Click GUI", ColorUtil.NONSENSE, () -> !this.categoryColors.get());
     public final BooleanProperty toolTips = new BooleanProperty("Tool Tips", "Renders tool tips.", false);
     public final EnumProperty<Sound> sound = new EnumProperty<>("Sound", "Plays a sound when you press a button", Sound.NONE);
 
@@ -32,7 +31,7 @@ public class ClickGui extends Module {
     private ImClickGui imGui;
 
     public ClickGui() {
-        this.addProperties(this.mode, this.categoryColors, this.color, this.toolTips, this.sound);
+        this.addProperties(this.mode, this.categoryColors, this.toolTips, this.sound);
     }
 
     public void initGuis() {

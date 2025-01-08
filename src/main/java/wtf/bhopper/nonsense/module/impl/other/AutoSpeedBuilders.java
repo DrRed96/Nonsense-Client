@@ -18,7 +18,7 @@ import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
 import wtf.bhopper.nonsense.event.impl.packet.EventReceivePacket;
 import wtf.bhopper.nonsense.event.impl.player.EventJoinGame;
-import wtf.bhopper.nonsense.event.impl.player.EventSelectItem;
+import wtf.bhopper.nonsense.event.impl.player.inventory.EventSelectItem;
 import wtf.bhopper.nonsense.event.impl.player.EventUpdate;
 import wtf.bhopper.nonsense.event.impl.render.EventRenderWorld;
 import wtf.bhopper.nonsense.module.Module;

@@ -2450,6 +2450,10 @@ public abstract class EntityPlayer extends EntityLivingBase
         this.hasReducedDebug = reducedDebug;
     }
 
+    public int getHeldItemSlot() {
+        return this.inventory.currentItem;
+    }
+
     public static enum EnumChatVisibility
     {
         FULL(0, "options.chat.visibility.full"),

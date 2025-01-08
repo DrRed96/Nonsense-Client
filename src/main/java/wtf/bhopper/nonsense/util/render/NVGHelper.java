@@ -1,5 +1,6 @@
 package wtf.bhopper.nonsense.util.render;
 
+import com.google.common.primitives.Chars;
 import org.lwjgl.nanovg.NVGColor;
 import org.lwjgl.nanovg.NVGPaint;
 import org.lwjgl.opengl.Display;
@@ -161,7 +162,7 @@ public class NVGHelper {
         return nvgCreateImageMem(context, flags, data);
     }
 
-    public static int createFontMem(String name, ByteBuffer data, boolean freeData) {
+    public static int createFontMem(CharSequence name, ByteBuffer data, boolean freeData) {
         return nvgCreateFontMem(context, name, data, freeData);
     }
 
@@ -272,7 +273,7 @@ public class NVGHelper {
         closePath();
     }
 
-    public static void drawText(String text, float x, float y, int color, boolean shadow) {
+    public static void drawText(CharSequence text, float x, float y, int color, boolean shadow) {
         beginPath();
         if (shadow) {
             fillColor(ColorUtil.dropShadow(color));
@@ -283,11 +284,11 @@ public class NVGHelper {
         closePath();
     }
 
-    public static void drawText(String text, float x, float y, int color) {
+    public static void drawText(CharSequence text, float x, float y, int color) {
         drawText(text, x, y, color, false);
     }
 
-    public static void drawGradientText(String text, float x, float y, int startColor, int endColor, boolean shadow) {
+    public static void drawGradientText(CharSequence text, float x, float y, int startColor, int endColor, boolean shadow) {
         float[] bounds = new float[4];
         beginPath();
         textBounds(x, y, text, bounds);
@@ -300,7 +301,7 @@ public class NVGHelper {
         closePath();
     }
 
-    public static void drawTextBox(String text, float x, float y, int color, boolean shadow, float lineBreakWidth) {
+    public static void drawTextBox(CharSequence text, float x, float y, int color, boolean shadow, float lineBreakWidth) {
         beginPath();
         if (shadow) {
             fillColor(ColorUtil.dropShadow(color));
@@ -311,11 +312,11 @@ public class NVGHelper {
         closePath();
     }
 
-    public static void drawGradientText(String text, float x, float y, int startColor, int endColor) {
+    public static void drawGradientText(CharSequence text, float x, float y, int startColor, int endColor) {
         drawGradientText(text, x, y, startColor, endColor, false);
     }
 
-    public static float getStringWidth(String text) {
+    public static float getStringWidth(CharSequence text) {
         return textBounds(0.0F, 0.0F, text);
     }
 

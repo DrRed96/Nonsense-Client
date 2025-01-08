@@ -56,20 +56,11 @@ public class ModuleList {
         // Background
         if (mod.moduleListBackground.getInt() != 0) {
 
-            NVGHelper.beginPath();
-            NVGHelper.moveTo(right, 0);
-
             float yOffBg = yOff;
 
             for (Slot slot : this.slots) {
-                yOffBg = slot.drawBackgroundPoints(yOffBg, right, mod);
+                yOffBg = slot.drawBackground(yOffBg, right, mod);
             }
-
-            NVGHelper.lineTo(right, yOffBg);
-
-            NVGHelper.fillColor(ColorUtil.alpha(0, mod.moduleListBackground.getInt()));
-            NVGHelper.fill();
-            NVGHelper.closePath();
         }
 
         switch (mod.moduleListOutline.get()) {
@@ -175,18 +166,18 @@ public class ModuleList {
             };
         }
 
-        public float drawBackgroundPoints(float yOff, float right, HudMod hudMod) {
+        public float drawBackground(float yOff, float right, HudMod hudMod) {
 
             if (!this.shouldDisplay) {
                 return yOff;
             }
 
             float fontSize = hudMod.font.is(HudMod.Font.MINECRAFT) ? 18.0F : hudMod.fontSize.getFloat();
-            float textX = right - (this.width + 2.0F + hudMod.moduleListSpacing.getFloat()) * this.animateFactor;
+            float width = (this.width + 2.0F + hudMod.moduleListSpacing.getFloat()) * this.animateFactor;
+            float textX = right - width;
             float textHeight = (fontSize + hudMod.moduleListSpacing.getFloat() * 2.0F) * this.animateFactor;
 
-            NVGHelper.lineTo(textX - 2.0F, yOff);
-            NVGHelper.lineTo(textX - 2.0F, yOff + textHeight);
+            NVGHelper.drawRect(textX - 2.0F, yOff, width + 2.0F, textHeight, ColorUtil.alpha(0, hudMod.moduleListBackground.getInt()));
 
             return yOff + textHeight;
         }
@@ -322,7 +313,7 @@ public class ModuleList {
             this.color = switch (mod.moduleListMode.get()) {
                 case GENERIC -> switch (mod.moduleListColor.get()) {
                     case STATIC -> mod.color.getRGB();
-                    case WAVY -> Hud.enableSecondary() ? ColorUtil.wave(mod.color.getRGB(), mod.secondary.getRGB(), timeMS, count) : ColorUtil.wave(mod.color.getRGB(), timeMS, count);
+                    case WAVY -> Hud.colorWave(timeMS, count);
                     case RAINBOW -> ColorUtil.rainbow(timeMS, count, 0.5F, 1.0F);
                     case RAINBOW_2 -> ColorUtil.rainbow(timeMS, count, 1.0F, 1.0F);
                     case EXHIBITION_RAINBOW -> ColorUtil.exhiRainbow(timeMS, count);

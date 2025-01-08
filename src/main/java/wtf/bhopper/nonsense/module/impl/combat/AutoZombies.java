@@ -11,7 +11,7 @@ import net.minecraft.util.Vec3;
 import wtf.bhopper.nonsense.component.impl.player.RotationsComponent;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
-import wtf.bhopper.nonsense.event.impl.player.EventSelectItem;
+import wtf.bhopper.nonsense.event.impl.player.inventory.EventSelectItem;
 import wtf.bhopper.nonsense.event.impl.player.EventUpdate;
 import wtf.bhopper.nonsense.event.impl.player.interact.EventClickAction;
 import wtf.bhopper.nonsense.module.Module;

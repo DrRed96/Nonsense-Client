@@ -14,6 +14,7 @@ import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.player.*;
 import wtf.bhopper.nonsense.event.impl.player.interact.EventClickAction;
+import wtf.bhopper.nonsense.event.impl.player.inventory.EventSelectItem;
 import wtf.bhopper.nonsense.event.impl.player.movement.EventMove;
 import wtf.bhopper.nonsense.event.impl.player.movement.EventMovementInput;
 import wtf.bhopper.nonsense.module.Module;

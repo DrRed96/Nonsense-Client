@@ -30,7 +30,6 @@ public enum Nonsense {
     INSTANCE;
 
     public static final String NAME = "Nonsense";
-    public static final String VERSION = "241116";
 
     public static final Logger LOGGER = LogManager.getLogger();
     public static final Gson GSON = new Gson();
@@ -55,7 +54,7 @@ public enum Nonsense {
     private File dataDir;
 
     public void setup() {
-        LOGGER.info("Loading {} {}", NAME, VERSION);
+        LOGGER.info("Loading {}", NAME);
         this.startTime = System.currentTimeMillis();
 
         ViaMCP.create();
