@@ -2,16 +2,20 @@ package wtf.bhopper.nonsense.module.impl.other;
 
 import net.minecraft.network.play.server.S02PacketChat;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.IChatComponent;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.player.EventJoinGame;
 import wtf.bhopper.nonsense.event.impl.packet.EventReceivePacket;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
+import wtf.bhopper.nonsense.gui.hud.notification.Notification;
+import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
+import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
 import wtf.bhopper.nonsense.module.property.impl.StringProperty;
 import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
@@ -22,7 +26,7 @@ import java.util.regex.Pattern;
 @ModuleInfo(name = "Auto Hypixel", description = "Useful mods for Hypixel", category = ModuleCategory.OTHER)
 public class AutoHypixel extends Module {
 
-    // Taken from
+    // Taken from Sk1er AutoGG mod XD
     public static final Pattern[] AUTO_GG_REGEX = {
             Pattern.compile("^ +1st Killer - ?\\\\[?\\\\w*\\\\+*\\\\]? \\\\w+ - \\\\d+(?: Kills?)?$"),
             Pattern.compile("^ *1st (?:Place ?)?(?:-|:)? ?\\[?\\w*\\+*\\]? \\w+(?: : \\d+| - \\d+(?: Points?)?| - \\d+(?: x .)?| \\(\\w+ .{1,6}\\) - \\d+ Kills?|: \\d+:\\d+| - \\d+ (?:Zombie )?(?:Kills?|Blocks? Destroyed)| - \\[LINK\\])?$"),
@@ -42,10 +46,13 @@ public class AutoHypixel extends Module {
             Pattern.compile("^ {21}Bridge CTF [a-zA-Z]+ - \\d\\d:\\d\\d$"),
     };
 
-
-    public final GroupProperty autoGg = new GroupProperty("Auto GG", "Automatically sends 'GG' or another message upon finishing a game", this);
-    private final BooleanProperty autoGgEnabled = new BooleanProperty("Enabled", "Enables Auto GG", true);
+    private final GroupProperty autoGg = new GroupProperty("Auto GG", "Automatically sends 'GG' or another message upon finishing a game", this);
+    private final BooleanProperty autoGgEnabled = new BooleanProperty("Enable", "Enables Auto GG", true);
     private final StringProperty autoGgMessage = new StringProperty("Message", "Message to send", "gg");
+
+    private final GroupProperty autoPlay = new GroupProperty("Auto Play", "Automatically plays a new game", this);
+    private final BooleanProperty autoPlayEnable = new BooleanProperty("Enable", "Enables auto play.", false);
+    private final NumberProperty autoPlayDelay = new NumberProperty("Delay", "Delay before joining a new game.", 3, 0, 5, 1, NumberProperty.FORMAT_SECONDS);
 
     private final BooleanProperty cleanChat = new BooleanProperty("Clean Chat", "Removes unnecessary messages.", true);
     private final BooleanProperty lobbyJoin = new BooleanProperty("Hide Lobby Join", "Removes lobby join messages.", false);
@@ -55,12 +62,13 @@ public class AutoHypixel extends Module {
     private boolean joined = false;
 
     public AutoHypixel() {
+        this.autoPlay.addProperties(this.autoPlayEnable, this.autoPlayDelay);
         this.autoGg.addProperties(this.autoGgEnabled, this.autoGgMessage);
         this.addProperties(this.autoGg, this.cleanChat, this.lobbyJoin, this.autoTip);
     }
 
     @EventLink
-    public final Listener<EventTick> onTick = event -> {
+    public final Listener<EventTick> onTick = _ -> {
         if (!PlayerUtil.canUpdate()) {
             return;
         }
@@ -77,7 +85,13 @@ public class AutoHypixel extends Module {
     @EventLink
     public final Listener<EventReceivePacket> onReceivePacket = event -> {
         if (event.packet instanceof S02PacketChat packet) {
-            String message = packet.getChatComponent().getFormattedText();
+
+            if (!packet.isChat()) {
+                return;
+            }
+
+            IChatComponent chatComponent = packet.getChatComponent();
+            String message = chatComponent.getFormattedText();
             String rawMessage = EnumChatFormatting.getTextWithoutFormattingCodes(message);
 
             if (this.autoGgEnabled.get()) {
@@ -90,7 +104,28 @@ public class AutoHypixel extends Module {
                         }
                     }
                 }
+            }
 
+            if (this.autoPlayEnable.get()) {
+                if (message.contains("play again?")) {
+                    for (IChatComponent component : packet.getChatComponent().getSiblings()) {
+                        for (String command : component.toString().split("'")) {
+                            if (command.startsWith("/play") && !command.contains(".")) {
+                                if (this.autoPlayDelay.getInt() == 0) {
+                                    ChatUtil.send("%s", command);
+                                } else {
+                                    new Thread(() -> {
+                                        Notification.send("Auto Play", "Joining a new game in " + this.autoPlayDelay.getInt() + " seconds.", NotificationType.INFO, this.autoPlayDelay.getInt() * 1000);
+                                        try {
+                                            Thread.sleep(this.autoPlayDelay.getInt() * 1000L);
+                                        } catch (InterruptedException _) { }
+                                        ChatUtil.send("%s", command);
+                                    }).start();
+                                }
+                            }
+                        }
+                    }
+                }
             }
 
             if (this.cleanChat.get()) {

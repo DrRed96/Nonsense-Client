@@ -31,14 +31,15 @@ public class GLFWKeyboardImplementation implements KeyboardImplementation {
             } else if (action == GLFW.GLFW_RELEASE) {
                 this.key_down_buffer[key] = 0;
             }
-            putKeyboardEvent(key, this.key_down_buffer[key], 0, System.nanoTime(), action == GLFW.GLFW_REPEAT);
+            this.putKeyboardEvent(key, this.key_down_buffer[key], 0, System.nanoTime(), action == GLFW.GLFW_REPEAT);
         });
 
-        this.charCallback = GLFWCharCallback.create((window, codepoint) ->
+        this.charCallback = GLFWCharCallback.create((window, codepoint) -> {
             // if the keycode is 0 minecraft instead uses the character code as the key pressed, not sure why
             // but a keycode of -1 is used instead to fix this issue
-            putKeyboardEvent(-1, (byte) 1, codepoint, System.nanoTime(), false)
-        );
+
+            this.putKeyboardEvent(-1, (byte) 1, codepoint, System.nanoTime(), false);
+        });
 
         this.windowHandle = Display.getHandle();
         GLFW.glfwSetKeyCallback(this.windowHandle, this.keyCallback);
@@ -47,7 +48,7 @@ public class GLFWKeyboardImplementation implements KeyboardImplementation {
 
     private void putKeyboardEvent(int keycode, byte state, int ch, long nanos, boolean repeat) {
         this.tmp_event.clear();
-        this.tmp_event.putInt(keycode).put(state).putInt(ch).putLong(nanos).put(repeat ? (byte)1 : (byte)0);
+        this.tmp_event.putInt(keycode).put(state).putInt(ch).putLong(nanos).put(repeat ? (byte) 1 : (byte) 0);
         this.tmp_event.flip();
         this.event_queue.putEvent(this.tmp_event);
     }
@@ -71,9 +72,13 @@ public class GLFWKeyboardImplementation implements KeyboardImplementation {
     }
 
     public static int translateKeyFromGLFW(int key) {
-        if (key == -1) return GLFW2LWJGL[0];
-        else if (key < GLFW2LWJGL.length) return GLFW2LWJGL[key];
-        else return key;
+        if (key == -1) {
+            return GLFW2LWJGL[0];
+        } else if (key < GLFW2LWJGL.length) {
+            return GLFW2LWJGL[key];
+        } else {
+            return key;
+        }
     }
 
     private static final int[] GLFW2LWJGL = new int[Keyboard.KEYBOARD_SIZE];

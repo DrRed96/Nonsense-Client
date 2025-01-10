@@ -66,7 +66,7 @@ public class GuessTheBuildSolver extends Module {
             "#10 Builder"
     };
 
-    private final BooleanProperty autoGuess = new BooleanProperty("Auto Guess", "automatically guesses when there's only 1 theme left", true);
+    private final BooleanProperty autoGuess = new BooleanProperty("Auto Guess", "Automatically guesses when there's only 1 theme left", true);
     private final NumberProperty delay = new NumberProperty("Guess Delay", "Auto guess delay", this.autoGuess::get, 0, 0, 3000, 50, NumberProperty.FORMAT_MS);
 
     private final List<String> themes = new ArrayList<>();

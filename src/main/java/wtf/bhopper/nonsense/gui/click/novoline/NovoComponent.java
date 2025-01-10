@@ -1,5 +1,6 @@
 package wtf.bhopper.nonsense.gui.click.novoline;
 
+import wtf.bhopper.nonsense.gui.hud.Hud;
 import wtf.bhopper.nonsense.util.misc.InputUtil;
 import wtf.bhopper.nonsense.util.render.ColorUtil;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
@@ -42,6 +43,19 @@ public abstract class NovoComponent {
 
     public void drawBackground(float height, int color) {
         this.drawBackground(this.yOff, height, color);
+    }
+
+    public void drawBackgroundHud(float yOff, float height) {
+        NVGHelper.drawRect(0.0F, yOff, WIDTH, height, OUTLINE_COLOR);
+        if (NovoGui.mod().categoryColors.get()) {
+            NVGHelper.drawRect(1.0F, yOff, WIDTH - 2.0F, height, NovoGui.getColor(this.panel));
+        } else {
+            Hud.rect(1.0F, yOff, WIDTH - 2.0F, height);
+        }
+    }
+
+    public void drawBackgroundHud(float height) {
+        this.drawBackgroundHud(this.yOff, height);
     }
 
     public boolean mouseIntersecting(float mouseX, float mouseY, float height) {

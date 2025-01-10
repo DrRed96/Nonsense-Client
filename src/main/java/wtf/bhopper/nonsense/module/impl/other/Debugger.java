@@ -25,6 +25,7 @@ import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
 import wtf.bhopper.nonsense.network.GuiTestNetwork;
 import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
+import wtf.bhopper.nonsense.util.misc.GeneralUtil;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -260,7 +261,8 @@ public class Debugger extends Module {
         public PacketInfo(Packet packet, State state) {
             this.clazz = packet.getClass().getSimpleName();
             this.state = state;
-            Field[] declaredFields = packet.getClass().getDeclaredFields();
+            Field[] declaredFields = GeneralUtil.concat(packet.getClass().getDeclaredFields(), packet.getClass().getSuperclass().getDeclaredFields());
+
             this.fields = new FieldInfo[declaredFields.length];
             for (int i = 0; i < declaredFields.length; i++) {
                 Field field = declaredFields[i];

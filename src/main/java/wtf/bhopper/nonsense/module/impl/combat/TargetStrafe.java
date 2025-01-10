@@ -99,7 +99,11 @@ public class TargetStrafe extends Module {
             if (this.renderOutline.get()) {
                 RenderUtil.drawRadius(x, y, z, this.range.getDouble(), this.renderPoints.getInt(), 4.0F, ColorUtil.BLACK);
             }
-            RenderUtil.drawRadius(x, y, z, this.range.getDouble(), this.renderPoints.getInt(), 2.0F, Hud.color());
+            if (Hud.enableSecondary()) {
+                RenderUtil.drawRadius(x, y, z, this.range.getDouble(), this.renderPoints.getInt(), 2.0F, Hud.color(), Hud.secondary());
+            } else {
+                RenderUtil.drawRadius(x, y, z, this.range.getDouble(), this.renderPoints.getInt(), 2.0F, Hud.color());
+            }
         }
     };
 

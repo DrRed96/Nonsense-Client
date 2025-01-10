@@ -313,6 +313,49 @@ public class RenderUtil implements IMinecraft {
 
     }
 
+    public static void drawRadius(double x, double y, double z, double radius, int points, float lineWidth, int color, int color2) {
+
+        double renderX = x - mc.getRenderManager().viewerPosX;
+        double renderY = y - mc.getRenderManager().viewerPosY;
+        double renderZ = z - mc.getRenderManager().viewerPosZ;
+
+        glPushMatrix();
+        glDisable(GL_TEXTURE_2D);
+        glEnable(GL_LINE_SMOOTH);
+        glEnable(GL_POLYGON_SMOOTH);
+        glEnable(GL_POINT_SMOOTH);
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glHint(GL_LINE_SMOOTH_HINT, GL_NICEST);
+        glHint(GL_POLYGON_SMOOTH_HINT, GL_NICEST);
+        glHint(GL_POINT_SMOOTH_HINT, GL_NICEST);
+        glDisable(GL_DEPTH_TEST);
+        glLineWidth(lineWidth);
+        glShadeModel(GL_SMOOTH);
+
+        Color colorA = new Color(color);
+        Color colorB = new Color(color2);
+
+        glBegin(GL_LINE_STRIP);
+        for (int i = 0; i <= points; ++i) {
+            float factor = Math.abs(((float)i / (float)points) * 2.0F - 1.0F);
+            glColor(ColorUtil.interpolate(colorA, colorB, factor));
+            glVertex3d(renderX + radius * Math.cos(i * MathHelper.PI2 / (double)points), renderY, renderZ + radius * Math.sin(i * MathHelper.PI2 / (double)points));
+        }
+        glEnd();
+
+        glShadeModel(GL_FLAT);
+        glDepthMask(true);
+        glEnable(GL_DEPTH_TEST);
+        glDisable(GL_LINE_SMOOTH);
+        glDisable(GL_POLYGON_SMOOTH);
+        glEnable(GL_POINT_SMOOTH);
+        glEnable(GL_TEXTURE_2D);
+        glPopMatrix();
+        glColor(ColorUtil.WHITE);
+
+    }
+
     public static AxisAlignedBB toRender(AxisAlignedBB axisAlignedBB) {
         return new AxisAlignedBB(
                 axisAlignedBB.minX - mc.getRenderManager().viewerPosX,

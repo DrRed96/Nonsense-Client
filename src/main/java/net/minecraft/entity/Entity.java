@@ -1107,7 +1107,7 @@ public abstract class Entity implements ICommandSender {
      */
     public void moveFlying(float strafe, float forward, float friction) {
 
-        EventStrafe event = new EventStrafe(forward, strafe, friction, this.movementYaw);
+        EventStrafe event = new EventStrafe(forward, strafe, friction, this.isClientPlayer() ? this.movementYaw : this.rotationYaw);
         if (this.isClientPlayer()) {
             Nonsense.getEventBus().post(event);
         }

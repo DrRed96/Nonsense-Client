@@ -82,6 +82,11 @@ public class InfiniteAura extends Module {
 
     }
 
+    @Override
+    public void onDisable() {
+        this.target = null;
+    }
+
     @EventLink
     public final Listener<EventTick> onTick = _ -> {
 

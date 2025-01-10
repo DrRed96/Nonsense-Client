@@ -1,12 +1,15 @@
 package wtf.bhopper.nonsense.module.impl.visual;
 
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockLiquid;
 import net.minecraft.client.entity.EntityOtherPlayerMP;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagByte;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.Vec3;
+import net.minecraft.network.play.client.C03PacketPlayer;
+import net.minecraft.network.play.client.C07PacketPlayerDigging;
+import net.minecraft.util.*;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.component.impl.player.RotationsComponent;
 import wtf.bhopper.nonsense.event.EventPriorities;
@@ -25,9 +28,17 @@ import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
+import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
+import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
 import wtf.bhopper.nonsense.util.minecraft.inventory.ItemBuilder;
 import wtf.bhopper.nonsense.util.minecraft.player.*;
+import wtf.bhopper.nonsense.util.minecraft.world.BlockUtil;
+import wtf.bhopper.nonsense.util.misc.MathUtil;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 @ModuleInfo(name = "Freecam",
         description = "Silent spectator mode",
@@ -36,6 +47,10 @@ public class Freecam extends Module {
 
     private final NumberProperty speed = new NumberProperty("Speed", "Freecam fly speed", 4.0, 1.0, 10.0, 1.0);
     private final BooleanProperty autoRefresh = new BooleanProperty("Auto Refresh", "Automatically refresh chunks when Free Camera is disabled", false);
+
+    private final GroupProperty nukerGroup = new GroupProperty("Nuker", "Freecam nuker", this);
+    private final NumberProperty nukerRadius = new NumberProperty("Radius", "Block break radius", 4.5, 1.0, 6.0, 0.1);
+    private final EnumProperty<PathMode> pathMode = new EnumProperty<>("Path Finder", "Path finding method", PathMode.INSTANT);
 
     private Vec3 position = null;
     private Vec3 prevPosition = null;
@@ -51,7 +66,8 @@ public class Freecam extends Module {
     private int slot = 0;
 
     public Freecam() {
-        this.addProperties(this.speed, this.autoRefresh);
+        this.nukerGroup.addProperties(this.nukerRadius, this.pathMode);
+        this.addProperties(this.speed, this.autoRefresh, this.nukerGroup);
         this.setHidden(false);
 
         mainInventory[0] = ItemBuilder.of(Items.sugar)
@@ -60,6 +76,10 @@ public class Freecam extends Module {
 
         mainInventory[1] = ItemBuilder.of(Items.blaze_rod)
                 .setDisplayName("\2475Magic Wand")
+                .build();
+
+        mainInventory[2] = ItemBuilder.of(Items.record_cat)
+                .setDisplayName("\247aRefresh Chunks")
                 .build();
 
         mainInventory[7] = ItemBuilder.of(Blocks.tnt)
@@ -187,6 +207,10 @@ public class Freecam extends Module {
     public final Listener<EventPreRenderWorld> onPreRender = _ -> {
         if (this.clientEntity != null) {
 
+            if (this.position == null) {
+                this.position = mc.thePlayer.getPositionVector();
+            }
+
             this.clientEntity.setPosition(this.position.xCoord, this.position.yCoord, this.position.zCoord);
             this.clientEntity.prevPosX = this.clientEntity.lastTickPosX = this.prevPosition.xCoord;
             this.clientEntity.prevPosY = this.clientEntity.lastTickPosY = this.prevPosition.yCoord;
@@ -263,16 +287,19 @@ public class Freecam extends Module {
         if (event.leftButton || event.rightButton) {
             switch (this.state) {
                 case NORMAL -> {
+                    if (event.leftButton) {
+                        mc.thePlayer.fakeSwing();
+                    }
+
                     switch (this.slot) {
                         case 0 -> this.state = State.SPEED;
                         case 1 -> {
-                            if (this.clientEntity != null) {
-                                MovingObjectPosition intercept = RotationUtil.rayCastBlocks(new Rotation(mc.thePlayer), 9999, this.clientEntity);
-                                if (intercept.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
-                                    this.position = new Vec3(intercept.getBlockPos()).addVector(0.5, 1.0, 0.5);
-                                }
+                            MovingObjectPosition intercept = this.rayCast();
+                            if (intercept.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+                                this.position = new Vec3(intercept.getBlockPos()).addVector(0.5, 1.0, 0.5);
                             }
                         }
+                        case 2 -> mc.renderGlobal.loadRenderers();
                         case 7 -> {
                             if (mc.thePlayer.capabilities.isCreativeMode) {
                                 this.state = State.NUKER;
@@ -286,6 +313,9 @@ public class Freecam extends Module {
                 }
 
                 case SPEED -> {
+                    if (event.leftButton) {
+                        mc.thePlayer.fakeSwing();
+                    }
                     this.speed.set(this.slot + 1.0);
                     this.state = State.NORMAL;
                     this.slot = 0;
@@ -301,8 +331,15 @@ public class Freecam extends Module {
                         if (item.getTagCompound().hasKey("Nonsense", 1)) {
                             byte id = item.getTagCompound().getByte("Nonsense");
                             switch (id) {
-                                case 0 -> { /* TODO: nuke */ }
-                                case 1 -> { /* TODO: teleport */ }
+                                case 0 -> {
+                                    if (event.leftButton) {
+                                        mc.thePlayer.fakeSwing();
+                                        this.nuke();
+                                    }
+                                }
+                                case 1 -> {
+
+                                }
                                 case 2 -> {
                                     this.state = State.NORMAL; this.slot = 7;
                                 }
@@ -386,10 +423,81 @@ public class Freecam extends Module {
         return this.clientEntity.inventory.getCurrentItem();
     }
 
+    private MovingObjectPosition rayCast() {
+        if (this.clientEntity == null) {
+            return new MovingObjectPosition(MovingObjectPosition.MovingObjectType.MISS, Vec3.ORIGIN, null, BlockPos.ORIGIN);
+        }
+        return RotationUtil.rayCastBlocks(new Rotation(mc.thePlayer), 9999, this.clientEntity);
+    }
+
+    private void nuke() {
+        MovingObjectPosition intercept = this.rayCast();
+        if (intercept.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+            Vec3 end = new Vec3(intercept.getBlockPos()).addVector(0.5, 0.5, 0.5);
+            Vec3 eyes = end.addVector(0.0, mc.thePlayer.getEyeHeight(), 0.0);
+            List<BlockPos> blocks = new ArrayList<>();
+
+            for (int x = -6; x <= 6; x++) {
+                for (int y = -6; y <= 6; y++) {
+                    for (int z = -6; z <= 6; z++) {
+                        blocks.add(new BlockPos(eyes).add(x, y, z));
+                    }
+                }
+            }
+
+            List<Vec3> path = this.pathFind(this.position, end);
+            this.sendPathPacketsForward(path);
+
+            for (BlockPos pos : blocks) {
+                Block block = BlockUtil.getBlock(pos);
+
+                if (block != Blocks.air && !(block instanceof BlockLiquid)) {
+                    AxisAlignedBB bounds = block.getSelectedBoundingBox(mc.theWorld, pos);
+                    Vec3 centre = MathUtil.centrePoint(bounds);
+                    MovingObjectPosition blockIntercept = block.collisionRayTrace(mc.theWorld, pos, eyes, centre);
+                    if (blockIntercept != null && blockIntercept.typeOfHit == MovingObjectPosition.MovingObjectType.BLOCK) {
+                        if (blockIntercept.hitVec.distanceTo(eyes) <= this.nukerRadius.getDouble()) {
+                            PacketUtil.send(new C07PacketPlayerDigging(C07PacketPlayerDigging.Action.START_DESTROY_BLOCK, blockIntercept.getBlockPos(), blockIntercept.sideHit));
+//                            mc.playerController.clickBlock(blockIntercept.getBlockPos(), blockIntercept.sideHit);
+//                            PacketUtil.send(new C03PacketPlayer(mc.thePlayer.onGround));
+                        }
+                    }
+                }
+            }
+
+            this.sendPathPacketsBack(path);
+        }
+    }
+
+    private List<Vec3> pathFind(Vec3 start, Vec3 end) {
+        return switch (this.pathMode.get()) {
+            case INSTANT -> Arrays.asList(start, end);
+        };
+    }
+
+    private void sendPathPacketsForward(List<Vec3> path) {
+        for (int i = 1; i < path.size(); i++) {
+            Vec3 pos = path.get(i);
+            PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(pos.xCoord, pos.yCoord, pos.zCoord, mc.thePlayer.onGround));
+        }
+        PacketUtil.send(new C03PacketPlayer(mc.thePlayer.onGround));
+    }
+
+    private void sendPathPacketsBack(List<Vec3> path) {
+        for (int i = path.size() - 2; i >= 0; i--) {
+            Vec3 pos = path.get(i);
+            PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(pos.xCoord, pos.yCoord, pos.zCoord, mc.thePlayer.onGround));
+        }
+    }
+
     public enum State {
         NORMAL,
         SPEED,
         NUKER
+    }
+
+    public enum PathMode {
+        INSTANT
     }
 
 

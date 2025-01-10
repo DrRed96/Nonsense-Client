@@ -171,6 +171,7 @@ public class HudMod extends Module {
     public enum NotificationSound {
         POP("random.pop", 1),
         DING("random.orb", 1),
+        DISCORD("nonsense.discord", 1),
         NONE("", 0);
 
         private final ResourceLocation sound;

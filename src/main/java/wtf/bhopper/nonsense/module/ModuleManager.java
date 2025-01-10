@@ -70,6 +70,7 @@ public class ModuleManager {
                 new AntiCactus(),
                 new GameSpeed(),
                 new HorseJump(),
+                new Nuker(),
 
                 // Exploit
                 new PingSpoofer(),
@@ -88,6 +89,7 @@ public class ModuleManager {
                 // Other
                 new AntiCheatMod(),
                 new ChatFilter(),
+                new Spammer(),
                 new AntiAim(),
                 new AntiDesync(),
                 new Announcer(),

@@ -38,14 +38,16 @@ public class PacketUtil implements IMinecraft {
     }
 
     public static void queue(Packet<?> packet) {
-        try {
-            if (EnumConnectionState.PLAY.getPacketId(EnumPacketDirection.SERVERBOUND, packet) != null) {
-                send(packet);
-            } else {
+        if (PlayerUtil.canUpdate()) {
+            try {
+                if (EnumConnectionState.PLAY.getPacketId(EnumPacketDirection.SERVERBOUND, packet) != null) {
+                    send(packet);
+                } else {
+                    receive(packet);
+                }
+            } catch (Exception _) {
                 receive(packet);
             }
-        } catch (Exception _) {
-            receive(packet);
         }
     }
 

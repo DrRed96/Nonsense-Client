@@ -1,8 +1,13 @@
 package wtf.bhopper.nonsense.gui.click.novoline;
 
 import net.minecraft.client.Minecraft;
+import org.lwjgl.nanovg.NVGPaint;
+import wtf.bhopper.nonsense.gui.hud.Hud;
+import wtf.bhopper.nonsense.module.impl.visual.ClickGui;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
+
+import java.awt.*;
 
 import static org.lwjgl.nanovg.NanoVG.*;
 
@@ -35,7 +40,16 @@ public class NovoSlider extends NovoComponent {
         float boxY = yOff + MOD_HEIGHT / 2.0F - 10.0F;
         float width = WIDTH - 16.0F;
         NVGHelper.drawRect(8.0F, boxY, width, 20.0F, this.indentColor(COMPONENT_COLOR));
-        NVGHelper.drawRect(8.0F, boxY, width * (float)this.property.getPercent(), 20.0F, NovoGui.getColor(this.panel));
+
+        if (!NovoGui.mod().categoryColors.get() && Hud.enableSecondary()) {
+            NVGHelper.beginPath();
+            NVGHelper.rect(8.0F, boxY, width * (float) this.property.getPercent(), 20.0F);
+            NVGHelper.fillPaint(NVGHelper.linearGradient(8.0F, boxY, 8.0F + width, boxY, Hud.color(), Hud.secondary()));
+            NVGHelper.fill();
+            NVGHelper.closePath();
+        } else {
+            NVGHelper.drawRect(8.0F, boxY, width * (float) this.property.getPercent(), 20.0F, NovoGui.getColor(this.panel));
+        }
 
         NVGHelper.fontSize(16.0F);
         NVGHelper.textAlign(NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);

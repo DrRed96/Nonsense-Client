@@ -135,11 +135,9 @@ public class Speed extends Module {
             }
 
             case MINIBLOX -> {
-                if (MoveUtil.isMoving()) {
-                    MoveUtil.setSpeed(event, 0.39); // Miniblox has a hard speed cap, this is about as fast as you can go without C0B resetting
-                    if (this.jump.get() && mc.thePlayer.onGround) {
-                        MoveUtil.jump(event);
-                    }
+                MoveUtil.setSpeed(event, 0.39); // Miniblox has a hard speed cap, this is about as fast as you can go without using a disabler
+                if (this.jump.get() && mc.thePlayer.onGround && MoveUtil.isMoving()) {
+                    MoveUtil.jump(event);
                 }
             }
         }

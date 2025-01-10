@@ -14,6 +14,7 @@ public class NumberProperty extends Property<Double> {
     public static final NumberFormat FORMAT_INT = new DecimalFormat("#0");
     public static final NumberFormat FORMAT_DOUBLE = new DecimalFormat("#0.##");
     public static final NumberFormat FORMAT_PERCENT = new DecimalFormat("#0.##'%'");
+    public static final NumberFormat FORMAT_SECONDS = new DecimalFormat("#0's'");
     public static final NumberFormat FORMAT_MS = new DecimalFormat("#0'ms'");
     public static final NumberFormat FORMAT_DISTANCE = new DecimalFormat("#0.##'m'");
     public static final NumberFormat FORMAT_ANGLE = new DecimalFormat("#0.##'\u00B0'");

@@ -2,6 +2,8 @@ package net.minecraft.util;
 
 public class Vec3
 {
+    public static final Vec3 ORIGIN = new Vec3(0.0, 0.0, 0.0);
+
     /** X coordinate of Vec3D */
     public final double xCoord;
 
@@ -97,10 +99,10 @@ public class Vec3
      */
     public double distanceTo(Vec3 vec)
     {
-        double d0 = vec.xCoord - this.xCoord;
-        double d1 = vec.yCoord - this.yCoord;
-        double d2 = vec.zCoord - this.zCoord;
-        return MathHelper.sqrt_double(d0 * d0 + d1 * d1 + d2 * d2);
+        double X = vec.xCoord - this.xCoord;
+        double Y = vec.yCoord - this.yCoord;
+        double Z = vec.zCoord - this.zCoord;
+        return MathHelper.sqrt_double(X * X + Y * Y + Z * Z);
     }
 
     /**

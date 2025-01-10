@@ -146,8 +146,25 @@ public class TargetHud extends RenderComponent {
         this.setSize(Fonts.mc().getStringWidth(text) * 2 + 40, 80);
 
         this.translate.interpolate((this.getWidth() - 50.0F) * (target.getHealth() / target.getMaxHealth()), 0.0F, 0.2F, delta);
-        int color = this.getColor(target, mod);
-        int color2 = ColorUtil.multiplySatBri(color, 0.5F, 2.0F);
+
+        int color;
+        int color2;
+        switch (mod.targetHudColorMode.get()) {
+            case STATIC -> {
+                if (Hud.enableSecondary()) {
+                    color = Hud.color();
+                    color2 = Hud.secondary();
+                } else {
+                    color = Hud.color();
+                    color2 = ColorUtil.multiplySatBri(color, 0.5F, 2.0F);
+                }
+            }
+            case HEALTH -> {
+                color = target.getAbsorptionAmount() != 0.0F ? 0xFFFFAA00 : ColorUtil.health(target);
+                color2 = ColorUtil.multiplySatBri(color, 0.5F, 2.0F);
+            }
+            default -> color = color2 = ColorUtil.WHITE;
+        }
 
         NVGHelper.begin();
         this.nvgTranslate();
@@ -159,14 +176,14 @@ public class TargetHud extends RenderComponent {
         NVGHelper.drawRoundedRect(20.0F, 50.0F, this.getWidth() - 40.0F, 10.0F, 5.0F, 0x80000000);
         NVGHelper.beginPath();
         NVGHelper.roundedRect(20.0F, 50.0F, 10.0F + this.translate.getX(), 10.0F, 5.0F);
-        NVGHelper.fillPaint(NVGHelper.linearGradient(20.0F, this.getHeight() / 2.0F, 30.0F + this.translate.getX(), this.getHeight() / 2.0F, color2, color));
+        NVGHelper.fillPaint(NVGHelper.linearGradient(20.0F, this.getHeight() / 2.0F, 30.0F + this.translate.getX(), this.getHeight() / 2.0F, color, color2));
         NVGHelper.fill();
         NVGHelper.closePath();
 
         // Outline
         NVGHelper.beginPath();
         NVGHelper.roundedRect(0.0F, 0.0F, this.getWidth(), this.getHeight(), 10.0F);
-        NVGHelper.strokePaint(NVGHelper.linearGradient(0.0F, this.getHeight() / 2.0F, this.getWidth(), this.getHeight() / 2.0F, color2, color));
+        NVGHelper.strokePaint(NVGHelper.linearGradient(0.0F, this.getHeight() / 2.0F, this.getWidth(), this.getHeight() / 2.0F, color, color2));
         NVGHelper.strokeWidth(2.0F);
         NVGHelper.stroke();
         NVGHelper.closePath();

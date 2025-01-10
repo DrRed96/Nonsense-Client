@@ -850,7 +850,7 @@ public abstract class EntityLivingBase extends Entity {
                             d1 = (Math.random() - Math.random()) * 0.01D;
                         }
 
-                        this.attackedAtYaw = (float) (MathHelper.func_181159_b(d0, d1) * 180.0D / Math.PI - (double) this.movementYaw);
+                        this.attackedAtYaw = (float) (MathHelper.func_181159_b(d0, d1) * 180.0D / Math.PI - (double)(this.isClientPlayer() ? this.movementYaw : this.rotationYaw));
                         this.knockBack(entity, amount, d1, d0);
                     } else {
                         this.attackedAtYaw = (float) ((int) (Math.random() * 2.0D) * 180);
@@ -1385,7 +1385,7 @@ public abstract class EntityLivingBase extends Entity {
         this.motionY = motion;
 
         if (this.isSprinting()) {
-            float f = this.movementYaw * 0.017453292F;
+            float f = (this.isClientPlayer() ? this.movementYaw : this.rotationYaw) * 0.017453292F;
             this.motionX -= MathHelper.sin(f) * 0.2F;
             this.motionZ += MathHelper.cos(f) * 0.2F;
         }

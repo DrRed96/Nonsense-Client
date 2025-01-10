@@ -1,6 +1,7 @@
 package wtf.bhopper.nonsense.gui.click.novoline;
 
 import net.minecraft.client.Minecraft;
+import wtf.bhopper.nonsense.gui.hud.Hud;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.property.Property;
 import wtf.bhopper.nonsense.module.property.impl.*;
@@ -42,21 +43,17 @@ public class NovoModule extends NovoComponent {
         this.yOff = this.panel.yOff;
 
         boolean intersecting = this.mouseIntersecting(mouseX, mouseY, MOD_HEIGHT);
-
-        int color;
-        if (this.module.isToggled()) {
-            color = NovoGui.getColor(this.panel);
-        } else if (intersecting) {
-            color = BG_COLOR_DARK;
-        } else {
-            color = BG_COLOR;
-        }
-
         if (intersecting) {
             this.setToolTip(this.module.description);
         }
 
-        this.drawBackground(MOD_HEIGHT, color);
+        if (this.module.isToggled()) {
+            this.drawBackgroundHud(MOD_HEIGHT);
+        } else if (intersecting) {
+            this.drawBackground(MOD_HEIGHT, BG_COLOR_DARK);
+        } else {
+            this.drawBackground(MOD_HEIGHT, BG_COLOR);
+        }
 
         NVGHelper.fontSize(16.0F);
         NVGHelper.textAlign(NVG_ALIGN_LEFT | NVG_ALIGN_MIDDLE);

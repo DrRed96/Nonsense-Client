@@ -2,7 +2,6 @@ package wtf.bhopper.nonsense.module.property.impl;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import imgui.ImGui;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.module.impl.visual.ClickGui;
 import wtf.bhopper.nonsense.module.property.Property;
@@ -136,30 +135,5 @@ public class EnumProperty<T extends Enum<T>> extends Property<T> {
         } catch (NoSuchFieldException | NullPointerException ignored) {}
 
         return null;
-    }
-
-    public void imGuiDraw() {
-        // An internal method is needed here to manage the generics
-
-        Map<T, String> nameMap = this.valueNameMap();
-
-        if (ImGui.beginCombo(this.displayName, this.getDisplayValue())) {
-            for (T value : values) {
-
-                if (ImGui.selectable(nameMap.get(value))) {
-                    this.set(value);
-                }
-                String desc = getEnumDescription(value);
-                if (desc != null) {
-                    if (ImGui.isItemHovered() && Nonsense.module(ClickGui.class).toolTips.get()) {
-                        ImGui.setTooltip(desc);
-                    }
-                }
-            }
-            ImGui.endCombo();
-        } else if (ImGui.isItemHovered() && Nonsense.module(ClickGui.class).toolTips.get()) {
-            ImGui.setTooltip(this.description);
-        }
-
     }
 }

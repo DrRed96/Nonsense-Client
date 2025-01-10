@@ -84,7 +84,7 @@ public class Breaker extends Module {
             }
 
             case DRAGON_EGG -> {
-
+                this.mouseOver = null;
             }
         }
     };
@@ -95,7 +95,7 @@ public class Breaker extends Module {
             switch (packet.getStatus()) {
                 case STOP_DESTROY_BLOCK -> {
                     this.isBreaking = false;
-                    this.didBreak = packet.getPosition() == mouseOver.getBlockPos();
+                    this.didBreak = packet.getPosition() == this.mouseOver.getBlockPos();
                 }
                 case ABORT_DESTROY_BLOCK -> this.isBreaking = false;
             }

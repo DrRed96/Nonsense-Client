@@ -28,6 +28,7 @@ import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
+import wtf.bhopper.nonsense.module.impl.movement.Scaffold;
 import wtf.bhopper.nonsense.module.property.impl.*;
 import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.Rotation;
@@ -179,6 +180,10 @@ public class KillAura extends Module {
     @EventLink(EventPriorities.HIGH)
     public final Listener<EventClickAction> onClick = event -> {
 
+        if (Nonsense.module(Scaffold.class).isToggled()) {
+            return;
+        }
+
         if (this.target == null) {
             this.targetRotations = new Rotation(mc.thePlayer);
             this.rotations = null;
@@ -248,7 +253,7 @@ public class KillAura extends Module {
 
     @EventLink
     public final Listener<EventUpdate> onUpdate = _ -> {
-        if (this.rotations != null) {
+        if (this.rotations != null && !Nonsense.module(Scaffold.class).isToggled()) {
             RotationsComponent.updateServerRotations(this.rotations);
         }
     };
@@ -397,12 +402,17 @@ public class KillAura extends Module {
             double y = MathUtil.lerp(mc.thePlayer.lastTickPosY, mc.thePlayer.posY, event.delta);
             double z = MathUtil.lerp(mc.thePlayer.lastTickPosZ, mc.thePlayer.posZ, event.delta);
 
-            int color = this.target != null && this.isTargetValid ? this.attackColor.getRGB() : Hud.color();
-
             if (this.rangeIndicator.is(RangeIndiactor.OUTLINE)) {
                 RenderUtil.drawRadius(x, y, z, this.playerRange.getDouble(), 100, 4.0F, ColorUtil.BLACK);
             }
-            RenderUtil.drawRadius(x, y, z, this.playerRange.getDouble(), 100, 2.0F, color);
+
+            if (this.target != null && this.isTargetValid) {
+                RenderUtil.drawRadius(x, y, z, this.playerRange.getDouble(), 100, 2.0F, this.attackColor.getRGB());
+            } else if (Hud.enableSecondary()) {
+                RenderUtil.drawRadius(x, y, z, this.playerRange.getDouble(), 100, 2.0F, Hud.color(), Hud.secondary());
+            } else {
+                RenderUtil.drawRadius(x, y, z, this.playerRange.getDouble(), 100, 2.0F, Hud.color());
+            }
         }
     };
 

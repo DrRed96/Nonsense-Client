@@ -729,8 +729,8 @@ public abstract class EntityPlayer extends EntityLivingBase
             this.inventory.dropAllItems();
         }
 
-        this.motionX = -MathHelper.cos((this.attackedAtYaw + this.movementYaw) * (float) Math.PI / 180.0F) * 0.1F;
-        this.motionZ = -MathHelper.sin((this.attackedAtYaw + this.movementYaw) * (float)Math.PI / 180.0F) * 0.1F;
+        this.motionX = -MathHelper.cos((this.attackedAtYaw + (this.isClientPlayer() ? this.movementYaw : this.rotationYaw)) * (float) Math.PI / 180.0F) * 0.1F;
+        this.motionZ = -MathHelper.sin((this.attackedAtYaw + (this.isClientPlayer() ? this.movementYaw : this.rotationYaw)) * (float)Math.PI / 180.0F) * 0.1F;
 
         this.triggerAchievement(StatList.deathsStat);
         this.func_175145_a(StatList.timeSinceDeathStat);
@@ -860,8 +860,8 @@ public abstract class EntityPlayer extends EntityLivingBase
             else
             {
                 float f2 = 0.3F;
-                entityitem.motionX = (double)(-MathHelper.sin(this.movementYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI) * f2);
-                entityitem.motionZ = (double)(MathHelper.cos(this.movementYaw / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI) * f2);
+                entityitem.motionX = (double)(-MathHelper.sin((this.isClientPlayer() ? this.movementYaw : this.rotationYaw) / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI) * f2);
+                entityitem.motionZ = (double)(MathHelper.cos((this.isClientPlayer() ? this.movementYaw : this.rotationYaw) / 180.0F * (float)Math.PI) * MathHelper.cos(this.rotationPitch / 180.0F * (float)Math.PI) * f2);
                 entityitem.motionY = (double)(-MathHelper.sin(this.rotationPitch / 180.0F * (float)Math.PI) * f2 + 0.1F);
                 float f3 = this.rand.nextFloat() * (float)Math.PI * 2.0F;
                 f2 = 0.02F * this.rand.nextFloat();
@@ -1331,9 +1331,9 @@ public abstract class EntityPlayer extends EntityLivingBase
                         if (knockback > 0)
                         {
                             targetEntity.addVelocity(
-                                    -MathHelper.sin(this.movementYaw * (float)Math.PI / 180.0F) * (float)knockback * 0.5F,
+                                    -MathHelper.sin((this.isClientPlayer() ? this.movementYaw : this.rotationYaw) * (float)Math.PI / 180.0F) * (float)knockback * 0.5F,
                                     0.1D,
-                                    MathHelper.cos(this.movementYaw * (float)Math.PI / 180.0F) * (float)knockback * 0.5F
+                                    MathHelper.cos((this.isClientPlayer() ? this.movementYaw : this.rotationYaw) * (float)Math.PI / 180.0F) * (float)knockback * 0.5F
                             );
 
                             if (!Nonsense.module(Sprint.class).keepSprint()) {

@@ -4,6 +4,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.component.impl.packet.PingComponent;
 import wtf.bhopper.nonsense.component.impl.world.TickRateComponent;
 import wtf.bhopper.nonsense.module.impl.visual.HudMod;
 import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
@@ -124,6 +125,7 @@ public class Watermark implements IMinecraft {
 
         return mod.watermarkText.get()
                 .replace("%fps%", Integer.toString(Minecraft.getDebugFPS()))
+                .replace("%ping%", Long.toString(PingComponent.getPing()))
                 .replace("%tps%", TPS_FORMAT.format(Nonsense.component(TickRateComponent.class).getTickRate()))
                 .replace("%time%", DATE_FORMAT.format(new Date()))
                 .replace("%server%", mc.isSingleplayer() || mc.getCurrentServerData() == null ? "Singleplayer" : mc.getCurrentServerData().serverIP);
