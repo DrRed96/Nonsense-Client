@@ -18,6 +18,8 @@ import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
 import wtf.bhopper.nonsense.util.minecraft.player.MoveUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.PacketUtil;
 
+import java.util.function.Supplier;
+
 @ModuleInfo(name = "Step",
         description = "Allows you to step up blocks",
         category = ModuleCategory.MOVEMENT)
@@ -26,7 +28,7 @@ public class Step extends Module {
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Step method", Mode.VANILLA);
     private final NumberProperty height = new NumberProperty("Height", "Step height", () -> this.mode.is(Mode.VANILLA), 1.0, 1.0, 10.0, 0.5);
 
-    private final GroupProperty timerGroup = new GroupProperty("Timer", "Uses timer to help bypass", this);
+    private final GroupProperty timerGroup = new GroupProperty("Timer", "Uses timer to help bypass", this, () -> !this.mode.is(Mode.WATCHDOG));
     private final BooleanProperty timerEnable = new BooleanProperty("Enable", "Enable timer", false);
     private final NumberProperty timerSpeed = new NumberProperty("Speed", "Timer speed", 0.55F, 0.1F, 1.0F, 0.05F);
     private final BooleanProperty speedDisable = new BooleanProperty("Speed Disable", "Disables step when using speed.", true);
@@ -36,6 +38,7 @@ public class Step extends Module {
     private boolean resetTimer = false;
 
     public Step() {
+        super();
         this.timerGroup.addProperties(this.timerEnable, this.timerSpeed);
         this.addProperties(this.mode, this.height, this.timerGroup, this.speedDisable, this.packets);
         this.setSuffix(this.mode::getDisplayValue);

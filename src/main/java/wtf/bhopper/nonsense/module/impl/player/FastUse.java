@@ -12,7 +12,9 @@ import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
 import wtf.bhopper.nonsense.util.minecraft.player.PacketUtil;
 
-@ModuleInfo(name = "Fast Use", description = "Use items faster", category = ModuleCategory.PLAYER)
+@ModuleInfo(name = "Fast Use",
+        description = "Use items faster",
+        category = ModuleCategory.PLAYER)
 public class FastUse extends Module {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Fast use method", Mode.PACKET);
@@ -22,7 +24,7 @@ public class FastUse extends Module {
     private boolean timerSetback;
 
     public FastUse() {
-        this.autoAddProperties();
+        super();
     }
 
     @Override

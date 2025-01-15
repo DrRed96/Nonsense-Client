@@ -18,10 +18,14 @@ public class AltManager {
 
     public static LoginThread loginThread = null;
 
+    private final File altsFile;
+
     // Because the account login is done in a separate thread a CopyOnWriteArrayList is used for thread safety
     public Map<UUID, Alt> alts = new LinkedHashMap<>();
 
-    public AltManager() {}
+    public AltManager() {
+        this.altsFile = new File(Nonsense.getDataDir(), "alts.json");
+    }
 
     public Alt getFromUuid(UUID uuid) {
         return alts.getOrDefault(uuid, null);
@@ -44,8 +48,7 @@ public class AltManager {
     public void load() throws IOException {
         alts.clear();
 
-        File file = new File(Nonsense.getDataDir(), "alts.json");
-        JsonObject json = JsonUtil.readFromFile(file);
+        JsonObject json = JsonUtil.readFromFile(this.altsFile);
 
         JsonArray alts = json.getAsJsonArray("alts");
         for (JsonElement altElement : alts) {
@@ -65,7 +68,6 @@ public class AltManager {
 
     public void save() throws IOException {
 
-        File file = Nonsense.getDataDir().toPath().resolve("alts.json").toFile();
         JsonObject json = new JsonObject();
         JsonArray alts = new JsonArray();
 
@@ -74,7 +76,7 @@ public class AltManager {
         }
 
         json.add("alts", alts);
-        JsonUtil.writeToFile(json, file);
+        JsonUtil.writeToFile(json, this.altsFile);
     }
 
     public void trySave() {

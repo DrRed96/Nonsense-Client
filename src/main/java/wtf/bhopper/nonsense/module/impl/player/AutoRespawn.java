@@ -9,7 +9,9 @@ import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 
-@ModuleInfo(name = "Auto Respawn", description = "Automatically respawns you upon death.", category = ModuleCategory.PLAYER)
+@ModuleInfo(name = "Auto Respawn",
+        description = "Automatically respawns you upon death.",
+        category = ModuleCategory.PLAYER)
 public class AutoRespawn extends Module {
 
     @EventLink

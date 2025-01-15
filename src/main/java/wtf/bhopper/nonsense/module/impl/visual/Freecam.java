@@ -66,6 +66,7 @@ public class Freecam extends Module {
     private int slot = 0;
 
     public Freecam() {
+        super();
         this.nukerGroup.addProperties(this.nukerRadius, this.pathMode);
         this.addProperties(this.speed, this.autoRefresh, this.nukerGroup);
         this.setHidden(false);

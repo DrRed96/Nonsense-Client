@@ -21,7 +21,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.impl.client.EventJoinServer;
-import wtf.bhopper.nonsense.gui.screens.NonsenseMainMenu;
 import wtf.bhopper.nonsense.util.minecraft.world.ServerUtil;
 
 public class GuiConnecting extends GuiScreen {
@@ -31,12 +30,9 @@ public class GuiConnecting extends GuiScreen {
     private boolean cancel;
     private final GuiScreen previousGuiScreen;
 
-    private final String tip;
-
     public GuiConnecting(GuiScreen parentScreen, Minecraft mcIn, ServerData serverData) {
         this.mc = mcIn;
         this.previousGuiScreen = parentScreen;
-        this.tip = NonsenseMainMenu.randomTip();
         ServerAddress serveraddress = ServerAddress.fromString(serverData.serverIP);
         mcIn.loadWorld(null);
         mcIn.setServerData(serverData);
@@ -46,7 +42,6 @@ public class GuiConnecting extends GuiScreen {
     public GuiConnecting(GuiScreen parentScreen, Minecraft mcIn, String hostName, int port) {
         this.mc = mcIn;
         this.previousGuiScreen = parentScreen;
-        this.tip = NonsenseMainMenu.randomTip();
         mcIn.loadWorld(null);
         this.connect(hostName, port);
     }
@@ -152,8 +147,6 @@ public class GuiConnecting extends GuiScreen {
         } else {
             this.drawCenteredString(this.fontRendererObj, I18n.format("connect.authorizing"), this.width / 2, this.height / 2 - 50, 0xffffff);
         }
-
-        this.drawCenteredString(this.fontRendererObj, "\247fTip: \247r" + this.tip, this.width / 2, this.height / 2 + 20, 0xAAAAAA);
 
         super.drawScreen(mouseX, mouseY, partialTicks);
     }

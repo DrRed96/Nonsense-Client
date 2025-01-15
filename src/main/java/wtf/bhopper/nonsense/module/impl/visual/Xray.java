@@ -13,7 +13,9 @@ import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
 import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 
-@ModuleInfo(name = "Xray", description = "Allows you to see ores thought blocks", category = ModuleCategory.VISUAL)
+@ModuleInfo(name = "Xray",
+        description = "Allows you to see ores thought blocks",
+        category = ModuleCategory.VISUAL)
 public class Xray extends Module {
 
     private final GroupProperty ores = new GroupProperty("Ores", "Ores to be rendered", this);
@@ -24,6 +26,7 @@ public class Xray extends Module {
     private float lastGamma;
 
     public Xray() {
+        super();
         this.ores.addProperties(this.diamond);
         this.addProperties(this.ores, this.opacity);
     }

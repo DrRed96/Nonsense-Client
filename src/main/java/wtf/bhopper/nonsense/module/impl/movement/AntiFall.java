@@ -31,6 +31,7 @@ public class AntiFall extends Module {
     private BlockPos lastGroundPos = null;
 
     public AntiFall() {
+        super();
         this.addProperties(this.mode, this.height, this.voidOnly, this.scaffold);
         this.setSuffix(this.mode::getDisplayValue);
     }

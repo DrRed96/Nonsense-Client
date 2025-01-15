@@ -23,7 +23,9 @@ import wtf.bhopper.nonsense.util.render.RenderUtil;
 
 import static org.lwjgl.opengl.GL11.*;
 
-@ModuleInfo(name = "Tracers", description = "Draws a line to nearby entities", category = ModuleCategory.VISUAL)
+@ModuleInfo(name = "Tracers",
+        description = "Draws a line to nearby entities",
+        category = ModuleCategory.VISUAL)
 public class Tracers extends Module {
 
     private final GroupProperty targetsGroup = new GroupProperty("Targets", "What entities Tracers should render", this);
@@ -38,6 +40,7 @@ public class Tracers extends Module {
     private final NumberProperty lineWidth = new NumberProperty("Line Width", "Width of the tracer lines", 1.5F, 0.5F, 3.0F, 0.5F);
 
     public Tracers() {
+        super();
         this.targetsGroup.addProperties(this.players, this.mobs, this.animals, this.others, this.invis);
         this.addProperties(this.targetsGroup, this.colorMode, this.color, this.lineWidth);
     }

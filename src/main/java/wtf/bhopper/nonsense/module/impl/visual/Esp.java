@@ -37,7 +37,9 @@ import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.*;
 
-@ModuleInfo(name = "ESP", description = "Gives you extrasensory perception", category = ModuleCategory.VISUAL)
+@ModuleInfo(name = "ESP",
+        description = "Gives you extrasensory perception",
+        category = ModuleCategory.VISUAL)
 public class Esp extends Module {
 
     private static final NumberFormat HEALTH_FORMAT = new DecimalFormat("#0.#");
@@ -74,6 +76,7 @@ public class Esp extends Module {
     private final List<RenderEntity> renderEntities = new ArrayList<>();
 
     public Esp() {
+        super();
         this.targetsGroup.addProperties(this.players, this.mobs, this.animals, this.others, this.invis, this.self);
         this.boxGroup.addProperties(this.boxEnable, this.boxCorners, this.boxOutline, this.boxCornerFactor, this.boxColor);
         this.nameGroup.addProperties(this.nameEnable, this.nameColor, this.displayNames, this.nameHealth, this.nameBackground, this.nameOutline, this.heldItem);
@@ -88,11 +91,8 @@ public class Esp extends Module {
         if (PlayerUtil.canUpdate()) {
             this.renderEntities.addAll(mc.theWorld.getEntities(EntityLivingBase.class, this::isValidEntity)
                     .stream()
-                    .collect(
-                            ArrayList::new,
-                            (renderEntities, entityLivingBase) -> renderEntities.add(new RenderEntity(entityLivingBase)),
-                            Collection::addAll
-                    )
+                    .map(RenderEntity::new)
+                    .toList()
             );
             this.renderEntities.sort(Comparator.<RenderEntity>comparingDouble(value -> mc.thePlayer.getDistanceToEntity(value.entity)).reversed());
         }
@@ -237,10 +237,10 @@ public class Esp extends Module {
             }
 
             entityRenderer.setupOverlayRendering();
-            this.startX = (int)position.x;
-            this.startY = (int)position.y;
-            this.endX = (int)position.z;
-            this.endY = (int)position.w;
+            this.startX = (int) position.x;
+            this.startY = (int) position.y;
+            this.endX = (int) position.z;
+            this.endY = (int) position.w;
             this.width = this.endX - this.startX;
             this.height = this.endY - this.startY;
 
@@ -280,7 +280,7 @@ public class Esp extends Module {
                     NVGHelper.drawRect(-1.0F, ih - 1.0F, 3.0F, h + 2.0F, ColorUtil.BLACK);
 
                     // Bottom Right
-                    NVGHelper.drawRect(iw - 1.0F, this.height  - 1.0F, w + 2.0F, 3.0F, ColorUtil.BLACK);
+                    NVGHelper.drawRect(iw - 1.0F, this.height - 1.0F, w + 2.0F, 3.0F, ColorUtil.BLACK);
                     NVGHelper.drawRect(this.width - 1.0F, ih - 1.0F, 3.0F, h + 2.0F, ColorUtil.BLACK);
                 }
 

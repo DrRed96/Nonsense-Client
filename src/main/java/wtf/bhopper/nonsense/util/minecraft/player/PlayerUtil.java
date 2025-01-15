@@ -5,6 +5,7 @@ import net.minecraft.block.BlockAir;
 import net.minecraft.block.BlockHopper;
 import net.minecraft.block.BlockLiquid;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Blocks;
 import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C0APacketAnimation;
 import net.minecraft.potion.Potion;
@@ -75,6 +76,19 @@ public class PlayerUtil implements IMinecraft {
 
     public static boolean isBlockUnder() {
         return isBlockUnder(mc.thePlayer.posY + mc.thePlayer.getEyeHeight());
+    }
+
+    public static Block getBlockUnder() {
+        return getBlockUnder(1);
+    }
+
+    public static Block getBlockUnder(int offset) {
+        return BlockUtil.getBlock(mc.thePlayer.getPosition().add(0, -offset, 0));
+    }
+
+    public static boolean isOnIce() {
+        Block block = getBlockUnder();
+        return block == Blocks.ice || block == Blocks.packed_ice;
     }
 
     public static boolean isInLiquid() {

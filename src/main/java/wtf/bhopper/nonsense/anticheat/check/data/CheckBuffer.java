@@ -1,6 +1,6 @@
 package wtf.bhopper.nonsense.anticheat.check.data;
 
-public class AbstractCheckBuffer implements ICheckData {
+public abstract class CheckBuffer implements ICheckData {
 
     float buffer;
 

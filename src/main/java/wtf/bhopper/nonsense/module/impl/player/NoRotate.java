@@ -25,6 +25,7 @@ public class NoRotate extends Module {
     private Rotation rotation = null;
 
     public NoRotate() {
+        super();
         this.addProperties(this.mode);
     }
 

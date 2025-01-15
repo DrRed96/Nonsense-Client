@@ -33,7 +33,9 @@ import java.util.List;
 import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.opengl.GL11.GL_LINES;
 
-@ModuleInfo(name = "Auto Cops And Crims", description = "Aims for you in cops and crims", category = ModuleCategory.COMBAT)
+@ModuleInfo(name = "Auto Cops And Crims",
+        description = "Aims for you in cops and crims",
+        category = ModuleCategory.COMBAT)
 public class AutoCopsAndCrims extends Module {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Aiming method", Mode.DYNAMIC);
@@ -44,7 +46,8 @@ public class AutoCopsAndCrims extends Module {
     private boolean firstShot = true;
 
     public AutoCopsAndCrims() {
-        this.autoAddProperties();
+        super();
+        this.addProperties(this.mode, this.sorting, this.range);
         this.setSuffix(this.mode::getDisplayValue);
     }
 

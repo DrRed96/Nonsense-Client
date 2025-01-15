@@ -25,7 +25,9 @@ import wtf.bhopper.nonsense.util.render.RenderUtil;
 
 import static org.lwjgl.opengl.GL11.*;
 
-@ModuleInfo(name = "Chams", description = "Allows you to see entities through walls", category = ModuleCategory.VISUAL)
+@ModuleInfo(name = "Chams",
+        description = "Allows you to see entities through walls",
+        category = ModuleCategory.VISUAL)
 public class Chams extends Module {
 
     private final GroupProperty targetsGroup = new GroupProperty("Targets", "What entities Chams should render", this);
@@ -41,6 +43,7 @@ public class Chams extends Module {
     private final BooleanProperty lighting = new BooleanProperty("Lighting", "Displays lighting on the entities", false, () -> this.mode.is(Mode.COLORED));
 
     public Chams() {
+        super();
         this.targetsGroup.addProperties(this.players, this.mobs, this.animals, this.others, this.invis);
         this.addProperties(this.targetsGroup, this.mode, this.color, this.colorInvis, this.lighting);
     }

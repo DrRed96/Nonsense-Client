@@ -16,7 +16,9 @@ import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 
 import java.util.List;
 
-@ModuleInfo(name = "Scoreboard", description = "Improves the scoreboard", category = ModuleCategory.VISUAL)
+@ModuleInfo(name = "Scoreboard",
+        description = "Improves the scoreboard",
+        category = ModuleCategory.VISUAL)
 public class ScoreboardMod extends Module {
 
     private final BooleanProperty shadow = new BooleanProperty("Shadow", "Draws a drop shadow on the text.", true);
@@ -26,7 +28,8 @@ public class ScoreboardMod extends Module {
     private final BooleanProperty moduleListFix = new BooleanProperty("Module List Fix", "Prevents the scoreboard from overlapping with the module list", true);
 
     public ScoreboardMod() {
-        this.autoAddProperties();
+        super();
+        this.addProperties(this.shadow, this.noScore, this.noBackground, this.novoline, this.moduleListFix);
     }
 
     public void drawScoreboard(ScaledResolution scaledRes, ScoreObjective objective, Scoreboard scoreboard, List<Score> scores, int minY) {

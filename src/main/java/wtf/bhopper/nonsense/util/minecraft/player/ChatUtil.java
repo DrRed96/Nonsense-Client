@@ -21,11 +21,11 @@ public class ChatUtil implements IMinecraft {
     public static final String IRC_PREFIX = "\2476\247lIRC \247r";
 
     public static void raw(IChatComponent message) {
-        mc.thePlayer.addChatMessage(message);
+        mc.ingameGUI.getChatGUI().printChatMessage(message);
     }
 
     public static void raw(String message) {
-        mc.thePlayer.addChatMessage(new ChatComponentText(message));
+        mc.ingameGUI.getChatGUI().printChatMessage(new ChatComponentText(message));
     }
 
     public static void print(String message, Object... args) {

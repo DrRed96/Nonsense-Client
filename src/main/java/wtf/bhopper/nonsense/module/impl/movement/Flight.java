@@ -58,6 +58,7 @@ public class Flight extends Module {
     private final Stopwatch timerClock = new Stopwatch();
 
     public Flight() {
+        super();
         this.boostGroup.addProperties(this.useBoost, this.useTimer, this.timerFactor, this.timerTime, this.damage, this.timerStart, this.pushUp, this.quickStop);
         this.addProperties(this.mode, this.speedSet, this.hSpeed, this.vSpeed, this.boostGroup, this.viewBobbing);
         this.setSuffix(this.mode::getDisplayValue);
@@ -124,18 +125,6 @@ public class Flight extends Module {
                 }
             }
 
-            case NCP_GLIDE -> {
-                MoveUtil.vertical(event, -0.0222);
-                PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(
-                        mc.thePlayer.posX + mc.thePlayer.motionX,
-                        mc.thePlayer.posY + mc.thePlayer.motionY,
-                        mc.thePlayer.posZ + mc.thePlayer.motionZ,
-                        false
-                ));
-                PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, false));
-                PacketUtil.send(new C03PacketPlayer.C04PacketPlayerPosition(mc.thePlayer.posX, mc.thePlayer.posY, mc.thePlayer.posZ, true));
-            }
-
             case MINIBLOX -> {
                 if (this.ticks >= 6) {
                     MoveUtil.setSpeed(event, 0.0);
@@ -163,12 +152,12 @@ public class Flight extends Module {
                                 case MINIMAL -> PlayerUtil.selfDamageMinimal();
                                 case NONE -> mc.thePlayer.onGround;
                             }) {
-                                this.stage = 1;
-                                this.speed = this.speedSet.get();
-                                if (this.pushUp.get()) {
-                                    MoveUtil.vertical(event, MoveUtil.jumpHeight());
-                                }
+                                this.speed = this.speedSet.get() * 0.5;
+                                MoveUtil.setSpeed(event, this.speed);
+
                                 mc.timer.timerSpeed = this.timerStart.getFloat();
+
+                                this.stage = 1;
                             }
                         }
                     }
@@ -182,26 +171,33 @@ public class Flight extends Module {
                             mc.timer.timerSpeed = 1.0F;
                         }
 
-                        MoveUtil.setSpeed(event, speed);
-                        MoveUtil.vertical(event, 0.0);
-                        stage = 2;
+                        this.speed *= 2.149;
+                        MoveUtil.setSpeed(event, this.speed);
+
+                        if (this.pushUp.get()) {
+                            MoveUtil.vertical(event, MoveUtil.jumpHeight());
+                        } else {
+                            MoveUtil.vertical(event, 0.0);
+                        }
+                        this.stage = 2;
                     }
 
                     case 2 -> {
-                        if (this.useTimer.isAny(Timer.ON_BOOST, Timer.ALWAYS)) {
-                            if (this.timerClock.hasReached(this.timerTime.getInt()) && !this.useTimer.is(Timer.ALWAYS)) {
-                                if (!this.stopTimer) {
-                                    this.stopTimer = true;
-                                    mc.timer.timerSpeed = 1.0F;
-                                }
-                            } else {
-                                mc.timer.timerSpeed = this.timerFactor.getFloat();
-                            }
-                        }
+                        this.boostTimer();
 
-                        speed = lastDist - lastDist / MoveUtil.NCP_FRICTION;
-                        speed = Math.max(speed, MoveUtil.baseSpeed());
-                        MoveUtil.setSpeed(event, speed);
+                        this.speed = this.speedSet.getDouble();
+                        MoveUtil.setSpeed(event, this.speed);
+                        MoveUtil.vertical(event, 0.0);
+
+                        this.stage = 3;
+                    }
+
+                    case 3 -> {
+                        this.boostTimer();
+
+                        this.speed = this.lastDist - this.lastDist / MoveUtil.NCP_FRICTION;
+                        this.speed = Math.max(this.speed, MoveUtil.baseSpeed());
+                        MoveUtil.setSpeed(event, this.speed);
                         MoveUtil.vertical(event, 0.0);
                     }
                 }
@@ -211,10 +207,6 @@ public class Flight extends Module {
 
     @EventLink
     public final Listener<EventPreMotion> onPre = event -> {
-
-        switch (this.mode.get()) {
-            case NCP_GLIDE -> event.onGround = true;
-        }
 
         this.lastDist = MoveUtil.lastDistance();
 
@@ -235,9 +227,21 @@ public class Flight extends Module {
         }
     };
 
+    private void boostTimer() {
+        if (this.useTimer.isAny(Timer.ON_BOOST, Timer.ALWAYS)) {
+            if (this.timerClock.hasReached(this.timerTime.getInt()) && !this.useTimer.is(Timer.ALWAYS)) {
+                if (!this.stopTimer) {
+                    this.stopTimer = true;
+                    mc.timer.timerSpeed = 1.0F;
+                }
+            } else {
+                mc.timer.timerSpeed = this.timerFactor.getFloat();
+            }
+        }
+    }
+
     private enum Mode {
         VANILLA,
-        @DisplayName("NCP Glide") NCP_GLIDE,
         MINIBLOX,
         @Description("\"Wow arithmo i like how flokcks go ZOOM make me ZOOOM.\" - Brain dead Kid") BOOST
     }

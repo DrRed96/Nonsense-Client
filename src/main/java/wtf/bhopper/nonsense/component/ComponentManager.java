@@ -14,7 +14,7 @@ import java.util.Arrays;
 
 public class ComponentManager {
 
-    private final ClassToInstanceMap<Component> components;
+    private final ImmutableClassToInstanceMap<Component> components;
 
     public ComponentManager() {
         this.components = addComponents(
@@ -34,7 +34,7 @@ public class ComponentManager {
     }
 
     @SuppressWarnings("unchecked")
-    private ClassToInstanceMap<Component> addComponents(Component... components) {
+    private ImmutableClassToInstanceMap<Component> addComponents(Component... components) {
         ImmutableClassToInstanceMap.Builder<Component> builder = ImmutableClassToInstanceMap.builder();
         Arrays.stream(components).forEach(component -> builder.put((Class<Component>) component.getClass(), component));
         return builder.build();

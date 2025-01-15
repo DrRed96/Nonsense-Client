@@ -39,13 +39,11 @@ public class ItemAnimations extends Module {
     private final EnumProperty<BlockAnimation> blockAnimation = new EnumProperty<>("Animation", "Sword blocking animation.", BlockAnimation.DEFAULT);
     private final NumberProperty equipAnimation = new NumberProperty("Equip Animation", "Crontrols the animation played when your item is updated.", 0.5, 0.0, 1.0, 0.05);
 
-    private final GroupProperty swingGroup = new GroupProperty("Swinging", "Modify item/arm swinging", this);
-    private final NumberProperty normalSwingSpeed = new NumberProperty("Normal Speed", "Normal swing speed", 6, 1, 15, 1);
-    private final NumberProperty usingSwingSpeed = new NumberProperty("Using Speed", "Using swing speed", 6, 1, 15, 1);
-
+    private final NumberProperty swingSpeed = new NumberProperty("Swing Speed", "Swinging speed (6 is vanilla)", 6, 1, 20, 1);
     private final BooleanProperty oldTransform = new BooleanProperty("Old Transform", "Applies the 1.7 item transformations", false);
 
     public ItemAnimations() {
+        super();
 
         this.usePos.addProperties(this.useX, this.useY, this.useZ);
         this.normPos.addProperties(this.normX, this.normY, this.normZ);
@@ -53,9 +51,7 @@ public class ItemAnimations extends Module {
 
         this.swordGroup.addProperties(this.blockAnimation, this.equipAnimation);
 
-        this.swingGroup.addProperties(this.normalSwingSpeed, this.usingSwingSpeed);
-
-        this.addProperties(this.posGroup, this.swordGroup, this.swingGroup, this.oldTransform);
+        this.addProperties(this.posGroup, this.swordGroup, this.swingSpeed, this.oldTransform);
     }
 
     public void transformFirstPersonItem(float equipProgress, float swingProgress) {
@@ -255,10 +251,12 @@ public class ItemAnimations extends Module {
 
     public int getArmSwingEnd(EntityLivingBase entity) {
         if (!entity.isClientPlayer() || !this.isToggled()) {
+            // Only modify for the client entity,
+            // modifying the swing speed of other entities my conflict with some of the checks in Anti Cheat
             return 6;
         }
 
-        return ((EntityPlayer)entity).isUsingItem() ? this.usingSwingSpeed.getInt() : this.normalSwingSpeed.getInt();
+        return this.swingSpeed.getInt();
     }
 
 

@@ -22,6 +22,7 @@ public class Sprint extends Module {
     private final EnumProperty<ServerState> serverState = new EnumProperty<>("Server State", "Server sprinting state", ServerState.DEFAULT);
 
     public Sprint() {
+        super();
         this.addProperties(this.omniSprint, this.keepSprint, this.serverState);
     }
 

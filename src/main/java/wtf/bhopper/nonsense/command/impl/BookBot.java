@@ -1,5 +1,6 @@
 package wtf.bhopper.nonsense.command.impl;
 
+import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -16,6 +17,7 @@ import wtf.bhopper.nonsense.util.misc.GeneralUtil;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.function.Function;
 
 @CommandInfo(name = "BookBot", description = "Fills a book and quill with jumbled nonsense.", syntax = ".bookbot")
 public class BookBot extends Command {
@@ -35,7 +37,8 @@ public class BookBot extends Command {
         }
 
         List<String> pages = pagesJson.stream()
-                .collect(ArrayList::new, (strings, jsonObject) -> strings.add(jsonObject.toString()), List::addAll);
+                .map(JsonElement::toString)
+                .toList();
 
         NBTTagList pagesNbt = new NBTTagList();
         for (String page : pages) {

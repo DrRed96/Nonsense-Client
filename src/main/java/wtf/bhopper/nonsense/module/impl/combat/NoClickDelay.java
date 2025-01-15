@@ -8,7 +8,9 @@ import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 
-@ModuleInfo(name = "No Click Delay", description = "Removes the click delay after missing an attack", category = ModuleCategory.COMBAT)
+@ModuleInfo(name = "No Click Delay",
+        description = "Removes the click delay after missing an attack",
+        category = ModuleCategory.COMBAT)
 public class NoClickDelay extends Module {
 
     @EventLink

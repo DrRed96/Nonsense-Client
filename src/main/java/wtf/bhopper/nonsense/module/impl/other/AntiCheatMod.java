@@ -25,6 +25,7 @@ public class AntiCheatMod extends Module {
     private final Map<Check, BooleanProperty> checkProperties = new ConcurrentHashMap<>();
 
     public AntiCheatMod() {
+        super();
         this.addProperties(this.checksGroup);
     }
 

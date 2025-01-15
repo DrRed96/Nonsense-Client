@@ -37,6 +37,7 @@ public class NoSlow extends Module {
     private boolean ncpBlock = false;
 
     public NoSlow() {
+        super();
         this.addProperties(this.mode, this.sprintReset, this.spoofMode, this.groundCheck);
         this.setSuffix(this.mode::getDisplayValue);
     }

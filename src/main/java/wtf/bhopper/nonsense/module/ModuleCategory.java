@@ -8,7 +8,8 @@ public enum ModuleCategory {
     PLAYER("Player", 0xAA55AA, "player.png"),
     EXPLOIT("Exploit", 0x55AAFF, "exploit.png"),
     OTHER("Other", 0xFFAA00, "other.png"),
-    VISUAL("Visual", 0x0000AA, "visual.png");
+    VISUAL("Visual", 0x0000AA, "visual.png"),
+    SCRIPT("Script", 0xFFFF55, "scripts.png");
 
     public final String name;
     public final int color;

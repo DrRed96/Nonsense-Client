@@ -34,7 +34,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Queue;
 
-@ModuleInfo(name = "Debugger", description = "Module to help with debugging.", category = ModuleCategory.OTHER)
+@ModuleInfo(name = "Debugger",
+        description = "Module to help with debugging.",
+        category = ModuleCategory.OTHER)
 public class Debugger extends Module {
 
     private final GroupProperty loggingGroup = new GroupProperty("Logging", "Logs things in chat", this);
@@ -51,6 +53,7 @@ public class Debugger extends Module {
     private final Queue<PacketInfo> packetCache = EvictingQueue.create(100);
 
     public Debugger() {
+        super();
 
         for (int i = 0; ; i++) {
             try {

@@ -30,6 +30,7 @@ public class NoFall extends Module {
     private boolean timerSetBack = false;
 
     public NoFall() {
+        super();
         this.addProperties(this.mode, this.timer);
         this.setSuffix(this.mode::getDisplayValue);
     }

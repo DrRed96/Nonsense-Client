@@ -13,8 +13,10 @@ import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
+import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
 import wtf.bhopper.nonsense.util.minecraft.player.MoveUtil;
+import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 import wtf.bhopper.nonsense.util.misc.Stopwatch;
 
 @ModuleInfo(name = "Speed",
@@ -25,11 +27,15 @@ public class Speed extends Module {
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Method for speed.", Mode.VANILLA);
     private final NumberProperty speedSet = new NumberProperty("Speed", "Move speed.", () -> this.mode.is(Mode.VANILLA), 1.0, 0.1, 3.0, 0.01);
     private final BooleanProperty jump = new BooleanProperty("Jump", "Automatically Jumps", false, () -> this.mode.isAny(Mode.VANILLA, Mode.MINIBLOX));
-    private final NumberProperty bhopSpeed = new NumberProperty("Bhop Speed", "Speed for Bhop Mode.\n1.6 will bypass NCP", () -> this.mode.isAny(Mode.BHOP, Mode.LOW_HOP), 1.6, 0.0, 3.0, 0.01);
+
+    private final GroupProperty bhopGroup = new GroupProperty("Bhop", "Bhop properties.", this, () -> this.mode.isAny(Mode.BHOP, Mode.LOW_HOP));
+
+    private final NumberProperty bhopSpeed = new NumberProperty("Speed", "Speed for Bhop Mode.\n1.6 will bypass NCP", 1.6, 0.0, 3.0, 0.01);
     private final NumberProperty jumpHeight = new NumberProperty("Jump Height", "Bhop jump height", () -> this.mode.is(Mode.BHOP), 0.4, 0.1, 1.0, 0.01);
-    private final BooleanProperty bhopSlow = new BooleanProperty("Slow", "Slows you down more to help bypass", false, () -> this.mode.isAny(Mode.BHOP, Mode.LOW_HOP));
-    private final BooleanProperty limit = new BooleanProperty("Limit Speed", "Limits your speed, useful for servers with strict anti-cheats.", false, () -> this.mode.isAny(Mode.BHOP, Mode.LOW_HOP));
+    private final BooleanProperty bhopSlow = new BooleanProperty("Slow", "Slows you down more to help bypass", false);
+    private final BooleanProperty limit = new BooleanProperty("Limit", "Limits your speed, useful for servers with strict anti-cheats.", false);
     private final BooleanProperty damageBoost = new BooleanProperty("Damage Boost", "Boosts your speed when you get hit", false, () -> this.mode.is(Mode.BHOP));
+    private final BooleanProperty iceBoost = new BooleanProperty("Ice Boost", "Boosts your speed on ice.", true);
 
     private double speed = 0.0;
     private double lastDist = 0.0;
@@ -40,7 +46,9 @@ public class Speed extends Module {
     private final Stopwatch timer = new Stopwatch();
 
     public Speed() {
-        this.addProperties(this.mode, this.speedSet, this.jump, this.bhopSpeed, this.jumpHeight, this.bhopSlow, this.limit);
+        super();
+        this.bhopGroup.addProperties(this.bhopSpeed, this.jumpHeight, this.bhopSlow, this.limit, this.damageBoost, this.iceBoost);
+        this.addProperties(this.mode, this.speedSet, this.jump, this.bhopGroup);
         this.setSuffix(() -> {
             if (this.mode.is(Mode.BHOP) && this.bhopSlow.get()) {
                 return "Bhop Slow";
@@ -99,6 +107,9 @@ public class Speed extends Module {
                                 MoveUtil.vertical(event, MoveUtil.jumpHeight(this.jumpHeight.getDouble()));
                             }
                             this.speed *= this.bhopSpeed.getDouble();
+                            if (this.iceBoost.get() && PlayerUtil.isOnIce()) {
+                                this.speed *= MoveUtil.ICE_MOD;
+                            }
                             this.stage = 2;
                         }
                     }

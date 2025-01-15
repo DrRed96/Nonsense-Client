@@ -10,8 +10,11 @@ import java.lang.annotation.Target;
 public @interface CheckInfo {
 
     String name();
+
     String description();
+
     int maxVl();
+
     boolean enabled() default true;
 
 }

@@ -110,7 +110,7 @@ public class KillAura extends Module {
     }
     
     public KillAura() {
-
+        super();
         this.targetsGroup.addProperties(this.players, this.mobs, this.animals, this.others, this.invis, this.dead, this.teams, this.existed);
         this.rangeGroup.addProperties(this.playerRange, this.otherRange, this.rotRange, this.swingRange, this.fov);
         this.renderGroup.addProperties(this.rangeIndicator, this.attackColor);

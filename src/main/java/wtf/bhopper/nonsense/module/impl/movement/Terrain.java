@@ -22,6 +22,7 @@ public class Terrain extends Module {
     private final BooleanProperty water = new BooleanProperty("Water", "Prevents you from being pushed by flowing water", true);
 
     public Terrain() {
+        super();
         this.addProperties(this.soulSand, this.cobwebs, this.water);
     }
 

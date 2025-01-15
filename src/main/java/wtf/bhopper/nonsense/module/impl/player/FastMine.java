@@ -16,7 +16,9 @@ import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
 import wtf.bhopper.nonsense.util.minecraft.world.BlockUtil;
 
-@ModuleInfo(name = "Fast Mine", description = "Allows you to break blocks faster", category = ModuleCategory.PLAYER)
+@ModuleInfo(name = "Fast Mine",
+        description = "Allows you to break blocks faster",
+        category = ModuleCategory.PLAYER)
 public class FastMine extends Module {
 
     private final GroupProperty breakingGroup = new GroupProperty("Breaking", "Block breaking", this);
@@ -30,6 +32,7 @@ public class FastMine extends Module {
     private boolean timerSetBack = false;
 
     public FastMine() {
+        super();
         this.breakingGroup.addProperties(this.enableBreaking, this.breakingMode, this.multiplier, this.hitDelay);
         this.addProperties(this.breakingGroup, this.autoTool);
     }

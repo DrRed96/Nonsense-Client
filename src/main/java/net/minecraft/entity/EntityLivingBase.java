@@ -1150,7 +1150,7 @@ public abstract class EntityLivingBase extends Entity {
      * sets the amount of arrows stuck in the entity. used for rendering those
      */
     public final void setArrowCountInEntity(int count) {
-        this.dataWatcher.updateObject(9, Byte.valueOf((byte) count));
+        this.dataWatcher.updateObject(9, (byte) count);
     }
 
     /**

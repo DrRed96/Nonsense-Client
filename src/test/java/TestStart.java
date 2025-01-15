@@ -5,7 +5,7 @@ import java.util.Arrays;
 public class TestStart {
     public static void main(String[] args) {
         Main.main(concat(new String[]{
-                "--version", "mcp",
+                "--version", "Nonsense",
                 "--accessToken", "0",
                 "--gameDir", System.getenv("appdata").replace('\\', '/') + "/.minecraft",
                 "--assetsDir", "assets",

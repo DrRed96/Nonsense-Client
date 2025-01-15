@@ -23,7 +23,9 @@ import wtf.bhopper.nonsense.util.misc.Stopwatch;
 
 import java.util.regex.Pattern;
 
-@ModuleInfo(name = "Auto Hypixel", description = "Useful mods for Hypixel", category = ModuleCategory.OTHER)
+@ModuleInfo(name = "Auto Hypixel",
+        description = "Useful mods for Hypixel",
+        category = ModuleCategory.OTHER)
 public class AutoHypixel extends Module {
 
     // Taken from Sk1er AutoGG mod XD
@@ -62,6 +64,7 @@ public class AutoHypixel extends Module {
     private boolean joined = false;
 
     public AutoHypixel() {
+        super();
         this.autoPlay.addProperties(this.autoPlayEnable, this.autoPlayDelay);
         this.autoGg.addProperties(this.autoGgEnabled, this.autoGgMessage);
         this.addProperties(this.autoGg, this.cleanChat, this.lobbyJoin, this.autoTip);

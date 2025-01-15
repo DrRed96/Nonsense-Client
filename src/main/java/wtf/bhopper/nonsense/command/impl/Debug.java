@@ -115,7 +115,7 @@ public class Debug extends Command {
 
                 if (args.length >= 3) {
                     account = switch (args[2].toLowerCase()) {
-                        case "admin" -> Account.DEFAULT_ADMIN;
+                        case "admin", "owner" -> Account.DEFAULT_ADMIN;
                         case "moderator", "mod" -> Account.DEFAULT_MODERATOR;
                         default -> Account.DEFAULT_ACCOUNT;
                     };

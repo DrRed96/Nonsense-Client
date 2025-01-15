@@ -14,7 +14,9 @@ import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.util.minecraft.player.PacketUtil;
 
-@ModuleInfo(name = "Fast Bow", description = "Turns your bow into a machine gun.", category = ModuleCategory.COMBAT)
+@ModuleInfo(name = "Fast Bow",
+        description = "Turns your bow into a machine gun.",
+        category = ModuleCategory.COMBAT)
 public class FastBow extends Module {
 
     @EventLink

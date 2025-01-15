@@ -28,6 +28,7 @@ public class AntiAim extends Module {
     private float spinYaw = 0.0F;
 
     public AntiAim() {
+        super();
         this.addProperties(this.mode, this.pitchSet, this.speed, this.lockView);
         this.setSuffix(this.mode::getDisplayValue);
     }

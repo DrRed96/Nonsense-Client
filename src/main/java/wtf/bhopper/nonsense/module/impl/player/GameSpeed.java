@@ -18,6 +18,7 @@ public class GameSpeed extends Module {
     private final NumberProperty speed = new NumberProperty("Speed", "Game speed multiplier", 1.5, 0.1, 10.0, 0.01);
 
     public GameSpeed() {
+        super();
         this.addProperties(this.speed);
         this.setSuffix(this.speed::getDisplayValue);
     }

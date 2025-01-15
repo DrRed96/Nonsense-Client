@@ -27,6 +27,7 @@ public class LongJump extends Module {
     private int groundTicks = 1;
 
     public LongJump() {
+        super();
         this.addProperties(this.mode);
     }
 

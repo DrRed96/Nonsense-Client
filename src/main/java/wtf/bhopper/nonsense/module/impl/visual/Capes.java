@@ -19,7 +19,10 @@ import wtf.bhopper.nonsense.util.render.ColorUtil;
 import java.awt.*;
 import java.util.function.Supplier;
 
-@ModuleInfo(name = "Capes", description = "Client capes.", category = ModuleCategory.VISUAL, toggled = true)
+@ModuleInfo(name = "Capes",
+        description = "Client capes.",
+        category = ModuleCategory.VISUAL,
+        toggled = true)
 public class Capes extends Module {
 
     public final EnumProperty<Cape> cape = new EnumProperty<>("Cape", "There's too many of them...", Cape.NONSENSE);
@@ -29,6 +32,7 @@ public class Capes extends Module {
     private int frameCounter = 0;
 
     public Capes() {
+        super();
         this.addProperties(this.cape, this.glint);
         this.cape.addValueChangeListener((oldValue, value) -> this.frameCounter = 0);
     }

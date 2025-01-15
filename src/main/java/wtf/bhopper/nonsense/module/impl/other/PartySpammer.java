@@ -31,6 +31,7 @@ public class PartySpammer extends Module {
     private boolean inParty = false;
 
     public PartySpammer() {
+        super();
         this.addProperties(this.player, this.delay, this.cleanChat);
     }
 

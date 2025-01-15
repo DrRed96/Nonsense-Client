@@ -14,7 +14,9 @@ import wtf.bhopper.nonsense.module.property.impl.*;
 import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 import wtf.bhopper.nonsense.util.render.ColorUtil;
 
-@ModuleInfo(name = "Atmosphere", description = "Modifies the atmosphere", category = ModuleCategory.VISUAL)
+@ModuleInfo(name = "Atmosphere",
+        description = "Modifies the atmosphere",
+        category = ModuleCategory.VISUAL)
 public class Atmosphere extends Module {
 
     private final EnumProperty<FullBright> fullBright = new EnumProperty<>("Full Bright", "Method for brightness", FullBright.GAMMA);
@@ -37,6 +39,7 @@ public class Atmosphere extends Module {
     private boolean hadEffect;
 
     public Atmosphere() {
+        super();
         this.timeGroup.addProperties(this.timeEnable, this.timeMode, this.timeChange);
         this.weatherGroup.addProperties(this.weatherEnabled, this.weather);
         this.worldColorGroup.addProperties(this.worldColorEnable, this.worldColor);

@@ -45,6 +45,7 @@ public class ChatFilter extends Module {
     private final List<String> words = new ArrayList<>();
 
     public ChatFilter() {
+        super();
         this.addProperties(this.mode, this.wordCheck, this.frequency);
         this.setSuffix(this.mode::getDisplayValue);
 

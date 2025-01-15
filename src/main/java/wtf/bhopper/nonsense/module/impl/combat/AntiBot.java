@@ -17,7 +17,9 @@ import wtf.bhopper.nonsense.util.minecraft.world.ServerUtil;
 import java.util.HashSet;
 import java.util.Set;
 
-@ModuleInfo(name = "Anti Bot", description = "Prevents bot targeting", category = ModuleCategory.COMBAT)
+@ModuleInfo(name = "Anti Bot",
+        description = "Prevents bot targeting",
+        category = ModuleCategory.COMBAT)
 public class AntiBot extends Module {
 
     private static final String VALID_USERNAME_REGEX = "^[a-zA-Z0-9_]{1,16}+$";
@@ -27,6 +29,7 @@ public class AntiBot extends Module {
     private final Set<EntityPlayer> bots = new HashSet<>();
 
     public AntiBot() {
+        super();
         this.addProperties(this.mode);
         this.setSuffix(this.mode::getDisplayValue);
     }

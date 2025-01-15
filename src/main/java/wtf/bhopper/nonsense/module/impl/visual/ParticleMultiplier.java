@@ -8,14 +8,17 @@ import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
 
-@ModuleInfo(name = "Particle Multiplier", description = "Increases the amount of particles", category = ModuleCategory.VISUAL)
+@ModuleInfo(name = "Particle Multiplier",
+        description = "Increases the amount of particles",
+        category = ModuleCategory.VISUAL)
 public class ParticleMultiplier extends Module {
 
     private final NumberProperty critical = new NumberProperty("Critical", "Critical particles", 1, 1, 10, 1);
     private final NumberProperty enchantment = new NumberProperty("Enchantment", "Enchantment particles", 1, 1, 10, 1);
 
     public ParticleMultiplier() {
-        this.autoAddProperties();
+        super();
+        this.addProperties(this.critical, this.enchantment);
     }
 
     @EventLink

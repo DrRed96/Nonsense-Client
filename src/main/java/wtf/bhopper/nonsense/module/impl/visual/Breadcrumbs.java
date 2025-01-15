@@ -23,7 +23,9 @@ import java.util.List;
 
 import static org.lwjgl.opengl.GL11.*;
 
-@ModuleInfo(name = "Breadcrumbs", description = "Renders a line that displays where you have been", category = ModuleCategory.VISUAL)
+@ModuleInfo(name = "Breadcrumbs",
+        description = "Renders a line that displays where you have been",
+        category = ModuleCategory.VISUAL)
 public class Breadcrumbs extends Module {
 
     private final ColorProperty color = new ColorProperty("Color", "Color of the line", 0xFFFF0000);
@@ -32,6 +34,7 @@ public class Breadcrumbs extends Module {
     private final List<Vec3> path = new ArrayList<>();
 
     public Breadcrumbs() {
+        super();
         this.addProperties(this.color);
     }
 

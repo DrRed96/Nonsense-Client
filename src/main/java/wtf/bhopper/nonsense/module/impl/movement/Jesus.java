@@ -25,6 +25,7 @@ public class Jesus extends Module {
     private final EnumProperty<PushOut> pushOut = new EnumProperty<>("Push Out", "Pushes you out of water/lava", PushOut.BOOST, () -> this.mode.isAny(Mode.SOLID, Mode.NCP));
 
     public Jesus() {
+        super();
         this.addProperties(this.mode, this.pushOut);
         this.setSuffix(this.mode::getDisplayValue);
     }

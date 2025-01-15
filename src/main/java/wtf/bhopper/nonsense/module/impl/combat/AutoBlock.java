@@ -40,6 +40,7 @@ public class AutoBlock extends Module {
 
 
     public AutoBlock() {
+        super();
         this.targetsGroup.addProperties(this.players, this.mobs, this.animals, this.others, this.invis, this.dead, this.teams);
         this.addProperties(this.targetsGroup, this.range, this.auraOnly);
     }

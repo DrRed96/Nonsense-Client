@@ -22,7 +22,9 @@ import wtf.bhopper.nonsense.util.misc.MathUtil;
 import wtf.bhopper.nonsense.util.render.ColorUtil;
 import wtf.bhopper.nonsense.util.render.RenderUtil;
 
-@ModuleInfo(name = "Target Strafe", description = "Strafes around entities", category = ModuleCategory.COMBAT)
+@ModuleInfo(name = "Target Strafe",
+        description = "Strafes around entities",
+        category = ModuleCategory.COMBAT)
 public class TargetStrafe extends Module {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Method for strafing", Mode.CIRCLE);
@@ -41,6 +43,7 @@ public class TargetStrafe extends Module {
     private int ticks = 0;
 
     public TargetStrafe() {
+        super();
         this.render.addProperties(this.enableRender, this.renderPoints, this.renderOutline);
         this.addProperties(this.mode, this.range, this.jump, this.render);
     }

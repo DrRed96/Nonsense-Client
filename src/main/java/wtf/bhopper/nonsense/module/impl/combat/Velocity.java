@@ -19,18 +19,19 @@ import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
         searchAlias = {"Anti Knock Back", "Anti KB", "Anti Velocity"})
 public class Velocity extends Module {
 
-    private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Method for velocity.", Mode.PACKET);
-    private final NumberProperty vertical = new NumberProperty("Vertical", "Vertical velocity", () -> this.mode.is(Mode.PACKET), 0.0F, 0.0F, 100.0F, 0.01F, NumberProperty.FORMAT_PERCENT);
-    private final NumberProperty horizontal = new NumberProperty("Horizontal", "Horizontal velocity", () -> this.mode.is(Mode.PACKET), 0.0F, 0.0F, 100.0F, 0.01F, NumberProperty.FORMAT_PERCENT);
+    private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Method for velocity.", Mode.NORMAL);
+    private final NumberProperty vertical = new NumberProperty("Vertical", "Vertical velocity", () -> this.mode.is(Mode.NORMAL), 0.0F, 0.0F, 100.0F, 0.01F, NumberProperty.FORMAT_PERCENT);
+    private final NumberProperty horizontal = new NumberProperty("Horizontal", "Horizontal velocity", () -> this.mode.is(Mode.NORMAL), 0.0F, 0.0F, 100.0F, 0.01F, NumberProperty.FORMAT_PERCENT);
     private final NumberProperty airTicks = new NumberProperty("Ticks", "Air velocity ticks.", () -> this.mode.is(Mode.AIR), 5.0, 1.0, 20.0, 1.0, NumberProperty.FORMAT_INT);
 
     private int ticks = 0;
     private boolean cancel = false;
 
     public Velocity() {
+        super();
         this.addProperties(this.mode, this.vertical, this.horizontal, this.airTicks);
         this.setSuffix(() -> {
-            if (this.mode.is(Mode.PACKET)) {
+            if (this.mode.is(Mode.NORMAL)) {
                 return vertical.getDisplayValue() + " " + horizontal.getDisplayValue();
             }
             return this.mode.getDisplayValue();
@@ -67,7 +68,7 @@ public class Velocity extends Module {
             }
 
             switch (this.mode.get()) {
-                case PACKET -> {
+                case NORMAL -> {
                     event.cancel();
 
                     if (this.horizontal.get() != 0.0F) {
@@ -95,7 +96,7 @@ public class Velocity extends Module {
             }
         } else if (event.packet instanceof S27PacketExplosion packet) {
             switch (this.mode.get()) {
-                case PACKET -> packet.setMotion(
+                case NORMAL -> packet.setMotion(
                         packet.getMotionX() * this.horizontal.getFloat(),
                         packet.getMotionY() * this.vertical.getFloat(),
                         packet.getMotionZ() * this.horizontal.getFloat()
@@ -112,7 +113,7 @@ public class Velocity extends Module {
     };
 
     enum Mode {
-        PACKET,
+        NORMAL,
         AIR
     }
 

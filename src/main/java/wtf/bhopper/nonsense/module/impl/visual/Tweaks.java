@@ -8,7 +8,9 @@ import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 
-@ModuleInfo(name = "Tweaks", description = "Visuals tweaks/improvements.", category = ModuleCategory.VISUAL)
+@ModuleInfo(name = "Tweaks",
+        description = "Visuals tweaks/improvements.",
+        category = ModuleCategory.VISUAL)
 public class Tweaks extends Module {
 
     private final BooleanProperty viewClip = new BooleanProperty("View Clip", "Prevents your FOV from changing in 3rd person.", true);
@@ -16,7 +18,8 @@ public class Tweaks extends Module {
     private final BooleanProperty nameTagShadow = new BooleanProperty("Name Tag Shadow", "Draws text with a drop shadow in name tags", true);
 
     public Tweaks() {
-        this.autoAddProperties();
+        super();
+        this.addProperties(this.viewClip, this.minimalBobbing, this.nameTagShadow);
     }
 
     @EventLink

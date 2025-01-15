@@ -23,7 +23,8 @@ public class SkinBlinker extends Module {
     private final Stopwatch timer = new Stopwatch();
 
     public SkinBlinker() {
-        this.autoAddProperties();
+        super();
+        this.addProperties(this.delay);
     }
 
     @EventLink

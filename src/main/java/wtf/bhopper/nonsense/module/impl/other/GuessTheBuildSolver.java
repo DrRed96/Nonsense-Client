@@ -79,6 +79,7 @@ public class GuessTheBuildSolver extends Module {
     private final Render render = new Render();
 
     public GuessTheBuildSolver() {
+        super();
         this.addProperties(this.autoGuess, this.delay);
         this.addProperties(this.render.getProperties());
         this.loadThemes();

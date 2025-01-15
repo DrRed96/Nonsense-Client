@@ -27,12 +27,13 @@ public class AutoPixelParty extends Module {
     private final BooleanProperty update = new BooleanProperty("Update", "Re-Updates the blocks", false);
     private final BooleanProperty debug = new BooleanProperty("Debug", "Prints debugging", false);
 
-    public AutoPixelParty() {
-        this.addProperties(this.update, this.debug);
-    }
-
     private IBlockState block = null;
     private BlockPos goal = null;
+
+    public AutoPixelParty() {
+        super();
+        this.addProperties(this.update, this.debug);
+    }
 
     @Override
     public void onEnable() {

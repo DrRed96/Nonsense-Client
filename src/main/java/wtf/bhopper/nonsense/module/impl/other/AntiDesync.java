@@ -14,6 +14,7 @@ public class AntiDesync extends Module {
     private final BooleanProperty placeSet = new BooleanProperty("Place", "Block placing", false);
 
     public AntiDesync() {
+        super();
         this.addProperties(this.breakSet, this.placeSet);
     }
 

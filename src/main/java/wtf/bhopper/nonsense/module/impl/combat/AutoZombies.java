@@ -26,7 +26,7 @@ import wtf.bhopper.nonsense.util.minecraft.world.BlockUtil;
 import java.util.Comparator;
 
 @ModuleInfo(name = "Auto Zombies",
-        description = "Some tools for zombies, made by Ciyuna",
+        description = "Some tools for zombies",
         category = ModuleCategory.COMBAT)
 public class AutoZombies extends Module {
 
@@ -37,6 +37,7 @@ public class AutoZombies extends Module {
     private EntityLivingBase target = null;
 
     public AutoZombies() {
+        super();
         this.addProperties(this.silent, this.autoShoot, this.autoSwap);
     }
 

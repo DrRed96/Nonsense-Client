@@ -20,6 +20,7 @@ public class FastPlace extends Module {
     private final BooleanProperty blocksOnly = new BooleanProperty("Blocks Only", "Only remove the click delay while holding blocks.", true);
 
     public FastPlace() {
+        super();
         this.addProperties(this.delay, this.blocksOnly);
     }
 

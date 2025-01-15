@@ -37,7 +37,7 @@ public class EquationParser {
 
     private double parseExpression() {
         double x = this.parseTerm();
-        for (; ; ) {
+        while (true) {
             if (this.eat('+')) {
                 x += this.parseTerm(); // addition
             } else if (eat('-')) {
@@ -50,7 +50,7 @@ public class EquationParser {
 
     private double parseTerm() {
         double x = this.parseFactor();
-        for (; ; ) {
+        while (true) {
             if (this.eat('*')) {
                 x *= this.parseFactor(); // multiplication
             } else if (eat('/')) {

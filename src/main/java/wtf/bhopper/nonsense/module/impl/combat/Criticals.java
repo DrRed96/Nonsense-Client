@@ -31,6 +31,7 @@ public class Criticals extends Module {
     private int ticks = 0;
 
     public Criticals() {
+        super();
         this.addProperties(this.mode, this.delay, this.safe, this.offset);
         this.setSuffix(() -> this.mode.getDisplayValue() + " " + (this.safe.get() ? "Safe" : delay.getDisplayValue()));
     }

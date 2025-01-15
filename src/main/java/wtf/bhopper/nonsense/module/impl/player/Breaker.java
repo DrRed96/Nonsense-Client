@@ -41,6 +41,7 @@ public class Breaker extends Module {
     private boolean didBreak = false;
 
     public Breaker() {
+        super();
         this.addProperties(this.targetBlock, this.range, this.rotate);
     }
 

@@ -78,6 +78,7 @@ public class Scaffold extends Module {
     private final Stopwatch towerTimer = new Stopwatch();
 
     public Scaffold() {
+        super();
         this.towerGroup.addProperties(this.towerEnable, this.towerMode);
         this.addProperties(this.mode, this.rotationsProperty, this.towerGroup, this.swing, this.swap, this.sameY, this.down);
         this.setSuffix(this.mode::getDisplayValue);

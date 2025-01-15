@@ -15,7 +15,6 @@ import wtf.bhopper.nonsense.util.misc.GeneralUtil;
 import wtf.bhopper.nonsense.util.misc.Stopwatch;
 
 import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 @ModuleInfo(name = "Spammer",
         description = "Spams a message in chat.",
@@ -34,6 +33,7 @@ public class Spammer extends Module {
     private final Stopwatch stopwatch = new Stopwatch();
 
     public Spammer() {
+        super();
         this.randomGroup.addProperties(this.randomAppend, this.randomAppendLength, this.randomReplace, this.randomReplaceLength);
         this.addProperties(this.message, this.delay, this.randomGroup);
     }

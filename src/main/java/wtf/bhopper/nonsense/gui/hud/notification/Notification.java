@@ -96,11 +96,11 @@ public class Notification implements IMinecraft {
         // NVG Text
         if (!mod.font.is(HudMod.Font.MINECRAFT)) {
             NVGHelper.drawText(this.title, x + 48.0F, y + 14.0F, TITLE_COLOR, true);
-            NVGHelper.drawText(this.message, x + 48.0F, y + 30.0F, MSG_COLOR, true);
+            NVGHelper.drawText(this.message, x + 48.0F, y + 32.0F, MSG_COLOR, true);
         }
 
         // Bar
-        NVGHelper.drawRect(x, y + HEIGHT - BAR_HEIGHT, width, BAR_HEIGHT, ColorUtil.darken(this.type.color.getRGB(), 2));
+        NVGHelper.drawRect(x, y + HEIGHT - BAR_HEIGHT, width, BAR_HEIGHT, ColorUtil.dropShadow(this.type.color.getRGB()));
         NVGHelper.drawRect(x, y + HEIGHT - BAR_HEIGHT, width * this.doneFactor(), BAR_HEIGHT, this.type.color.getRGB());
 
         // Outline

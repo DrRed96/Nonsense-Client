@@ -10,6 +10,12 @@ import java.math.RoundingMode;
 
 public class MathUtil {
 
+    public static final float PI = (float)Math.PI;
+
+    public static float rad(float deg) {
+        return deg / 180.0F * PI;
+    }
+
     public static double getIncremental(double val, double inc) {
         double inverse = 1.0 / inc;
         return (double)Math.round(val * inverse) / inverse;

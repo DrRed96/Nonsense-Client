@@ -41,7 +41,8 @@ public class Announcer extends Module {
     private final BooleanProperty blocks = new BooleanProperty("Blocks", "Tell everyone about your amazing building skills", true);
 
     public Announcer() {
-        this.autoAddProperties();
+        super();
+        this.addProperties(this.joins, this.items, this.blocks);
     }
 
     @EventLink

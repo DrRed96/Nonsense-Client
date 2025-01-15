@@ -12,7 +12,9 @@ import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 
-@ModuleInfo(name = "Lag Notifier", description = "Notifies you about lag", category = ModuleCategory.VISUAL)
+@ModuleInfo(name = "Lag Notifier",
+        description = "Notifies you about lag",
+        category = ModuleCategory.VISUAL)
 public class LagNotifier extends Module {
 
     private final NumberProperty threshold = new NumberProperty("Threshold", "Lag threshold", 1500, 1000, 3000, 50, NumberProperty.FORMAT_MS);
@@ -20,6 +22,7 @@ public class LagNotifier extends Module {
     private final Render render = new Render();
 
     public LagNotifier() {
+        super();
         this.addProperties(this.threshold);
         this.addProperties(render.getProperties());
     }

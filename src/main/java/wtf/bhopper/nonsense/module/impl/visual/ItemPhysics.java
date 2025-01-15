@@ -19,7 +19,9 @@ import java.util.Random;
 
 import static org.lwjgl.opengl.GL11.*;
 
-@ModuleInfo(name = "Item Physics", description = "Item physics mod", category = ModuleCategory.VISUAL)
+@ModuleInfo(name = "Item Physics",
+        description = "Item physics mod",
+        category = ModuleCategory.VISUAL)
 public class ItemPhysics extends Module {
 
     public static long tick;

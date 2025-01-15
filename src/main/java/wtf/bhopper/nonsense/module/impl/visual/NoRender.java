@@ -7,7 +7,9 @@ import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 
-@ModuleInfo(name = "No Render", description = "Prevents certain things from being rendered", category = ModuleCategory.VISUAL)
+@ModuleInfo(name = "No Render",
+        description = "Prevents certain things from being rendered",
+        category = ModuleCategory.VISUAL)
 public class NoRender extends Module {
 
     public final BooleanProperty hurtCamera = new BooleanProperty("Hurt Camera", "Removes the shake effect from the camera when taking damage", true);
@@ -17,7 +19,8 @@ public class NoRender extends Module {
     public final BooleanProperty enchantTable = new BooleanProperty("Enchantment Table", "Prevents the books on top of enchantment tables from rendering", false);
 
     public NoRender() {
-        this.autoAddProperties();
+        super();
+        this.addProperties(this.hurtCamera, this.blindness, this.nausea, this.pumpkinOverlay, this.enchantTable);
     }
 
     public boolean blindness(Entity entity) {

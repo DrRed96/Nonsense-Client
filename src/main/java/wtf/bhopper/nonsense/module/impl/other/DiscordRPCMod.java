@@ -21,6 +21,7 @@ public class DiscordRPCMod extends Module {
     private static final String APPLICATION_ID = "1294195120781922305";
 
     public DiscordRPCMod() {
+        super();
         DiscordEventHandlers handlers = new DiscordEventHandlers.Builder()
                 .setReadyEventHandler(user -> Nonsense.LOGGER.info("[Discord RPC] Logged in as {}:{}", user.username, user.userId))
                 .build();

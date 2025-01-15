@@ -40,7 +40,9 @@ import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 @SuppressWarnings("FieldCanBeLocal")
-@ModuleInfo(name = "Auto Speed Builders", description = "Plays speed builders for you.", category = ModuleCategory.OTHER)
+@ModuleInfo(name = "Auto Speed Builders",
+        description = "Plays speed builders for you.",
+        category = ModuleCategory.OTHER)
 public class AutoSpeedBuilders extends Module {
 
     private static final EnumFacing[] OPTIMAL_PLACE_DIRECTIONS = {
@@ -79,6 +81,7 @@ public class AutoSpeedBuilders extends Module {
     private final Stopwatch timer = new Stopwatch();
 
     public AutoSpeedBuilders() {
+        super();
         this.silent.addProperties(this.silentSwing, this.silentSwap);
         this.render.addProperties(this.renderBuild, this.validBlock, this.invalidBlock, this.renderData, this.clickBlock, this.placeBlock);
         this.addProperties(this.delay, this.disconnectedFix, this.silent, this.render);

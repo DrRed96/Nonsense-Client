@@ -28,6 +28,7 @@ public class InventoryMove extends Module {
     };
 
     public InventoryMove() {
+        super();
         this.addProperties(this.clientSide);
     }
 

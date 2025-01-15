@@ -1,6 +1,5 @@
 package wtf.bhopper.nonsense.module;
 
-import com.google.common.collect.ClassToInstanceMap;
 import com.google.common.collect.ImmutableClassToInstanceMap;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.EventLink;
@@ -11,27 +10,30 @@ import wtf.bhopper.nonsense.module.impl.exploit.*;
 import wtf.bhopper.nonsense.module.impl.movement.*;
 import wtf.bhopper.nonsense.module.impl.other.*;
 import wtf.bhopper.nonsense.module.impl.player.*;
-import wtf.bhopper.nonsense.module.impl.movement.Scaffold;
 import wtf.bhopper.nonsense.module.impl.visual.*;
+import wtf.bhopper.nonsense.script.ScriptModule;
+import wtf.bhopper.nonsense.script.ScriptOptionsMod;
 
+import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ModuleManager {
 
-    private final ClassToInstanceMap<Module> modules;
+    private final ImmutableClassToInstanceMap<Module> modules;
+    private final List<ScriptModule> scriptModules;
 
     public ModuleManager() {
 
         this.modules = this.addModules(
                 // Combat
                 new KillAura(),
-//                new KillAuraOld(),
                 new AntiBot(),
                 new Velocity(),
                 new AutoBlock(),
                 new Criticals(),
+                new AutoClicker(),
                 new TargetStrafe(),
                 new FastBow(),
                 new InfiniteAura(),
@@ -66,8 +68,9 @@ public class ModuleManager {
                 new FastUse(),
                 new FastMine(),
                 new FastPlace(),
+                new AutoPlace(),
                 new Breaker(),
-                new AntiCactus(),
+                new Avoid(),
                 new GameSpeed(),
                 new HorseJump(),
                 new Nuker(),
@@ -121,12 +124,18 @@ public class ModuleManager {
                 new Crosshair(),
                 new Tweaks(),
                 new Tracers(),
+                new Trajectories(),
                 new LagNotifier(),
                 new Capes(),
                 new ItemPhysics(),
                 new ParticleMultiplier(),
-                new BarrierView()
+                new BarrierView(),
+
+                // Script
+                new ScriptOptionsMod()
         );
+
+        this.scriptModules = new CopyOnWriteArrayList<>();
 
         Nonsense.getEventBus().subscribe(this);
     }
@@ -141,7 +150,7 @@ public class ModuleManager {
     };
 
     @SuppressWarnings("unchecked")
-    private ClassToInstanceMap<Module> addModules(Module... modules) {
+    private ImmutableClassToInstanceMap<Module> addModules(Module... modules) {
         ImmutableClassToInstanceMap.Builder<Module> builder = ImmutableClassToInstanceMap.builder();
         Arrays.stream(modules).forEach(module -> {
             if (module != null) {
@@ -151,8 +160,10 @@ public class ModuleManager {
         return builder.build();
     }
 
-    public Collection<Module> getModules() {
-        return this.modules.values();
+    public List<Module> getModules() {
+        List<Module> modules = new ArrayList<>(this.modules.values());
+        modules.addAll(this.scriptModules);
+        return modules;
     }
 
     public <T extends Module> T get(Class<T> clazz) {
@@ -161,6 +172,14 @@ public class ModuleManager {
 
     public Module get(String name) {
         return this.getModules()
+                .stream()
+                .filter(module -> module.name.equalsIgnoreCase(name))
+                .findFirst()
+                .orElse(null);
+    }
+
+    public ScriptModule getScript(String name) {
+        return this.scriptModules
                 .stream()
                 .filter(module -> module.name.equalsIgnoreCase(name))
                 .findFirst()
@@ -182,7 +201,7 @@ public class ModuleManager {
     }
 
     public int size() {
-        return this.modules.size();
+        return this.getModules().size();
     }
 
     public int amountEnabled() {
@@ -190,6 +209,18 @@ public class ModuleManager {
                 .stream()
                 .filter(Module::isToggled)
                 .count();
+    }
+
+    public boolean addScriptModule(ScriptModule module) {
+        if (this.get(module.name) != null) {
+            return false;
+        }
+        this.scriptModules.add(module);
+        return true;
+    }
+
+    public void clearScriptModules() {
+        this.scriptModules.clear();
     }
 
     private Module loadPrivateModule(String name) {

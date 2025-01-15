@@ -8,11 +8,11 @@ import net.minecraft.network.play.server.S1CPacketEntityMetadata;
 import wtf.bhopper.nonsense.anticheat.check.Check;
 import wtf.bhopper.nonsense.anticheat.check.CheckInfo;
 import wtf.bhopper.nonsense.anticheat.PlayerData;
-import wtf.bhopper.nonsense.anticheat.check.data.AbstractCheckBuffer;
+import wtf.bhopper.nonsense.anticheat.check.data.CheckBuffer;
 
 @CheckInfo(
         name = "Auto-Block A",
-        description = "Auto sword blocking.",
+        description = "Unlikely sword blocking/unblocking.",
         maxVl = 3
 )
 public class AutoBlockA extends Check {
@@ -48,15 +48,20 @@ public class AutoBlockA extends Check {
         if (itemStack == null) {
             return -1;
         }
+
         Item item = itemStack.getItem();
+
         if (item == Items.bow) {
             return 4;
-        } else if (item instanceof ItemSword || item instanceof ItemFood || item instanceof ItemPotion && !ItemPotion.isSplash(itemStack.getMetadata())) {
+        }
+
+        if (item instanceof ItemSword || item instanceof ItemFood || item instanceof ItemPotion && !ItemPotion.isSplash(itemStack.getMetadata())) {
             return 1;
         }
+
         return -1;
     }
 
-    private static class Buffer extends AbstractCheckBuffer { }
+    private static class Buffer extends CheckBuffer { }
 
 }

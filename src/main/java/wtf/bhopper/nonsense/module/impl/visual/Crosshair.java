@@ -16,7 +16,8 @@ public class Crosshair extends Module {
     private final NumberProperty size = new NumberProperty("Size", "Size of the crosshair", 16, 1, 30, 1);
 
     public Crosshair() {
-        this.autoAddProperties();
+        super();
+        this.addProperties(this.size);
     }
 
     public void draw(float delta) {

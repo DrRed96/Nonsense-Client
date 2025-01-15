@@ -36,7 +36,9 @@ import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 
-@ModuleInfo(name = "Infinite Aura", description = "Kill Aura with unlimited range", category = ModuleCategory.COMBAT)
+@ModuleInfo(name = "Infinite Aura",
+        description = "Kill Aura with unlimited range.",
+        category = ModuleCategory.COMBAT)
 public class InfiniteAura extends Module {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Method for TP aura", Mode.INSTANT);
@@ -64,6 +66,7 @@ public class InfiniteAura extends Module {
     private final Stopwatch attackTimer = new Stopwatch();
 
     public InfiniteAura() {
+        super();
         this.targetsGroup.addProperties(this.players, this.mobs, this.animals, this.others, this.invis, this.dead, this.teams, this.existed);
         this.addProperties(this.mode, this.sorting, this.minAps, this.maxAps, this.targetsGroup, this.range, this.autoDisable, this.particles);
         this.setSuffix(this.mode::getDisplayValue);

@@ -30,7 +30,9 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@ModuleInfo(name = "Block Overlay", description = "Modify block overlay", category = ModuleCategory.VISUAL)
+@ModuleInfo(name = "Block Overlay",
+        description = "Modify block overlay",
+        category = ModuleCategory.VISUAL)
 public class BlockOverlay extends Module {
 
     private static final float BED_HEIGHT = 0.5625F;
@@ -51,6 +53,7 @@ public class BlockOverlay extends Module {
     private final List<BlockPos> jukeBoxes = new ArrayList<>();
 
     public BlockOverlay() {
+        super();
         this.addProperties(this.mouseOver, this.chests, this.enderChests, this.hopper, this.dispenser, this.dropper, this.bedSet, this.jukeBox, this.searchRange);
     }
 

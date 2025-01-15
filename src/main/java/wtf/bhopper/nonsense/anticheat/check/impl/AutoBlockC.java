@@ -7,7 +7,7 @@ import net.minecraft.network.play.server.*;
 import wtf.bhopper.nonsense.anticheat.PlayerData;
 import wtf.bhopper.nonsense.anticheat.check.Check;
 import wtf.bhopper.nonsense.anticheat.check.CheckInfo;
-import wtf.bhopper.nonsense.anticheat.check.data.AbstractCheckBuffer;
+import wtf.bhopper.nonsense.anticheat.check.data.CheckBuffer;
 import wtf.bhopper.nonsense.util.misc.Stopwatch;
 
 import java.util.ArrayList;
@@ -41,12 +41,12 @@ public class AutoBlockC extends Check {
 
         Iterator<Stopwatch> it = buffer.swingList.iterator();
         while (it.hasNext()) {
-            Stopwatch clock = it.next();
-            if (!clock.hasReached(150L)) {
+            Stopwatch stopwatch = it.next();
+            if (!stopwatch.hasReached(150L)) {
                 continue;
             }
 
-            if (data.getUseClock() == null || !data.getUseClock().hasReached(clock.passedTime())) {
+            if (data.getUseClock() == null || !data.getUseClock().hasReached(stopwatch.passedTime())) {
                 it.remove();
                 return;
             }
@@ -90,10 +90,13 @@ public class AutoBlockC extends Check {
             return false;
         }
         Item item = itemStack.getItem();
-        return item == Items.bow || item instanceof ItemSword || item instanceof ItemFood || item instanceof ItemPotion && !ItemPotion.isSplash(itemStack.getMetadata());
+        return item == Items.bow ||
+                item instanceof ItemSword ||
+                item instanceof ItemFood ||
+                (item instanceof ItemPotion && !ItemPotion.isSplash(itemStack.getMetadata()));
     }
 
-    private static final class Buffer extends AbstractCheckBuffer {
+    private static final class Buffer extends CheckBuffer {
         private final List<Stopwatch> swingList = new ArrayList<>();
     }
 

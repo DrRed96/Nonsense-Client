@@ -47,8 +47,6 @@ public class NonsenseMainMenu extends GuiScreen {
 
     private static List<String> splashes = null;
 
-    private static List<String> tips = null;
-
     private ResourceLocation backgroundTexture;
     private String splashText;
     private int panoramaTimer;
@@ -333,30 +331,6 @@ public class NonsenseMainMenu extends GuiScreen {
         } catch (IOException exception) {
             throw new RuntimeException(exception);
         }
-    }
-
-    private static void loadTips() {
-        try {
-            tips = new ArrayList<>();
-            IResource resource = Minecraft.getMinecraft()
-                    .getResourceManager()
-                    .getResource(new ResourceLocation("nonsense/tips.txt"));
-            try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
-                while (reader.ready()) {
-                    tips.add(reader.readLine());
-                }
-            }
-        } catch (IOException exception) {
-            throw new RuntimeException(exception);
-        }
-    }
-
-    public static String randomTip() {
-        if (tips == null) {
-            loadTips();
-        }
-
-        return GeneralUtil.randomElement(tips);
     }
 
     private enum Theme {

@@ -21,13 +21,16 @@ import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 import wtf.bhopper.nonsense.util.minecraft.world.BlockUtil;
 import wtf.bhopper.nonsense.util.misc.MathUtil;
 
-@ModuleInfo(name = "Nuker", description = "Destroys large amounts of blocks", category = ModuleCategory.PLAYER)
+@ModuleInfo(name = "Nuker",
+        description = "Destroys large amounts of blocks",
+        category = ModuleCategory.PLAYER)
 public class Nuker extends Module {
 
     private final NumberProperty radius = new NumberProperty("Radius", "Block break radius", 4.5, 1.0, 6.0, 0.1);
     private final BooleanProperty packet = new BooleanProperty("Packet", "Packet mode", false);
 
     public Nuker() {
+        super();
         this.addProperties(this.radius, this.packet);
     }
 

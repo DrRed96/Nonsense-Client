@@ -100,7 +100,7 @@ public class Item {
     }
 
     /**
-     * Tries to get an Item by it's name (e.g. minecraft:apple) or a String representation of a numerical ID. If both
+     * Tries to get an Item by its name (e.g. minecraft:apple) or a String representation of a numerical ID. If both
      * fail, null is returned.
      */
     public static Item getByNameOrId(String id) {
@@ -828,7 +828,7 @@ public class Item {
         WOOD(0, 59, 2.0F, 0.0F, 15),
         STONE(1, 131, 4.0F, 1.0F, 5),
         IRON(2, 250, 6.0F, 2.0F, 14),
-        EMERALD(3, 1561, 8.0F, 3.0F, 10), // WHY THE FUCK WOULD YOU DO THIS MOJANG???
+        EMERALD(3, 1561, 8.0F, 3.0F, 10), // WHY THE FUCK IS IT CALLED 'EMERALD' MOJANG???
         GOLD(0, 32, 12.0F, 0.0F, 22);
 
         private final int harvestLevel;

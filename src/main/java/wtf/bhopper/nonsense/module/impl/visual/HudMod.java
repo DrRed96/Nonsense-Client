@@ -70,6 +70,7 @@ public class HudMod extends Module {
     public final BooleanProperty hideInF3 = new BooleanProperty("Hide In F3", "Hides the HUD while in F3", true);
     
     public HudMod() {
+        super();
         this.moduleListGroup.addProperties(this.moduleListEnabled,
                 this.moduleListMode,
                 this.moduleListColor,

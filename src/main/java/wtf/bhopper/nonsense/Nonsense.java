@@ -19,13 +19,14 @@ import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleManager;
 import wtf.bhopper.nonsense.module.impl.visual.ClickGui;
 import wtf.bhopper.nonsense.network.NonsenseNetHandler;
+import wtf.bhopper.nonsense.script.ScriptManager;
 import wtf.bhopper.nonsense.util.render.Fonts;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
 
 import java.io.File;
 
 public enum Nonsense {
-    INSTANCE;
+    INSTANCE; // an enum field is used for the client instance because they are immutable and initialized automatically.
 
     public static final String NAME = "Nonsense";
 
@@ -40,6 +41,7 @@ public enum Nonsense {
     private CommandManager commandManager;
     private ComponentManager componentManager;
     private ConfigManager configManager;
+    private ScriptManager scriptManager;
     private AltManager altManager;
     private NonsenseNetHandler netHandler;
 
@@ -72,6 +74,7 @@ public enum Nonsense {
         this.commandManager = new CommandManager();
         this.componentManager = new ComponentManager();
         this.configManager = new ConfigManager();
+        this.scriptManager = new ScriptManager();
         this.altManager = new AltManager();
         this.altManager.tryLoad();
         this.netHandler = new NonsenseNetHandler();
@@ -114,6 +117,10 @@ public enum Nonsense {
 
     public static ConfigManager getConfigManager() {
         return INSTANCE.configManager;
+    }
+
+    public static ScriptManager getScriptManager() {
+        return INSTANCE.scriptManager;
     }
 
     public static AltManager getAltManager() {

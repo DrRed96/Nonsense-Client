@@ -112,6 +112,7 @@ public class InventoryManager extends Module {
     private boolean skip = false;
 
     public InventoryManager() {
+        super();
 
         this.slotsGroup.addProperties(this.swordSlot,
                 this.bowSlot,

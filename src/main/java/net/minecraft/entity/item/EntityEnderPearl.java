@@ -1,6 +1,5 @@
 package net.minecraft.entity.item;
 
-import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.monster.EntityEndermite;
 import net.minecraft.entity.player.EntityPlayer;
@@ -20,10 +19,10 @@ public class EntityEnderPearl extends EntityThrowable
         super(p_i46455_1_);
     }
 
-    public EntityEnderPearl(World worldIn, EntityLivingBase p_i1783_2_)
+    public EntityEnderPearl(World worldIn, EntityLivingBase throwerIn)
     {
-        super(worldIn, p_i1783_2_);
-        this.field_181555_c = p_i1783_2_;
+        super(worldIn, throwerIn);
+        this.field_181555_c = throwerIn;
     }
 
     public EntityEnderPearl(World worldIn, double p_i1784_2_, double p_i1784_4_, double p_i1784_6_)
@@ -55,9 +54,8 @@ public class EntityEnderPearl extends EntityThrowable
 
         if (!this.worldObj.isRemote)
         {
-            if (entitylivingbase instanceof EntityPlayerMP)
+            if (entitylivingbase instanceof EntityPlayerMP entityplayermp)
             {
-                EntityPlayerMP entityplayermp = (EntityPlayerMP)entitylivingbase;
 
                 if (entityplayermp.playerNetServerHandler.getNetworkManager().isChannelOpen() && entityplayermp.worldObj == this.worldObj && !entityplayermp.isPlayerSleeping())
                 {
@@ -71,7 +69,7 @@ public class EntityEnderPearl extends EntityThrowable
 
                     if (entitylivingbase.isRiding())
                     {
-                        entitylivingbase.mountEntity((Entity)null);
+                        entitylivingbase.mountEntity(null);
                     }
 
                     entitylivingbase.setPositionAndUpdate(this.posX, this.posY, this.posZ);

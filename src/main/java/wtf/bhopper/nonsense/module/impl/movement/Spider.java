@@ -18,6 +18,7 @@ public class Spider extends Module {
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Method for spider.", Mode.VANILLA);
 
     public Spider() {
+        super();
         this.addProperties(this.mode);
     }
 

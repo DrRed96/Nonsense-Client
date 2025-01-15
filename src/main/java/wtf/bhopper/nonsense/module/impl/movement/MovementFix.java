@@ -13,7 +13,8 @@ public class MovementFix extends Module {
     public final BooleanProperty optimize = new BooleanProperty("Optimize", "Optimizes your movement to be closer to the client yaw", true);
 
     public MovementFix() {
-        this.autoAddProperties();
+        super();
+        this.addProperties(this.optimize);
     }
 
 }

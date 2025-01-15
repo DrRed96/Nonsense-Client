@@ -85,14 +85,24 @@ dependencies {
     library 'com.mojang:netty:1.8.8'
     library 'com.mojang:realms:1.7.59'
 
+    // Apache HTTP Components
     library 'org.apache.httpcomponents:httpclient:4.3.3'
     library 'org.apache.httpcomponents:httpcore:4.3.2'
+
+    // Apache Commons
     library 'org.apache.commons:commons-compress:1.8.1'
     library 'org.apache.commons:commons-lang3:3.3.2'
+
+    // Netty.io
     library 'io.netty:netty-all:4.0.23.Final'
+
+    // JNA
     library 'net.java.dev.jna:jna:3.4.0'
     library 'net.java.dev.jna:platform:3.4.0'
+
+    // JOpt Simple, used for argument parsing
     library 'net.sf.jopt-simple:jopt-simple:4.6'
+
     library 'commons-codec:commons-codec:1.9'
     library 'commons-io:commons-io:2.4'
     library 'commons-logging:commons-logging:1.1.3'
@@ -101,6 +111,8 @@ dependencies {
     library 'com.ibm.icu:icu4j-core-mojang:51.2'
     library 'net.java.jutils:jutils:1.0.0'
     library 'oshi-project:oshi-core:1.1'
+
+    // Required by OptiFine, JDK's usually don't include javax vecmath, so include it here
     library 'javax.vecmath:vecmath:1.5.2'
 
     library 'org.reflections:reflections:0.10.2'

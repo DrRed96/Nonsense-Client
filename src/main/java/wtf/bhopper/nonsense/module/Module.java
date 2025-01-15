@@ -2,6 +2,7 @@ package wtf.bhopper.nonsense.module;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import org.lwjgl.input.Keyboard;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.gui.hud.Hud;
 import wtf.bhopper.nonsense.gui.hud.notification.Notification;
@@ -12,8 +13,6 @@ import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 import wtf.bhopper.nonsense.util.misc.GeneralUtil;
 import wtf.bhopper.nonsense.config.ISerializable;
 
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -21,37 +20,41 @@ import java.util.function.Supplier;
 
 public abstract class Module implements IPropertyContainer, ISerializable, IMinecraft {
 
-    public final String name = this.getClass().getAnnotation(ModuleInfo.class).name().replace(" ", "").toLowerCase();
-    public final String displayName = this.getClass().getAnnotation(ModuleInfo.class).name();
-    public final String description = this.getClass().getAnnotation(ModuleInfo.class).description();
-    public final ModuleCategory category = this.getClass().getAnnotation(ModuleInfo.class).category();
-    public final String[] searchAlias = GeneralUtil.concat(new String[]{this.displayName, this.description}, this.getClass().getAnnotation(ModuleInfo.class).searchAlias());
+    public final String name;
+    public final String displayName;
+    public final String description;
+    public final ModuleCategory category;
+    public final String[] searchAlias;
 
-    private boolean toggled = this.getClass().getAnnotation(ModuleInfo.class).toggled();
-    private int bind = this.getClass().getAnnotation(ModuleInfo.class).bind();
-    private boolean hidden = this.getClass().getAnnotation(ModuleInfo.class).hidden() || category == ModuleCategory.VISUAL;
+    private boolean toggled = false;
+    private int bind = Keyboard.KEY_NONE;
+    private boolean hidden = false;
     private final List<Property<?>> properties = new ArrayList<>();
 
     private Supplier<String> suffix = () -> null;
 
-    protected void autoAddProperties() {
-        for (Field field : this.getClass().getDeclaredFields()) {
-
-            if (Modifier.isStatic(field.getModifiers())) {
-                continue;
-            }
-
-            if (!field.canAccess(this)) {
-                field.setAccessible(true);
-            }
-
-            try {
-                Object object = field.get(this);
-                if (object instanceof Property<?> property) {
-                    this.properties.add(property);
-                }
-            } catch (IllegalAccessException ignored) {}
+    public Module() {
+        if (!this.getClass().isAnnotationPresent(ModuleInfo.class)) {
+            throw new IllegalStateException("Module using the default constructor must be annotated with @ModuleInfo");
         }
+
+        this.name = this.getClass().getAnnotation(ModuleInfo.class).name().replace(" ", "").toLowerCase();
+        this.displayName = this.getClass().getAnnotation(ModuleInfo.class).name();
+        this.description = this.getClass().getAnnotation(ModuleInfo.class).description();
+        this.category = this.getClass().getAnnotation(ModuleInfo.class).category();
+        this.searchAlias = GeneralUtil.concat(new String[]{this.displayName, this.description}, this.getClass().getAnnotation(ModuleInfo.class).searchAlias());
+
+        this.toggled = this.getClass().getAnnotation(ModuleInfo.class).toggled();
+        this.bind = this.getClass().getAnnotation(ModuleInfo.class).bind();
+        this.hidden = this.getClass().getAnnotation(ModuleInfo.class).hidden() || this.category == ModuleCategory.VISUAL;
+    }
+
+    public Module(String displayName, String description, ModuleCategory category) {
+        this.name = displayName.replace(" ", "").toLowerCase();
+        this.displayName = displayName;
+        this.description = description;
+        this.category = category;
+        this.searchAlias = new String[]{this.displayName, this.description};
     }
 
     public void toggle(boolean toggled) {

@@ -26,6 +26,7 @@ public class ClickGui extends Module {
     private NovoGui novoline;
 
     public ClickGui() {
+        super();
         this.addProperties(this.mode, this.categoryColors, this.toolTips, this.sound);
     }
 

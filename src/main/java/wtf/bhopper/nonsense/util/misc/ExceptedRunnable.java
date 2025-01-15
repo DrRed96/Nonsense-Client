@@ -1,6 +1,6 @@
 package wtf.bhopper.nonsense.util.misc;
 
 @FunctionalInterface
-public interface CaughtRunnable {
+public interface ExceptedRunnable {
     void run() throws Exception;
 }

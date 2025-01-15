@@ -19,6 +19,7 @@ public class Phase extends Module {
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Phase method", Mode.VANILLA);
 
     public Phase() {
+        super();
         this.addProperties(this.mode);
         this.setSuffix(this.mode::getDisplayValue);
     }

@@ -31,7 +31,11 @@ public class NumberProperty extends Property<Double> {
         super(displayName, description, value, dependency);
 
         if (min > max) {
-            throw new IllegalArgumentException("min must be smaller than max");
+            throw new IllegalArgumentException("Minimum value must be smaller than the maximum value");
+        }
+
+        if (value < min || value > max) {
+            throw new IllegalArgumentException("Default value must be between the minimum and maximum values");
         }
 
         this.min = min;
