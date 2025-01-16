@@ -26,7 +26,7 @@ public class Speed extends Module {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Method for speed.", Mode.VANILLA);
     private final NumberProperty speedSet = new NumberProperty("Speed", "Move speed.", () -> this.mode.is(Mode.VANILLA), 1.0, 0.1, 3.0, 0.01);
-    private final BooleanProperty jump = new BooleanProperty("Jump", "Automatically Jumps", false, () -> this.mode.isAny(Mode.VANILLA, Mode.MINIBLOX));
+    private final BooleanProperty jump = new BooleanProperty("Jump", "Automatically Jumps", false, () -> this.mode.isAny(Mode.VANILLA, Mode.MINIBLOX, Mode.GROUND_STRAFE));
 
     private final GroupProperty bhopGroup = new GroupProperty("Bhop", "Bhop properties.", this, () -> this.mode.isAny(Mode.BHOP, Mode.LOW_HOP));
 
@@ -78,6 +78,15 @@ public class Speed extends Module {
                 if (MoveUtil.isMoving()) {
                     MoveUtil.setSpeed(event, this.speedSet.getDouble());
                     if (this.jump.get() && mc.thePlayer.onGround) {
+                        MoveUtil.vertical(event, MoveUtil.jumpHeight());
+                    }
+                }
+            }
+
+            case GROUND_STRAFE -> {
+                if (MoveUtil.isMoving()) {
+                    if (this.jump.get() && mc.thePlayer.onGround) {
+                        MoveUtil.setSpeed(event, 0.5f);
                         MoveUtil.vertical(event, MoveUtil.jumpHeight());
                     }
                 }
@@ -177,7 +186,8 @@ public class Speed extends Module {
         VANILLA,
         BHOP,
         LOW_HOP,
-        MINIBLOX
+        MINIBLOX,
+        GROUND_STRAFE
     }
 
 }

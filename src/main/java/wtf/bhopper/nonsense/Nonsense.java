@@ -25,8 +25,9 @@ import wtf.bhopper.nonsense.util.render.NVGHelper;
 
 import java.io.File;
 
-public enum Nonsense {
-    INSTANCE; // an enum field is used for the client instance because they are immutable and initialized automatically.
+public final class Nonsense {
+
+    public static final Nonsense INSTANCE = new Nonsense();
 
     public static final String NAME = "Nonsense";
 
