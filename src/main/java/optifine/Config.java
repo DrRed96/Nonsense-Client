@@ -1998,7 +1998,7 @@ public class Config
         int j = minecraft.renderGlobal.getCountActiveRenderers();
         int k = minecraft.renderGlobal.getCountEntitiesRendered();
         int l = minecraft.renderGlobal.getCountTileEntitiesRendered();
-        String s1 = "" + i + " fps, C: " + j + ", E: " + k + "+" + l + ", U: " + s;
+        String s1 = i + " fps, C: " + j + ", E: " + k + "+" + l + ", U: " + s;
         minecraft.fontRendererObj.drawString(s1, 2, 2, -2039584);
     }
 
@@ -2027,13 +2027,10 @@ public class Config
     {
         String[] astring = new String[] {"sun.arch.data.model", "com.ibm.vm.bitmode", "os.arch"};
 
-        for (int i = 0; i < astring.length; ++i)
-        {
-            String s = astring[i];
+        for (String s : astring) {
             String s1 = System.getProperty(s);
 
-            if (s1 != null && s1.contains("64"))
-            {
+            if (s1 != null && s1.contains("64")) {
                 return 64;
             }
         }

@@ -18,7 +18,7 @@ import wtf.bhopper.nonsense.gui.hud.Hud;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleManager;
 import wtf.bhopper.nonsense.module.impl.visual.ClickGui;
-import wtf.bhopper.nonsense.network.NonsenseNetHandler;
+import wtf.bhopper.nonsense.network.Universe;
 import wtf.bhopper.nonsense.script.ScriptManager;
 import wtf.bhopper.nonsense.util.render.Fonts;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
@@ -43,7 +43,7 @@ public enum Nonsense {
     private ConfigManager configManager;
     private ScriptManager scriptManager;
     private AltManager altManager;
-    private NonsenseNetHandler netHandler;
+    private Universe universe;
 
     // Components
     private Hud hud;
@@ -77,7 +77,7 @@ public enum Nonsense {
         this.scriptManager = new ScriptManager();
         this.altManager = new AltManager();
         this.altManager.tryLoad();
-        this.netHandler = new NonsenseNetHandler();
+        this.universe = new Universe();
 
         // Rendering initialization
         NVGHelper.init();
@@ -127,8 +127,8 @@ public enum Nonsense {
         return INSTANCE.altManager;
     }
 
-    public static NonsenseNetHandler getNetHandler() {
-        return INSTANCE.netHandler;
+    public static Universe getUniverse() {
+        return INSTANCE.universe;
     }
 
     public static Hud getHud() {

@@ -2,7 +2,7 @@
 <Configuration status="WARN">
     <Appenders>
         <Console name="SysOut" target="SYSTEM_OUT">
-            <PatternLayout pattern="[%d{HH:mm:ss}] [%t/%level]: %msg%n" />
+            <PatternLayout pattern="[%d{HH:mm:ss}] [%t/%level]: %msg{nolookups}%n" />
         </Console>
         <Queue name="ServerGuiConsole">
             <PatternLayout pattern="[%d{HH:mm:ss} %level]: %msg{nolookups}%n" />

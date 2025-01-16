@@ -4,9 +4,9 @@ import org.luaj.vm2.Globals;
 import org.luaj.vm2.LuaError;
 import org.luaj.vm2.LuaValue;
 import org.luaj.vm2.lib.jse.JsePlatform;
-import wtf.bhopper.nonsense.script.lua.api.impl.LuaClientApi;
-import wtf.bhopper.nonsense.script.lua.api.impl.LuaModuleManagerApi;
-import wtf.bhopper.nonsense.script.lua.api.impl.LuaPlayerApi;
+import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.script.ScriptOptionsMod;
+import wtf.bhopper.nonsense.script.lua.api.impl.*;
 import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 
 public class LuaEnvironment {
@@ -15,8 +15,11 @@ public class LuaEnvironment {
 
     public LuaEnvironment() {
         this.globals.set("player", new LuaPlayerApi());
+        this.globals.set("world", new LuaWorldApi());
         this.globals.set("client", new LuaClientApi());
         this.globals.set("module_manager", new LuaModuleManagerApi());
+        this.globals.set("input", new LuaInputApi());
+        this.globals.set("http", new LuaHttpApi());
     }
 
     public LuaValue runScript(LuaScript script) {
@@ -56,6 +59,10 @@ public class LuaEnvironment {
 
     public Globals getGlobals() {
         return this.globals;
+    }
+
+    public boolean allowHttp() {
+        return Nonsense.module(ScriptOptionsMod.class).luaHttp.get();
     }
 
 }

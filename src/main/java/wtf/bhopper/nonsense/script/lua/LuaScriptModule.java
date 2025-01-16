@@ -81,7 +81,9 @@ public class LuaScriptModule extends ScriptModule {
                 luaEvent.set("on_ground", LuaValue.valueOf(packet.isOnGround()));
             }
             case C07PacketPlayerDigging packet -> {
-                // TODO: help!
+                luaEvent.set("status", packet.getStatus().ordinal());
+                // TODO: block pos
+                luaEvent.set("facing", packet.getFacing().ordinal());
             }
             case C09PacketHeldItemChange packet -> luaEvent.set("slot_id", packet.getSlotId());
             default -> {}

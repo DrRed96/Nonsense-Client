@@ -3,6 +3,7 @@ package wtf.bhopper.nonsense.module.impl.movement;
 import net.minecraft.item.EnumAction;
 import net.minecraft.network.play.client.C09PacketHeldItemChange;
 import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.component.impl.packet.BlinkComponent;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.EventPriorities;
 import wtf.bhopper.nonsense.event.Listener;
@@ -17,7 +18,6 @@ import wtf.bhopper.nonsense.module.impl.combat.AutoBlock;
 import wtf.bhopper.nonsense.module.property.annotations.DisplayName;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
-import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.MoveUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.PacketUtil;
 
@@ -51,6 +51,11 @@ public class NoSlow extends Module {
     public final Listener<EventSlowDown> onSlowDown = event -> {
         switch (this.mode.get()) {
             case VANILLA, NCP, SWITCH -> event.cancel();
+            case LEGIT -> {
+                if (mc.thePlayer.isBlocking()) {
+                    event.cancel();
+                }
+            }
             case SPOOF -> {
                 if (this.ground && mc.thePlayer.isUsingItem()) {
                     event.cancel();
@@ -63,12 +68,30 @@ public class NoSlow extends Module {
     @EventLink(EventPriorities.LOW)
     public final Listener<EventClickAction> onClick = event -> {
 
-        if (this.mode.is(Mode.NCP)) {
-//            ChatUtil.print("%s && %s && %s && %s", event.usingItem, this.blockItem(), !event.release, MoveUtil.isMoving() || event.left);
-            if (event.usingItem && this.blockItem() && !event.release && (MoveUtil.isMoving() || event.left)) {
-                event.release = true;
-                this.ncpBlock = true;
+        switch (this.mode.get()) {
+            case NCP -> {
+                if (event.usingItem && this.blockItem() && !event.release && (MoveUtil.isMoving() || event.left)) {
+                    event.release = true;
+                    this.ncpBlock = true;
+                }
             }
+
+            case LEGIT -> {
+                if (this.blockItem()) {
+                    if (event.usingItem) {
+                        if (event.left || MoveUtil.isMoving()) {
+                            event.release = true;
+                        }
+                        event.left = false;
+                        event.right = false;
+                    } else {
+                        if (event.rightButton) {
+                            event.right = true;
+                        }
+                    }
+                }
+            }
+
         }
     };
 
@@ -150,6 +173,7 @@ public class NoSlow extends Module {
     private enum Mode {
         VANILLA,
         @DisplayName("NCP") NCP,
+        LEGIT,
         SWITCH,
         SPOOF
     }

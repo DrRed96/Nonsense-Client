@@ -14,6 +14,12 @@ version '1.0'
 
 def os = OperatingSystem.current()
 
+def natives = [
+    [ os: OperatingSystem.WINDOWS, lwjgl: 'natives-windows' ],
+    [ os: OperatingSystem.MAC_OS, lwjgl: 'natives-macos' ],
+    [ os: OperatingSystem.LINUX, lwjgl: 'natives-linux' ]
+]
+
 switch (os) {
     case OperatingSystem.LINUX:
         project.ext.lwjglNatives = 'natives-linux'
@@ -62,13 +68,17 @@ dependencies {
     library "org.lwjgl:lwjgl-nanovg:${project.lwjgl_version}"
     library "org.lwjgl:lwjgl-stb:${project.lwjgl_version}"
     library "org.lwjgl:lwjgl-tinyfd:${project.lwjgl_version}"
-    nativeLib "org.lwjgl:lwjgl:${project.lwjgl_version}:$lwjglNatives"
-    nativeLib "org.lwjgl:lwjgl-glfw:${project.lwjgl_version}:$lwjglNatives"
-    nativeLib "org.lwjgl:lwjgl-openal:${project.lwjgl_version}:$lwjglNatives"
-    nativeLib "org.lwjgl:lwjgl-opengl:${project.lwjgl_version}:$lwjglNatives"
-    nativeLib "org.lwjgl:lwjgl-nanovg:${project.lwjgl_version}:$lwjglNatives"
-    nativeLib "org.lwjgl:lwjgl-stb:${project.lwjgl_version}:$lwjglNatives"
-    nativeLib "org.lwjgl:lwjgl-tinyfd:${project.lwjgl_version}:$lwjglNatives"
+
+    // LWJGL native libraries
+    for (n in natives) {
+        nativeLib "org.lwjgl:lwjgl:${project.lwjgl_version}:${n.lwjgl}"
+        nativeLib "org.lwjgl:lwjgl-glfw:${project.lwjgl_version}:${n.lwjgl}"
+        nativeLib "org.lwjgl:lwjgl-openal:${project.lwjgl_version}:${n.lwjgl}"
+        nativeLib "org.lwjgl:lwjgl-opengl:${project.lwjgl_version}:${n.lwjgl}"
+        nativeLib "org.lwjgl:lwjgl-nanovg:${project.lwjgl_version}:${n.lwjgl}"
+        nativeLib "org.lwjgl:lwjgl-stb:${project.lwjgl_version}:${n.lwjgl}"
+        nativeLib "org.lwjgl:lwjgl-tinyfd:${project.lwjgl_version}:${n.lwjgl}"
+    }
 
     // Vorbis Libraries
     library 'com.paulscode:codecjorbis:20101023'
@@ -135,7 +145,7 @@ jar {
 
     manifest {
         attributes(
-                'Main-Class': 'net.minecraft.client.main.Main',
+                'Main-Class': 'Start',
                 'Multi-Release': 'true'
         )
     }
@@ -152,7 +162,7 @@ tasks.register('allJar', Jar) {
 
     manifest {
         attributes(
-                'Main-Class': 'net.minecraft.client.main.Main',
+                'Main-Class': 'Start',
                 'Multi-Release': 'true'
         )
     }
@@ -163,12 +173,12 @@ tasks.register('libraryJar', Jar) {
 
     archiveFileName.set('libs.jar')
     from configurations.library.collect { zipTree(it) }
-    duplicatesStrategy = DuplicatesStrategy.EXCLUDE
+    duplicatesStrategy = DuplicatesStrategy.INCLUDE
 }
 
 tasks.register('nativesJar', Jar) {
     setGroup('client')
-    archiveFileName.set("natives-${os.getFamilyName()}.jar")
+    archiveFileName.set("natives.jar")
     from configurations.nativeLib.collect { zipTree(it) }
     duplicatesStrategy = DuplicatesStrategy.EXCLUDE
 }
@@ -185,7 +195,7 @@ tasks.register('extractNatives', Copy) {
 
     from configurations.nativeLib.collect { zipTree(it).flatten() }
     include('*.dll', '*.dylib', '*.so')
-    into "${layout.buildDirectory.getAsFile().get()}/libs/natives/${os.getFamilyName()}"
+    into "${layout.buildDirectory.getAsFile().get()}/libs/natives"
 }
 
 tasks.register('copyAssets', Copy) {
@@ -205,7 +215,7 @@ idea.project.settings.runConfigurations {
     "Start"(Application) {
         mainClass = 'TestStart'
         workingDirectory = "${project.rootDir}/run"
-        jvmArgs = "-Xmx4G -Xms512m -Djava.library.path=../build/libs/natives/${os.getFamilyName()}"
+        jvmArgs = "-Xmx4G -Xms512m -Djava.library.path=../build/libs/natives"
         moduleName = "Nonsense-Client.test"
     }
 }

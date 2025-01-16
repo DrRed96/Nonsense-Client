@@ -20,7 +20,7 @@ public class Http {
     public HttpURLConnection connection;
 
     public Http(String url) throws Exception {
-        this.connection = (HttpURLConnection)(new URL(url)).openConnection();
+        this.connection = (HttpURLConnection)new URI(url).toURL().openConnection();
         this.connection.setDoOutput(true);
         this.connection.setDoInput(true);
         this.connection.setInstanceFollowRedirects(false);
@@ -35,6 +35,21 @@ public class Http {
         for (String key : headers.keySet()) {
             this.connection.setRequestProperty(key, headers.get(key));
         }
+        return this;
+    }
+
+    public Http get() throws ProtocolException {
+        this.connection.setRequestMethod("GET");
+        return this;
+    }
+
+    public Http get(Map<Object, Object> map) throws ProtocolException {
+        this.connection.setRequestMethod("GET");
+        return this;
+    }
+
+    public Http post() throws ProtocolException {
+        this.connection.setRequestMethod("POST");
         return this;
     }
 
@@ -59,21 +74,10 @@ public class Http {
         header("Content-Type", "application/x-www-form-urlencoded");
         StringJoiner sj = new StringJoiner("&");
         for (Map.Entry<Object, Object> entry : map.entrySet()) {
-            sj.add(URLEncoder.encode(entry.getKey().toString(), "UTF-8") + "=" + URLEncoder.encode(entry.getValue().toString(), "UTF-8"));
+            sj.add(URLEncoder.encode(entry.getKey().toString(), StandardCharsets.UTF_8) + "=" + URLEncoder.encode(entry.getValue().toString(), StandardCharsets.UTF_8));
         }
         postRaw(sj.toString());
         return this;
-    }
-
-    public Http get() throws ProtocolException {
-        this.connection.setRequestMethod("GET");
-        return this;
-    }
-
-    public Http get(Map<Object, Object> map) throws ProtocolException {
-        this.connection.setRequestMethod("GET");
-        return this;
-
     }
 
     public int status() throws IOException {
@@ -101,10 +105,10 @@ public class Http {
 
     public static boolean ping(String url) {
         try {
-            URLConnection con = new URL(url).openConnection();
+            URLConnection con = new URI(url).toURL().openConnection();
             con.connect();
             return true;
-        } catch (IOException e) {
+        } catch (IOException | URISyntaxException e) {
             return false;
         }
     }

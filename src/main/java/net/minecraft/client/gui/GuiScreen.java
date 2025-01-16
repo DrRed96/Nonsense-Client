@@ -12,7 +12,7 @@ import java.io.File;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
-import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -28,7 +28,6 @@ import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
-import net.minecraft.nbt.NBTBase;
 import net.minecraft.nbt.NBTException;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.stats.Achievement;
@@ -69,7 +68,7 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback {
      */
     public int height;
     protected List<GuiButton> buttonList = Lists.newCopyOnWriteArrayList();
-    protected List<GuiLabel> labelList = Lists.<GuiLabel>newArrayList();
+    protected List<GuiLabel> labelList = Lists.newArrayList();
     public boolean allowUserInput;
 
     /**
@@ -125,13 +124,13 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback {
      */
     public static String getClipboardString() {
         try {
-            Transferable transferable = Toolkit.getDefaultToolkit().getSystemClipboard().getContents((Object) null);
+            Transferable transferable = Toolkit.getDefaultToolkit().getSystemClipboard().getContents(null);
 
             if (transferable != null && transferable.isDataFlavorSupported(DataFlavor.stringFlavor)) {
                 return (String) transferable.getTransferData(DataFlavor.stringFlavor);
             }
-        } catch (Exception var1) {
-            ;
+        } catch (Exception _) {
+
         }
 
         return "";
@@ -155,9 +154,9 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback {
 
         for (int i = 0; i < list.size(); ++i) {
             if (i == 0) {
-                list.set(i, stack.getRarity().rarityColor + (String) list.get(i));
+                list.set(i, stack.getRarity().rarityColor + list.get(i));
             } else {
-                list.set(i, EnumChatFormatting.GRAY + (String) list.get(i));
+                list.set(i, EnumChatFormatting.GRAY + list.get(i));
             }
         }
 
@@ -169,7 +168,7 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback {
      * mouse x position, current mouse y position.
      */
     protected void drawCreativeTabHoveringText(String tabName, int mouseX, int mouseY) {
-        this.drawHoveringText(Arrays.<String>asList(new String[]{tabName}), mouseX, mouseY);
+        this.drawHoveringText(Collections.singletonList(tabName), mouseX, mouseY);
     }
 
     /**
@@ -209,21 +208,21 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback {
 
             this.zLevel = 300.0F;
             this.itemRender.zLevel = 300.0F;
-            int l = -267386864;
+            int l = 0xf0100010;
             this.drawGradientRect(l1 - 3, i2 - 4, l1 + i + 3, i2 - 3, l, l);
             this.drawGradientRect(l1 - 3, i2 + k + 3, l1 + i + 3, i2 + k + 4, l, l);
             this.drawGradientRect(l1 - 3, i2 - 3, l1 + i + 3, i2 + k + 3, l, l);
             this.drawGradientRect(l1 - 4, i2 - 3, l1 - 3, i2 + k + 3, l, l);
             this.drawGradientRect(l1 + i + 3, i2 - 3, l1 + i + 4, i2 + k + 3, l, l);
-            int i1 = 1347420415;
-            int j1 = (i1 & 16711422) >> 1 | i1 & -16777216;
+            int i1 = 0x505000ff;
+            int j1 = (i1 & 0xfefefe) >> 1 | i1 & 0xff000000;
             this.drawGradientRect(l1 - 3, i2 - 3 + 1, l1 - 3 + 1, i2 + k + 3 - 1, i1, j1);
             this.drawGradientRect(l1 + i + 2, i2 - 3 + 1, l1 + i + 3, i2 + k + 3 - 1, i1, j1);
             this.drawGradientRect(l1 - 3, i2 - 3, l1 + i + 3, i2 - 3 + 1, i1, i1);
             this.drawGradientRect(l1 - 3, i2 + k + 2, l1 + i + 3, i2 + k + 3, j1, j1);
 
             for (int k1 = 0; k1 < textLines.size(); ++k1) {
-                String s1 = (String) textLines.get(k1);
+                String s1 = textLines.get(k1);
                 this.fontRendererObj.drawStringWithShadow(s1, (float) l1, (float) i2, -1);
 
                 if (k1 == 0) {
@@ -253,13 +252,12 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback {
                 ItemStack itemstack = null;
 
                 try {
-                    NBTBase nbtbase = JsonToNBT.getTagFromJson(hoverevent.getValue().getUnformattedText());
+                    NBTTagCompound nbtbase = JsonToNBT.getTagFromJson(hoverevent.getValue().getUnformattedText());
 
-                    if (nbtbase instanceof NBTTagCompound) {
-                        itemstack = ItemStack.loadItemStackFromNBT((NBTTagCompound) nbtbase);
+                    if (nbtbase != null) {
+                        itemstack = ItemStack.loadItemStackFromNBT(nbtbase);
                     }
-                } catch (NBTException var11) {
-                    ;
+                } catch (NBTException _) {
                 }
 
                 if (itemstack != null) {
@@ -270,19 +268,18 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback {
             } else if (hoverevent.getAction() == HoverEvent.Action.SHOW_ENTITY) {
                 if (this.mc.gameSettings.advancedItemTooltips) {
                     try {
-                        NBTBase nbtbase1 = JsonToNBT.getTagFromJson(hoverevent.getValue().getUnformattedText());
+                        NBTTagCompound nbtbase1 = JsonToNBT.getTagFromJson(hoverevent.getValue().getUnformattedText());
 
-                        if (nbtbase1 instanceof NBTTagCompound) {
-                            List<String> list1 = Lists.<String>newArrayList();
-                            NBTTagCompound nbttagcompound = (NBTTagCompound) nbtbase1;
-                            list1.add(nbttagcompound.getString("name"));
+                        if (nbtbase1 != null) {
+                            List<String> list1 = Lists.newArrayList();
+                            list1.add(nbtbase1.getString("name"));
 
-                            if (nbttagcompound.hasKey("type", 8)) {
-                                String s = nbttagcompound.getString("type");
+                            if (nbtbase1.hasKey("type", 8)) {
+                                String s = nbtbase1.getString("type");
                                 list1.add("Type: " + s + " (" + EntityList.getIDFromString(s) + ")");
                             }
 
-                            list1.add(nbttagcompound.getString("id"));
+                            list1.add(nbtbase1.getString("id"));
                             this.drawHoveringText(list1, p_175272_2_, p_175272_3_);
                         } else {
                             this.drawCreativeTabHoveringText(EnumChatFormatting.RED + "Invalid Entity!", p_175272_2_, p_175272_3_);
@@ -298,10 +295,10 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback {
 
                 if (statbase != null) {
                     IChatComponent ichatcomponent = statbase.getStatName();
-                    IChatComponent ichatcomponent1 = new ChatComponentTranslation("stats.tooltip.type." + (statbase.isAchievement() ? "achievement" : "statistic"), new Object[0]);
-                    ichatcomponent1.getChatStyle().setItalic(Boolean.valueOf(true));
+                    IChatComponent ichatcomponent1 = new ChatComponentTranslation("stats.tooltip.type." + (statbase.isAchievement() ? "achievement" : "statistic"));
+                    ichatcomponent1.getChatStyle().setItalic(Boolean.TRUE);
                     String s1 = statbase instanceof Achievement ? ((Achievement) statbase).getDescription() : null;
-                    List<String> list = Lists.newArrayList(new String[]{ichatcomponent.getFormattedText(), ichatcomponent1.getFormattedText()});
+                    List<String> list = Lists.newArrayList(ichatcomponent.getFormattedText(), ichatcomponent1.getFormattedText());
 
                     if (s1 != null) {
                         list.addAll(this.fontRendererObj.listFormattedStringToWidth(s1, 150));
@@ -361,7 +358,7 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback {
                             this.openWebLink(uri);
                         }
                     } catch (URISyntaxException urisyntaxexception) {
-                        LOGGER.error((String) ("Can\'t open url for " + clickevent), (Throwable) urisyntaxexception);
+                        LOGGER.error("Can't open url for " + clickevent, urisyntaxexception);
                     }
                 } else if (clickevent.getAction() == ClickEvent.Action.OPEN_FILE) {
                     URI uri1 = (new File(clickevent.getValue())).toURI();
@@ -373,7 +370,7 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback {
                 } else if (clickevent.getAction() == ClickEvent.Action.TWITCH_USER_INFO) {
                     LOGGER.warn("Twitch has been removed.");
                 } else {
-                    LOGGER.error("Don\'t know how to handle " + clickevent);
+                    LOGGER.error("Don't know how to handle " + clickevent);
                 }
 
                 return true;
@@ -551,10 +548,10 @@ public abstract class GuiScreen extends Gui implements GuiYesNoCallback {
         GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
         float f = 32.0F;
         worldrenderer.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-        worldrenderer.pos(0.0D, (double) this.height, 0.0D).tex(0.0D, (double) ((float) this.height / 32.0F + (float) tint)).color(64, 64, 64, 255).endVertex();
-        worldrenderer.pos((double) this.width, (double) this.height, 0.0D).tex((double) ((float) this.width / 32.0F), (double) ((float) this.height / 32.0F + (float) tint)).color(64, 64, 64, 255).endVertex();
-        worldrenderer.pos((double) this.width, 0.0D, 0.0D).tex((double) ((float) this.width / 32.0F), (double) tint).color(64, 64, 64, 255).endVertex();
-        worldrenderer.pos(0.0D, 0.0D, 0.0D).tex(0.0D, (double) tint).color(64, 64, 64, 255).endVertex();
+        worldrenderer.pos(0.0D, this.height, 0.0D).tex(0.0D, (float) this.height / 32.0F + (float) tint).color(64, 64, 64, 255).endVertex();
+        worldrenderer.pos(this.width, this.height, 0.0D).tex((float) this.width / 32.0F, (float) this.height / 32.0F + (float) tint).color(64, 64, 64, 255).endVertex();
+        worldrenderer.pos(this.width, 0.0D, 0.0D).tex((float) this.width / 32.0F, tint).color(64, 64, 64, 255).endVertex();
+        worldrenderer.pos(0.0D, 0.0D, 0.0D).tex(0.0D, tint).color(64, 64, 64, 255).endVertex();
         tessellator.draw();
     }
 

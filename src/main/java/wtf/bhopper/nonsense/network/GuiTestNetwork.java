@@ -10,7 +10,7 @@ public class GuiTestNetwork extends GuiScreen {
 
     @Override
     public void initGui() {
-        this.buttonList.add(new GuiButton(1, this.width / 2 - 100, 5, "Start"));
+        this.buttonList.add(new GuiButton(1, this.width / 2 - 100, 20, "Start"));
     }
 
     @Override
@@ -23,7 +23,7 @@ public class GuiTestNetwork extends GuiScreen {
     protected void actionPerformed(GuiButton button) throws IOException {
 
         switch (button.id) {
-            case 1 -> Nonsense.getNetHandler().connect();
+            case 1 -> Nonsense.getUniverse().connect();
         }
 
     }
