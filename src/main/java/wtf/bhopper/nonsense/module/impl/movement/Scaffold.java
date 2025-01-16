@@ -143,7 +143,7 @@ public class Scaffold extends Module {
     @EventLink
     public final Listener<EventUpdate> onUpdate = _ -> {
         if (this.rotations != null) {
-            RotationsComponent.updateServerRotations(this.rotations);
+            RotationsComponent.updateServerRotations(this.mode.is(Mode.HYPIXEL) ? new Rotation(mc.thePlayer.rotationYaw - 180.0f + 51.0f, 89.0f) : this.rotations);
         }
     };
 
@@ -350,7 +350,8 @@ public class Scaffold extends Module {
     public record BlockData(BlockPos blockPos, EnumFacing facing) { }
 
     private enum Mode {
-        NORMAL
+        NORMAL,
+        HYPIXEL
     }
 
     private enum RotationsMode {

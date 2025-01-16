@@ -71,20 +71,21 @@ public class Velocity extends Module {
                 case NORMAL -> {
                     event.cancel();
 
-                    if (this.horizontal.get() != 0.0F) {
-                        double h = horizontal.get() / 100.0;
-                        double mx = (double)packet.getMotionX() / 8000.0;
-                        double mz = (double)packet.getMotionZ() / 8000.0;
-                        mc.thePlayer.motionX = mx * h;
-                        mc.thePlayer.motionZ = mz * h;
-                    }
-
                     if (this.vertical.get() != 0.0F) {
                         double v = vertical.get() / 100.0;
                         double my = (double)packet.getMotionY() / 8000.0;
                         mc.thePlayer.motionY = my * v;
                     }
 
+                    if (this.horizontal.get() != 0.0F) {
+                        double h = horizontal.get() / 100.0;
+                        double mx = (double)packet.getMotionX() / 8000.0;
+                        double mz = (double)packet.getMotionZ() / 8000.0;
+                        mc.thePlayer.motionX = mx * h;
+                        mc.thePlayer.motionZ = mz * h;
+                    } else {
+                        event.setCancelled(true);
+                    }
                 }
 
                 case AIR -> {
@@ -94,7 +95,9 @@ public class Velocity extends Module {
                     }
                 }
             }
-        } else if (event.packet instanceof S27PacketExplosion packet) {
+        }
+        // commented out, that's not how explosion velo works m8 - Shae/qe7
+        /* else if (event.packet instanceof S27PacketExplosion packet) {
             switch (this.mode.get()) {
                 case NORMAL -> packet.setMotion(
                         packet.getMotionX() * this.horizontal.getFloat(),
@@ -108,7 +111,7 @@ public class Velocity extends Module {
                         packet.getMotionZ() * this.horizontal.getFloat()
                 );
             }
-        }
+        }*/
 
     };
 
