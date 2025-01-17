@@ -54,6 +54,7 @@ public class Scaffold extends Module {
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Scaffold method.", Mode.NORMAL);
 
     private final RotationsProperty rotationsProperty = new RotationsProperty("Rotations", "Scaffold rotations.", this);
+    private final BooleanProperty fallBack = new BooleanProperty("Fall Back", "Use fall back rotations if optimal rotations cannot be found.", true);
 
     private final GroupProperty towerGroup = new GroupProperty("Tower", "Scaffold tower", this);
     private final BooleanProperty towerEnable = new BooleanProperty("Enable", "Enables tower", true);
@@ -79,6 +80,7 @@ public class Scaffold extends Module {
 
     public Scaffold() {
         super();
+        this.rotationsProperty.addProperties(this.fallBack);
         this.towerGroup.addProperties(this.towerEnable, this.towerMode);
         this.addProperties(this.mode, this.rotationsProperty, this.towerGroup, this.swing, this.swap, this.sameY, this.down);
         this.setSuffix(this.mode::getDisplayValue);
@@ -143,7 +145,7 @@ public class Scaffold extends Module {
     @EventLink
     public final Listener<EventUpdate> onUpdate = _ -> {
         if (this.rotations != null) {
-            RotationsComponent.updateServerRotations(this.mode.is(Mode.HYPIXEL) ? new Rotation(mc.thePlayer.rotationYaw - 180.0f + 51.0f, 89.0f) : this.rotations);
+            RotationsComponent.updateServerRotations(this.rotations);
         }
     };
 
@@ -216,31 +218,65 @@ public class Scaffold extends Module {
 
     private void calculateTargetRotations() {
 
-        EntityPlayer player = mc.thePlayer;
+        switch (this.mode.get()) {
+            case NORMAL -> {
+                EntityPlayer player = mc.thePlayer;
 
-        double diff = player.posY + player.getEyeHeight() - this.blockData.blockPos.getY() - 0.5 - (Math.random() - 0.5 * 0.1);
+                double diff = player.posY + player.getEyeHeight() - this.blockData.blockPos.getY() - 0.5 - (Math.random() - 0.5 * 0.1);
 
-        MovingObjectPosition mouseOver;
+                MovingObjectPosition mouseOver;
 
-        for (int offset = -180; offset <= 180; offset += 45) {
-            player.setPosition(player.posX, player.posY - diff, player.posZ);
-            mouseOver = RotationUtil.rayCastBlocks(new Rotation(player.rotationYaw + (offset * 3.0F), 0.0F), 4.5, player);
-            player.setPosition(player.posX, player.posY + diff, player.posZ);
+                for (int offset = -180; offset <= 180; offset += 45) {
+                    player.setPosition(player.posX, player.posY - diff, player.posZ);
+                    mouseOver = RotationUtil.rayCastBlocks(new Rotation(player.rotationYaw + (offset * 3.0F), 0.0F), 4.5, player);
+                    player.setPosition(player.posX, player.posY + diff, player.posZ);
 
-            if (mouseOver == null || mouseOver.hitVec == null) {
-                return;
+                    if (mouseOver == null || mouseOver.hitVec == null) {
+                        return;
+                    }
+
+                    Rotation newRotations = RotationUtil.getRotations(mouseOver.hitVec);
+
+                    if (RotationUtil.isOverBlock(newRotations, this.blockData.blockPos, this.blockData.facing)) {
+                        this.targetRotations = newRotations;
+                        return;
+                    }
+                }
+
+                if (this.fallBack.get() && (this.targetRotations == null || !RotationUtil.isOverBlock(this.targetRotations, this.blockData.blockPos, this.blockData.facing))) {
+                    this.targetRotations = RotationUtil.getRotations(this.blockData.blockPos, this.blockData.facing);
+                }
             }
 
-            Rotation newRotations = RotationUtil.getRotations(mouseOver.hitVec);
+            case WATCHDOG -> {
 
-            if (RotationUtil.isOverBlock(newRotations, this.blockData.blockPos, this.blockData.facing)) {
-                this.targetRotations = newRotations;
-                return;
+                EntityPlayer player = mc.thePlayer;
+                double diff = player.posY + player.getEyeHeight() - this.blockData.blockPos.getY() - 0.5 - (Math.random() - 0.5 * 0.1);
+
+                for (float f : new float[]{ 51.0F, -51.0F, 0.0F }) {
+
+                    player.setPosition(player.posX, player.posY - diff, player.posZ);
+                    mouseOver = RotationUtil.rayCastBlocks(new Rotation(player.rotationYaw - 180.0F + f, 0.0F), 4.5, player);
+                    player.setPosition(player.posX, player.posY + diff, player.posZ);
+
+                    if (mouseOver == null || mouseOver.hitVec == null) {
+                        continue;
+                    }
+
+                    Rotation newRotations = RotationUtil.getRotations(mouseOver.hitVec);
+                    if (RotationUtil.isOverBlock(newRotations, this.blockData.blockPos, this.blockData.facing)) {
+                        this.targetRotations = newRotations;
+                        return;
+                    }
+
+                }
+
+                if (this.fallBack.get() && (this.targetRotations == null || !RotationUtil.isOverBlock(this.targetRotations, this.blockData.blockPos, this.blockData.facing))) {
+                    this.targetRotations = RotationUtil.getRotations(this.blockData.blockPos, this.blockData.facing);
+                }
+
+//                this.targetRotations = new Rotation(mc.thePlayer.rotationYaw - 180.0f + 51.0f, 89.0f);
             }
-        }
-
-        if (this.targetRotations == null || !RotationUtil.isOverBlock(this.targetRotations, this.blockData.blockPos, this.blockData.facing)) {
-            this.targetRotations = RotationUtil.getRotations(this.blockData.blockPos, this.blockData.facing);
         }
 
     }
@@ -351,24 +387,7 @@ public class Scaffold extends Module {
 
     private enum Mode {
         NORMAL,
-        HYPIXEL
-    }
-
-    private enum RotationsMode {
-        INSTANT,
-        PLACE
-    }
-
-    private enum RotationsAiming {
-        HIT_VECTOR,
-        INVALID
-    }
-
-    private enum RotationsHitVec {
-        CENTRE,
-        CLOSEST,
-        RANDOM,
-        RAY_CAST
+        WATCHDOG
     }
 
     private enum TowerMode {
