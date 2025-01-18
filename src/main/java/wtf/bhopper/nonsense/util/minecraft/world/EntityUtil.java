@@ -13,6 +13,10 @@ import java.util.List;
 
 public class EntityUtil implements IMinecraft {
 
+    public static Entity getEntity(int id) {
+        return mc.theWorld.getEntityByID(id);
+    }
+
     public static PathResult predictThrowablePath(double posX, double posY, double posZ, float rotationYaw, float rotationPitch, Entity thrower, int maxSimulations) {
         return predictProjectilePath(posX, posY, posZ, rotationYaw, rotationPitch, 0.25F, 1.5F, 0.03F, thrower, maxSimulations);
     }

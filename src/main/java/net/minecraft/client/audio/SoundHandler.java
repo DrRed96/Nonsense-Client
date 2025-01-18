@@ -73,7 +73,7 @@ public class SoundHandler implements IResourceManagerReloadListener, ITickable
 
                         for (Entry<String, SoundList> entry : map.entrySet())
                         {
-                            this.loadSoundResource(new ResourceLocation(s, (String)entry.getKey()), (SoundList)entry.getValue());
+                            this.loadSoundResource(new ResourceLocation(s, entry.getKey()), entry.getValue());
                         }
                     }
                     catch (RuntimeException runtimeexception)

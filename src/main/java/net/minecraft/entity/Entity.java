@@ -281,6 +281,7 @@ public abstract class Entity implements ICommandSender {
     public float movementYaw;
     public float lastTickMovementYaw;
     public float velocityYaw;
+    public boolean hasMoved = false;
     public boolean isFake = false;
 
     /**
@@ -428,6 +429,11 @@ public abstract class Entity implements ICommandSender {
      */
     public void onUpdate() {
         this.onEntityUpdate();
+
+        if (this.getPositionVector().distanceTo(new Vec3(this.lastTickPosX, this.lastTickPosY, this.lastTickPosZ)) > 0.1) {
+            this.hasMoved = true;
+        }
+
     }
 
     /**
@@ -437,6 +443,10 @@ public abstract class Entity implements ICommandSender {
 
         if (this.ridingEntity != null && this.ridingEntity.isDead) {
             this.ridingEntity = null;
+        }
+
+        if (this.ticksExisted > 10 && (Math.abs(this.prevPosX - this.posX) > 0.2 || Math.abs(this.prevPosY - this.posY) > 0.2 || Math.abs(this.prevPosZ - this.posZ) > 0.2)) {
+            this.hasMoved = true;
         }
 
         this.prevDistanceWalkedModified = this.distanceWalkedModified;

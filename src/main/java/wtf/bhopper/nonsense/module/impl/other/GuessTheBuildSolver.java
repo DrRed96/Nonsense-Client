@@ -192,6 +192,9 @@ public class GuessTheBuildSolver extends Module {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
                 while (reader.ready()) {
                     String line = reader.readLine();
+                    if (line.startsWith("//")) {
+                        continue;
+                    }
                     this.themes.add(line);
                 }
             }

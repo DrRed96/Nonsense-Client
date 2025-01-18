@@ -237,7 +237,32 @@ public class EntityRenderer implements IResourceManagerReloadListener {
     private double cameraYaw;
     private double cameraPitch;
     private ShaderGroup theShaderGroup;
-    private static final ResourceLocation[] shaderResourceLocations = new ResourceLocation[]{new ResourceLocation("shaders/post/notch.json"), new ResourceLocation("shaders/post/fxaa.json"), new ResourceLocation("shaders/post/art.json"), new ResourceLocation("shaders/post/bumpy.json"), new ResourceLocation("shaders/post/blobs2.json"), new ResourceLocation("shaders/post/pencil.json"), new ResourceLocation("shaders/post/color_convolve.json"), new ResourceLocation("shaders/post/deconverge.json"), new ResourceLocation("shaders/post/flip.json"), new ResourceLocation("shaders/post/invert.json"), new ResourceLocation("shaders/post/ntsc.json"), new ResourceLocation("shaders/post/outline.json"), new ResourceLocation("shaders/post/phosphor.json"), new ResourceLocation("shaders/post/scan_pincushion.json"), new ResourceLocation("shaders/post/sobel.json"), new ResourceLocation("shaders/post/bits.json"), new ResourceLocation("shaders/post/desaturate.json"), new ResourceLocation("shaders/post/green.json"), new ResourceLocation("shaders/post/blur.json"), new ResourceLocation("shaders/post/wobble.json"), new ResourceLocation("shaders/post/blobs.json"), new ResourceLocation("shaders/post/antialias.json"), new ResourceLocation("shaders/post/creeper.json"), new ResourceLocation("shaders/post/spider.json")};
+    private static final ResourceLocation[] shaderResourceLocations = new ResourceLocation[]{
+            new ResourceLocation("shaders/post/notch.json"),
+            new ResourceLocation("shaders/post/fxaa.json"),
+            new ResourceLocation("shaders/post/art.json"),
+            new ResourceLocation("shaders/post/bumpy.json"),
+            new ResourceLocation("shaders/post/blobs2.json"),
+            new ResourceLocation("shaders/post/pencil.json"),
+            new ResourceLocation("shaders/post/color_convolve.json"),
+            new ResourceLocation("shaders/post/deconverge.json"),
+            new ResourceLocation("shaders/post/flip.json"),
+            new ResourceLocation("shaders/post/invert.json"),
+            new ResourceLocation("shaders/post/ntsc.json"),
+            new ResourceLocation("shaders/post/outline.json"),
+            new ResourceLocation("shaders/post/phosphor.json"),
+            new ResourceLocation("shaders/post/scan_pincushion.json"),
+            new ResourceLocation("shaders/post/sobel.json"),
+            new ResourceLocation("shaders/post/bits.json"),
+            new ResourceLocation("shaders/post/desaturate.json"),
+            new ResourceLocation("shaders/post/green.json"),
+            new ResourceLocation("shaders/post/blur.json"),
+            new ResourceLocation("shaders/post/wobble.json"),
+            new ResourceLocation("shaders/post/blobs.json"),
+            new ResourceLocation("shaders/post/antialias.json"),
+            new ResourceLocation("shaders/post/creeper.json"),
+            new ResourceLocation("shaders/post/spider.json")
+    };
     public static final int shaderCount = shaderResourceLocations.length;
     private int shaderIndex;
     private boolean useShader;
@@ -342,12 +367,8 @@ public class EntityRenderer implements IResourceManagerReloadListener {
                 this.theShaderGroup = new ShaderGroup(this.mc.getTextureManager(), this.resourceManager, this.mc.getFramebuffer(), resourceLocationIn);
                 this.theShaderGroup.createBindFramebuffers(this.mc.displayWidth, this.mc.displayHeight);
                 this.useShader = true;
-            } catch (IOException ioexception) {
-                logger.warn((String) ("Failed to load shader: " + resourceLocationIn), (Throwable) ioexception);
-                this.shaderIndex = shaderCount;
-                this.useShader = false;
-            } catch (JsonSyntaxException jsonsyntaxexception) {
-                logger.warn((String) ("Failed to load shader: " + resourceLocationIn), (Throwable) jsonsyntaxexception);
+            } catch (IOException | JsonSyntaxException exception) {
+                logger.warn("Failed to load shader: " + resourceLocationIn, exception);
                 this.shaderIndex = shaderCount;
                 this.useShader = false;
             }

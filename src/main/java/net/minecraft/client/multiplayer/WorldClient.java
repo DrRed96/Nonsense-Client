@@ -266,7 +266,7 @@ public class WorldClient extends World
 
     public Entity removeEntityFromWorld(int p_73028_1_)
     {
-        Entity entity = (Entity)this.entitiesById.removeObject(p_73028_1_);
+        Entity entity = this.entitiesById.removeObject(p_73028_1_);
 
         if (entity != null)
         {

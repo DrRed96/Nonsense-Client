@@ -171,6 +171,7 @@ public class Bootstrap {
                 source.getWorld().playAuxSFX(1009, source.getBlockPos(), 0);
             }
         });
+
         BlockDispenser.dispenseBehaviorRegistry.putObject(Items.boat, new BehaviorDefaultDispenseItem() {
             private final BehaviorDefaultDispenseItem field_150842_b = new BehaviorDefaultDispenseItem();
 
@@ -204,6 +205,7 @@ public class Bootstrap {
                 source.getWorld().playAuxSFX(1000, source.getBlockPos(), 0);
             }
         });
+
         IBehaviorDispenseItem ibehaviordispenseitem = new BehaviorDefaultDispenseItem() {
             private final BehaviorDefaultDispenseItem field_150841_b = new BehaviorDefaultDispenseItem();
 
@@ -220,6 +222,7 @@ public class Bootstrap {
                 }
             }
         };
+
         BlockDispenser.dispenseBehaviorRegistry.putObject(Items.lava_bucket, ibehaviordispenseitem);
         BlockDispenser.dispenseBehaviorRegistry.putObject(Items.water_bucket, ibehaviordispenseitem);
         BlockDispenser.dispenseBehaviorRegistry.putObject(Items.bucket, new BehaviorDefaultDispenseItem() {
@@ -255,6 +258,7 @@ public class Bootstrap {
                 return stack;
             }
         });
+
         BlockDispenser.dispenseBehaviorRegistry.putObject(Items.flint_and_steel, new BehaviorDefaultDispenseItem() {
             private boolean field_150839_b = true;
 
@@ -286,6 +290,7 @@ public class Bootstrap {
                 }
             }
         });
+
         BlockDispenser.dispenseBehaviorRegistry.putObject(Items.dye, new BehaviorDefaultDispenseItem() {
             private boolean field_150838_b = true;
 
@@ -316,6 +321,7 @@ public class Bootstrap {
                 }
             }
         });
+
         BlockDispenser.dispenseBehaviorRegistry.putObject(Item.getItemFromBlock(Blocks.tnt), new BehaviorDefaultDispenseItem() {
             protected ItemStack dispenseStack(IBlockSource source, ItemStack stack) {
                 World world = source.getWorld();
@@ -327,6 +333,7 @@ public class Bootstrap {
                 return stack;
             }
         });
+
         BlockDispenser.dispenseBehaviorRegistry.putObject(Items.skull, new BehaviorDefaultDispenseItem() {
             private boolean field_179240_b = true;
 
@@ -385,6 +392,7 @@ public class Bootstrap {
                 }
             }
         });
+
         BlockDispenser.dispenseBehaviorRegistry.putObject(Item.getItemFromBlock(Blocks.pumpkin), new BehaviorDefaultDispenseItem() {
             private boolean field_179241_b = true;
 
@@ -443,7 +451,7 @@ public class Bootstrap {
         System.setOut(new LoggingPrintStream("STDOUT", SYSOUT));
     }
 
-    public static void printToSYSOUT(String p_179870_0_) {
-        SYSOUT.println(p_179870_0_);
+    public static void printToSYSOUT(String msg) {
+        SYSOUT.println(msg);
     }
 }

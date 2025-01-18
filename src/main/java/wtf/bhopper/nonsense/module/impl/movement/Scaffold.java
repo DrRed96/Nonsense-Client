@@ -54,7 +54,7 @@ public class Scaffold extends Module {
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Scaffold method.", Mode.NORMAL);
 
     private final RotationsProperty rotationsProperty = new RotationsProperty("Rotations", "Scaffold rotations.", this);
-    private final BooleanProperty fallBack = new BooleanProperty("Fall Back", "Use fall back rotations if optimal rotations cannot be found.", true);
+    private final EnumProperty<FallBack> fallBack = new EnumProperty<>("Fall Back", "Use fall back rotations if optimal rotations cannot be found.", FallBack.CENTRE);
 
     private final GroupProperty towerGroup = new GroupProperty("Tower", "Scaffold tower", this);
     private final BooleanProperty towerEnable = new BooleanProperty("Enable", "Enables tower", true);
@@ -243,8 +243,11 @@ public class Scaffold extends Module {
                     }
                 }
 
-                if (this.fallBack.get() && (this.targetRotations == null || !RotationUtil.isOverBlock(this.targetRotations, this.blockData.blockPos, this.blockData.facing))) {
-                    this.targetRotations = RotationUtil.getRotations(this.blockData.blockPos, this.blockData.facing);
+                if (this.targetRotations == null || !RotationUtil.isOverBlock(this.targetRotations, this.blockData.blockPos, this.blockData.facing)) {
+                    switch (this.fallBack.get()) {
+                        case CENTRE -> this.targetRotations = RotationUtil.getRotations(this.blockData.blockPos, this.blockData.facing);
+                        case CLOSEST -> this.targetRotations = RotationUtil.getRotations(RotationUtil.getHitVecOptimized(this.blockData.blockPos, this.blockData.facing));
+                    }
                 }
             }
 
@@ -271,8 +274,11 @@ public class Scaffold extends Module {
 
                 }
 
-                if (this.fallBack.get() && (this.targetRotations == null || !RotationUtil.isOverBlock(this.targetRotations, this.blockData.blockPos, this.blockData.facing))) {
-                    this.targetRotations = RotationUtil.getRotations(this.blockData.blockPos, this.blockData.facing);
+                if (this.targetRotations == null || !RotationUtil.isOverBlock(this.targetRotations, this.blockData.blockPos, this.blockData.facing)) {
+                    switch (this.fallBack.get()) {
+                        case CENTRE -> this.targetRotations = RotationUtil.getRotations(this.blockData.blockPos, this.blockData.facing);
+                        case CLOSEST -> this.targetRotations = RotationUtil.getRotations(RotationUtil.getHitVecOptimized(this.blockData.blockPos, this.blockData.facing));
+                    }
                 }
 
 //                this.targetRotations = new Rotation(mc.thePlayer.rotationYaw - 180.0f + 51.0f, 89.0f);
@@ -388,6 +394,12 @@ public class Scaffold extends Module {
     private enum Mode {
         NORMAL,
         WATCHDOG
+    }
+
+    private enum FallBack {
+        CENTRE,
+        CLOSEST,
+        NONE
     }
 
     private enum TowerMode {

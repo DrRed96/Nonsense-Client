@@ -3,6 +3,7 @@ package wtf.bhopper.nonsense.gui.hud;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.input.Keyboard;
+import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.client.EventKeyPress;
@@ -12,6 +13,9 @@ import wtf.bhopper.nonsense.module.impl.visual.HudMod;
 import wtf.bhopper.nonsense.module.property.Property;
 import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 import wtf.bhopper.nonsense.util.render.*;
+
+import java.util.Comparator;
+import java.util.List;
 
 import static org.lwjgl.nanovg.NanoVG.*;
 
@@ -26,6 +30,7 @@ public class TabGui implements IMinecraft {
     private boolean isInProperty = false;
 
     private final Translate categoryTranslate = new Translate(0.0F, 0.0F);
+    private final Translate moduleTranslate = new Translate(0.0F, 0.0F);
 
     public void draw(ScaledResolution scaledRes, float delta, int minY) {
 
@@ -77,8 +82,18 @@ public class TabGui implements IMinecraft {
             }
         }
 
+        float x = tabSize - tabHeight + 2.0F;
+
         if (this.isInCategory) {
 
+            List<Module> modules = Nonsense.getModuleManager().getInCategory(this.selectedCategory);
+
+            float longestWidth = modules.stream()
+                    .map(module -> getWidth.getWidth(module.name))
+                    .max(Comparator.comparingDouble(f -> f))
+                    .orElse(0.0F) + 2.0F;
+
+            NVGHelper.drawRect(x, 0.0F, longestWidth, tabHeight, ColorUtil.BACKGROUND);
         }
 
         NVGHelper.end();

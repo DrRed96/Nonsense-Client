@@ -9,6 +9,7 @@ import org.luaj.vm2.Varargs;
 import org.luaj.vm2.lib.VarArgFunction;
 import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 import wtf.bhopper.nonsense.util.minecraft.inventory.InventoryUtil;
+import wtf.bhopper.nonsense.util.minecraft.world.EntityUtil;
 
 public abstract class LuaApi extends LuaTable implements IMinecraft {
 
@@ -30,7 +31,7 @@ public abstract class LuaApi extends LuaTable implements IMinecraft {
     }
 
     public static Entity getEntity(LuaValue value) {
-        return mc.theWorld.getEntityByID(value.checkint());
+        return EntityUtil.getEntity(value.checkint());
     }
 
     public static BlockPos getBlockPos(LuaValue value) {

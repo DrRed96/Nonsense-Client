@@ -14,9 +14,7 @@ import wtf.bhopper.nonsense.module.impl.visual.*;
 import wtf.bhopper.nonsense.script.ScriptModule;
 import wtf.bhopper.nonsense.script.ScriptOptionsMod;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ModuleManager {
@@ -26,7 +24,7 @@ public class ModuleManager {
 
     public ModuleManager() {
 
-        this.modules = this.addModules(
+        this.modules = this.createModuleMap(
                 // Combat
                 new KillAura(),
                 new AntiBot(),
@@ -150,7 +148,7 @@ public class ModuleManager {
     };
 
     @SuppressWarnings("unchecked")
-    private ImmutableClassToInstanceMap<Module> addModules(Module... modules) {
+    private ImmutableClassToInstanceMap<Module> createModuleMap(Module... modules) {
         ImmutableClassToInstanceMap.Builder<Module> builder = ImmutableClassToInstanceMap.builder();
         Arrays.stream(modules).forEach(module -> {
             if (module != null) {

@@ -155,12 +155,12 @@ public class CrashReport {
         Throwable object = this.cause;
 
         if (object.getMessage() == null) {
-            if (object instanceof NullPointerException) {
-                object = new NullPointerException(this.description);
-            } else if (object instanceof StackOverflowError) {
-                object = new StackOverflowError(this.description);
-            } else if (object instanceof OutOfMemoryError) {
-                object = new OutOfMemoryError(this.description);
+            switch (object) {
+                case NullPointerException _ -> object = new NullPointerException(this.description);
+                case StackOverflowError _ -> object = new StackOverflowError(this.description);
+                case OutOfMemoryError _ -> object = new OutOfMemoryError(this.description);
+                default -> {
+                }
             }
 
             object.setStackTrace(this.cause.getStackTrace());
@@ -190,27 +190,27 @@ public class CrashReport {
             CrashReporter.onCrashReport(this, this.theReportCategory);
         }
 
-        StringBuilder stringbuilder = new StringBuilder();
-        stringbuilder.append("---- Minecraft Crash Report ----\n");
-        Reflector.call(Reflector.BlamingTransformer_onCrash, stringbuilder);
-        Reflector.call(Reflector.CoreModManager_onCrash, stringbuilder);
-        stringbuilder.append("// ");
-        stringbuilder.append(getWittyComment());
-        stringbuilder.append("\n\n");
-        stringbuilder.append("Time: ");
-        stringbuilder.append((new SimpleDateFormat()).format(new Date()));
-        stringbuilder.append("\n");
-        stringbuilder.append("Description: ");
-        stringbuilder.append(this.description);
-        stringbuilder.append("\n\n");
-        stringbuilder.append(this.getCauseStackTraceOrString());
-        stringbuilder.append("\n\nA detailed walkthrough of the error, its code path and all known details is as follows:\n");
+        StringBuilder builder = new StringBuilder();
+        builder.append("---- Minecraft Crash Report ----\n");
+        Reflector.call(Reflector.BlamingTransformer_onCrash, builder);
+        Reflector.call(Reflector.CoreModManager_onCrash, builder);
+        builder.append("// ");
+        builder.append(getWittyComment());
+        builder.append("\n\n");
+        builder.append("Time: ");
+        builder.append(new SimpleDateFormat().format(new Date()));
+        builder.append("\n");
+        builder.append("Description: ");
+        builder.append(this.description);
+        builder.append("\n\n");
+        builder.append(this.getCauseStackTraceOrString());
+        builder.append("\n\nA detailed walkthrough of the error, its code path and all known details is as follows:\n");
 
-        stringbuilder.append("-".repeat(87));
+        builder.append("-".repeat(87));
 
-        stringbuilder.append("\n\n");
-        this.getSectionsInStringBuilder(stringbuilder);
-        return stringbuilder.toString();
+        builder.append("\n\n");
+        this.getSectionsInStringBuilder(builder);
+        return builder.toString();
     }
 
     /**
@@ -269,7 +269,7 @@ public class CrashReport {
             int j = astacktraceelement.length - i;
 
             if (j < 0) {
-                // This annoyed me so I've commented it out
+//                 This annoyed me so I've commented it out
 //                System.out.println("Negative index in crash report handler (" + astacktraceelement.length + "/" + i + ")");
             }
 
@@ -335,7 +335,8 @@ public class CrashReport {
                 "Ouch. That hurt :(",
                 "You're mean.",
                 "This is a token for 1 free hug. Redeem at your nearest Mojangsta: [~~HUG~~]",
-                "There are four lights!", "But it works on my machine."
+                "There are four lights!",
+                "But it works on my machine."
         };
 
         try {

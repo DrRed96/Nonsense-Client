@@ -118,7 +118,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.FutureTask;
 
 public class Minecraft implements IThreadListener {
-    private static final Logger logger = LogManager.getLogger();
+    private static final Logger LOGGER = LogManager.getLogger();
     private static final ResourceLocation locationMojangPng = new ResourceLocation("textures/gui/title/mojang.png");
     public static final boolean isRunningOnMac = Util.getOSType() == Util.EnumOS.OSX;
 
@@ -324,8 +324,8 @@ public class Minecraft implements IThreadListener {
         this.proxy = gameConfig.userInfo.proxy == null ? Proxy.NO_PROXY : gameConfig.userInfo.proxy;
         this.sessionService = (new YggdrasilAuthenticationService(gameConfig.userInfo.proxy, UUID.randomUUID().toString())).createMinecraftSessionService();
         this.session = gameConfig.userInfo.session;
-        logger.info("Setting user: " + this.session.getUsername());
-        logger.info("(Session ID is " + this.session.getSessionID() + ")");
+        LOGGER.info("Setting user: " + this.session.getUsername());
+        LOGGER.info("(Session ID is " + this.session.getSessionID() + ")");
         this.isDemo = gameConfig.gameInfo.isDemo;
         this.displayWidth = gameConfig.displayInfo.width > 0 ? gameConfig.displayInfo.width : 1;
         this.displayHeight = gameConfig.displayInfo.height > 0 ? gameConfig.displayInfo.height : 1;
@@ -376,13 +376,13 @@ public class Minecraft implements IThreadListener {
             } catch (ReportedException exception) {
                 this.addGraphicsAndWorldToCrashReport(exception.getCrashReport());
                 this.freeMemory();
-                logger.fatal("Reported exception thrown!", exception);
+                LOGGER.fatal("Reported exception thrown!", exception);
                 this.displayCrashReport(exception.getCrashReport());
                 break;
             } catch (Throwable throwable1) {
                 CrashReport crashReport = this.addGraphicsAndWorldToCrashReport(new CrashReport("Unexpected error", throwable1));
                 this.freeMemory();
-                logger.fatal("Unreported exception thrown!", throwable1);
+                LOGGER.fatal("Unreported exception thrown!", throwable1);
                 this.displayCrashReport(crashReport);
                 break;
             } finally {
@@ -406,7 +406,7 @@ public class Minecraft implements IThreadListener {
             this.displayHeight = this.gameSettings.overrideHeight;
         }
 
-        logger.info("LWJGL Version: " + Sys.getVersion());
+        LOGGER.info("LWJGL Version: " + Sys.getVersion());
         this.setWindowIcon();
         this.setInitialDisplayMode();
         this.createDisplay();
@@ -526,7 +526,7 @@ public class Minecraft implements IThreadListener {
         try {
             Display.create(new PixelFormat().withDepthBits(24));
         } catch (LWJGLException lwjglexception) {
-            logger.error("Couldn't set pixel format", lwjglexception);
+            LOGGER.error("Couldn't set pixel format", lwjglexception);
 
             try {
                 Thread.sleep(1000L);
@@ -557,21 +557,21 @@ public class Minecraft implements IThreadListener {
         Util.EnumOS util$enumos = Util.getOSType();
 
         if (util$enumos != Util.EnumOS.OSX) {
-            InputStream inputstream = null;
-            InputStream inputstream1 = null;
+            InputStream icon16 = null;
+            InputStream icon32 = null;
 
             try {
-                inputstream = this.mcDefaultResourcePack.getInputStreamAssets(new ResourceLocation("icons/icon_16x16.png"));
-                inputstream1 = this.mcDefaultResourcePack.getInputStreamAssets(new ResourceLocation("icons/icon_32x32.png"));
+                icon16 = this.mcDefaultResourcePack.getInputStreamAssets(new ResourceLocation("icons/icon_16x16.png"));
+                icon32 = this.mcDefaultResourcePack.getInputStreamAssets(new ResourceLocation("icons/icon_32x32.png"));
 
-                if (inputstream != null && inputstream1 != null) {
-                    Display.setIcon(new ByteBuffer[]{this.readImageToBuffer(inputstream), this.readImageToBuffer(inputstream1)});
+                if (icon16 != null && icon32 != null) {
+                    Display.setIcon(new ByteBuffer[]{this.readImageToBuffer(icon16), this.readImageToBuffer(icon32)});
                 }
             } catch (IOException ioexception) {
-                logger.error("Couldn't set icon", ioexception);
+                LOGGER.error("Couldn't set icon", ioexception);
             } finally {
-                IOUtils.closeQuietly(inputstream);
-                IOUtils.closeQuietly(inputstream1);
+                IOUtils.closeQuietly(icon16);
+                IOUtils.closeQuietly(icon32);
             }
         }
     }
@@ -655,7 +655,7 @@ public class Minecraft implements IThreadListener {
         try {
             this.mcResourceManager.reloadResources(list);
         } catch (RuntimeException runtimeexception) {
-            logger.info("Caught error stitching, removing all assigned resourcepacks", runtimeexception);
+            LOGGER.info("Caught error stitching, removing all assigned resourcepacks", runtimeexception);
             list.clear();
             list.addAll(this.defaultResourcePacks);
             this.mcResourcePackRepository.setRepositories(Collections.emptyList());
@@ -728,29 +728,29 @@ public class Minecraft implements IThreadListener {
 
     private void drawSplashScreen(TextureManager textureManagerInstance) throws LWJGLException {
         ScaledResolution scaledresolution = new ScaledResolution(this);
-        int i = scaledresolution.getScaleFactor();
-        Framebuffer framebuffer = new Framebuffer(scaledresolution.getScaledWidth() * i, scaledresolution.getScaledHeight() * i, true);
+        int scaleFactor = scaledresolution.getScaleFactor();
+        Framebuffer framebuffer = new Framebuffer(scaledresolution.getScaledWidth() * scaleFactor, scaledresolution.getScaledHeight() * scaleFactor, true);
         framebuffer.bindFramebuffer(false);
-        GlStateManager.matrixMode(5889);
+        GlStateManager.matrixMode(GL11.GL_PROJECTION);
         GlStateManager.loadIdentity();
         GlStateManager.ortho(0.0D, scaledresolution.getScaledWidth(), scaledresolution.getScaledHeight(), 0.0D, 1000.0D, 3000.0D);
-        GlStateManager.matrixMode(5888);
+        GlStateManager.matrixMode(GL11.GL_MODELVIEW );
         GlStateManager.loadIdentity();
         GlStateManager.translate(0.0F, 0.0F, -2000.0F);
         GlStateManager.disableLighting();
         GlStateManager.disableFog();
         GlStateManager.disableDepth();
         GlStateManager.enableTexture2D();
-        InputStream inputstream = null;
+        InputStream mojangLogo = null;
 
         try {
-            inputstream = this.mcDefaultResourcePack.getInputStream(locationMojangPng);
-            this.mojangLogo = textureManagerInstance.getDynamicTextureLocation("logo", new DynamicTexture(ImageIO.read(inputstream)));
+            mojangLogo = this.mcDefaultResourcePack.getInputStream(locationMojangPng);
+            this.mojangLogo = textureManagerInstance.getDynamicTextureLocation("logo", new DynamicTexture(ImageIO.read(mojangLogo)));
             textureManagerInstance.bindTexture(this.mojangLogo);
         } catch (IOException ioexception) {
-            logger.error("Unable to load logo: " + locationMojangPng, ioexception);
+            LOGGER.error("Unable to load logo: " + locationMojangPng, ioexception);
         } finally {
-            IOUtils.closeQuietly(inputstream);
+            IOUtils.closeQuietly(mojangLogo);
         }
 
         Tessellator tessellator = Tessellator.getInstance();
@@ -768,7 +768,7 @@ public class Minecraft implements IThreadListener {
         GlStateManager.disableLighting();
         GlStateManager.disableFog();
         framebuffer.unbindFramebuffer();
-        framebuffer.framebufferRender(scaledresolution.getScaledWidth() * i, scaledresolution.getScaledHeight() * i);
+        framebuffer.framebufferRender(scaledresolution.getScaledWidth() * scaleFactor, scaledresolution.getScaledHeight() * scaleFactor);
         GlStateManager.enableAlpha();
         GlStateManager.alphaFunc(516, 0.1F);
         this.updateDisplay();
@@ -836,9 +836,9 @@ public class Minecraft implements IThreadListener {
 
             if (i != 0) {
                 String s = GLU.gluErrorString(i);
-                logger.error("########## GL ERROR ##########");
-                logger.error("@ " + message);
-                logger.error(i + ": " + s);
+                LOGGER.error("########## GL ERROR ##########");
+                LOGGER.error("@ " + message);
+                LOGGER.error(i + ": " + s);
             }
         }
     }
@@ -849,7 +849,7 @@ public class Minecraft implements IThreadListener {
      */
     public void shutdownMinecraftApplet() {
         try {
-            logger.info("Stopping!");
+            LOGGER.info("Stopping!");
 
             try {
                 this.loadWorld(null);
@@ -887,7 +887,7 @@ public class Minecraft implements IThreadListener {
 
         synchronized (this.scheduledTasks) {
             while (!this.scheduledTasks.isEmpty()) {
-                Util.executeFuture(this.scheduledTasks.poll(), logger);
+                Util.executeFuture(this.scheduledTasks.poll(), LOGGER);
             }
         }
 
@@ -995,9 +995,7 @@ public class Minecraft implements IThreadListener {
         try {
             System.gc();
             this.loadWorld(null);
-        } catch (Throwable ignored) {
-
-        }
+        } catch (Throwable ignored) { }
 
         System.gc();
     }
@@ -1079,7 +1077,7 @@ public class Minecraft implements IThreadListener {
             AttackOrder.sendConditionalSwing(this.objectMouseOver, silentSwing);
 
             if (event.mouseOver == null) {
-                logger.error("Null returned as 'hitResult', this shouldn't happen!");
+                LOGGER.error("Null returned as 'hitResult', this shouldn't happen!");
 
                 if (this.playerController.isNotCreative()) {
                     this.leftClickCounter = 10;
@@ -1129,7 +1127,7 @@ public class Minecraft implements IThreadListener {
             ItemStack itemstack = this.thePlayer.inventory.getCurrentItem();
 
             if (event.mouseOver == null) {
-                logger.warn("Null returned as 'hitResult', this shouldn't happen!");
+                LOGGER.warn("Null returned as 'hitResult', this shouldn't happen!");
             } else {
                 switch (event.mouseOver.typeOfHit) {
                     case ENTITY:
@@ -1221,7 +1219,7 @@ public class Minecraft implements IThreadListener {
             Display.setVSyncEnabled(this.gameSettings.enableVsync);
             this.updateDisplay();
         } catch (Exception exception) {
-            logger.error("Couldn't toggle fullscreen", exception);
+            LOGGER.error("Couldn't toggle fullscreen", exception);
         }
     }
 
@@ -1995,8 +1993,17 @@ public class Minecraft implements IThreadListener {
         theCrash.getCategory().addCrashSectionCallable("GL Caps", OpenGlHelper::getLogText);
         theCrash.getCategory().addCrashSectionCallable("Using VBOs", () -> Minecraft.this.gameSettings.useVbo ? "Yes" : "No");
         theCrash.getCategory().addCrashSectionCallable("Is Modded", () -> {
-            String s = ClientBrandRetriever.getClientModName();
-            return !s.equals("vanilla") ? "Definitely; Client brand changed to '" + s + "'" : (Minecraft.class.getSigners() == null ? "Very likely; Jar signature invalidated" : "Probably not. Jar signature remains and client brand is untouched.");
+            String brand = ClientBrandRetriever.getClientModName();
+
+            if (!brand.equals("vanilla")) {
+                return "Definitely; Client brand changed to '" + brand + "'";
+            }
+
+            if (Minecraft.class.getSigners() == null) {
+                return "Very likely; Jar signature invalidated";
+            }
+
+            return "Probably not. Jar signature remains and client brand is untouched.";
         });
         theCrash.getCategory().addCrashSectionCallable("Type", () -> "Client (map_client.txt)");
         theCrash.getCategory().addCrashSectionCallable("Resource Packs", () -> {

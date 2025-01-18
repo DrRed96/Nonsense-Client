@@ -3,6 +3,7 @@ package wtf.bhopper.nonsense.module.impl.combat;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
+import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.EventPriorities;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
@@ -10,6 +11,7 @@ import wtf.bhopper.nonsense.event.impl.client.EventTick;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
+import wtf.bhopper.nonsense.module.property.annotations.DisplayName;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 import wtf.bhopper.nonsense.util.minecraft.world.ServerUtil;
@@ -44,13 +46,21 @@ public class AntiBot extends Module {
         switch (this.mode.get()) {
             case TAB -> {
                 this.bots.clear();
-                this.bots.addAll(mc.theWorld.getEntities(EntityPlayer.class, input -> !ServerUtil.isInTab(input)));
+                this.bots.addAll(mc.theWorld.getEntities(EntityPlayer.class, entity -> !ServerUtil.isInTab(entity)));
+            }
+
+            case NPC -> {
+                this.bots.clear();
+                this.bots.addAll(mc.theWorld.getEntities(EntityPlayer.class, entity -> !entity.hasMoved));
             }
 
             case HYPIXEL -> {
                 this.bots.clear();
                 for (EntityPlayer player : mc.theWorld.getEntities(EntityPlayer.class, _ -> true)) {
-                    if (!ServerUtil.isInTab(player) || this.nameStartsWith(player, "[NPC] ") || !player.getName().matches(VALID_USERNAME_REGEX)) {
+                    if (!ServerUtil.isInTab(player) ||
+                            this.nameStartsWith(player, "[NPC] ") ||
+                            !player.getName().matches(VALID_USERNAME_REGEX) ||
+                            !player.hasMoved) {
                         this.bots.add(player);
                     }
                 }
@@ -82,6 +92,7 @@ public class AntiBot extends Module {
 
     private enum Mode {
         TAB,
+        @DisplayName("NPC") NPC,
         HYPIXEL
     }
 

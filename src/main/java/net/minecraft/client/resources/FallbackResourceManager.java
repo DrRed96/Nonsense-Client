@@ -66,13 +66,15 @@ public class FallbackResourceManager implements IResourceManager
 
     protected InputStream getInputStream(ResourceLocation location, IResourcePack resourcePack) throws IOException
     {
-        InputStream inputstream = resourcePack.getInputStream(location);
-        return logger.isDebugEnabled() ? new InputStreamLeakedResourceLogger(inputstream, location, resourcePack.getPackName()) : inputstream;
+        InputStream inputStream = resourcePack.getInputStream(location);
+        return logger.isDebugEnabled()
+                ? new InputStreamLeakedResourceLogger(inputStream, location, resourcePack.getPackName())
+                : inputStream;
     }
 
     public List<IResource> getAllResources(ResourceLocation location) throws IOException
     {
-        List<IResource> list = Lists.<IResource>newArrayList();
+        List<IResource> list = Lists.newArrayList();
         ResourceLocation resourcelocation = getLocationMcmeta(location);
 
         for (IResourcePack iresourcepack : this.resourcePacks)

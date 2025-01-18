@@ -18,14 +18,14 @@ public class RealmsBridge extends RealmsScreen
         try
         {
             Class<?> oclass = Class.forName("com.mojang.realmsclient.RealmsMainScreen");
-            Constructor<?> constructor = oclass.getDeclaredConstructor(new Class[] {RealmsScreen.class});
+            Constructor<?> constructor = oclass.getDeclaredConstructor(RealmsScreen.class);
             constructor.setAccessible(true);
-            Object object = constructor.newInstance(new Object[] {this});
+            Object object = constructor.newInstance(this);
             Minecraft.getMinecraft().displayGuiScreen(((RealmsScreen)object).getProxy());
         }
         catch (Exception exception)
         {
-            LOGGER.error((String)"Realms module missing", (Throwable)exception);
+            LOGGER.error("Realms module missing", exception);
         }
     }
 

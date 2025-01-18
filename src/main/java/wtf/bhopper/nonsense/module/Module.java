@@ -116,15 +116,13 @@ public abstract class Module implements IPropertyContainer, ISerializable, IMine
     }
 
     public Property<?> getProperty(String name) {
-        return this.properties
-                .stream()
+        return this.properties.stream()
                 .filter(property -> property.name.equalsIgnoreCase(name))
                 .findFirst()
                 .orElse(null);
     }
 
     public boolean matches(String name) {
-
         if (name.isBlank()) {
             return true;
         }

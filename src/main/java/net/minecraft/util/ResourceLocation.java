@@ -31,7 +31,7 @@ public class ResourceLocation
     protected static String[] splitObjectName(String toSplit)
     {
         String[] astring = new String[] {null, toSplit};
-        int i = toSplit.indexOf(58);
+        int i = toSplit.indexOf(':');
 
         if (i >= 0)
         {

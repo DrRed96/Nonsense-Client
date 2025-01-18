@@ -89,7 +89,7 @@ public class GuiWinGame extends GuiScreen
     {
         if (this.field_146582_i == null)
         {
-            this.field_146582_i = Lists.<String>newArrayList();
+            this.field_146582_i = Lists.newArrayList();
 
             try
             {
@@ -170,10 +170,10 @@ public class GuiWinGame extends GuiScreen
 
         f3 = f3 * f3;
         f3 = f3 * 96.0F / 255.0F;
-        worldrenderer.pos(0.0D, (double)this.height, (double)this.zLevel).tex(0.0D, (double)(f * f2)).color(f3, f3, f3, 1.0F).endVertex();
-        worldrenderer.pos((double)i, (double)this.height, (double)this.zLevel).tex((double)((float)i * f2), (double)(f * f2)).color(f3, f3, f3, 1.0F).endVertex();
-        worldrenderer.pos((double)i, 0.0D, (double)this.zLevel).tex((double)((float)i * f2), (double)(f1 * f2)).color(f3, f3, f3, 1.0F).endVertex();
-        worldrenderer.pos(0.0D, 0.0D, (double)this.zLevel).tex(0.0D, (double)(f1 * f2)).color(f3, f3, f3, 1.0F).endVertex();
+        worldrenderer.pos(0.0D, this.height, this.zLevel).tex(0.0D, f * f2).color(f3, f3, f3, 1.0F).endVertex();
+        worldrenderer.pos(i, this.height, this.zLevel).tex((float)i * f2, f * f2).color(f3, f3, f3, 1.0F).endVertex();
+        worldrenderer.pos(i, 0.0D, this.zLevel).tex((float)i * f2, f1 * f2).color(f3, f3, f3, 1.0F).endVertex();
+        worldrenderer.pos(0.0D, 0.0D, this.zLevel).tex(0.0D, f1 * f2).color(f3, f3, f3, 1.0F).endVertex();
         tessellator.draw();
     }
 

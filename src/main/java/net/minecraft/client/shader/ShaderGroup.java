@@ -38,17 +38,17 @@ public class ShaderGroup
     private float field_148036_j;
     private float field_148037_k;
 
-    public ShaderGroup(TextureManager p_i1050_1_, IResourceManager p_i1050_2_, Framebuffer p_i1050_3_, ResourceLocation p_i1050_4_) throws JsonException, IOException, JsonSyntaxException
+    public ShaderGroup(TextureManager textureManager, IResourceManager resourceManager, Framebuffer mainFramebuffer, ResourceLocation p_i1050_4_) throws JsonException, IOException, JsonSyntaxException
     {
-        this.resourceManager = p_i1050_2_;
-        this.mainFramebuffer = p_i1050_3_;
+        this.resourceManager = resourceManager;
+        this.mainFramebuffer = mainFramebuffer;
         this.field_148036_j = 0.0F;
         this.field_148037_k = 0.0F;
-        this.mainFramebufferWidth = p_i1050_3_.framebufferWidth;
-        this.mainFramebufferHeight = p_i1050_3_.framebufferHeight;
+        this.mainFramebufferWidth = mainFramebuffer.framebufferWidth;
+        this.mainFramebufferHeight = mainFramebuffer.framebufferHeight;
         this.shaderGroupName = p_i1050_4_.toString();
         this.resetProjectionMatrix();
-        this.parseGroup(p_i1050_1_, p_i1050_4_);
+        this.parseGroup(textureManager, p_i1050_4_);
     }
 
     public void parseGroup(TextureManager p_152765_1_, ResourceLocation p_152765_2_) throws JsonException, IOException, JsonSyntaxException
