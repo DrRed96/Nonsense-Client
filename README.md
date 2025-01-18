@@ -15,7 +15,7 @@ More information at https://bhopper.wtf/nonsense
 5. Make sure you have launched Minecraft 1.8.8 at least once, run the `client -> copyAssets` gradle task.
 6. To run the client, run the `Start` run configuration.
 
-# Contributing Guidelines
+## Contributing Guidelines
 - Specify the changes you have made in your pull request.
 - Don't commit any IDE or system related files, these should be added to the `.gitignore`.
 - Use appropriate code formatting and naming conventions, use the [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html) as reference.
