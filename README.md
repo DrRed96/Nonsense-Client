@@ -19,8 +19,3 @@ More information at https://bhopper.wtf/nonsense
 - Specify the changes you have made in your pull request.
 - Don't commit any IDE or system related files, these should be added to the `.gitignore`.
 - Use appropriate code formatting and naming conventions, use the [Google Java Style Guide](https://google.github.io/styleguide/javaguide.html) as reference.
-
-## FAQ
-- **Can I use Nonsense Client's source code for my own client?**<br>
-  Yes! You may use this clients source code for your own client as stated in the ["Unlicense"](./UNLICENSE).<br>
-  Credit is appreciated but not required.
