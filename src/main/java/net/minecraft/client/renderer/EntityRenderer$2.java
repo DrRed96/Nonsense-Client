@@ -3,10 +3,9 @@ package net.minecraft.client.renderer;
 import java.util.concurrent.Callable;
 import net.minecraft.client.Minecraft;
 
-class EntityRenderer$2 implements Callable
+class EntityRenderer$2 implements Callable<String>
 {
     final EntityRenderer field_90025_c;
-    private static final String __OBFID = "CL_00000948";
 
     EntityRenderer$2(EntityRenderer p_i46419_1_)
     {

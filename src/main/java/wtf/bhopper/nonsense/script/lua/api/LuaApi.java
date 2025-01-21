@@ -11,13 +11,15 @@ import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 import wtf.bhopper.nonsense.util.minecraft.inventory.InventoryUtil;
 import wtf.bhopper.nonsense.util.minecraft.world.EntityUtil;
 
+import java.util.function.Function;
+
 public abstract class LuaApi extends LuaTable implements IMinecraft {
 
-    public void addFunc(String name, ILuaFunction body) {
+    public void addFunc(String name, Function<Varargs, Varargs> body) {
         this.set(name, new VarArgFunction() {
             @Override
             public Varargs invoke(Varargs args) {
-                return body.invoke(args);
+                return body.apply(args);
             }
         });
     }

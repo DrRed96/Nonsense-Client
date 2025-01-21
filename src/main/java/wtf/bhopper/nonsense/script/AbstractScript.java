@@ -1,10 +1,10 @@
 package wtf.bhopper.nonsense.script;
 
-public abstract class Script {
+public abstract class AbstractScript {
 
     private String name;
 
-    public Script(String name) {
+    public AbstractScript(String name) {
         this.name = name;
     }
 

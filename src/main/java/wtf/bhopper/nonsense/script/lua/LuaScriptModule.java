@@ -11,9 +11,9 @@ import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.packet.EventSendPacket;
 import wtf.bhopper.nonsense.event.impl.player.EventPreMotion;
 import wtf.bhopper.nonsense.event.impl.player.EventUpdate;
-import wtf.bhopper.nonsense.script.ScriptModule;
+import wtf.bhopper.nonsense.script.AbstractScriptModule;
 
-public class LuaScriptModule extends ScriptModule {
+public class LuaScriptModule extends AbstractScriptModule {
 
     private final LuaTable moduleTable;
 

@@ -13,7 +13,7 @@ import shadersmod.client.SVertexBuilder;
 public class WorldVertexBufferUploader
 {
 
-    public void func_181679_a(WorldRenderer renderer)
+    public void upload(WorldRenderer renderer)
     {
         if (renderer.getVertexCount() > 0)
         {

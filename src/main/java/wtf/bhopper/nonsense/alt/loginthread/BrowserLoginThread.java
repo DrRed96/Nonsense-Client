@@ -11,7 +11,6 @@ import wtf.bhopper.nonsense.alt.mslogin.LoginData;
 import wtf.bhopper.nonsense.alt.mslogin.MSAuthException;
 import wtf.bhopper.nonsense.alt.mslogin.MSAuthScheme;
 import wtf.bhopper.nonsense.gui.screens.altmanager.GuiAltManager;
-import wtf.bhopper.nonsense.util.misc.ErrorCallback;
 import wtf.bhopper.nonsense.util.misc.Http;
 
 import java.io.IOException;
@@ -20,10 +19,11 @@ import java.nio.charset.StandardCharsets;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.Executors;
+import java.util.function.Consumer;
 
 public class BrowserLoginThread extends LoginThread {
 
-    public BrowserLoginThread(LoginDataCallback loginDataCallback, ErrorCallback errorCallback) {
+    public BrowserLoginThread(Consumer<LoginData> loginDataCallback, Consumer<Exception> errorCallback) {
         super(loginDataCallback, errorCallback);
     }
 
@@ -35,7 +35,7 @@ public class BrowserLoginThread extends LoginThread {
             this.startServer();
         } catch (Exception exception) {
             this.stopServer();
-            this.errorCallback.onError(exception);
+            this.errorCallback.accept(exception);
         }
 
     }
@@ -102,17 +102,17 @@ public class BrowserLoginThread extends LoginThread {
                             BrowserLoginThread.this.loginDataCallback.accept(loginData);
 
                         } catch (Exception exception) {
-                            errorCallback.onError(exception);
+                            errorCallback.accept(exception);
                         }
                         break;
                     }
                     if (pair.getName().equals("error")) {
-                        BrowserLoginThread.this.errorCallback.onError(new MSAuthException(pair.getValue()));
+                        BrowserLoginThread.this.errorCallback.accept(new MSAuthException(pair.getValue()));
                     }
                 }
 
                 if (!ok) {
-                    BrowserLoginThread.this.errorCallback.onError(new MSAuthException("Code was not found"));
+                    BrowserLoginThread.this.errorCallback.accept(new MSAuthException("Code was not found"));
                 }
 
             }

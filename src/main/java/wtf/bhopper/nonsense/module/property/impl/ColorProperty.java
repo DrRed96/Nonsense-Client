@@ -2,15 +2,14 @@ package wtf.bhopper.nonsense.module.property.impl;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import com.google.gson.JsonPrimitive;
 import net.minecraft.util.MathHelper;
-import wtf.bhopper.nonsense.module.property.Property;
+import wtf.bhopper.nonsense.module.property.AbstractProperty;
 import wtf.bhopper.nonsense.util.render.ColorUtil;
 
 import java.awt.*;
 import java.util.function.Supplier;
 
-public class ColorProperty extends Property<Color> {
+public class ColorProperty extends AbstractProperty<Color> {
 
     public ColorProperty(String displayName, String description, int value, Supplier<Boolean> dependency) {
         super(displayName, description, new Color(value, true), dependency);

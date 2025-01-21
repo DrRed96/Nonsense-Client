@@ -107,7 +107,7 @@ public class S08PacketPlayerPosLook implements Packet<INetHandlerPlayClient>
         Y_ROT(3),
         X_ROT(4);
 
-        private int id;
+        private final int id;
 
         EnumFlags(int id)
         {

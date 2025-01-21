@@ -2,11 +2,11 @@ package wtf.bhopper.nonsense.anticheat.check.impl;
 
 import net.minecraft.network.play.server.S14PacketEntity;
 import wtf.bhopper.nonsense.anticheat.PlayerData;
-import wtf.bhopper.nonsense.anticheat.check.Check;
+import wtf.bhopper.nonsense.anticheat.check.AbstractCheck;
 import wtf.bhopper.nonsense.anticheat.check.CheckInfo;
 
 @CheckInfo(name = "Velocity", description = "Horizontal velocity", maxVl = 10, enabled = false)
-public class VelocityA extends Check {
+public class VelocityA extends AbstractCheck {
 
     @Override
     public void handleRelMove(PlayerData data, S14PacketEntity packet) {

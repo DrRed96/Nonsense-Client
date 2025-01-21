@@ -130,6 +130,8 @@ public class GuiMerchant extends GuiContainer
             packetbuffer.writeInt(this.selectedMerchantRecipe);
             this.mc.getNetHandler().addToSendQueue(new C17PacketCustomPayload("MC|TrSel", packetbuffer));
         }
+
+        super.actionPerformed(button);
     }
 
     /**

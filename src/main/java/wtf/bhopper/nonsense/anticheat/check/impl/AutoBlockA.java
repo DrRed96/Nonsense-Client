@@ -5,7 +5,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.*;
 import net.minecraft.network.play.server.S14PacketEntity;
 import net.minecraft.network.play.server.S1CPacketEntityMetadata;
-import wtf.bhopper.nonsense.anticheat.check.Check;
+import wtf.bhopper.nonsense.anticheat.check.AbstractCheck;
 import wtf.bhopper.nonsense.anticheat.check.CheckInfo;
 import wtf.bhopper.nonsense.anticheat.PlayerData;
 import wtf.bhopper.nonsense.anticheat.check.data.CheckBuffer;
@@ -15,7 +15,7 @@ import wtf.bhopper.nonsense.anticheat.check.data.CheckBuffer;
         description = "Unlikely sword blocking/unblocking.",
         maxVl = 3
 )
-public class AutoBlockA extends Check {
+public class AutoBlockA extends AbstractCheck {
 
     @Override
     public void handleEntityMetadata(PlayerData data, S1CPacketEntityMetadata packet) {

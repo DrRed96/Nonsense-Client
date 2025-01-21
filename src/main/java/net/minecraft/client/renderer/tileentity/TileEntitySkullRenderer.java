@@ -81,7 +81,7 @@ public class TileEntitySkullRenderer extends TileEntitySpecialRenderer<TileEntit
 
                         if (map.containsKey(Type.SKIN))
                         {
-                            resourcelocation = minecraft.getSkinManager().loadSkin((MinecraftProfileTexture)map.get(Type.SKIN), Type.SKIN);
+                            resourcelocation = minecraft.getSkinManager().loadSkin(map.get(Type.SKIN), Type.SKIN);
                         }
                         else
                         {

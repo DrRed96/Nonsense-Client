@@ -1,21 +1,17 @@
 package net.minecraft.util;
 
-public class IntegerCache
-{
-    private static final Integer[] field_181757_a = new Integer[65535];
+public class IntegerCache {
+    private static final Integer[] cache = new Integer[0xffff];
 
-    public static Integer func_181756_a(int p_181756_0_)
-    {
-        return p_181756_0_ > 0 && p_181756_0_ < field_181757_a.length ? field_181757_a[p_181756_0_] : Integer.valueOf(p_181756_0_);
+    public static Integer func_181756_a(int p_181756_0_) {
+        return p_181756_0_ > 0 && p_181756_0_ < cache.length ? cache[p_181756_0_] : Integer.valueOf(p_181756_0_);
     }
 
-    static
-    {
+    static {
         int i = 0;
 
-        for (int j = field_181757_a.length; i < j; ++i)
-        {
-            field_181757_a[i] = Integer.valueOf(i);
+        for (int j = cache.length; i < j; ++i) {
+            cache[i] = i;
         }
     }
 }

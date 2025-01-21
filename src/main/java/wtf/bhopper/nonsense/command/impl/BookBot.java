@@ -17,7 +17,6 @@ import wtf.bhopper.nonsense.util.misc.GeneralUtil;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
 @CommandInfo(name = "BookBot", description = "Fills a book and quill with jumbled nonsense.", syntax = ".bookbot")
 public class BookBot extends Command {

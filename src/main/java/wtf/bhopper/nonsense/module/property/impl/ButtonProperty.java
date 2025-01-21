@@ -1,11 +1,11 @@
 package wtf.bhopper.nonsense.module.property.impl;
 
 import com.google.gson.JsonElement;
-import wtf.bhopper.nonsense.module.property.Property;
+import wtf.bhopper.nonsense.module.property.AbstractProperty;
 
 import java.util.function.Supplier;
 
-public class ButtonProperty extends Property<Void> {
+public class ButtonProperty extends AbstractProperty<Void> {
 
     private final Runnable runnable;
 

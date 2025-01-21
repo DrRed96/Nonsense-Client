@@ -45,7 +45,7 @@ public class IntHashMap<V>
             }
         }
 
-        return (V)null;
+        return null;
     }
 
     /**

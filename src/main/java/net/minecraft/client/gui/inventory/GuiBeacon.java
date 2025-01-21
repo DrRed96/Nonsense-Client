@@ -167,6 +167,8 @@ public class GuiBeacon extends GuiContainer
             this.initGui();
             this.updateScreen();
         }
+
+        super.actionPerformed(button);
     }
 
     /**

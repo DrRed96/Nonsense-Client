@@ -851,6 +851,8 @@ public class GuiCustomCreative extends InventoryEffectRenderer {
             GuiContainerCreative.custom = false;
             this.mc.displayGuiScreen(new GuiContainerCreative(this.mc.thePlayer));
         }
+
+        super.actionPerformed(button);
     }
 
     public int getSelectedTabIndex()

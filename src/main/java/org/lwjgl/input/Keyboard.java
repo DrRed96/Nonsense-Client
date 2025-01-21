@@ -291,7 +291,7 @@ public class Keyboard {
      * @see org.lwjgl.input.Keyboard#getEventKey()
      */
     public static void enableRepeatEvents(boolean enable) {
-//        synchronized (OpenGLPackageAccess.global_lock) {
+//        synchronized (OpenGLPackageAcess.global_lock) {
             repeat_enabled = enable;
 //        }
     }

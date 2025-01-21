@@ -13,13 +13,13 @@ public class GameConfiguration
     public final GameConfiguration.GameInformation gameInfo;
     public final GameConfiguration.ServerInformation serverInfo;
 
-    public GameConfiguration(GameConfiguration.UserInformation userInfoIn, GameConfiguration.DisplayInformation displayInfoIn, GameConfiguration.FolderInformation folderInfoIn, GameConfiguration.GameInformation gameInfoIn, GameConfiguration.ServerInformation serverInfoIn)
+    public GameConfiguration(GameConfiguration.UserInformation userInfo, GameConfiguration.DisplayInformation displayInfo, GameConfiguration.FolderInformation folderInfo, GameConfiguration.GameInformation gameInfo, GameConfiguration.ServerInformation serverInfo)
     {
-        this.userInfo = userInfoIn;
-        this.displayInfo = displayInfoIn;
-        this.folderInfo = folderInfoIn;
-        this.gameInfo = gameInfoIn;
-        this.serverInfo = serverInfoIn;
+        this.userInfo = userInfo;
+        this.displayInfo = displayInfo;
+        this.folderInfo = folderInfo;
+        this.gameInfo = gameInfo;
+        this.serverInfo = serverInfo;
     }
 
     public static class DisplayInformation
@@ -29,12 +29,12 @@ public class GameConfiguration
         public final boolean fullscreen;
         public final boolean checkGlErrors;
 
-        public DisplayInformation(int widthIn, int heightIn, boolean fullscreenIn, boolean checkGlErrorsIn)
+        public DisplayInformation(int width, int height, boolean fullscreen, boolean checkGlErrors)
         {
-            this.width = widthIn;
-            this.height = heightIn;
-            this.fullscreen = fullscreenIn;
-            this.checkGlErrors = checkGlErrorsIn;
+            this.width = width;
+            this.height = height;
+            this.fullscreen = fullscreen;
+            this.checkGlErrors = checkGlErrors;
         }
     }
 
@@ -45,12 +45,12 @@ public class GameConfiguration
         public final File assetsDir;
         public final String assetIndex;
 
-        public FolderInformation(File mcDataDirIn, File resourcePacksDirIn, File assetsDirIn, String assetIndexIn)
+        public FolderInformation(File mcDataDir, File resourcePacksDir, File assetsDir, String assetIndex)
         {
-            this.mcDataDir = mcDataDirIn;
-            this.resourcePacksDir = resourcePacksDirIn;
-            this.assetsDir = assetsDirIn;
-            this.assetIndex = assetIndexIn;
+            this.mcDataDir = mcDataDir;
+            this.resourcePacksDir = resourcePacksDir;
+            this.assetsDir = assetsDir;
+            this.assetIndex = assetIndex;
         }
     }
 
@@ -59,10 +59,10 @@ public class GameConfiguration
         public final boolean isDemo;
         public final String version;
 
-        public GameInformation(boolean isDemoIn, String versionIn)
+        public GameInformation(boolean isDemo, String version)
         {
-            this.isDemo = isDemoIn;
-            this.version = versionIn;
+            this.isDemo = isDemo;
+            this.version = version;
         }
     }
 
@@ -71,10 +71,10 @@ public class GameConfiguration
         public final String serverName;
         public final int serverPort;
 
-        public ServerInformation(String serverNameIn, int serverPortIn)
+        public ServerInformation(String serverName, int serverPort)
         {
-            this.serverName = serverNameIn;
-            this.serverPort = serverPortIn;
+            this.serverName = serverName;
+            this.serverPort = serverPort;
         }
     }
 

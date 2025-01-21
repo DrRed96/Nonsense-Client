@@ -4,13 +4,13 @@ import net.minecraft.network.play.server.*;
 import wtf.bhopper.nonsense.anticheat.PlayerData;
 import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 
-public abstract class Check implements IMinecraft {
+public abstract class AbstractCheck implements IMinecraft {
 
     public final String name;
     public final String description;
     public final int maxVl;
 
-    public Check() {
+    public AbstractCheck() {
         this.name = this.getClass().getAnnotation(CheckInfo.class).name();
         this.description = this.getClass().getAnnotation(CheckInfo.class).description();
         this.maxVl = this.getClass().getAnnotation(CheckInfo.class).maxVl();

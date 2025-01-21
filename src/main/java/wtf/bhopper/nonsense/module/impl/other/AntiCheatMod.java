@@ -1,6 +1,6 @@
 package wtf.bhopper.nonsense.module.impl.other;
 
-import wtf.bhopper.nonsense.anticheat.check.Check;
+import wtf.bhopper.nonsense.anticheat.check.AbstractCheck;
 import wtf.bhopper.nonsense.anticheat.check.CheckInfo;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
@@ -8,8 +8,6 @@ import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
 
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
@@ -22,20 +20,20 @@ import java.util.concurrent.ConcurrentHashMap;
 public class AntiCheatMod extends Module {
 
     private final GroupProperty checksGroup = new GroupProperty("Checks", "Anti Cheat checks", this);
-    private final Map<Check, BooleanProperty> checkProperties = new ConcurrentHashMap<>();
+    private final Map<AbstractCheck, BooleanProperty> checkProperties = new ConcurrentHashMap<>();
 
     public AntiCheatMod() {
         super();
         this.addProperties(this.checksGroup);
     }
 
-    public void addCheckProperty(Check check) {
+    public void addCheckProperty(AbstractCheck check) {
         BooleanProperty property = new BooleanProperty(check.name, check.description, check.getClass().getAnnotation(CheckInfo.class).enabled());
         this.checkProperties.put(check, property);
         this.checksGroup.addProperties(property);
     }
 
-    public boolean checkEnabled(Check check) {
+    public boolean checkEnabled(AbstractCheck check) {
         return this.checkProperties.get(check).get();
     }
 

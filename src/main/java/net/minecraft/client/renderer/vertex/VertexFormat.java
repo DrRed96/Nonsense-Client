@@ -60,7 +60,7 @@ public class VertexFormat
         else
         {
             this.elements.add(p_181721_1_);
-            this.offsets.add(Integer.valueOf(this.nextOffset));
+            this.offsets.add(this.nextOffset);
 
             switch (p_181721_1_.getUsage())
             {

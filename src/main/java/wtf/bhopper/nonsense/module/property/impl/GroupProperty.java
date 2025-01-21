@@ -2,7 +2,7 @@ package wtf.bhopper.nonsense.module.property.impl;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
-import wtf.bhopper.nonsense.module.property.Property;
+import wtf.bhopper.nonsense.module.property.AbstractProperty;
 import wtf.bhopper.nonsense.module.property.IPropertyContainer;
 
 import java.util.ArrayList;
@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.function.Supplier;
 
-public class GroupProperty extends Property<List<Property<?>>> implements IPropertyContainer {
+public class GroupProperty extends AbstractProperty<List<AbstractProperty<?>>> implements IPropertyContainer {
 
     private final IPropertyContainer owner;
 
@@ -37,7 +37,7 @@ public class GroupProperty extends Property<List<Property<?>>> implements IPrope
     @Override
     public JsonElement serialize() {
         JsonObject object = new JsonObject();
-        for (Property<?> property : this.getProperties()) {
+        for (AbstractProperty<?> property : this.getProperties()) {
             try {
                 object.add(property.name, property.serialize());
             } catch (UnsupportedOperationException ignored) {}
@@ -48,7 +48,7 @@ public class GroupProperty extends Property<List<Property<?>>> implements IPrope
     @Override
     public void deserialize(JsonElement element) {
         if (element instanceof JsonObject object) {
-            for (Property<?> property : this.getProperties()) {
+            for (AbstractProperty<?> property : this.getProperties()) {
                 if (object.has(property.name)) {
                     try {
                         property.deserialize(object.get(property.name));
@@ -60,12 +60,12 @@ public class GroupProperty extends Property<List<Property<?>>> implements IPrope
     }
 
     @Override
-    public void addProperties(Property<?>... properties) {
+    public void addProperties(AbstractProperty<?>... properties) {
         this.value.addAll(Arrays.asList(properties));
     }
 
     @Override
-    public List<Property<?>> getProperties() {
+    public List<AbstractProperty<?>> getProperties() {
         return this.value;
     }
 
@@ -85,7 +85,7 @@ public class GroupProperty extends Property<List<Property<?>>> implements IPrope
         return this.owner;
     }
 
-    public Property<?> getProperty(String name) {
+    public AbstractProperty<?> getProperty(String name) {
         return this.get()
                 .stream()
                 .filter(property -> property.name.equalsIgnoreCase(name))

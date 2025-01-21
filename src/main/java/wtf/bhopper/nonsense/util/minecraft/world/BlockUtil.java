@@ -128,7 +128,7 @@ public class BlockUtil implements IMinecraft {
 
         return true;
     }
-    
+
     public static boolean hasAnyCollisionsUnder(AxisAlignedBB bb, double posY) {
         List<AxisAlignedBB> list = Lists.newArrayList();
         int minX = MathHelper.floor_double(bb.minX);
@@ -165,6 +165,11 @@ public class BlockUtil implements IMinecraft {
         }
 
         return !list.isEmpty();
+    }
+
+    public static boolean isSafeToWalkOn(BlockPos pos) {
+        Block block = getBlock(pos);
+        return !(block instanceof BlockFence || block instanceof BlockWall);
     }
 
 }

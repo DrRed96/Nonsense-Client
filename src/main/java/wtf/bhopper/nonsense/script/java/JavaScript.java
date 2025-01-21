@@ -1,7 +1,7 @@
 package wtf.bhopper.nonsense.script.java;
 
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.script.Script;
+import wtf.bhopper.nonsense.script.AbstractScript;
 
 import javax.tools.StandardJavaFileManager;
 import java.io.File;
@@ -11,7 +11,7 @@ import java.util.List;
 // lol js
 // I love js lol
 // js my favorite language!
-public class JavaScript extends Script {
+public class JavaScript extends AbstractScript {
 
     private Class<Object> clazz;
     private boolean error = false;

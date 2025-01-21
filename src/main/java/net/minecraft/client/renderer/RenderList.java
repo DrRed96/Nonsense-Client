@@ -7,30 +7,23 @@ import optifine.Config;
 
 import org.lwjgl.opengl.GL11;
 
-public class RenderList extends ChunkRenderContainer
-{
-    private static final String __OBFID = "CL_00000957";
+public class RenderList extends ChunkRenderContainer {
 
-    public void renderChunkLayer(EnumWorldBlockLayer layer)
-    {
-        if (this.initialized)
-        {
-            if (this.renderChunks.size() == 0)
-            {
+    public void renderChunkLayer(EnumWorldBlockLayer layer) {
+        if (this.initialized) {
+            if (this.renderChunks.isEmpty()) {
                 return;
             }
 
-            for (RenderChunk renderchunk : this.renderChunks)
-            {
-                ListedRenderChunk listedrenderchunk = (ListedRenderChunk)renderchunk;
+            for (RenderChunk renderchunk : this.renderChunks) {
+                ListedRenderChunk listedrenderchunk = (ListedRenderChunk) renderchunk;
                 GlStateManager.pushMatrix();
                 this.preRenderChunk(renderchunk);
                 GL11.glCallList(listedrenderchunk.getDisplayList(layer, listedrenderchunk.getCompiledChunk()));
                 GlStateManager.popMatrix();
             }
 
-            if (Config.isMultiTexture())
-            {
+            if (Config.isMultiTexture()) {
                 GlStateManager.bindCurrentTexture();
             }
 

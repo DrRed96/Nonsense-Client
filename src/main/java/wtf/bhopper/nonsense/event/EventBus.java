@@ -1,5 +1,7 @@
 package wtf.bhopper.nonsense.event;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.lang.invoke.MethodHandles;
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
@@ -43,7 +45,7 @@ public class EventBus {
                     if (this.callSiteMap.containsKey(eventType)) {
                         callSites = this.callSiteMap.get(eventType);
                         callSites.add(callSite);
-                        callSites.sort(Comparator.comparingInt(o -> o.priority));
+                        callSites.sort(Comparator.naturalOrder());
                     } else {
                         callSites = new ArrayList<>(1);
                         callSites.add(callSite);
@@ -92,6 +94,11 @@ public class EventBus {
         }
     }
 
-    private record CallSite(Object owner, Listener<Event> listener, int priority) { }
+    private record CallSite(Object owner, Listener<Event> listener, int priority) implements Comparable<CallSite> {
+        @Override
+        public int compareTo(@NotNull EventBus.CallSite o) {
+            return Integer.compare(this.priority, o.priority);
+        }
+    }
 
 }

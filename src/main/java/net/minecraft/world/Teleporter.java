@@ -21,7 +21,7 @@ public class Teleporter
     /** A private Random() function in Teleporter */
     private final Random random;
     private final LongHashMap destinationCoordinateCache = new LongHashMap();
-    private final List<Long> destinationCoordinateKeys = Lists.<Long>newArrayList();
+    private final List<Long> destinationCoordinateKeys = Lists.newArrayList();
 
     public Teleporter(WorldServer worldIn)
     {

@@ -11,7 +11,7 @@ import wtf.bhopper.nonsense.module.impl.movement.*;
 import wtf.bhopper.nonsense.module.impl.other.*;
 import wtf.bhopper.nonsense.module.impl.player.*;
 import wtf.bhopper.nonsense.module.impl.visual.*;
-import wtf.bhopper.nonsense.script.ScriptModule;
+import wtf.bhopper.nonsense.script.AbstractScriptModule;
 import wtf.bhopper.nonsense.script.ScriptOptionsMod;
 
 import java.util.*;
@@ -20,7 +20,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public class ModuleManager {
 
     private final ImmutableClassToInstanceMap<Module> modules;
-    private final List<ScriptModule> scriptModules;
+    private final List<AbstractScriptModule> scriptModules;
 
     public ModuleManager() {
 
@@ -176,7 +176,7 @@ public class ModuleManager {
                 .orElse(null);
     }
 
-    public ScriptModule getScript(String name) {
+    public AbstractScriptModule getScript(String name) {
         return this.scriptModules
                 .stream()
                 .filter(module -> module.name.equalsIgnoreCase(name))
@@ -209,7 +209,7 @@ public class ModuleManager {
                 .count();
     }
 
-    public boolean addScriptModule(ScriptModule module) {
+    public boolean addScriptModule(AbstractScriptModule module) {
         if (this.get(module.name) != null) {
             return false;
         }

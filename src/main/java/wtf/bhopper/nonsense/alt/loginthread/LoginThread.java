@@ -2,15 +2,16 @@ package wtf.bhopper.nonsense.alt.loginthread;
 
 import wtf.bhopper.nonsense.alt.Alt;
 import wtf.bhopper.nonsense.alt.mslogin.LoginData;
-import wtf.bhopper.nonsense.util.misc.ErrorCallback;
+
+import java.util.function.Consumer;
 
 public abstract class LoginThread extends Thread {
 
     protected Alt account;
-    protected final LoginDataCallback loginDataCallback;
-    protected final ErrorCallback errorCallback;
+    protected final Consumer<LoginData> loginDataCallback;
+    protected final Consumer<Exception> errorCallback;
 
-    public LoginThread(LoginDataCallback loginDataCallback, ErrorCallback errorCallback) {
+    public LoginThread(Consumer<LoginData> loginDataCallback, Consumer<Exception> errorCallback) {
         this.loginDataCallback = loginDataCallback;
         this.errorCallback = errorCallback;
         this.setName("Account login thread");
@@ -29,10 +30,6 @@ public abstract class LoginThread extends Thread {
     public void interrupt() {
         this.finish();
         super.interrupt();
-    }
-
-    public interface AccountLoginCallback {
-        void accept(LoginData loginData);
     }
 
 }

@@ -345,26 +345,26 @@ public class WorldRenderer
         return this;
     }
 
-    public WorldRenderer lightmap(int p_181671_1_, int p_181671_2_)
+    public WorldRenderer lightmap(int u, int v)
     {
         int i = this.vertexCount * this.vertexFormat.getNextOffset() + this.vertexFormat.func_181720_d(this.field_181678_g);
 
         switch (WorldRenderer$2.field_181661_a[this.field_181677_f.getType().ordinal()]) {
             case 1 -> {
-                this.byteBuffer.putFloat(i, (float) p_181671_1_);
-                this.byteBuffer.putFloat(i + 4, (float) p_181671_2_);
+                this.byteBuffer.putFloat(i, (float) u);
+                this.byteBuffer.putFloat(i + 4, (float) v);
             }
             case 2, 3 -> {
-                this.byteBuffer.putInt(i, p_181671_1_);
-                this.byteBuffer.putInt(i + 4, p_181671_2_);
+                this.byteBuffer.putInt(i, u);
+                this.byteBuffer.putInt(i + 4, v);
             }
             case 4, 5 -> {
-                this.byteBuffer.putShort(i, (short) p_181671_2_);
-                this.byteBuffer.putShort(i + 2, (short) p_181671_1_);
+                this.byteBuffer.putShort(i, (short) v);
+                this.byteBuffer.putShort(i + 2, (short) u);
             }
             case 6, 7 -> {
-                this.byteBuffer.put(i, (byte) p_181671_2_);
-                this.byteBuffer.put(i + 1, (byte) p_181671_1_);
+                this.byteBuffer.put(i, (byte) v);
+                this.byteBuffer.put(i + 1, (byte) u);
             }
         }
 

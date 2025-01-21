@@ -8,7 +8,7 @@ import java.awt.*;
 
 public class ColorUtil {
 
-    public static final int NONSENSE = 0xFFFF5555;
+    public static final int NONSENSE = 0xFFFF3030;
     public static final int WHITE = 0xFFFFFFFF;
     public static final int BLACK = 0xFF000000;
     public static final int GRAY = 0xFFAAAAAA;

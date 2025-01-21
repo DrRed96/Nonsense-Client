@@ -128,7 +128,7 @@ public class Minecraft implements IThreadListener {
     public static byte[] memoryReserve = new byte[0xA00000];
     private static final List<DisplayMode> macDisplayModes = Lists.newArrayList(new DisplayMode(2560, 1600), new DisplayMode(2880, 1800));
     private final File fileResourcepacks;
-    private final PropertyMap field_181038_N;
+    private final PropertyMap profileProperties;
     private ServerData currentServerData;
 
     /**
@@ -319,10 +319,10 @@ public class Minecraft implements IThreadListener {
         this.fileAssets = gameConfig.folderInfo.assetsDir;
         this.fileResourcepacks = gameConfig.folderInfo.resourcePacksDir;
         this.launchedVersion = gameConfig.gameInfo.version;
-        this.field_181038_N = gameConfig.userInfo.profileProperties;
+        this.profileProperties = gameConfig.userInfo.profileProperties;
         this.mcDefaultResourcePack = new DefaultResourcePack((new ResourceIndex(gameConfig.folderInfo.assetsDir, gameConfig.folderInfo.assetIndex)).getResourceMap());
         this.proxy = gameConfig.userInfo.proxy == null ? Proxy.NO_PROXY : gameConfig.userInfo.proxy;
-        this.sessionService = (new YggdrasilAuthenticationService(gameConfig.userInfo.proxy, UUID.randomUUID().toString())).createMinecraftSessionService();
+        this.sessionService = new YggdrasilAuthenticationService(gameConfig.userInfo.proxy, UUID.randomUUID().toString()).createMinecraftSessionService();
         this.session = gameConfig.userInfo.session;
         LOGGER.info("Setting user: " + this.session.getUsername());
         LOGGER.info("(Session ID is " + this.session.getSessionID() + ")");
@@ -441,9 +441,9 @@ public class Minecraft implements IThreadListener {
         this.mcResourceManager.registerReloadListener(this.bitFontRenderer);
         this.mcResourceManager.registerReloadListener(new GrassColorReloadListener());
         this.mcResourceManager.registerReloadListener(new FoliageColorReloadListener());
-        AchievementList.openInventory.setStatStringFormatter(p_74535_1_ -> {
+        AchievementList.openInventory.setStatStringFormatter(format -> {
             try {
-                return String.format(p_74535_1_, GameSettings.getKeyDisplayString(Minecraft.this.gameSettings.keyBindInventory.getKeyCode()));
+                return String.format(format, GameSettings.getKeyDisplayString(Minecraft.this.gameSettings.keyBindInventory.getKeyCode()));
             } catch (Exception exception) {
                 return "Error: " + exception.getLocalizedMessage();
             }
@@ -503,7 +503,7 @@ public class Minecraft implements IThreadListener {
 
         try {
             Display.setVSyncEnabled(this.gameSettings.enableVsync);
-        } catch (OpenGLException var2) {
+        } catch (OpenGLException e) {
             this.gameSettings.enableVsync = false;
             this.gameSettings.saveOptions();
         }
@@ -525,14 +525,12 @@ public class Minecraft implements IThreadListener {
 
         try {
             Display.create(new PixelFormat().withDepthBits(24));
-        } catch (LWJGLException lwjglexception) {
-            LOGGER.error("Couldn't set pixel format", lwjglexception);
+        } catch (LWJGLException e) {
+            LOGGER.error("Couldn't set pixel format", e);
 
             try {
                 Thread.sleep(1000L);
-            } catch (InterruptedException ignored) {
-
-            }
+            } catch (InterruptedException _) {}
 
             if (this.fullscreen) {
                 this.updateDisplayMode();
@@ -1961,19 +1959,19 @@ public class Minecraft implements IThreadListener {
         }
     }
 
-    private ItemStack func_181036_a(Item p_181036_1_, int p_181036_2_, TileEntity p_181036_3_) {
-        ItemStack itemstack = new ItemStack(p_181036_1_, 1, p_181036_2_);
-        NBTTagCompound nbttagcompound = new NBTTagCompound();
-        p_181036_3_.writeToNBT(nbttagcompound);
+    private ItemStack func_181036_a(Item item, int meta, TileEntity tileEntity) {
+        ItemStack itemstack = new ItemStack(item, 1, meta);
+        NBTTagCompound nbtTagCompound = new NBTTagCompound();
+        tileEntity.writeToNBT(nbtTagCompound);
 
-        if (p_181036_1_ == Items.skull && nbttagcompound.hasKey("Owner")) {
-            NBTTagCompound nbttagcompound2 = nbttagcompound.getCompoundTag("Owner");
+        if (item == Items.skull && nbtTagCompound.hasKey("Owner")) {
+            NBTTagCompound owner = nbtTagCompound.getCompoundTag("Owner");
             NBTTagCompound nbttagcompound3 = new NBTTagCompound();
-            nbttagcompound3.setTag("SkullOwner", nbttagcompound2);
+            nbttagcompound3.setTag("SkullOwner", owner);
             itemstack.setTagCompound(nbttagcompound3);
             return itemstack;
         } else {
-            itemstack.setTagInfo("BlockEntityTag", nbttagcompound);
+            itemstack.setTagInfo("BlockEntityTag", nbtTagCompound);
             NBTTagCompound nbttagcompound1 = new NBTTagCompound();
             NBTTagList nbttaglist = new NBTTagList();
             nbttaglist.appendTag(new NBTTagString("(+NBT)"));
@@ -2128,13 +2126,13 @@ public class Minecraft implements IThreadListener {
         return this.session;
     }
 
-    public PropertyMap func_181037_M() {
-        if (this.field_181038_N.isEmpty()) {
+    public PropertyMap getProfileProperties() {
+        if (this.profileProperties.isEmpty()) {
             GameProfile gameprofile = this.getSessionService().fillProfileProperties(this.session.getProfile(), false);
-            this.field_181038_N.putAll(gameprofile.getProperties());
+            this.profileProperties.putAll(gameprofile.getProperties());
         }
 
-        return this.field_181038_N;
+        return this.profileProperties;
     }
 
     public Proxy getProxy() {
@@ -2258,7 +2256,7 @@ public class Minecraft implements IThreadListener {
         return debugFPS;
     }
 
-    public FrameTimer func_181539_aj() {
+    public FrameTimer getFrameTimer() {
         return this.frameTimer;
     }
 

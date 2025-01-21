@@ -5,7 +5,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.*;
 import net.minecraft.network.play.server.*;
 import wtf.bhopper.nonsense.anticheat.PlayerData;
-import wtf.bhopper.nonsense.anticheat.check.Check;
+import wtf.bhopper.nonsense.anticheat.check.AbstractCheck;
 import wtf.bhopper.nonsense.anticheat.check.CheckInfo;
 import wtf.bhopper.nonsense.anticheat.check.data.CheckBuffer;
 import wtf.bhopper.nonsense.util.misc.Stopwatch;
@@ -17,7 +17,7 @@ import java.util.List;
 @CheckInfo(name = "Auto-Block C",
         description = "Swing shouldn't have been allowed.",
         maxVl = 6)
-public class AutoBlockC extends Check {
+public class AutoBlockC extends AbstractCheck {
 
     @Override
     public void handleRelMove(PlayerData data, S14PacketEntity packet) {

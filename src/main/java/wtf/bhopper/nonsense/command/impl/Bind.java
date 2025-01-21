@@ -53,7 +53,7 @@ public class Bind extends Command {
             }
 
             module.setBind(Keyboard.getKeyIndex(args[2].toUpperCase()));
-            ChatUtil.info("%s was bound to: %s", module.name, Keyboard.getKeyName(module.getBind()));
+            ChatUtil.info("%s was bound to: %s", module.displayName, Keyboard.getKeyName(module.getBind()));
         }
     }
 }

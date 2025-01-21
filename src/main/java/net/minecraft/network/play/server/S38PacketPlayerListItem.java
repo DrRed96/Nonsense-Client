@@ -16,7 +16,7 @@ import net.minecraft.world.WorldSettings;
 public class S38PacketPlayerListItem implements Packet<INetHandlerPlayClient>
 {
     private S38PacketPlayerListItem.Action action;
-    private final List<S38PacketPlayerListItem.AddPlayerData> players = Lists.<S38PacketPlayerListItem.AddPlayerData>newArrayList();
+    private final List<S38PacketPlayerListItem.AddPlayerData> players = Lists.newArrayList();
 
     public S38PacketPlayerListItem()
     {
@@ -66,8 +66,8 @@ public class S38PacketPlayerListItem implements Packet<INetHandlerPlayClient>
 
                     for (; i1 < l; ++i1)
                     {
-                        String s = buf.readStringFromBuffer(32767);
-                        String s1 = buf.readStringFromBuffer(32767);
+                        String s = buf.readStringFromBuffer(0x7fff);
+                        String s1 = buf.readStringFromBuffer(0x7fff);
 
                         if (buf.readBoolean())
                         {
@@ -125,16 +125,16 @@ public class S38PacketPlayerListItem implements Packet<INetHandlerPlayClient>
         buf.writeEnumValue(this.action);
         buf.writeVarIntToBuffer(this.players.size());
 
-        for (S38PacketPlayerListItem.AddPlayerData s38packetplayerlistitem$addplayerdata : this.players)
+        for (S38PacketPlayerListItem.AddPlayerData playerData : this.players)
         {
             switch (this.action)
             {
                 case ADD_PLAYER:
-                    buf.writeUuid(s38packetplayerlistitem$addplayerdata.getProfile().getId());
-                    buf.writeString(s38packetplayerlistitem$addplayerdata.getProfile().getName());
-                    buf.writeVarIntToBuffer(s38packetplayerlistitem$addplayerdata.getProfile().getProperties().size());
+                    buf.writeUuid(playerData.getProfile().getId());
+                    buf.writeString(playerData.getProfile().getName());
+                    buf.writeVarIntToBuffer(playerData.getProfile().getProperties().size());
 
-                    for (Property property : s38packetplayerlistitem$addplayerdata.getProfile().getProperties().values())
+                    for (Property property : playerData.getProfile().getProperties().values())
                     {
                         buf.writeString(property.getName());
                         buf.writeString(property.getValue());
@@ -150,48 +150,49 @@ public class S38PacketPlayerListItem implements Packet<INetHandlerPlayClient>
                         }
                     }
 
-                    buf.writeVarIntToBuffer(s38packetplayerlistitem$addplayerdata.getGameMode().getID());
-                    buf.writeVarIntToBuffer(s38packetplayerlistitem$addplayerdata.getPing());
+                    buf.writeVarIntToBuffer(playerData.getGameMode().getID());
+                    buf.writeVarIntToBuffer(playerData.getPing());
 
-                    if (s38packetplayerlistitem$addplayerdata.getDisplayName() == null)
+                    if (playerData.getDisplayName() == null)
                     {
                         buf.writeBoolean(false);
                     }
                     else
                     {
                         buf.writeBoolean(true);
-                        buf.writeChatComponent(s38packetplayerlistitem$addplayerdata.getDisplayName());
+                        buf.writeChatComponent(playerData.getDisplayName());
                     }
 
                     break;
 
                 case UPDATE_GAME_MODE:
-                    buf.writeUuid(s38packetplayerlistitem$addplayerdata.getProfile().getId());
-                    buf.writeVarIntToBuffer(s38packetplayerlistitem$addplayerdata.getGameMode().getID());
+                    buf.writeUuid(playerData.getProfile().getId());
+                    buf.writeVarIntToBuffer(playerData.getGameMode().getID());
                     break;
 
                 case UPDATE_LATENCY:
-                    buf.writeUuid(s38packetplayerlistitem$addplayerdata.getProfile().getId());
-                    buf.writeVarIntToBuffer(s38packetplayerlistitem$addplayerdata.getPing());
+                    buf.writeUuid(playerData.getProfile().getId());
+                    buf.writeVarIntToBuffer(playerData.getPing());
                     break;
 
                 case UPDATE_DISPLAY_NAME:
-                    buf.writeUuid(s38packetplayerlistitem$addplayerdata.getProfile().getId());
+                    buf.writeUuid(playerData.getProfile().getId());
 
-                    if (s38packetplayerlistitem$addplayerdata.getDisplayName() == null)
+                    if (playerData.getDisplayName() == null)
                     {
                         buf.writeBoolean(false);
                     }
                     else
                     {
                         buf.writeBoolean(true);
-                        buf.writeChatComponent(s38packetplayerlistitem$addplayerdata.getDisplayName());
+                        buf.writeChatComponent(playerData.getDisplayName());
                     }
 
                     break;
 
                 case REMOVE_PLAYER:
-                    buf.writeUuid(s38packetplayerlistitem$addplayerdata.getProfile().getId());
+                    buf.writeUuid(playerData.getProfile().getId());
+                    break;
             }
         }
     }

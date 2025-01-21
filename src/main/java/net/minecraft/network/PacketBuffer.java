@@ -585,24 +585,24 @@ public class PacketBuffer extends ByteBuf {
         return this.buf.readDouble();
     }
 
-    public ByteBuf readBytes(int p_readBytes_1_) {
-        return this.buf.readBytes(p_readBytes_1_);
+    public ByteBuf readBytes(int length) {
+        return this.buf.readBytes(length);
     }
 
-    public ByteBuf readSlice(int p_readSlice_1_) {
-        return this.buf.readSlice(p_readSlice_1_);
+    public ByteBuf readSlice(int length) {
+        return this.buf.readSlice(length);
     }
 
-    public ByteBuf readBytes(ByteBuf p_readBytes_1_) {
-        return this.buf.readBytes(p_readBytes_1_);
+    public ByteBuf readBytes(ByteBuf dst) {
+        return this.buf.readBytes(dst);
     }
 
-    public ByteBuf readBytes(ByteBuf p_readBytes_1_, int p_readBytes_2_) {
-        return this.buf.readBytes(p_readBytes_1_, p_readBytes_2_);
+    public ByteBuf readBytes(ByteBuf dst, int length) {
+        return this.buf.readBytes(dst, length);
     }
 
-    public ByteBuf readBytes(ByteBuf p_readBytes_1_, int p_readBytes_2_, int p_readBytes_3_) {
-        return this.buf.readBytes(p_readBytes_1_, p_readBytes_2_, p_readBytes_3_);
+    public ByteBuf readBytes(ByteBuf dst, int dstIndex, int length) {
+        return this.buf.readBytes(dst, dstIndex, length);
     }
 
     public ByteBuf readBytes(byte[] p_readBytes_1_) {
@@ -665,8 +665,8 @@ public class PacketBuffer extends ByteBuf {
         return this.buf.writeDouble(d);
     }
 
-    public ByteBuf writeBytes(ByteBuf p_writeBytes_1_) {
-        return this.buf.writeBytes(p_writeBytes_1_);
+    public ByteBuf writeBytes(ByteBuf src) {
+        return this.buf.writeBytes(src);
     }
 
     public ByteBuf writeBytes(ByteBuf p_writeBytes_1_, int p_writeBytes_2_) {
@@ -809,8 +809,8 @@ public class PacketBuffer extends ByteBuf {
         return this.buf.hashCode();
     }
 
-    public boolean equals(Object p_equals_1_) {
-        return this.buf.equals(p_equals_1_);
+    public boolean equals(Object obj) {
+        return this.buf.equals(obj);
     }
 
     public int compareTo(ByteBuf p_compareTo_1_) {

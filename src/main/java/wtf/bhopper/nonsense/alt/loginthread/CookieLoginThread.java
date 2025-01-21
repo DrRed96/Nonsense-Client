@@ -6,7 +6,6 @@ import wtf.bhopper.nonsense.alt.mslogin.LoginData;
 import wtf.bhopper.nonsense.alt.mslogin.MSAuthException;
 import wtf.bhopper.nonsense.alt.mslogin.MSAuthScheme;
 import wtf.bhopper.nonsense.gui.screens.altmanager.GuiAltManager;
-import wtf.bhopper.nonsense.util.misc.ErrorCallback;
 import wtf.bhopper.nonsense.util.misc.Http;
 
 import java.io.File;
@@ -14,6 +13,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.*;
 import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 public class CookieLoginThread extends LoginThread {
 
@@ -22,12 +22,12 @@ public class CookieLoginThread extends LoginThread {
     private final File file;
     private String cookieHeader = null;
 
-    public CookieLoginThread(File file, LoginDataCallback loginDataCallback, ErrorCallback errorCallback) {
+    public CookieLoginThread(File file, Consumer<LoginData> loginDataCallback, Consumer<Exception> errorCallback) {
         super(loginDataCallback, errorCallback);
         this.file = file;
     }
 
-    public CookieLoginThread(String header, LoginDataCallback loginDataCallback, ErrorCallback errorCallback) {
+    public CookieLoginThread(String header, Consumer<LoginData> loginDataCallback, Consumer<Exception> errorCallback) {
         super(loginDataCallback, errorCallback);
         this.file = null;
         this.cookieHeader = header;
@@ -89,7 +89,7 @@ public class CookieLoginThread extends LoginThread {
             loginDataCallback.accept(new LoginData(Alt.Type.COOKIE, mcAuth.access_token, profileResponse.id, profileResponse.name, this.cookieHeader));
 
         } catch (Exception exception) {
-            this.errorCallback.onError(exception);
+            this.errorCallback.accept(exception);
         }
     }
 

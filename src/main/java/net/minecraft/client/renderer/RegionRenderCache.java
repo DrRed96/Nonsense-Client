@@ -17,12 +17,11 @@ public class RegionRenderCache extends ChunkCache
 {
     private static final IBlockState DEFAULT_STATE = Blocks.air.getDefaultState();
     private final BlockPos position;
-    private int[] combinedLights;
-    private IBlockState[] blockStates;
-    private static final String __OBFID = "CL_00002565";
-    private static ArrayDeque<int[]> cacheLights = new ArrayDeque();
-    private static ArrayDeque<IBlockState[]> cacheStates = new ArrayDeque();
-    private static int maxCacheSize = Config.limit(Runtime.getRuntime().availableProcessors(), 1, 32);
+    private final int[] combinedLights;
+    private final IBlockState[] blockStates;
+    private static final ArrayDeque<int[]> cacheLights = new ArrayDeque<>();
+    private static final ArrayDeque<IBlockState[]> cacheStates = new ArrayDeque<>();
+    private static final int maxCacheSize = Config.limit(Runtime.getRuntime().availableProcessors(), 1, 32);
 
     public RegionRenderCache(World worldIn, BlockPos posFromIn, BlockPos posToIn, int subIn)
     {
@@ -30,7 +29,7 @@ public class RegionRenderCache extends ChunkCache
         this.position = posFromIn.subtract(new Vec3i(subIn, subIn, subIn));
         boolean flag = true;
         this.combinedLights = allocateLights(8000);
-        Arrays.fill((int[])this.combinedLights, (int) - 1);
+        Arrays.fill(this.combinedLights, -1);
         this.blockStates = allocateStates(8000);
     }
 
@@ -107,7 +106,7 @@ public class RegionRenderCache extends ChunkCache
     {
         synchronized (cacheLights)
         {
-            int[] aint = (int[])cacheLights.pollLast();
+            int[] aint = cacheLights.pollLast();
 
             if (aint == null || aint.length < p_allocateLights_0_)
             {
@@ -133,11 +132,11 @@ public class RegionRenderCache extends ChunkCache
     {
         synchronized (cacheStates)
         {
-            IBlockState[] aiblockstate = (IBlockState[])cacheStates.pollLast();
+            IBlockState[] aiblockstate = cacheStates.pollLast();
 
             if (aiblockstate != null && aiblockstate.length >= p_allocateStates_0_)
             {
-                Arrays.fill(aiblockstate, (Object)null);
+                Arrays.fill(aiblockstate, null);
             }
             else
             {

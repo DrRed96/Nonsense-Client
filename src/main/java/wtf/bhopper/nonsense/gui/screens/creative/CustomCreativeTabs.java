@@ -1,5 +1,7 @@
 package wtf.bhopper.nonsense.gui.screens.creative;
 
+import com.mojang.authlib.GameProfile;
+import com.mojang.authlib.properties.Property;
 import net.minecraft.creativetab.CreativeTabs;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.init.Blocks;
@@ -12,6 +14,7 @@ import wtf.bhopper.nonsense.util.minecraft.inventory.ItemBuilder;
 import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 
 import java.util.List;
+import java.util.function.Consumer;
 
 @SuppressWarnings("unused")
 public class CustomCreativeTabs extends CreativeTabs implements IMinecraft {
@@ -48,13 +51,22 @@ public class CustomCreativeTabs extends CreativeTabs implements IMinecraft {
                 .setDisplayName("\247rnull")
                 .build());
 
+        NBTTagCompound profileNbt = new NBTTagCompound();
+        GameProfile profile = new GameProfile(null, "Your Mom");
+        profile.getProperties().put("textures", new Property("Value", "eyJ0ZXh0\u00addXJlcyI6eyJTS0lOIjp7InVybCI6IiJ9fX0="));
+        profileNbt.setString("Id", "9d744c33-f3c4-4040-a7fc-73b47c840f0c");
+        NBTUtil.writeGameProfile(profileNbt, profile);
+        items.add(ItemBuilder.of(Items.skull)
+                .setMeta(3)
+                .addTag("SkullOwner", profileNbt)
+                .build());
+
         NBTTagCompound opSign = new NBTTagCompound();
         opSign.setTag("Text1", new NBTTagString("{\"text\":\"Troll\",\"clickEvent\":{\"action\":\"run_command\",\"value\":\"/op @p\"}}"));
         items.add(ItemBuilder.of(Items.sign)
                 .setDisplayName("\2474\247lForce OP Sign")
                 .addTag("BlockEntityTag", opSign)
                 .build());
-
 
 
         NBTTagList opBook = new NBTTagList();
@@ -303,11 +315,31 @@ public class CustomCreativeTabs extends CreativeTabs implements IMinecraft {
                 .setDisplayName("\247rSplash Potion of Infinite Invisibility")
                 .build());
 
+        ItemBuilder everything = ItemBuilder.of(Items.potionitem)
+                        .setMeta(0x4001)
+                        .setDisplayName("\247rSplash Potion of Everything");
+        for (Potion potion : Potion.potionTypes) {
+            if (potion != null) {
+                everything.addPotionEffect(potion, 1000000, 2);
+            }
+        }
+        items.add(everything.build());
+
         items.add(ItemBuilder.of(Items.potionitem)
                 .setMeta(0x4001)
                 .addPotionEffect(Potion.heal, 1000000, 125)
                 .setDisplayName("\247rSplash Potion of Instant Death")
                 .build());
+
+        ItemBuilder lol = ItemBuilder.of(Items.potionitem)
+                .setMeta(0x4001)
+                .setDisplayName("lol");
+        for (Potion potion : Potion.potionTypes) {
+            if (potion != null) {
+                lol.addPotionEffect(potion, Integer.MAX_VALUE, Integer.MAX_VALUE);
+            }
+        }
+        items.add(lol.build());
 
     });
 
@@ -354,7 +386,10 @@ public class CustomCreativeTabs extends CreativeTabs implements IMinecraft {
 
         items.add(ItemBuilder.of(Blocks.light_weighted_pressure_plate)
                 .setDisplayName("\247aParkour Block")
-                .setLore()
+                .setLore(
+                        "\2477Place this block in your house to",
+                        "\2477place a Parkour Block!"
+                )
                 .build());
 
         items.add(ItemBuilder.of(Blocks.heavy_weighted_pressure_plate)
@@ -679,15 +714,15 @@ public class CustomCreativeTabs extends CreativeTabs implements IMinecraft {
 
     private final Item icon;
 
-    public final ItemAdder itemAdder;
+    public final Consumer<List<ItemStack>> itemAdder;
 
     private final int columnOverride;
 
-    public CustomCreativeTabs(int index, String label, Item icon, ItemAdder itemAdder) {
+    public CustomCreativeTabs(int index, String label, Item icon, Consumer<List<ItemStack>> itemAdder) {
         this(index, label, icon, index, itemAdder);
     }
 
-    public CustomCreativeTabs(int index, String label, Item icon, int columnOverride, ItemAdder itemAdder) {
+    public CustomCreativeTabs(int index, String label, Item icon, int columnOverride, Consumer<List<ItemStack>> itemAdder) {
         super(index, label, TABS);
         this.icon = icon;
         this.itemAdder = itemAdder;
@@ -701,7 +736,7 @@ public class CustomCreativeTabs extends CreativeTabs implements IMinecraft {
 
     @Override
     public void displayAllReleventItems(List<ItemStack> itemStacks) {
-        this.itemAdder.addItems(itemStacks);
+        this.itemAdder.accept(itemStacks);
     }
 
     @Override
@@ -712,10 +747,6 @@ public class CustomCreativeTabs extends CreativeTabs implements IMinecraft {
     @Override
     public String getTranslatedTabLabel() {
         return this.getTabLabel();
-    }
-
-    public interface ItemAdder {
-        void addItems(List<ItemStack> items);
     }
 
     public static ItemStack buildDragonChestExploit() {

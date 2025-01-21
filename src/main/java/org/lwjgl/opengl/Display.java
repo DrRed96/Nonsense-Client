@@ -1,3 +1,35 @@
+/*
+ * Copyright (c) 2002-2008 LWJGL Project
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are
+ * met:
+ *
+ * * Redistributions of source code must retain the above copyright
+ *   notice, this list of conditions and the following disclaimer.
+ *
+ * * Redistributions in binary form must reproduce the above copyright
+ *   notice, this list of conditions and the following disclaimer in the
+ *   documentation and/or other materials provided with the distribution.
+ *
+ * * Neither the name of 'LWJGL' nor the names of
+ *   its contributors may be used to endorse or promote products derived
+ *   from this software without specific prior written permission.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS
+ * "AS IS" AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED
+ * TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR
+ * PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT OWNER OR
+ * CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL,
+ * EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO,
+ * PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR
+ * PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF
+ * LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+ * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+ * SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ */
+
 package org.lwjgl.opengl;
 
 import org.lwjgl.BufferUtils;
@@ -10,6 +42,8 @@ import org.lwjgl.system.MemoryUtil;
 import java.nio.ByteBuffer;
 import java.util.Arrays;
 import java.util.Comparator;
+
+import static org.lwjgl.glfw.GLFW.*;
 
 public class Display {
 
@@ -53,7 +87,7 @@ public class Display {
         }
 
         if (isCreated()) {
-            GLFW.glfwSetWindowIcon(handle, iconsToGLFWBuffer(cachedIcons));
+            glfwSetWindowIcon(handle, iconsToGLFWBuffer(cachedIcons));
             return 1;
         }
 
@@ -62,7 +96,7 @@ public class Display {
 
     public static void update() {
         windowResized = false;
-        GLFW.glfwPollEvents();
+        glfwPollEvents();
 
         if (Mouse.isCreated()) {
             Mouse.poll();
@@ -72,7 +106,7 @@ public class Display {
             Keyboard.poll();
         }
 
-        GLFW.glfwSwapBuffers(handle);
+        glfwSwapBuffers(handle);
     }
 
     public static void create(PixelFormat pixelFormat) throws LWJGLException {
@@ -82,30 +116,37 @@ public class Display {
     public static void create() throws LWJGLException {
         GLFWErrorCallback.createPrint(System.err).set();
 
-        if (!GLFW.glfwInit()) {
+        if (!glfwInit()) {
             throw new LWJGLException("Unable to initialize GLFW");
         }
 
-        GLFW.glfwDefaultWindowHints();
-        GLFW.glfwWindowHint(GLFW.GLFW_VISIBLE, GLFW.GLFW_FALSE);
-        GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, resizable ? GLFW.GLFW_TRUE : GLFW.GLFW_FALSE);
-        GLFW.glfwWindowHint(GLFW.GLFW_SAMPLES, 4);
+        glfwDefaultWindowHints();
+        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+        glfwWindowHint(GLFW_RESIZABLE, resizable ? GLFW_TRUE : GLFW_FALSE);
+        glfwWindowHint(GLFW_SAMPLES, 4); // Extra samples are used for NanoVG's antialiasing
+        handle = glfwCreateWindow(displayMode.getWidth(), displayMode.getHeight(), title, MemoryUtil.NULL, MemoryUtil.NULL);
 
-        handle = GLFW.glfwCreateWindow(displayMode.getWidth(), displayMode.getHeight(), title, MemoryUtil.NULL, MemoryUtil.NULL);
+        // Attempt to centre the window
+        long monitor = glfwGetPrimaryMonitor();
+        GLFWVidMode vidMode = glfwGetVideoMode(monitor);
+        if (vidMode != null) {
+            glfwSetWindowPos(handle, (vidMode.width() - displayMode.getWidth()) / 2, (vidMode.height() - displayMode.getHeight()) / 2);
+        }
+
 
         width = displayMode.getWidth();
         height = displayMode.getHeight();
 
-        GLFW.glfwMakeContextCurrent(handle);
+        glfwMakeContextCurrent(handle);
         GL.createCapabilities();
 
         sizeCallback = GLFWWindowSizeCallback.create(Display::resizeCallback);
-        GLFW.glfwSetWindowSizeCallback(handle, sizeCallback);
+        glfwSetWindowSizeCallback(handle, sizeCallback);
 
         Mouse.create();
         Keyboard.create();
 
-        GLFW.glfwShowWindow(handle);
+        glfwShowWindow(handle);
 
         if (cachedIcons != null) {
             setIcon(cachedIcons);
@@ -120,17 +161,17 @@ public class Display {
             resizeCallback(handle, displayMode.getWidth(), displayMode.getHeight());
 
             if (fullscreen) {
-                long monitor = GLFW.glfwGetPrimaryMonitor();
-                GLFW.glfwSetWindowMonitor(handle, monitor, 0, 0, width, height, displayMode.getFrequency());
+                long monitor = glfwGetPrimaryMonitor();
+                glfwSetWindowMonitor(handle, monitor, 0, 0, width, height, displayMode.getFrequency());
                 xPos = displayMode.getWidth() / 2;
                 yPos = displayMode.getHeight() / 2;
             } else {
                 xPos -= width / 2;
                 yPos -= height / 2;
-                GLFW.glfwSetWindowMonitor(handle, MemoryUtil.NULL, xPos, yPos, width, height, -1);
+                glfwSetWindowMonitor(handle, MemoryUtil.NULL, xPos, yPos, width, height, -1);
             }
 
-            GLFW.glfwSetWindowSize(handle, width, height);
+            glfwSetWindowSize(handle, width, height);
 
         } catch (Exception exception) {
             exception.printStackTrace();
@@ -139,12 +180,12 @@ public class Display {
     }
 
     public static DisplayMode[] getAvailableDisplayModes() throws LWJGLException {
-        long primaryMonitor = GLFW.glfwGetPrimaryMonitor();
+        long primaryMonitor = glfwGetPrimaryMonitor();
         if (primaryMonitor == MemoryUtil.NULL) {
             return new DisplayMode[0];
         }
 
-        GLFWVidMode.Buffer videoModes = GLFW.glfwGetVideoModes(primaryMonitor);
+        GLFWVidMode.Buffer videoModes = glfwGetVideoModes(primaryMonitor);
 
         if (videoModes == null) {
             throw new LWJGLException("No video modes found");
@@ -167,13 +208,13 @@ public class Display {
         sizeCallback.free();
         Mouse.destroy();
         Keyboard.destroy();
-        GLFW.glfwDestroyWindow(handle);
+        glfwDestroyWindow(handle);
     }
 
     public static void destroy() {
         destroyWindow();
-        GLFW.glfwTerminate();
-        GLFWErrorCallback cb = GLFW.glfwSetErrorCallback(null);
+        glfwTerminate();
+        GLFWErrorCallback cb = glfwSetErrorCallback(null);
         if (cb != null) {
             cb.free();
         }
@@ -184,7 +225,7 @@ public class Display {
     }
 
     public static boolean isCloseRequested() {
-        return GLFW.glfwWindowShouldClose(handle);
+        return glfwWindowShouldClose(handle);
     }
 
     public static boolean isActive() {
@@ -194,7 +235,7 @@ public class Display {
     public static void setResizable(boolean isResizable) {
         resizable = isResizable;
         if (isCreated()) {
-            GLFW.glfwWindowHint(GLFW.GLFW_RESIZABLE, resizable ? GLFW.GLFW_TRUE : GLFW.GLFW_FALSE);
+            glfwWindowHint(GLFW_RESIZABLE, resizable ? GLFW_TRUE : GLFW_FALSE);
         }
     }
 
@@ -203,7 +244,7 @@ public class Display {
     }
 
     public static void setVSyncEnabled(boolean enabled) {
-        GLFW.glfwSwapInterval(enabled ? 1 : 0);
+        glfwSwapInterval(enabled ? 1 : 0);
     }
 
     public static String getTitle() {
@@ -213,7 +254,7 @@ public class Display {
     public static void setTitle(String title) {
         Display.title = title;
         if (isCreated()) {
-            GLFW.glfwSetWindowTitle(handle, title);
+            glfwSetWindowTitle(handle, title);
         }
     }
 

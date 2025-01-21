@@ -4,7 +4,7 @@ import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.command.Command;
 import wtf.bhopper.nonsense.command.CommandInfo;
 import wtf.bhopper.nonsense.module.Module;
-import wtf.bhopper.nonsense.module.property.Property;
+import wtf.bhopper.nonsense.module.property.AbstractProperty;
 import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
 import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 
@@ -25,7 +25,7 @@ public class SetCmd extends Command {
             return;
         }
 
-        Property<?> property = module.getProperty(args[2]);
+        AbstractProperty<?> property = module.getProperty(args[2]);
         if (property == null) {
             ChatUtil.error("'%s' is not a property", args[2]);
             return;
@@ -34,13 +34,13 @@ public class SetCmd extends Command {
         this.parse(property, args, 3);
     }
 
-    private void parse(Property<?> property, String[] args, int current) {
+    private void parse(AbstractProperty<?> property, String[] args, int current) {
         if (property instanceof GroupProperty groupProperty) {
             if (args.length < current + 2) {
                 ChatUtil.error("Invalid arguments: %s", this.syntax);
                 return;
             }
-            Property<?> property2 = groupProperty.getProperty(args[current]);
+            AbstractProperty<?> property2 = groupProperty.getProperty(args[current]);
             if (property2 == null) {
                 ChatUtil.error("'%s' is not a property", args[current]);
                 return;

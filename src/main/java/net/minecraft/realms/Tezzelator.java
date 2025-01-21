@@ -12,25 +12,25 @@ public class Tezzelator
         t.draw();
     }
 
-    public Tezzelator vertex(double p_vertex_1_, double p_vertex_3_, double p_vertex_5_)
+    public Tezzelator vertex(double x, double y, double z)
     {
-        t.getWorldRenderer().pos(p_vertex_1_, p_vertex_3_, p_vertex_5_);
+        t.getWorldRenderer().pos(x, y, z);
         return this;
     }
 
-    public void color(float p_color_1_, float p_color_2_, float p_color_3_, float p_color_4_)
+    public void color(float red, float green, float blue, float alpha)
     {
-        t.getWorldRenderer().color(p_color_1_, p_color_2_, p_color_3_, p_color_4_);
+        t.getWorldRenderer().color(red, green, blue, alpha);
     }
 
-    public void tex2(short p_tex2_1_, short p_tex2_2_)
+    public void tex2(short u, short v)
     {
-        t.getWorldRenderer().lightmap(p_tex2_1_, p_tex2_2_);
+        t.getWorldRenderer().lightmap(u, v);
     }
 
-    public void normal(float p_normal_1_, float p_normal_2_, float p_normal_3_)
+    public void normal(float nx, float ny, float nz)
     {
-        t.getWorldRenderer().normal(p_normal_1_, p_normal_2_, p_normal_3_);
+        t.getWorldRenderer().normal(nx, ny, nz);
     }
 
     public void begin(int p_begin_1_, RealmsVertexFormat p_begin_2_)
@@ -43,19 +43,19 @@ public class Tezzelator
         t.getWorldRenderer().endVertex();
     }
 
-    public void offset(double p_offset_1_, double p_offset_3_, double p_offset_5_)
+    public void offset(double x, double y, double z)
     {
-        t.getWorldRenderer().setTranslation(p_offset_1_, p_offset_3_, p_offset_5_);
+        t.getWorldRenderer().setTranslation(x, y, z);
     }
 
-    public RealmsBufferBuilder color(int p_color_1_, int p_color_2_, int p_color_3_, int p_color_4_)
+    public RealmsBufferBuilder color(int red, int green, int blue, int alpha)
     {
-        return new RealmsBufferBuilder(t.getWorldRenderer().color(p_color_1_, p_color_2_, p_color_3_, p_color_4_));
+        return new RealmsBufferBuilder(t.getWorldRenderer().color(red, green, blue, alpha));
     }
 
-    public Tezzelator tex(double p_tex_1_, double p_tex_3_)
+    public Tezzelator tex(double u, double v)
     {
-        t.getWorldRenderer().tex(p_tex_1_, p_tex_3_);
+        t.getWorldRenderer().tex(u, v);
         return this;
     }
 }

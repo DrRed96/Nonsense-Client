@@ -2,14 +2,14 @@ package wtf.bhopper.nonsense.module.property.impl;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import wtf.bhopper.nonsense.module.property.Property;
+import wtf.bhopper.nonsense.module.property.AbstractProperty;
 import wtf.bhopper.nonsense.util.misc.MathUtil;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
 import java.util.function.Supplier;
 
-public class NumberProperty extends Property<Double> {
+public class NumberProperty extends AbstractProperty<Double> {
 
     public static final NumberFormat FORMAT_INT = new DecimalFormat("#0");
     public static final NumberFormat FORMAT_DOUBLE = new DecimalFormat("#0.##");

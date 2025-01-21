@@ -4,9 +4,9 @@ import java.util.List;
 
 public interface IPropertyContainer {
 
-    void addProperties(Property<?>... properties);
+    void addProperties(AbstractProperty<?>... properties);
 
-    List<Property<?>> getProperties();
+    List<AbstractProperty<?>> getProperties();
 
     String getContainerId();
 

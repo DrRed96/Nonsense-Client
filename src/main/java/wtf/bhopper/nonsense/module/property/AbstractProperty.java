@@ -1,12 +1,13 @@
 package wtf.bhopper.nonsense.module.property;
 
+import com.google.common.base.Objects;
 import wtf.bhopper.nonsense.config.ISerializable;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Supplier;
 
-public abstract class Property<T> implements ISerializable {
+public abstract class AbstractProperty<T> implements ISerializable {
 
     public final String name;
     public final String displayName;
@@ -15,7 +16,7 @@ public abstract class Property<T> implements ISerializable {
     private final List<IValueChangeListener<T>> valueChangeListeners = new ArrayList<>();
     protected T value;
 
-    public Property(String displayName, String description, T value, Supplier<Boolean> dependency) {
+    public AbstractProperty(String displayName, String description, T value, Supplier<Boolean> dependency) {
         this.name = displayName.replace(' ', '-').toLowerCase();
         this.displayName = displayName;
         this.description = description;
@@ -23,7 +24,7 @@ public abstract class Property<T> implements ISerializable {
         this.dependency = dependency;
     }
 
-    public Property(String displayName, String description, T value) {
+    public AbstractProperty(String displayName, String description, T value) {
         this(displayName, description, value, () -> true);
     }
 
@@ -63,4 +64,11 @@ public abstract class Property<T> implements ISerializable {
         return this.value.getClass();
     }
 
+    @Override
+    public String toString() {
+        return Objects.toStringHelper(this)
+                .add("name", this.name)
+                .add("value", this.value)
+                .toString();
+    }
 }

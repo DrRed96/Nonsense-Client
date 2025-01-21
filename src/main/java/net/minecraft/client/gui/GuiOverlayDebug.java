@@ -233,7 +233,7 @@ public class GuiOverlayDebug extends Gui
     private void func_181554_e()
     {
         GlStateManager.disableDepth();
-        FrameTimer frametimer = this.mc.func_181539_aj();
+        FrameTimer frametimer = this.mc.getFrameTimer();
         int i = frametimer.func_181749_a();
         int j = frametimer.func_181750_b();
         long[] along = frametimer.func_181746_c();

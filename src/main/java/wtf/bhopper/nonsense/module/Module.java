@@ -7,7 +7,7 @@ import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.gui.hud.Hud;
 import wtf.bhopper.nonsense.gui.hud.notification.Notification;
 import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
-import wtf.bhopper.nonsense.module.property.Property;
+import wtf.bhopper.nonsense.module.property.AbstractProperty;
 import wtf.bhopper.nonsense.module.property.IPropertyContainer;
 import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 import wtf.bhopper.nonsense.util.misc.GeneralUtil;
@@ -29,7 +29,7 @@ public abstract class Module implements IPropertyContainer, ISerializable, IMine
     private boolean toggled = false;
     private int bind = Keyboard.KEY_NONE;
     private boolean hidden = false;
-    private final List<Property<?>> properties = new ArrayList<>();
+    private final List<AbstractProperty<?>> properties = new ArrayList<>();
 
     private Supplier<String> suffix = () -> null;
 
@@ -101,12 +101,12 @@ public abstract class Module implements IPropertyContainer, ISerializable, IMine
     }
 
     @Override
-    public void addProperties(Property<?>... properties) {
+    public void addProperties(AbstractProperty<?>... properties) {
         this.properties.addAll(Arrays.asList(properties));
     }
 
     @Override
-    public List<Property<?>> getProperties() {
+    public List<AbstractProperty<?>> getProperties() {
         return this.properties;
     }
 
@@ -115,7 +115,7 @@ public abstract class Module implements IPropertyContainer, ISerializable, IMine
         return this.name;
     }
 
-    public Property<?> getProperty(String name) {
+    public AbstractProperty<?> getProperty(String name) {
         return this.properties.stream()
                 .filter(property -> property.name.equalsIgnoreCase(name))
                 .findFirst()
@@ -157,7 +157,7 @@ public abstract class Module implements IPropertyContainer, ISerializable, IMine
         moduleObject.addProperty("hidden", this.hidden);
 
         JsonObject properties = new JsonObject();
-        for (Property<?> property : this.properties) {
+        for (AbstractProperty<?> property : this.properties) {
             try {
                 properties.add(property.name, property.serialize());
             } catch (UnsupportedOperationException ignored) {}
@@ -189,7 +189,7 @@ public abstract class Module implements IPropertyContainer, ISerializable, IMine
         if (moduleObject.has("properties")) {
             JsonElement propertiesElement = moduleObject.get("properties");
             if (propertiesElement instanceof JsonObject object) {
-                for (Property<?> property : this.properties) {
+                for (AbstractProperty<?> property : this.properties) {
                     if (object.has(property.name)) {
                         try {
                             property.deserialize(object.get(property.name));

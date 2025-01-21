@@ -264,7 +264,7 @@ public class ChunkRenderDispatcher
         GL11.glNewList(p_178510_2_, GL11.GL_COMPILE);
         GlStateManager.pushMatrix();
         chunkRenderer.multModelviewMatrix();
-        this.worldVertexUploader.func_181679_a(p_178510_1_);
+        this.worldVertexUploader.upload(p_178510_1_);
         GlStateManager.popMatrix();
         GL11.glEndList();
     }
@@ -272,7 +272,7 @@ public class ChunkRenderDispatcher
     private void uploadVertexBuffer(WorldRenderer p_178506_1_, VertexBuffer vertexBufferIn)
     {
         this.vertexUploader.setVertexBuffer(vertexBufferIn);
-        this.vertexUploader.func_181679_a(p_178506_1_);
+        this.vertexUploader.upload(p_178506_1_);
     }
 
     public void clearChunkUpdates()

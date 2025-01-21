@@ -1,9 +1,8 @@
 package wtf.bhopper.nonsense.gui.click.novoline;
 
 import net.minecraft.client.Minecraft;
-import wtf.bhopper.nonsense.gui.hud.Hud;
 import wtf.bhopper.nonsense.module.Module;
-import wtf.bhopper.nonsense.module.property.Property;
+import wtf.bhopper.nonsense.module.property.AbstractProperty;
 import wtf.bhopper.nonsense.module.property.impl.*;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
 
@@ -23,7 +22,7 @@ public class NovoModule extends NovoComponent {
         super(panel, 0);
         this.module = module;
 
-        for (Property<?> p : module.getProperties()) {
+        for (AbstractProperty<?> p : module.getProperties()) {
             switch (p) {
                 case BooleanProperty booleanProperty -> components.add(new NovoSwitch(this.panel, booleanProperty, 0));
                 case NumberProperty numberProperty -> components.add(new NovoSlider(this.panel, numberProperty, 0));

@@ -2,9 +2,7 @@ package wtf.bhopper.nonsense.module.property.impl;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
-import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.module.impl.visual.ClickGui;
-import wtf.bhopper.nonsense.module.property.Property;
+import wtf.bhopper.nonsense.module.property.AbstractProperty;
 import wtf.bhopper.nonsense.module.property.annotations.Description;
 import wtf.bhopper.nonsense.module.property.annotations.DisplayName;
 import wtf.bhopper.nonsense.util.misc.GeneralUtil;
@@ -13,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.function.Supplier;
 
-public class EnumProperty<T extends Enum<T>> extends Property<T> {
+public class EnumProperty<T extends Enum<T>> extends AbstractProperty<T> {
 
     private final T[] values;
 

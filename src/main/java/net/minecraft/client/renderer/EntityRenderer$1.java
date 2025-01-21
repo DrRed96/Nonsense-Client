@@ -3,7 +3,7 @@ package net.minecraft.client.renderer;
 import com.google.common.base.Predicate;
 import net.minecraft.entity.Entity;
 
-class EntityRenderer$1 implements Predicate
+class EntityRenderer$1 implements Predicate<Entity>
 {
     final EntityRenderer field_90032_a;
 
@@ -15,10 +15,5 @@ class EntityRenderer$1 implements Predicate
     public boolean apply(Entity p_apply_1_)
     {
         return p_apply_1_.canBeCollidedWith();
-    }
-
-    public boolean apply(Object p_apply_1_)
-    {
-        return this.apply((Entity)p_apply_1_);
     }
 }

@@ -24,7 +24,7 @@ public class FastUse extends Module {
     private boolean timerSetback;
 
     public FastUse() {
-        super();
+        this.addProperties(this.mode, this.packets, this.timerSpeed);
     }
 
     @Override

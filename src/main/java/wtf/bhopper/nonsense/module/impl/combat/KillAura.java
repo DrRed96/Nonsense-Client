@@ -74,8 +74,8 @@ public class KillAura extends Module {
     private final RotationsProperty rotationsProperty = new RotationsProperty("Rotations", "Kill Aura Rotations", this);
 
     private final GroupProperty renderGroup = new GroupProperty("Render", "Rendering options", this);
-    private final EnumProperty<RangeIndiactor> rangeIndicator = new EnumProperty<>("Range Indicator", "Draws a circle to indicate your range", RangeIndiactor.NONE);
-    private final ColorProperty attackColor = new ColorProperty("Attack Color", "Color for attacking", ColorUtil.RED, () -> !this.rangeIndicator.is(RangeIndiactor.NONE));
+    private final EnumProperty<RangeIndicator> rangeIndicator = new EnumProperty<>("Range Indicator", "Draws a circle to indicate your range", RangeIndicator.NONE);
+    private final ColorProperty attackColor = new ColorProperty("Attack Color", "Color for attacking", ColorUtil.RED, () -> !this.rangeIndicator.is(RangeIndicator.NONE));
 
     private final EnumProperty<Swing> swingMode = new EnumProperty<>("Swing", "Swinging", Swing.CLIENT);
     private final BooleanProperty autoDisable = new BooleanProperty("Auto Disable", "Automatically disabled Kill Aura in certain situations", true);
@@ -397,12 +397,12 @@ public class KillAura extends Module {
 
     @EventLink
     public final Listener<EventRenderWorld> onRender = event -> {
-        if (!this.rangeIndicator.is(RangeIndiactor.NONE)) {
+        if (!this.rangeIndicator.is(RangeIndicator.NONE)) {
             double x = MathUtil.lerp(mc.thePlayer.lastTickPosX, mc.thePlayer.posX, event.delta);
             double y = MathUtil.lerp(mc.thePlayer.lastTickPosY, mc.thePlayer.posY, event.delta);
             double z = MathUtil.lerp(mc.thePlayer.lastTickPosZ, mc.thePlayer.posZ, event.delta);
 
-            if (this.rangeIndicator.is(RangeIndiactor.OUTLINE)) {
+            if (this.rangeIndicator.is(RangeIndicator.OUTLINE)) {
                 RenderUtil.drawRadius(x, y, z, this.playerRange.getDouble(), 100, 4.0F, ColorUtil.BLACK);
             }
 
@@ -421,17 +421,7 @@ public class KillAura extends Module {
         SWITCH
     }
 
-    private enum RotationMode {
-        INSTANT,
-        LINEAR
-    }
-
-    private enum HitVecMode {
-        CLOSEST,
-        HEAD
-    }
-
-    private enum RangeIndiactor {
+    private enum RangeIndicator {
         NORMAL,
         OUTLINE,
         NONE

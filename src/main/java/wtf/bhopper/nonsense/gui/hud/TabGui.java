@@ -10,7 +10,7 @@ import wtf.bhopper.nonsense.event.impl.client.EventKeyPress;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.impl.visual.HudMod;
-import wtf.bhopper.nonsense.module.property.Property;
+import wtf.bhopper.nonsense.module.property.AbstractProperty;
 import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 import wtf.bhopper.nonsense.util.render.*;
 
@@ -23,7 +23,7 @@ public class TabGui implements IMinecraft {
 
     private ModuleCategory selectedCategory = ModuleCategory.values()[0];
     private Module selectedModule = null;
-    private Property<?> selectedProperty = null;
+    private AbstractProperty<?> selectedProperty = null;
 
     private boolean isInCategory = false;
     private boolean isInModule = false;

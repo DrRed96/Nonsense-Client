@@ -20,6 +20,7 @@ public class ComponentManager {
         this.components = addComponents(
                 new AntiExploitComponent(),
                 new BlinkComponent(),
+                new InventoryExploitComponent(),
                 new LastConnectionComponent(),
                 new PingComponent(),
                 new PingSpoofComponent(),

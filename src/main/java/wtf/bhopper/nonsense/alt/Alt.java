@@ -8,12 +8,10 @@ import net.minecraft.util.JsonUtils;
 import net.minecraft.util.Session;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.alt.loginthread.CookieLoginThread;
-import wtf.bhopper.nonsense.alt.loginthread.LoginDataCallback;
 import wtf.bhopper.nonsense.alt.mslogin.LoginData;
 import wtf.bhopper.nonsense.gui.hud.notification.Notification;
 import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
 import wtf.bhopper.nonsense.gui.screens.altmanager.GuiAltManager;
-import wtf.bhopper.nonsense.util.misc.ErrorCallback;
 
 import java.util.ArrayList;
 import java.util.List;

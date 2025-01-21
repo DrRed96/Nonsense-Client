@@ -3,7 +3,7 @@ package wtf.bhopper.nonsense.script.lua.api.impl;
 import org.luaj.vm2.LuaTable;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
-import wtf.bhopper.nonsense.script.ScriptModule;
+import wtf.bhopper.nonsense.script.AbstractScriptModule;
 import wtf.bhopper.nonsense.script.lua.LuaScriptModule;
 import wtf.bhopper.nonsense.script.lua.api.LuaApi;
 
@@ -24,7 +24,7 @@ public class LuaModuleManagerApi extends LuaApi {
             String propertyDescription = args.arg(3).checkjstring();
             boolean defaultValue = args.arg(4).checkboolean();
 
-            ScriptModule module = Nonsense.getModuleManager().getScript(moduleName);
+            AbstractScriptModule module = Nonsense.getModuleManager().getScript(moduleName);
             if (module == null) {
                 throw new IllegalArgumentException("'" + moduleName + "' is not a valid script module.");
             }

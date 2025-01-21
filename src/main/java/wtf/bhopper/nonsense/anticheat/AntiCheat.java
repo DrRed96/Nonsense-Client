@@ -4,7 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.network.play.server.*;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.anticheat.check.Check;
+import wtf.bhopper.nonsense.anticheat.check.AbstractCheck;
 import wtf.bhopper.nonsense.anticheat.check.impl.*;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
@@ -22,7 +22,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class AntiCheat implements IMinecraft {
 
-    private final List<Check> checks = new CopyOnWriteArrayList<>();
+    private final List<AbstractCheck> checks = new CopyOnWriteArrayList<>();
     private final Map<Integer, PlayerData> playerData = new ConcurrentHashMap<>();
 
     public AntiCheat() {
@@ -36,9 +36,9 @@ public class AntiCheat implements IMinecraft {
         );
     }
 
-    private void addChecks(Check... checks) {
+    private void addChecks(AbstractCheck... checks) {
         AntiCheatMod mod = Nonsense.module(AntiCheatMod.class);
-        for (Check check : checks) {
+        for (AbstractCheck check : checks) {
             this.checks.add(check);
             mod.addCheckProperty(check);
         }
@@ -71,7 +71,7 @@ public class AntiCheat implements IMinecraft {
                 PlayerData data = this.getPlayerData((EntityPlayer)entity);
 
                 data.handleRelMove(packet);
-                for (Check check : this.checks) {
+                for (AbstractCheck check : this.checks) {
                     if (mod.checkEnabled(check)) {
                         check.handleRelMove(data, packet);
                     }
@@ -89,7 +89,7 @@ public class AntiCheat implements IMinecraft {
                 PlayerData data = this.getPlayerData((EntityPlayer)entity);;
 
                 data.handleTeleport(packet);
-                for (Check check : this.checks) {
+                for (AbstractCheck check : this.checks) {
                     if (mod.checkEnabled(check)) {
                         check.handleTeleport(data, packet);
                     }
@@ -107,7 +107,7 @@ public class AntiCheat implements IMinecraft {
                 PlayerData data = this.getPlayerData((EntityPlayer)entity);
 
                 data.handleAnimation(packet);
-                for (Check check : this.checks) {
+                for (AbstractCheck check : this.checks) {
                     if (mod.checkEnabled(check)) {
                         check.handleAnimation(data, packet);
                     }
@@ -125,7 +125,7 @@ public class AntiCheat implements IMinecraft {
                 PlayerData data = this.getPlayerData((EntityPlayer)entity);
 
                 data.handleEquipment(packet);
-                for (Check check : this.checks) {
+                for (AbstractCheck check : this.checks) {
                     if (mod.checkEnabled(check)) {
                         check.handleEquipment(data, packet);
                     }
@@ -143,7 +143,7 @@ public class AntiCheat implements IMinecraft {
                 PlayerData data = this.getPlayerData((EntityPlayer)entity);
 
                 data.handleHeadLook(packet);
-                for (Check check : this.checks) {
+                for (AbstractCheck check : this.checks) {
                     if (mod.checkEnabled(check)) {
                         check.handleHeadLook(data, packet);
                     }
@@ -161,7 +161,7 @@ public class AntiCheat implements IMinecraft {
                 PlayerData data = this.getPlayerData((EntityPlayer)entity);
 
                 data.handleEntityMetadata(packet);
-                for (Check check : this.checks) {
+                for (AbstractCheck check : this.checks) {
                     if (mod.checkEnabled(check)) {
                         check.handleEntityMetadata(data, packet);
                     }
@@ -178,7 +178,7 @@ public class AntiCheat implements IMinecraft {
 
                 PlayerData data = this.getPlayerData((EntityPlayer)entity);
 
-                for (Check check : this.checks) {
+                for (AbstractCheck check : this.checks) {
                     if (mod.checkEnabled(check)) {
                         check.handleBlockBreakAnim(data, packet);
                     }
@@ -200,7 +200,7 @@ public class AntiCheat implements IMinecraft {
         return entity instanceof EntityPlayer player && !player.isClientPlayer() && !player.isFake && !Nonsense.module(AntiBot.class).isBot(player);
     }
 
-    public List<Check> getChecks() {
+    public List<AbstractCheck> getChecks() {
         return this.checks;
     }
 

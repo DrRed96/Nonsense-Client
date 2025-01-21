@@ -31,6 +31,10 @@ public class MathUtil {
         return bd.doubleValue();
     }
 
+    public static Vec3 floor(Vec3 vec3) {
+        return new Vec3(Math.floor(vec3.xCoord), Math.floor(vec3.yCoord), Math.floor(vec3.zCoord));
+    }
+
     public static int lerp(int a, int b, float f) {
         return a + (int)(f * (float)(b - a));
     }
@@ -139,6 +143,10 @@ public class MathUtil {
 
     public static int random(int min, int max) {
         return lerp(min, max, (float)Math.random());
+    }
+
+    public static boolean vecEqual(Vec3 vecA, Vec3 vecB) {
+        return vecA.xCoord == vecB.xCoord && vecA.yCoord == vecB.yCoord && vecA.zCoord == vecB.zCoord;
     }
 
 }

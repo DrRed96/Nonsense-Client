@@ -7,7 +7,7 @@ import net.minecraft.network.play.server.*;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
-import wtf.bhopper.nonsense.anticheat.check.Check;
+import wtf.bhopper.nonsense.anticheat.check.AbstractCheck;
 import wtf.bhopper.nonsense.anticheat.check.data.ICheckData;
 import wtf.bhopper.nonsense.gui.hud.notification.Notification;
 import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
@@ -24,7 +24,7 @@ import java.util.function.Supplier;
 
 public class PlayerData implements IMinecraft {
 
-    private final Map<Check, Float> violations = new HashMap<>();
+    private final Map<AbstractCheck, Float> violations = new HashMap<>();
     private EntityPlayer entity;
 
     private double posX;
@@ -120,7 +120,7 @@ public class PlayerData implements IMinecraft {
     }
 
     public float getMoveYaw() {
-        return getMoveYaw(getDeltaX(), getDeltaZ());
+        return this.getMoveYaw(this.getDeltaX(), this.getDeltaZ());
     }
 
     public void handleRelMove(S14PacketEntity packetEntity) {
@@ -266,11 +266,11 @@ public class PlayerData implements IMinecraft {
         this.totalDeltaRotations = (float) Math.sqrt(deltaYaw180 * deltaYaw180 + deltaPitch * deltaPitch);
     }
 
-    public float incrementVl(Check check) {
+    public float incrementVl(AbstractCheck check) {
         return incrementVl(check, 1);
     }
 
-    public float incrementVl(Check check, int amount) {
+    public float incrementVl(AbstractCheck check, int amount) {
         float vl = this.violations.getOrDefault(check, 0.0F) + amount;
 
         boolean flagged = vl >= check.maxVl;
@@ -294,7 +294,7 @@ public class PlayerData implements IMinecraft {
         return vl;
     }
 
-    public float decrementVl(Check check, float multiplier) {
+    public float decrementVl(AbstractCheck check, float multiplier) {
         if (this.violations.containsKey(check)) {
             float newVl = this.violations.get(check) * multiplier;
             if (newVl < 0) {
@@ -505,7 +505,7 @@ public class PlayerData implements IMinecraft {
         return this.checkData.containsKey(clazz);
     }
 
-    public Map<Check, Float> getViolations() {
+    public Map<AbstractCheck, Float> getViolations() {
         return this.violations;
     }
 

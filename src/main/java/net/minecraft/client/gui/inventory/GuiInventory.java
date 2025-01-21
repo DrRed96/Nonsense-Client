@@ -138,6 +138,8 @@ public class GuiInventory extends InventoryEffectRenderer
      */
     protected void actionPerformed(GuiButton button) throws IOException
     {
+        super.actionPerformed(button);
+
         if (button.id == 0)
         {
             this.mc.displayGuiScreen(new GuiAchievements(this, this.mc.thePlayer.getStatFileWriter()));
