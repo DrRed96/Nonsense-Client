@@ -142,7 +142,7 @@ public class Lagometer
                 GlStateManager.pushMatrix();
                 GlStateManager.enableColorMaterial();
                 GlStateManager.loadIdentity();
-                GlStateManager.ortho(0.0D, (double)mc.displayWidth, (double)mc.displayHeight, 0.0D, 1000.0D, 3000.0D);
+                GlStateManager.ortho(0.0D, mc.displayWidth, mc.displayHeight, 0.0D, 1000.0D, 3000.0D);
                 GlStateManager.matrixMode(5888);
                 GlStateManager.pushMatrix();
                 GlStateManager.loadIdentity();

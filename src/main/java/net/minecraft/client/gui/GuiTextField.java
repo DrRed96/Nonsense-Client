@@ -12,7 +12,7 @@ import org.lwjgl.input.Keyboard;
 
 public class GuiTextField extends Gui {
     private final int id;
-    private final FontRenderer fontRendererInstance;
+    protected final FontRenderer fontRendererInstance;
     public int xPosition;
     public int yPosition;
 
@@ -20,15 +20,15 @@ public class GuiTextField extends Gui {
      * The width of this text field.
      */
     private final int width;
-    private final int height;
+    protected final int height;
 
     /**
      * Has the current text being edited on the textbox.
      */
     private String text = "";
     private int maxStringLength = 32;
-    private int cursorCounter;
-    private boolean enableBackgroundDrawing = true;
+    protected int cursorCounter;
+    protected boolean enableBackgroundDrawing = true;
 
     /**
      * if true the textbox can lose focus by clicking elsewhere on the screen
@@ -43,20 +43,20 @@ public class GuiTextField extends Gui {
     /**
      * If this value is true along with isFocused, keyTyped will process the keys.
      */
-    private boolean isEnabled = true;
+    protected boolean isEnabled = true;
 
     /**
      * The current character index that should be used as start of the rendered text.
      */
-    private int lineScrollOffset;
+    protected int lineScrollOffset;
     private int cursorPosition;
 
     /**
      * other selection position, maybe the same as the cursor
      */
     private int selectionEnd;
-    private int enabledColor = 14737632;
-    private int disabledColor = 7368816;
+    protected int enabledColor = 14737632;
+    protected int disabledColor = 7368816;
 
     /**
      * True if this textbox is visible
@@ -484,7 +484,7 @@ public class GuiTextField extends Gui {
     /**
      * draws the vertical line cursor in the textbox
      */
-    private void drawCursorVertical(int p_146188_1_, int p_146188_2_, int p_146188_3_, int p_146188_4_) {
+    protected void drawCursorVertical(int p_146188_1_, int p_146188_2_, int p_146188_3_, int p_146188_4_) {
         if (p_146188_1_ < p_146188_3_) {
             int i = p_146188_1_;
             p_146188_1_ = p_146188_3_;
@@ -512,10 +512,10 @@ public class GuiTextField extends Gui {
         GlStateManager.enableColorLogic();
         GlStateManager.colorLogicOp(5387);
         worldrenderer.begin(7, DefaultVertexFormats.POSITION);
-        worldrenderer.pos((double) p_146188_1_, (double) p_146188_4_, 0.0D).endVertex();
-        worldrenderer.pos((double) p_146188_3_, (double) p_146188_4_, 0.0D).endVertex();
-        worldrenderer.pos((double) p_146188_3_, (double) p_146188_2_, 0.0D).endVertex();
-        worldrenderer.pos((double) p_146188_1_, (double) p_146188_2_, 0.0D).endVertex();
+        worldrenderer.pos(p_146188_1_, p_146188_4_, 0.0D).endVertex();
+        worldrenderer.pos(p_146188_3_, p_146188_4_, 0.0D).endVertex();
+        worldrenderer.pos(p_146188_3_, p_146188_2_, 0.0D).endVertex();
+        worldrenderer.pos(p_146188_1_, p_146188_2_, 0.0D).endVertex();
         tessellator.draw();
         GlStateManager.disableColorLogic();
         GlStateManager.enableTexture2D();

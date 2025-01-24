@@ -47,7 +47,7 @@ public class OldServerPinger
 {
     private static final Splitter PING_RESPONSE_SPLITTER = Splitter.on('\u0000').limit(6);
     private static final Logger logger = LogManager.getLogger();
-    private final List<NetworkManager> pingDestinations = Collections.<NetworkManager>synchronizedList(Lists.<NetworkManager>newArrayList());
+    private final List<NetworkManager> pingDestinations = Collections.synchronizedList(Lists.<NetworkManager>newArrayList());
 
     public void ping(final ServerData server) throws UnknownHostException
     {
@@ -57,8 +57,7 @@ public class OldServerPinger
         server.serverMOTD = "Pinging...";
         server.pingToServer = -1L;
         server.playerList = null;
-        networkmanager.setNetHandler(new INetHandlerStatusClient()
-        {
+        networkmanager.setNetHandler(new INetHandlerStatusClient() {
             private boolean field_147403_d = false;
             private boolean field_183009_e = false;
             private long field_175092_e = 0L;

@@ -9,7 +9,7 @@ import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.network.Account;
+import wtf.bhopper.nonsense.universe.Account;
 import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 
 public class ChatUtil implements IMinecraft {

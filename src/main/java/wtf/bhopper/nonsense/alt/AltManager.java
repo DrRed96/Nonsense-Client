@@ -5,7 +5,7 @@ import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 import com.mojang.util.UUIDTypeAdapter;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.alt.loginthread.LoginThread;
+import wtf.bhopper.nonsense.alt.loginthread.AbstractLoginThread;
 import wtf.bhopper.nonsense.util.misc.JsonUtil;
 
 import java.io.File;
@@ -16,7 +16,7 @@ import java.util.UUID;
 
 public class AltManager {
 
-    public static LoginThread loginThread = null;
+    public static AbstractLoginThread loginThread = null;
 
     private final File altsFile;
 

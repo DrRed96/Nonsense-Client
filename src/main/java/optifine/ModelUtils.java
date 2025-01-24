@@ -16,23 +16,21 @@ public class ModelUtils
             Config.dbg("Model: " + p_dbgModel_0_ + ", ao: " + p_dbgModel_0_.isAmbientOcclusion() + ", gui3d: " + p_dbgModel_0_.isGui3d() + ", builtIn: " + p_dbgModel_0_.isBuiltInRenderer() + ", particle: " + p_dbgModel_0_.getParticleTexture());
             EnumFacing[] aenumfacing = EnumFacing.VALUES;
 
-            for (int i = 0; i < aenumfacing.length; ++i)
-            {
-                EnumFacing enumfacing = aenumfacing[i];
-                List list = p_dbgModel_0_.getFaceQuads(enumfacing);
+            for (EnumFacing enumfacing : aenumfacing) {
+                List<BakedQuad> list = p_dbgModel_0_.getFaceQuads(enumfacing);
                 dbgQuads(enumfacing.getName(), list, "  ");
             }
 
-            List list1 = p_dbgModel_0_.getGeneralQuads();
+            List<BakedQuad> list1 = p_dbgModel_0_.getGeneralQuads();
             dbgQuads("General", list1, "  ");
         }
     }
 
-    private static void dbgQuads(String p_dbgQuads_0_, List p_dbgQuads_1_, String p_dbgQuads_2_)
+    private static void dbgQuads(String p_dbgQuads_0_, List<BakedQuad> p_dbgQuads_1_, String p_dbgQuads_2_)
     {
-        for (Object bakedquad : p_dbgQuads_1_)
+        for (BakedQuad bakedquad : p_dbgQuads_1_)
         {
-            dbgQuad(p_dbgQuads_0_, (BakedQuad) bakedquad, p_dbgQuads_2_);
+            dbgQuad(p_dbgQuads_0_, bakedquad, p_dbgQuads_2_);
         }
     }
 

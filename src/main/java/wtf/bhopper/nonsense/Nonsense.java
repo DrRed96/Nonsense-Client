@@ -18,7 +18,7 @@ import wtf.bhopper.nonsense.gui.hud.Hud;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleManager;
 import wtf.bhopper.nonsense.module.impl.visual.ClickGui;
-import wtf.bhopper.nonsense.network.Universe;
+import wtf.bhopper.nonsense.universe.Universe;
 import wtf.bhopper.nonsense.script.ScriptManager;
 import wtf.bhopper.nonsense.util.render.Fonts;
 import wtf.bhopper.nonsense.util.render.NVGHelper;

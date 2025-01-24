@@ -5,11 +5,11 @@ import java.util.Map;
 public class FileUploadThread extends Thread
 {
     private String urlString;
-    private Map headers;
+    private Map<String, String> headers;
     private byte[] content;
     private IFileUploadListener listener;
 
-    public FileUploadThread(String p_i42_1_, Map p_i42_2_, byte[] p_i42_3_, IFileUploadListener p_i42_4_)
+    public FileUploadThread(String p_i42_1_, Map<String, String> p_i42_2_, byte[] p_i42_3_, IFileUploadListener p_i42_4_)
     {
         this.urlString = p_i42_1_;
         this.headers = p_i42_2_;

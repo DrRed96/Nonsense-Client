@@ -1,6 +1,7 @@
 package net.minecraft.client.multiplayer;
 
 import com.google.common.collect.Sets;
+
 import java.util.Random;
 import java.util.Set;
 
@@ -41,15 +42,20 @@ import optifine.Reflector;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.module.impl.visual.BarrierView;
 
-public class WorldClient extends World
-{
-    /** The packets that need to be sent to the server. */
+public class WorldClient extends World {
+    /**
+     * The packets that need to be sent to the server.
+     */
     private NetHandlerPlayClient sendQueue;
 
-    /** The ChunkProviderClient instance */
+    /**
+     * The ChunkProviderClient instance
+     */
     private ChunkProviderClient clientChunkProvider;
 
-    /** Contains all entities for this client, both spawned and non-spawned. */
+    /**
+     * Contains all entities for this client, both spawned and non-spawned.
+     */
     private final Set<Entity> entityList = Sets.newHashSet();
 
     /**
@@ -62,11 +68,10 @@ public class WorldClient extends World
     private BlockPosM randomTickPosM = new BlockPosM(0, 0, 0, 3);
     private boolean playerUpdate = false;
 
-    public WorldClient(NetHandlerPlayClient p_i45063_1_, WorldSettings p_i45063_2_, int p_i45063_3_, EnumDifficulty p_i45063_4_)
-    {
-        super(new SaveHandlerMP(), new WorldInfo(p_i45063_2_, "MpServer"), WorldProvider.getProviderForDimension(p_i45063_3_), true);
-        this.sendQueue = p_i45063_1_;
-        this.getWorldInfo().setDifficulty(p_i45063_4_);
+    public WorldClient(NetHandlerPlayClient sendQueue, WorldSettings settings, int dimensionId, EnumDifficulty difficulty) {
+        super(new SaveHandlerMP(), new WorldInfo(settings, "MpServer"), WorldProvider.getProviderForDimension(dimensionId), true);
+        this.sendQueue = sendQueue;
+        this.getWorldInfo().setDifficulty(difficulty);
         this.provider.registerWorld(this);
         this.setSpawnPoint(new BlockPos(8, 64, 8));
         this.chunkProvider = this.createChunkProvider();
@@ -75,33 +80,28 @@ public class WorldClient extends World
         this.calculateInitialWeather();
         Reflector.postForgeBusEvent(Reflector.WorldEvent_Load_Constructor, this);
 
-        if (this.mc.playerController != null && this.mc.playerController.getClass() == PlayerControllerMP.class)
-        {
-            this.mc.playerController = new PlayerControllerOF(this.mc, p_i45063_1_);
+        if (this.mc.playerController != null && this.mc.playerController.getClass() == PlayerControllerMP.class) {
+            this.mc.playerController = new PlayerControllerOF(this.mc, sendQueue);
         }
     }
 
     /**
      * Runs a single tick for the world
      */
-    public void tick()
-    {
+    public void tick() {
         super.tick();
         this.setTotalWorldTime(this.getTotalWorldTime() + 1L);
 
-        if (this.getGameRules().getBoolean("doDaylightCycle"))
-        {
+        if (this.getGameRules().getBoolean("doDaylightCycle")) {
             this.setWorldTime(this.getWorldTime() + 1L);
         }
 
 
-        for (int i = 0; i < 10 && !this.entitySpawnQueue.isEmpty(); ++i)
-        {
+        for (int i = 0; i < 10 && !this.entitySpawnQueue.isEmpty(); ++i) {
             Entity entity = this.entitySpawnQueue.iterator().next();
             this.entitySpawnQueue.remove(entity);
 
-            if (!this.loadedEntityList.contains(entity))
-            {
+            if (!this.loadedEntityList.contains(entity)) {
                 this.spawnEntityInWorld(entity);
             }
         }
@@ -114,35 +114,29 @@ public class WorldClient extends World
      * Invalidates an AABB region of blocks from the receive queue, in the event that the block has been modified
      * client-side in the intervening 80 receive ticks.
      */
-    public void invalidateBlockReceiveRegion(int p_73031_1_, int p_73031_2_, int p_73031_3_, int p_73031_4_, int p_73031_5_, int p_73031_6_)
-    {
+    public void invalidateBlockReceiveRegion(int p_73031_1_, int p_73031_2_, int p_73031_3_, int p_73031_4_, int p_73031_5_, int p_73031_6_) {
     }
 
     /**
      * Creates the chunk provider for this world. Called in the constructor. Retrieves provider from worldProvider?
      */
-    protected IChunkProvider createChunkProvider()
-    {
+    protected IChunkProvider createChunkProvider() {
         this.clientChunkProvider = new ChunkProviderClient(this);
         return this.clientChunkProvider;
     }
 
-    protected void updateBlocks()
-    {
+    protected void updateBlocks() {
         super.updateBlocks();
         this.previousActiveChunkSet.retainAll(this.activeChunkSet);
 
-        if (this.previousActiveChunkSet.size() == this.activeChunkSet.size())
-        {
+        if (this.previousActiveChunkSet.size() == this.activeChunkSet.size()) {
             this.previousActiveChunkSet.clear();
         }
 
         int i = 0;
 
-        for (ChunkCoordIntPair chunkcoordintpair : this.activeChunkSet)
-        {
-            if (!this.previousActiveChunkSet.contains(chunkcoordintpair))
-            {
+        for (ChunkCoordIntPair chunkcoordintpair : this.activeChunkSet) {
+            if (!this.previousActiveChunkSet.contains(chunkcoordintpair)) {
                 int j = chunkcoordintpair.chunkXPos * 16;
                 int k = chunkcoordintpair.chunkZPos * 16;
                 Chunk chunk = this.getChunkFromChunkCoords(chunkcoordintpair.chunkXPos, chunkcoordintpair.chunkZPos);
@@ -150,27 +144,21 @@ public class WorldClient extends World
                 this.previousActiveChunkSet.add(chunkcoordintpair);
                 ++i;
 
-                if (i >= 10)
-                {
+                if (i >= 10) {
                     return;
                 }
             }
         }
     }
 
-    public void doPreChunk(int p_73025_1_, int p_73025_2_, boolean p_73025_3_)
-    {
-        if (p_73025_3_)
-        {
+    public void doPreChunk(int p_73025_1_, int p_73025_2_, boolean p_73025_3_) {
+        if (p_73025_3_) {
             this.clientChunkProvider.loadChunk(p_73025_1_, p_73025_2_);
-        }
-        else
-        {
+        } else {
             this.clientChunkProvider.unloadChunk(p_73025_1_, p_73025_2_);
         }
 
-        if (!p_73025_3_)
-        {
+        if (!p_73025_3_) {
             this.markBlockRangeForRenderUpdate(p_73025_1_ * 16, 0, p_73025_2_ * 16, p_73025_1_ * 16 + 15, 256, p_73025_2_ * 16 + 15);
         }
     }
@@ -178,18 +166,14 @@ public class WorldClient extends World
     /**
      * Called when an entity is spawned in the world. This includes players.
      */
-    public boolean spawnEntityInWorld(Entity entityIn)
-    {
+    public boolean spawnEntityInWorld(Entity entityIn) {
         boolean flag = super.spawnEntityInWorld(entityIn);
         this.entityList.add(entityIn);
 
-        if (!flag)
-        {
+        if (!flag) {
             this.entitySpawnQueue.add(entityIn);
-        }
-        else if (entityIn instanceof EntityMinecart)
-        {
-            this.mc.getSoundHandler().playSound(new MovingSoundMinecart((EntityMinecart)entityIn));
+        } else if (entityIn instanceof EntityMinecart) {
+            this.mc.getSoundHandler().playSound(new MovingSoundMinecart((EntityMinecart) entityIn));
         }
 
         return flag;
@@ -198,36 +182,28 @@ public class WorldClient extends World
     /**
      * Schedule the entity for removal during the next tick. Marks the entity dead in anticipation.
      */
-    public void removeEntity(Entity entityIn)
-    {
+    public void removeEntity(Entity entityIn) {
         super.removeEntity(entityIn);
         this.entityList.remove(entityIn);
     }
 
-    protected void onEntityAdded(Entity entityIn)
-    {
+    protected void onEntityAdded(Entity entityIn) {
         super.onEntityAdded(entityIn);
 
-        if (this.entitySpawnQueue.contains(entityIn))
-        {
+        if (this.entitySpawnQueue.contains(entityIn)) {
             this.entitySpawnQueue.remove(entityIn);
         }
     }
 
-    protected void onEntityRemoved(Entity entityIn)
-    {
+    protected void onEntityRemoved(Entity entityIn) {
         super.onEntityRemoved(entityIn);
         boolean flag = false;
 
-        if (this.entityList.contains(entityIn))
-        {
-            if (entityIn.isEntityAlive())
-            {
+        if (this.entityList.contains(entityIn)) {
+            if (entityIn.isEntityAlive()) {
                 this.entitySpawnQueue.add(entityIn);
                 flag = true;
-            }
-            else
-            {
+            } else {
                 this.entityList.remove(entityIn);
             }
         }
@@ -236,20 +212,17 @@ public class WorldClient extends World
     /**
      * Add an ID to Entity mapping to entityHashSet
      */
-    public void addEntityToWorld(int entityIdIn, Entity entityIn)
-    {
+    public void addEntityToWorld(int entityIdIn, Entity entityIn) {
         Entity entity = this.getEntityByID(entityIdIn);
 
-        if (entity != null)
-        {
+        if (entity != null) {
             this.removeEntity(entity);
         }
 
         this.entityList.add(entityIn);
         entityIn.setEntityId(entityIdIn);
 
-        if (!this.spawnEntityInWorld(entityIn))
-        {
+        if (!this.spawnEntityInWorld(entityIn)) {
             this.entitySpawnQueue.add(entityIn);
         }
 
@@ -259,17 +232,14 @@ public class WorldClient extends World
     /**
      * Returns the Entity with the given ID, or null if it doesn't exist in this World.
      */
-    public Entity getEntityByID(int id)
-    {
-        return (Entity)(id == this.mc.thePlayer.getEntityId() ? this.mc.thePlayer : super.getEntityByID(id));
+    public Entity getEntityByID(int id) {
+        return (Entity) (id == this.mc.thePlayer.getEntityId() ? this.mc.thePlayer : super.getEntityByID(id));
     }
 
-    public Entity removeEntityFromWorld(int p_73028_1_)
-    {
+    public Entity removeEntityFromWorld(int p_73028_1_) {
         Entity entity = this.entitiesById.removeObject(p_73028_1_);
 
-        if (entity != null)
-        {
+        if (entity != null) {
             this.entityList.remove(entity);
             this.removeEntity(entity);
         }
@@ -277,8 +247,7 @@ public class WorldClient extends World
         return entity;
     }
 
-    public boolean invalidateRegionAndSetBlock(BlockPos p_180503_1_, IBlockState p_180503_2_)
-    {
+    public boolean invalidateRegionAndSetBlock(BlockPos p_180503_1_, IBlockState p_180503_2_) {
         int i = p_180503_1_.getX();
         int j = p_180503_1_.getY();
         int k = p_180503_1_.getZ();
@@ -289,25 +258,21 @@ public class WorldClient extends World
     /**
      * If on MP, sends a quitting packet.
      */
-    public void sendQuittingDisconnectingPacket()
-    {
+    public void sendQuittingDisconnectingPacket() {
         this.sendQueue.getNetworkManager().closeChannel(new ChatComponentText("Quitting"));
     }
 
     /**
      * Updates all weather states.
      */
-    protected void updateWeather()
-    {
+    protected void updateWeather() {
     }
 
-    protected int getRenderDistanceChunks()
-    {
+    protected int getRenderDistanceChunks() {
         return this.mc.gameSettings.renderDistanceChunks;
     }
 
-    public void doVoidFogParticles(int p_73029_1_, int p_73029_2_, int p_73029_3_)
-    {
+    public void doVoidFogParticles(int p_73029_1_, int p_73029_2_, int p_73029_3_) {
         byte b0 = 16;
         Random random = new Random();
         ItemStack itemstack = this.mc.thePlayer.getHeldItem();
@@ -318,10 +283,10 @@ public class WorldClient extends World
             if (Nonsense.module(BarrierView.class).isToggled()) {
                 flag = true;
             }
-        } catch (NullPointerException ignored) {}
+        } catch (NullPointerException ignored) {
+        }
 
-        for (int i = 0; i < 1000; ++i)
-        {
+        for (int i = 0; i < 1000; ++i) {
             int j = p_73029_1_ + this.rand.nextInt(b0) - this.rand.nextInt(b0);
             int k = p_73029_2_ + this.rand.nextInt(b0) - this.rand.nextInt(b0);
             int l = p_73029_3_ + this.rand.nextInt(b0) - this.rand.nextInt(b0);
@@ -329,9 +294,8 @@ public class WorldClient extends World
             IBlockState iblockstate = this.getBlockState(blockposm);
             iblockstate.getBlock().randomDisplayTick(this, blockposm, iblockstate, random);
 
-            if (flag && iblockstate.getBlock() == Blocks.barrier)
-            {
-                this.spawnParticle(EnumParticleTypes.BARRIER, (float)j + 0.5F, (float)k + 0.5F, (float)l + 0.5F, 0.0D, 0.0D, 0.0D);
+            if (flag && iblockstate.getBlock() == Blocks.barrier) {
+                this.spawnParticle(EnumParticleTypes.BARRIER, (float) j + 0.5F, (float) k + 0.5F, (float) l + 0.5F, 0.0D, 0.0D, 0.0D);
             }
         }
     }
@@ -339,8 +303,7 @@ public class WorldClient extends World
     /**
      * also releases skins.
      */
-    public void removeAllEntities()
-    {
+    public void removeAllEntities() {
         this.loadedEntityList.removeAll(this.unloadedEntityList);
 
         for (Entity entity : this.unloadedEntityList) {
@@ -358,14 +321,11 @@ public class WorldClient extends World
 
         this.unloadedEntityList.clear();
 
-        for (int i1 = 0; i1 < this.loadedEntityList.size(); ++i1)
-        {
+        for (int i1 = 0; i1 < this.loadedEntityList.size(); ++i1) {
             Entity entity1 = this.loadedEntityList.get(i1);
 
-            if (entity1.ridingEntity != null)
-            {
-                if (!entity1.ridingEntity.isDead && entity1.ridingEntity.riddenByEntity == entity1)
-                {
+            if (entity1.ridingEntity != null) {
+                if (!entity1.ridingEntity.isDead && entity1.ridingEntity.riddenByEntity == entity1) {
                     continue;
                 }
 
@@ -373,13 +333,11 @@ public class WorldClient extends World
                 entity1.ridingEntity = null;
             }
 
-            if (entity1.isDead)
-            {
+            if (entity1.isDead) {
                 int j1 = entity1.chunkCoordX;
                 int k1 = entity1.chunkCoordZ;
 
-                if (entity1.addedToChunk && this.isChunkLoaded(j1, k1, true))
-                {
+                if (entity1.addedToChunk && this.isChunkLoaded(j1, k1, true)) {
                     this.getChunkFromChunkCoords(j1, k1).removeEntity(entity1);
                 }
 
@@ -392,8 +350,7 @@ public class WorldClient extends World
     /**
      * Adds some basic stats of the world to the given crash report.
      */
-    public CrashReportCategory addWorldInfoToCrashReport(CrashReport report)
-    {
+    public CrashReportCategory addWorldInfoToCrashReport(CrashReport report) {
         CrashReportCategory crashreportcategory = super.addWorldInfoToCrashReport(report);
         crashreportcategory.addCrashSectionCallable("Forced entities", () -> WorldClient.this.entityList.size() + " total; " + WorldClient.this.entityList);
         crashreportcategory.addCrashSectionCallable("Retry entities", () -> WorldClient.this.entitySpawnQueue.size() + " total; " + WorldClient.this.entitySpawnQueue);
@@ -405,64 +362,51 @@ public class WorldClient extends World
     /**
      * Plays a sound at the specified position.
      */
-    public void playSoundAtPos(BlockPos p_175731_1_, String p_175731_2_, float p_175731_3_, float p_175731_4_, boolean p_175731_5_)
-    {
-        this.playSound((double)p_175731_1_.getX() + 0.5D, (double)p_175731_1_.getY() + 0.5D, (double)p_175731_1_.getZ() + 0.5D, p_175731_2_, p_175731_3_, p_175731_4_, p_175731_5_);
+    public void playSoundAtPos(BlockPos p_175731_1_, String p_175731_2_, float p_175731_3_, float p_175731_4_, boolean p_175731_5_) {
+        this.playSound((double) p_175731_1_.getX() + 0.5D, (double) p_175731_1_.getY() + 0.5D, (double) p_175731_1_.getZ() + 0.5D, p_175731_2_, p_175731_3_, p_175731_4_, p_175731_5_);
     }
 
     /**
      * par8 is loudness, all pars passed to minecraftInstance.sndManager.playSound
      */
-    public void playSound(double x, double y, double z, String soundName, float volume, float pitch, boolean distanceDelay)
-    {
+    public void playSound(double x, double y, double z, String soundName, float volume, float pitch, boolean distanceDelay) {
         double d0 = this.mc.getRenderViewEntity().getDistanceSq(x, y, z);
-        PositionedSoundRecord positionedsoundrecord = new PositionedSoundRecord(new ResourceLocation(soundName), volume, pitch, (float)x, (float)y, (float)z);
+        PositionedSoundRecord positionedsoundrecord = new PositionedSoundRecord(new ResourceLocation(soundName), volume, pitch, (float) x, (float) y, (float) z);
 
-        if (distanceDelay && d0 > 100.0D)
-        {
+        if (distanceDelay && d0 > 100.0D) {
             double d1 = Math.sqrt(d0) / 40.0D;
-            this.mc.getSoundHandler().playDelayedSound(positionedsoundrecord, (int)(d1 * 20.0D));
-        }
-        else
-        {
+            this.mc.getSoundHandler().playDelayedSound(positionedsoundrecord, (int) (d1 * 20.0D));
+        } else {
             this.mc.getSoundHandler().playSound(positionedsoundrecord);
         }
     }
 
-    public void makeFireworks(double x, double y, double z, double motionX, double motionY, double motionZ, NBTTagCompound compund)
-    {
+    public void makeFireworks(double x, double y, double z, double motionX, double motionY, double motionZ, NBTTagCompound compund) {
         this.mc.effectRenderer.addEffect(new EntityFirework.StarterFX(this, x, y, z, motionX, motionY, motionZ, this.mc.effectRenderer, compund));
     }
 
-    public void setWorldScoreboard(Scoreboard p_96443_1_)
-    {
+    public void setWorldScoreboard(Scoreboard p_96443_1_) {
         this.worldScoreboard = p_96443_1_;
     }
 
     /**
      * Sets the world time.
      */
-    public void setWorldTime(long time)
-    {
-        if (time < 0L)
-        {
+    public void setWorldTime(long time) {
+        if (time < 0L) {
             time = -time;
             this.getGameRules().setOrCreateGameRule("doDaylightCycle", "false");
-        }
-        else
-        {
+        } else {
             this.getGameRules().setOrCreateGameRule("doDaylightCycle", "true");
         }
 
         super.setWorldTime(time);
     }
 
-    public int getCombinedLight(BlockPos pos, int lightValue)
-    {
+    public int getCombinedLight(BlockPos pos, int lightValue) {
         int i = super.getCombinedLight(pos, lightValue);
 
-        if (Config.isDynamicLights())
-        {
+        if (Config.isDynamicLights()) {
             i = DynamicLights.getCombinedLight(pos, i);
         }
 
@@ -474,28 +418,22 @@ public class WorldClient extends World
      * clients (you almost always want this). Flag 4 prevents the block from being re-rendered, if this is a client
      * world. Flags can be added together.
      */
-    public boolean setBlockState(BlockPos pos, IBlockState newState, int flags)
-    {
+    public boolean setBlockState(BlockPos pos, IBlockState newState, int flags) {
         this.playerUpdate = this.isPlayerActing();
         boolean flag = super.setBlockState(pos, newState, flags);
         this.playerUpdate = false;
         return flag;
     }
 
-    private boolean isPlayerActing()
-    {
-        if (this.mc.playerController instanceof PlayerControllerOF playercontrollerof)
-        {
+    private boolean isPlayerActing() {
+        if (this.mc.playerController instanceof PlayerControllerOF playercontrollerof) {
             return playercontrollerof.isActing();
-        }
-        else
-        {
+        } else {
             return false;
         }
     }
 
-    public boolean isPlayerUpdate()
-    {
+    public boolean isPlayerUpdate() {
         return this.playerUpdate;
     }
 }

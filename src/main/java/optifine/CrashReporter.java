@@ -1,5 +1,6 @@
 package optifine;
 
+import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.Map;
 import net.minecraft.client.settings.GameSettings;
@@ -45,14 +46,9 @@ public class CrashReporter
             extendCrashReport(p_onCrashReport_1_);
             String s = "http://optifine.net/crashReport";
             String s1 = makeReport(p_onCrashReport_0_);
-            byte[] abyte = s1.getBytes("ASCII");
-            IFileUploadListener ifileuploadlistener = new IFileUploadListener()
-            {
-                public void fileUploadFinished(String p_fileUploadFinished_1_, byte[] p_fileUploadFinished_2_, Throwable p_fileUploadFinished_3_)
-                {
-                }
-            };
-            Map map = new HashMap();
+            byte[] abyte = s1.getBytes(StandardCharsets.US_ASCII);
+            IFileUploadListener ifileuploadlistener = (_, _, _) -> {};
+            Map<String, String> map = new HashMap<>();
             map.put("OF-Version", Config.getVersion());
             map.put("OF-Summary", makeSummary(p_onCrashReport_0_));
             FileUploadThread fileuploadthread = new FileUploadThread(s, map, abyte, ifileuploadlistener);

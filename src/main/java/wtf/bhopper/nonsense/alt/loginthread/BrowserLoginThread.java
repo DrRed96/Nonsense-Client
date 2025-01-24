@@ -21,14 +21,14 @@ import java.util.List;
 import java.util.concurrent.Executors;
 import java.util.function.Consumer;
 
-public class BrowserLoginThread extends LoginThread {
+public class BrowserLoginThread extends AbstractLoginThread {
 
     public BrowserLoginThread(Consumer<LoginData> loginDataCallback, Consumer<Exception> errorCallback) {
         super(loginDataCallback, errorCallback);
     }
 
     @Override
-    void execute() {
+    public void execute() {
         GuiAltManager.message = "Waiting...";
 
         try {
@@ -41,7 +41,7 @@ public class BrowserLoginThread extends LoginThread {
     }
 
     @Override
-    void finish() {
+    public void finish() {
         this.stopServer();
     }
 
@@ -75,7 +75,6 @@ public class BrowserLoginThread extends LoginThread {
         MSAuthScheme.server.stop(0);
         MSAuthScheme.server = null;
     }
-
 
     public class Handler implements HttpHandler {
 

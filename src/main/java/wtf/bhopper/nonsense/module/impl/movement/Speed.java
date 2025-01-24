@@ -19,6 +19,8 @@ import wtf.bhopper.nonsense.util.minecraft.player.MoveUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 import wtf.bhopper.nonsense.util.misc.Stopwatch;
 
+import java.util.List;
+
 @ModuleInfo(name = "Speed",
         description = "Increases your move speed.",
         category = ModuleCategory.MOVEMENT)
@@ -154,6 +156,46 @@ public class Speed extends Module {
 
             }
 
+            case OLD_HOP -> {
+                if (!MoveUtil.isMoving()) {
+                    this.speed = MoveUtil.baseSpeed();
+                }
+
+                if (this.stage == 0) {
+                    this.stage = 2;
+                }
+
+                if (this.stage == 1 && mc.thePlayer.isCollidedVertically && MoveUtil.isMoving()) {
+                    this.speed = MoveUtil.baseSpeed() + 0.24;
+                } else if (stage == 2 && mc.thePlayer.isCollidedVertically && MoveUtil.isMoving()) {
+                    this.speed *= 2.149;
+                    MoveUtil.jump(event, 0.4);
+                } else if (stage == 3) {
+                    this.speed = this.lastDist - 0.66 * (this.lastDist - MoveUtil.baseSpeed());
+                } else {
+                    boolean colliding = mc.thePlayer.isCollidedVertically || !mc.theWorld.getCollidingBoundingBoxes(mc.thePlayer, mc.thePlayer.getEntityBoundingBox().offset(0.0, mc.thePlayer.motionY, 0.0)).isEmpty();
+                    if (colliding && this.stage > 0) {
+                        if (1.35 * MoveUtil.baseSpeed() - 0.01 > this.speed) {
+                            this.stage = 0;
+                        } else if (MoveUtil.isMoving()) {
+                            this.stage = 1;
+                        } else {
+                            this.stage = 0;
+                        }
+                    }
+                    this.speed = this.lastDist - this.lastDist / MoveUtil.NCP_FRICTION;
+                }
+
+                this.speed = Math.max(this.speed, MoveUtil.baseSpeed());
+                if (this.stage > 0) {
+                    MoveUtil.setSpeed(event, this.speed);
+                }
+                if (MoveUtil.isMoving()) {
+                    this.stage++;
+                }
+
+            }
+
             case MINIBLOX -> {
                 MoveUtil.setSpeed(event, 0.39); // Miniblox has a hard speed cap, this is about as fast as you can go without using a disabler
                 if (this.jump.get() && mc.thePlayer.onGround && MoveUtil.isMoving()) {
@@ -186,6 +228,7 @@ public class Speed extends Module {
         VANILLA,
         BHOP,
         LOW_HOP,
+        OLD_HOP,
         MINIBLOX,
         GROUND_STRAFE
     }

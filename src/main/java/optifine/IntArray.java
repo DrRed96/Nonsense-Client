@@ -2,18 +2,18 @@ package optifine;
 
 public class IntArray
 {
-    private int[] array = null;
+    private final int[] array;
     private int position = 0;
     private int limit = 0;
 
-    public IntArray(int p_i62_1_)
+    public IntArray(int size)
     {
-        this.array = new int[p_i62_1_];
+        this.array = new int[size];
     }
 
-    public void put(int p_put_1_)
+    public void put(int value)
     {
-        this.array[this.position] = p_put_1_;
+        this.array[this.position] = value;
         ++this.position;
 
         if (this.limit < this.position)
@@ -22,28 +22,27 @@ public class IntArray
         }
     }
 
-    public void put(int p_put_1_, int p_put_2_)
+    public void put(int index, int value)
     {
-        this.array[p_put_1_] = p_put_2_;
+        this.array[index] = value;
 
-        if (this.limit < p_put_1_)
+        if (this.limit < index)
         {
-            this.limit = p_put_1_;
+            this.limit = index;
         }
     }
 
-    public void position(int p_position_1_)
+    public void position(int position)
     {
-        this.position = p_position_1_;
+        this.position = position;
     }
 
-    public void put(int[] p_put_1_)
+    public void put(int[] array)
     {
-        int i = p_put_1_.length;
+        int i = array.length;
 
-        for (int j = 0; j < i; ++j)
-        {
-            this.array[this.position] = p_put_1_[j];
+        for (int k : array) {
+            this.array[this.position] = k;
             ++this.position;
         }
 

@@ -22,7 +22,7 @@ import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.ButtonProperty;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
-import wtf.bhopper.nonsense.network.GuiTestNetwork;
+import wtf.bhopper.nonsense.universe.test.GuiTestNetwork;
 import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 import wtf.bhopper.nonsense.util.misc.GeneralUtil;

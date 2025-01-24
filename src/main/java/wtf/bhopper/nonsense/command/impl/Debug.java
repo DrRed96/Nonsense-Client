@@ -15,7 +15,7 @@ import wtf.bhopper.nonsense.gui.hud.notification.Notification;
 import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
 import wtf.bhopper.nonsense.module.impl.combat.AntiBot;
 import wtf.bhopper.nonsense.module.impl.other.Debugger;
-import wtf.bhopper.nonsense.network.Account;
+import wtf.bhopper.nonsense.universe.Account;
 import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.PacketUtil;
 
@@ -107,35 +107,6 @@ public class Debug extends Command {
             }
 
             case "spb" -> ChatUtil.send("/play build_battle_speed_builders");
-
-            case "ircchat" -> {
-
-                Account account = Account.DEFAULT_ACCOUNT;
-                int whisper = 0;
-
-                if (args.length >= 3) {
-                    account = switch (args[2].toLowerCase()) {
-                        case "admin", "owner" -> Account.DEFAULT_ADMIN;
-                        case "moderator", "mod" -> Account.DEFAULT_MODERATOR;
-                        default -> Account.DEFAULT_ACCOUNT;
-                    };
-
-                    if (args.length >= 4) {
-                        if (args[3].equalsIgnoreCase("to")) {
-                            whisper = 1;
-                        } else if (args[3].equalsIgnoreCase("from")) {
-                            whisper = 2;
-                        }
-                    }
-                }
-
-                switch (whisper) {
-                    case 1 -> ChatUtil.whisper("Hello!", account, true);
-                    case 2 -> ChatUtil.whisper("Hello!", account, false);
-                    default -> ChatUtil.irc("Hello!", account);
-                }
-
-            }
 
             case "uuids" -> {
                 ChatUtil.debugTitle("Player UUID's");

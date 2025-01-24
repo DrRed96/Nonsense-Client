@@ -2,8 +2,7 @@ package optifine;
 
 import net.minecraft.client.renderer.GlStateManager;
 
-public class Blender
-{
+public class Blender {
     public static final int BLEND_ALPHA = 0;
     public static final int BLEND_ADD = 1;
     public static final int BLEND_SUBSTRACT = 2;
@@ -15,64 +14,32 @@ public class Blender
     public static final int BLEND_REPLACE = 8;
     public static final int BLEND_DEFAULT = 1;
 
-    public static int parseBlend(String p_parseBlend_0_)
-    {
-        if (p_parseBlend_0_ == null)
-        {
-            return 1;
+    public static int parseBlend(String blend) {
+        if (blend == null) {
+            return BLEND_DEFAULT;
         }
-        else
-        {
-            p_parseBlend_0_ = p_parseBlend_0_.toLowerCase().trim();
 
-            if (p_parseBlend_0_.equals("alpha"))
-            {
-                return 0;
+        blend = blend.toLowerCase().trim();
+
+        return switch (blend) {
+            case "alpha" -> BLEND_ALPHA;
+            case "add" -> BLEND_ADD;
+            case "subtract" -> BLEND_SUBSTRACT;
+            case "multiply" -> BLEND_MULTIPLY;
+            case "dodge" -> BLEND_DODGE;
+            case "burn" -> BLEND_BURN;
+            case "screen" -> BLEND_SCREEN;
+            case "overlay" -> BLEND_OVERLAY;
+            case "replace" -> BLEND_REPLACE;
+            default -> {
+                Config.warn("Unknown blend: " + blend);
+                yield BLEND_DEFAULT;
             }
-            else if (p_parseBlend_0_.equals("add"))
-            {
-                return 1;
-            }
-            else if (p_parseBlend_0_.equals("subtract"))
-            {
-                return 2;
-            }
-            else if (p_parseBlend_0_.equals("multiply"))
-            {
-                return 3;
-            }
-            else if (p_parseBlend_0_.equals("dodge"))
-            {
-                return 4;
-            }
-            else if (p_parseBlend_0_.equals("burn"))
-            {
-                return 5;
-            }
-            else if (p_parseBlend_0_.equals("screen"))
-            {
-                return 6;
-            }
-            else if (p_parseBlend_0_.equals("overlay"))
-            {
-                return 7;
-            }
-            else if (p_parseBlend_0_.equals("replace"))
-            {
-                return 8;
-            }
-            else
-            {
-                Config.warn("Unknown blend: " + p_parseBlend_0_);
-                return 1;
-            }
-        }
+        };
     }
 
-    public static void setupBlend(int p_setupBlend_0_, float p_setupBlend_1_)
-    {
-        switch (p_setupBlend_0_)
-        {
+    public static void setupBlend(int p_setupBlend_0_, float p_setupBlend_1_) {
+        switch (p_setupBlend_0_) {
             case 0:
                 GlStateManager.disableAlpha();
                 GlStateManager.enableBlend();
@@ -138,8 +105,7 @@ public class Blender
         GlStateManager.enableTexture2D();
     }
 
-    public static void clearBlend(float p_clearBlend_0_)
-    {
+    public static void clearBlend(float p_clearBlend_0_) {
         GlStateManager.disableAlpha();
         GlStateManager.enableBlend();
         GlStateManager.blendFunc(770, 1);

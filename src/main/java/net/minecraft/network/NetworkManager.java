@@ -132,7 +132,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
     }
 
     public void channelInactive(ChannelHandlerContext p_channelInactive_1_) throws Exception {
-        this.closeChannel(new ChatComponentTranslation("disconnect.endOfStream", new Object[0]));
+        this.closeChannel(new ChatComponentTranslation("disconnect.endOfStream"));
     }
 
     public void exceptionCaught(ChannelHandlerContext p_exceptionCaught_1_, Throwable p_exceptionCaught_2_) throws Exception {
@@ -306,14 +306,14 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
 
     public static NetworkManager connect(InetAddress address, int port, boolean useEpoll) {
         final NetworkManager networkManager = new NetworkManager(EnumPacketDirection.CLIENTBOUND);
-        Class<? extends SocketChannel> oclass;
+        Class<? extends SocketChannel> socketClass;
         LazyLoadBase<? extends EventLoopGroup> lazyloadbase;
 
         if (Epoll.isAvailable() && useEpoll) {
-            oclass = EpollSocketChannel.class;
+            socketClass = EpollSocketChannel.class;
             lazyloadbase = CLIENT_EPOLL_EVENTLOOP;
         } else {
-            oclass = NioSocketChannel.class;
+            socketClass = NioSocketChannel.class;
             lazyloadbase = CLIENT_NIO_EVENTLOOP;
         }
 
@@ -339,7 +339,7 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
 
 
             }
-        }).channel(oclass).connect(address, port).syncUninterruptibly();
+        }).channel(socketClass).connect(address, port).syncUninterruptibly();
         return networkManager;
     }
 
@@ -350,8 +350,8 @@ public class NetworkManager extends SimpleChannelInboundHandler<Packet> {
     public static NetworkManager provideLocalClient(SocketAddress address) {
         final NetworkManager networkmanager = new NetworkManager(EnumPacketDirection.CLIENTBOUND);
         new Bootstrap().group(CLIENT_LOCAL_EVENTLOOP.getValue()).handler(new ChannelInitializer<>() {
-            protected void initChannel(Channel p_initChannel_1_) throws Exception {
-                p_initChannel_1_.pipeline().addLast("packet_handler", networkmanager);
+            protected void initChannel(Channel channel) throws Exception {
+                channel.pipeline().addLast("packet_handler", networkmanager);
             }
         }).channel(LocalChannel.class).connect(address).syncUninterruptibly();
         return networkmanager;

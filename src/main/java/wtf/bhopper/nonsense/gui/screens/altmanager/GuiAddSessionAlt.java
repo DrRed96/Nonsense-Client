@@ -5,6 +5,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
+import org.lwjgl.input.Keyboard;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.alt.Alt;
 import wtf.bhopper.nonsense.alt.AltManager;
@@ -35,6 +36,7 @@ public class GuiAddSessionAlt extends GuiScreen {
 
     @Override
     public void initGui() {
+        Keyboard.enableRepeatEvents(true);
         GuiAltManager.message = "Waiting...";
 
         this.username = new GuiTextField(1, this.fontRendererObj, this.width / 2 - 100, this.height / 2 - 90, 200, 20);
@@ -46,8 +48,13 @@ public class GuiAddSessionAlt extends GuiScreen {
 
         this.buttonList.add(this.doneButton = new GuiButton(4, this.width / 2 - 100, this.height / 2 + 35, "Done"));
         this.buttonList.add(new GuiButton(0, this.width / 2 - 100, this.height / 2 + 57, I18n.format("gui.cancel")));
-        this.buttonList.add(new GuiButton(12, this.width + 105, this.height / 2 - 50, 50, 20, "Random UUID"));
-        this.buttonList.add(new GuiButton(13, this.width + 105, this.height / 2 - 90, 50, 20, "Random Username"));
+        this.buttonList.add(new GuiButton(12, this.width / 2 + 105, this.height / 2 - 50, 100, 20, "Random UUID"));
+        this.buttonList.add(new GuiButton(13, this.width / 2 + 105, this.height / 2 - 90, 100, 20, "Random Username"));
+    }
+
+    @Override
+    public void onGuiClosed() {
+        Keyboard.enableRepeatEvents(false);
     }
 
     @Override

@@ -130,6 +130,11 @@ dependencies {
     library 'org.luaj:luaj-jse:3.0.1'
     library 'org.javassist:javassist:3.29.2-GA'
 
+    // WebSocket stuff
+    library 'javax.websocket:javax.websocket-api:1.1'
+    library 'org.glassfish.tyrus:tyrus-client:1.17'
+    library 'org.glassfish.tyrus:tyrus-container-grizzly-client:1.17'
+
     // Via Version
     library 'com.viaversion:viabackwards:5.0.2-SNAPSHOT'
     library 'com.viaversion:viarewind:4.0.1-SNAPSHOT'

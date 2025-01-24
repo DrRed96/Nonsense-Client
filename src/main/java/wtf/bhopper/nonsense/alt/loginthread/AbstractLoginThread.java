@@ -5,21 +5,21 @@ import wtf.bhopper.nonsense.alt.mslogin.LoginData;
 
 import java.util.function.Consumer;
 
-public abstract class LoginThread extends Thread {
+public abstract class AbstractLoginThread extends Thread {
 
     protected Alt account;
     protected final Consumer<LoginData> loginDataCallback;
     protected final Consumer<Exception> errorCallback;
 
-    public LoginThread(Consumer<LoginData> loginDataCallback, Consumer<Exception> errorCallback) {
+    public AbstractLoginThread(Consumer<LoginData> loginDataCallback, Consumer<Exception> errorCallback) {
         this.loginDataCallback = loginDataCallback;
         this.errorCallback = errorCallback;
         this.setName("Account login thread");
     }
 
-    abstract void execute();
+    public abstract void execute();
 
-    abstract void finish();
+    public abstract void finish();
 
     @Override
     public void run() {

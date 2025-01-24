@@ -3,13 +3,13 @@ package optifine;
 public class IntegerCache
 {
     private static final int CACHE_SIZE = 4096;
-    private static final Integer[] cache = makeCache(4096);
+    private static final Integer[] cache = makeCache(CACHE_SIZE);
 
-    private static Integer[] makeCache(int p_makeCache_0_)
+    private static Integer[] makeCache(int size)
     {
-        Integer[] ainteger = new Integer[p_makeCache_0_];
+        Integer[] ainteger = new Integer[size];
 
-        for (int i = 0; i < p_makeCache_0_; ++i)
+        for (int i = 0; i < size; ++i)
         {
             ainteger[i] = i;
         }
@@ -17,8 +17,8 @@ public class IntegerCache
         return ainteger;
     }
 
-    public static Integer valueOf(int p_valueOf_0_)
+    public static Integer valueOf(int size)
     {
-        return p_valueOf_0_ >= 0 && p_valueOf_0_ < 4096 ? cache[p_valueOf_0_] : Integer.valueOf(p_valueOf_0_);
+        return size >= 0 && size < CACHE_SIZE ? cache[size] : Integer.valueOf(size);
     }
 }

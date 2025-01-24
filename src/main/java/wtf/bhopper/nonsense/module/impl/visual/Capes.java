@@ -34,7 +34,7 @@ public class Capes extends Module {
     public Capes() {
         super();
         this.addProperties(this.cape, this.glint);
-        this.cape.addValueChangeListener((oldValue, value) -> this.frameCounter = 0);
+        this.cape.addValueChangeListener((_, _) -> this.frameCounter = 0);
     }
 
     @Override

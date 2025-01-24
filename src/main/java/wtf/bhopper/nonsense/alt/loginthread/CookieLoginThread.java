@@ -15,7 +15,7 @@ import java.util.*;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public class CookieLoginThread extends LoginThread {
+public class CookieLoginThread extends AbstractLoginThread {
 
     private static final String COOKIE_URL = "https://sisu.xboxlive.com/connect/XboxLive/?state=login&cobrandId=8058f65d-ce06-4c30-9559-473c9275a65d&tid=896928775&ru=https%3A%2F%2Fwww.minecraft.net%2Fen-us%2Flogin&aid=1142970254";
 
@@ -34,7 +34,7 @@ public class CookieLoginThread extends LoginThread {
     }
 
     @Override
-    void execute() {
+    public void execute() {
         try {
 
             GuiAltManager.message = "Logging in to Cookie alt...";
@@ -94,7 +94,7 @@ public class CookieLoginThread extends LoginThread {
     }
 
     @Override
-    void finish() {
+    public void finish() {
 
     }
 

@@ -72,7 +72,7 @@ public class HttpUtils
         return abyte1;
     }
 
-    public static String post(String p_post_0_, Map p_post_1_, byte[] p_post_2_) throws IOException
+    public static String post(String p_post_0_, Map<String, String> p_post_1_, byte[] p_post_2_) throws IOException
     {
         HttpURLConnection httpurlconnection = null;
         String s3;
@@ -85,10 +85,10 @@ public class HttpUtils
 
             if (p_post_1_ != null)
             {
-                for (Object s : p_post_1_.keySet())
+                for (String s : p_post_1_.keySet())
                 {
-                    String s1 = "" + p_post_1_.get(s);
-                    httpurlconnection.setRequestProperty((String) s, s1);
+                    String s1 = p_post_1_.get(s);
+                    httpurlconnection.setRequestProperty(s, s1);
                 }
             }
 

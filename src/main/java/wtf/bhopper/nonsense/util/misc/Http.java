@@ -65,18 +65,18 @@ public class Http {
     }
 
     public Http postJson(Object object) throws IOException {
-        header("Content-Type", "application/json");
-        postRaw(Nonsense.GSON.toJson(object));
+        this.header("Content-Type", "application/json");
+        this.postRaw(Nonsense.GSON.toJson(object));
         return this;
     }
 
     public Http postUrlEncoded(Map<Object, Object> map) throws IOException {
-        header("Content-Type", "application/x-www-form-urlencoded");
+        this.header("Content-Type", "application/x-www-form-urlencoded");
         StringJoiner sj = new StringJoiner("&");
         for (Map.Entry<Object, Object> entry : map.entrySet()) {
             sj.add(URLEncoder.encode(entry.getKey().toString(), StandardCharsets.UTF_8) + "=" + URLEncoder.encode(entry.getValue().toString(), StandardCharsets.UTF_8));
         }
-        postRaw(sj.toString());
+        this.postRaw(sj.toString());
         return this;
     }
 
