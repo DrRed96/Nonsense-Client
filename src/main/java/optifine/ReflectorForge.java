@@ -16,8 +16,8 @@ public class ReflectorForge
     {
         if (!Reflector.FMLClientHandler_trackBrokenTexture.exists())
         {
-            Object object = Reflector.call(Reflector.FMLClientHandler_instance, new Object[0]);
-            Reflector.call(object, Reflector.FMLClientHandler_trackBrokenTexture, new Object[] {p_FMLClientHandler_trackBrokenTexture_0_, p_FMLClientHandler_trackBrokenTexture_1_});
+            Object object = Reflector.call(Reflector.FMLClientHandler_instance);
+            Reflector.call(object, Reflector.FMLClientHandler_trackBrokenTexture, p_FMLClientHandler_trackBrokenTexture_0_, p_FMLClientHandler_trackBrokenTexture_1_);
         }
     }
 
@@ -25,8 +25,8 @@ public class ReflectorForge
     {
         if (!Reflector.FMLClientHandler_trackMissingTexture.exists())
         {
-            Object object = Reflector.call(Reflector.FMLClientHandler_instance, new Object[0]);
-            Reflector.call(object, Reflector.FMLClientHandler_trackMissingTexture, new Object[] {p_FMLClientHandler_trackMissingTexture_0_});
+            Object object = Reflector.call(Reflector.FMLClientHandler_instance);
+            Reflector.call(object, Reflector.FMLClientHandler_trackMissingTexture, p_FMLClientHandler_trackMissingTexture_0_);
         }
     }
 
@@ -42,7 +42,7 @@ public class ReflectorForge
 
     public static boolean renderFirstPersonHand(RenderGlobal p_renderFirstPersonHand_0_, float p_renderFirstPersonHand_1_, int p_renderFirstPersonHand_2_)
     {
-        return !Reflector.ForgeHooksClient_renderFirstPersonHand.exists() ? false : Reflector.callBoolean(Reflector.ForgeHooksClient_renderFirstPersonHand, new Object[] {p_renderFirstPersonHand_0_, Float.valueOf(p_renderFirstPersonHand_1_), Integer.valueOf(p_renderFirstPersonHand_2_)});
+        return !Reflector.ForgeHooksClient_renderFirstPersonHand.exists() ? false : Reflector.callBoolean(Reflector.ForgeHooksClient_renderFirstPersonHand, p_renderFirstPersonHand_0_, p_renderFirstPersonHand_1_, p_renderFirstPersonHand_2_);
     }
 
     public static InputStream getOptiFineResourceStream(String p_getOptiFineResourceStream_0_)
@@ -66,7 +66,7 @@ public class ReflectorForge
                     p_getOptiFineResourceStream_0_ = p_getOptiFineResourceStream_0_.substring(1);
                 }
 
-                byte[] abyte = (byte[])((byte[])Reflector.call(object, Reflector.OptiFineClassTransformer_getOptiFineResource, new Object[] {p_getOptiFineResourceStream_0_}));
+                byte[] abyte = (byte[]) Reflector.call(object, Reflector.OptiFineClassTransformer_getOptiFineResource, new Object[] {p_getOptiFineResourceStream_0_});
 
                 if (abyte == null)
                 {
@@ -84,17 +84,17 @@ public class ReflectorForge
     public static boolean blockHasTileEntity(IBlockState p_blockHasTileEntity_0_)
     {
         Block block = p_blockHasTileEntity_0_.getBlock();
-        return !Reflector.ForgeBlock_hasTileEntity.exists() ? block.hasTileEntity() : Reflector.callBoolean(block, Reflector.ForgeBlock_hasTileEntity, new Object[] {p_blockHasTileEntity_0_});
+        return !Reflector.ForgeBlock_hasTileEntity.exists() ? block.hasTileEntity() : Reflector.callBoolean(block, Reflector.ForgeBlock_hasTileEntity, p_blockHasTileEntity_0_);
     }
 
     public static boolean isItemDamaged(ItemStack p_isItemDamaged_0_)
     {
-        return !Reflector.ForgeItem_showDurabilityBar.exists() ? p_isItemDamaged_0_.isItemDamaged() : Reflector.callBoolean(p_isItemDamaged_0_.getItem(), Reflector.ForgeItem_showDurabilityBar, new Object[] {p_isItemDamaged_0_});
+        return !Reflector.ForgeItem_showDurabilityBar.exists() ? p_isItemDamaged_0_.isItemDamaged() : Reflector.callBoolean(p_isItemDamaged_0_.getItem(), Reflector.ForgeItem_showDurabilityBar, p_isItemDamaged_0_);
     }
 
     public static boolean armorHasOverlay(ItemArmor p_armorHasOverlay_0_, ItemStack p_armorHasOverlay_1_)
     {
         int i = p_armorHasOverlay_0_.getColor(p_armorHasOverlay_1_);
-        return i != 16777215;
+        return i != 0xffffff;
     }
 }

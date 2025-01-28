@@ -16,9 +16,9 @@ import org.apache.commons.io.FilenameUtils;
 
 public class CapeUtils
 {
-    public static void downloadCape(final AbstractClientPlayer p_downloadCape_0_)
+    public static void downloadCape(final AbstractClientPlayer player)
     {
-        String s = p_downloadCape_0_.getNameClear();
+        String s = player.getNameClear();
 
         if (s != null && !s.isEmpty())
         {
@@ -36,7 +36,7 @@ public class CapeUtils
                 {
                     if (threaddownloadimagedata.imageFound.booleanValue())
                     {
-                        p_downloadCape_0_.setLocationOfCape(resourcelocation);
+                        player.setLocationOfCape(resourcelocation);
                     }
 
                     return;
@@ -52,7 +52,7 @@ public class CapeUtils
                 }
                 public void skinAvailable()
                 {
-                    p_downloadCape_0_.setLocationOfCape(resourcelocation);
+                    player.setLocationOfCape(resourcelocation);
                 }
             };
             ThreadDownloadImageData threaddownloadimagedata1 = new ThreadDownloadImageData((File)null, s1, (ResourceLocation)null, iimagebuffer);

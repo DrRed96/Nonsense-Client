@@ -13,11 +13,11 @@ import net.minecraft.world.World;
 
 public class CustomSky
 {
-    private static CustomSkyLayer[][] worldSkyLayers = (CustomSkyLayer[][])null;
+    private static CustomSkyLayer[][] worldSkyLayers = null;
 
     public static void reset()
     {
-        worldSkyLayers = (CustomSkyLayer[][])null;
+        worldSkyLayers = null;
     }
 
     public static void update()

@@ -9,12 +9,12 @@ public class FileUploadThread extends Thread
     private byte[] content;
     private IFileUploadListener listener;
 
-    public FileUploadThread(String p_i42_1_, Map<String, String> p_i42_2_, byte[] p_i42_3_, IFileUploadListener p_i42_4_)
+    public FileUploadThread(String url, Map<String, String> headers, byte[] content, IFileUploadListener listener)
     {
-        this.urlString = p_i42_1_;
-        this.headers = p_i42_2_;
-        this.content = p_i42_3_;
-        this.listener = p_i42_4_;
+        this.urlString = url;
+        this.headers = headers;
+        this.content = content;
+        this.listener = listener;
     }
 
     public void run()
@@ -22,7 +22,7 @@ public class FileUploadThread extends Thread
         try
         {
             HttpUtils.post(this.urlString, this.headers, this.content);
-            this.listener.fileUploadFinished(this.urlString, this.content, (Throwable)null);
+            this.listener.fileUploadFinished(this.urlString, this.content, null);
         }
         catch (Exception exception)
         {

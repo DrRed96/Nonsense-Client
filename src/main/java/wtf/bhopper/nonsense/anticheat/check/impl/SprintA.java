@@ -13,20 +13,18 @@ public class SprintA extends AbstractCheck {
     @Override
     public void handleRelMove(PlayerData data, S14PacketEntity packet) {
         if (!data.isSprinting()) {
-            if (data.hasCheckData(Buffer.class)) {
+            if (data.hasCheckData(Buffer.class) && data.getCheckData(Buffer.class).getBuffer() > 0.0F) {
                 data.getCheckData(Buffer.class).decrementBuffer(0.1F);
             }
             data.decrementVl(this, 0.1F);
             return;
         }
 
-        if (Math.abs(data.getMoveYaw() - data.getRotationYaw()) >= 46.0F &&
-                data.isGroundCollision() &&
-                data.getDeltaXZ() >= 0.2) {
-            if (data.getCheckData(Buffer.class, Buffer::new).incrementBuffer() >= 3.0F) {
+        if (Math.abs(data.getMoveYaw() - data.getRotationYaw()) > 90.0F && data.isGroundCollision() && data.getDeltaXZ() >= 0.2) {
+            if (data.getCheckData(Buffer.class, Buffer::new).incrementBuffer() >= 20.0F) {
                 data.incrementVl(this);
             }
-        } else if (data.hasCheckData(Buffer.class)) {
+        } else if (data.hasCheckData(Buffer.class) && data.getCheckData(Buffer.class).getBuffer() > 0.0F) {
             data.getCheckData(Buffer.class).decrementBuffer(0.1F);
         }
 

@@ -17,12 +17,12 @@ public class SmartLeaves {
     private static IBakedModel modelLeavesCullJungle = null;
     private static IBakedModel modelLeavesCullOak = null;
     private static IBakedModel modelLeavesCullSpruce = null;
-    private static List generalQuadsCullAcacia = null;
-    private static List generalQuadsCullBirch = null;
-    private static List generalQuadsCullDarkOak = null;
-    private static List generalQuadsCullJungle = null;
-    private static List generalQuadsCullOak = null;
-    private static List generalQuadsCullSpruce = null;
+    private static List<BakedQuad> generalQuadsCullAcacia = null;
+    private static List<BakedQuad> generalQuadsCullBirch = null;
+    private static List<BakedQuad> generalQuadsCullDarkOak = null;
+    private static List<BakedQuad> generalQuadsCullJungle = null;
+    private static List<BakedQuad> generalQuadsCullOak = null;
+    private static List<BakedQuad> generalQuadsCullSpruce = null;
     private static IBakedModel modelLeavesDoubleAcacia = null;
     private static IBakedModel modelLeavesDoubleBirch = null;
     private static IBakedModel modelLeavesDoubleDarkOak = null;
@@ -35,7 +35,12 @@ public class SmartLeaves {
             return p_getLeavesModel_0_;
         } else {
             List<BakedQuad> list = p_getLeavesModel_0_.getGeneralQuads();
-            return list == generalQuadsCullAcacia ? modelLeavesDoubleAcacia : (list == generalQuadsCullBirch ? modelLeavesDoubleBirch : (list == generalQuadsCullDarkOak ? modelLeavesDoubleDarkOak : (list == generalQuadsCullJungle ? modelLeavesDoubleJungle : (list == generalQuadsCullOak ? modelLeavesDoubleOak : (list == generalQuadsCullSpruce ? modelLeavesDoubleSpruce : p_getLeavesModel_0_)))));
+            return list == generalQuadsCullAcacia ? modelLeavesDoubleAcacia
+                    : (list == generalQuadsCullBirch ? modelLeavesDoubleBirch
+                    : (list == generalQuadsCullDarkOak ? modelLeavesDoubleDarkOak
+                    : (list == generalQuadsCullJungle ? modelLeavesDoubleJungle
+                    : (list == generalQuadsCullOak ? modelLeavesDoubleOak
+                    : (list == generalQuadsCullSpruce ? modelLeavesDoubleSpruce : p_getLeavesModel_0_)))));
         }
     }
 
@@ -65,7 +70,7 @@ public class SmartLeaves {
         }
     }
 
-    private static List getGeneralQuadsSafe(IBakedModel p_getGeneralQuadsSafe_0_) {
+    private static List<BakedQuad> getGeneralQuadsSafe(IBakedModel p_getGeneralQuadsSafe_0_) {
         return p_getGeneralQuadsSafe_0_ == null ? null : p_getGeneralQuadsSafe_0_.getGeneralQuads();
     }
 

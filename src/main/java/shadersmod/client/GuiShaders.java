@@ -260,6 +260,7 @@ public class GuiShaders extends GuiScreen
                         switch (getOSType())
                         {
                             case 1:
+                                // bruh are so fkn serious???
                                 String s = String.format("cmd.exe /C start \"Open file\" \"%s\"", new Object[] {Shaders.shaderpacksdir.getAbsolutePath()});
 
                                 try

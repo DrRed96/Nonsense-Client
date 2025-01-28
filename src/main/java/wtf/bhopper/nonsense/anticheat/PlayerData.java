@@ -113,9 +113,9 @@ public class PlayerData implements IMinecraft {
     }
 
     public float getMoveYaw(double x, double z) {
-        double moveYaw = Math.atan2(-x, z) * (180 / Math.PI);
-        if (moveYaw < 0) {
-            moveYaw += 360;
+        double moveYaw = Math.atan2(-x, z) * (180.0 / Math.PI);
+        if (moveYaw < 0.0) {
+            moveYaw += 360.0;
         }
         return (float) moveYaw;
     }

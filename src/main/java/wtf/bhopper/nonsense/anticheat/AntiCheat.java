@@ -48,7 +48,7 @@ public class AntiCheat implements IMinecraft {
 
     @EventLink
     public final Listener<EventJoinGame> onJoin = _ -> {
-        this.playerData.clear();
+        this.clearPlayerData();
     };
 
     @EventLink
@@ -204,6 +204,10 @@ public class AntiCheat implements IMinecraft {
 
     public List<AbstractCheck> getChecks() {
         return this.checks;
+    }
+
+    public void clearPlayerData() {
+        this.playerData.clear();
     }
 
 }

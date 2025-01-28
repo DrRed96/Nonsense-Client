@@ -7,10 +7,10 @@ public class FileDownloadThread extends Thread
     private String urlString = null;
     private IFileDownloadListener listener = null;
 
-    public FileDownloadThread(String p_i41_1_, IFileDownloadListener p_i41_2_)
+    public FileDownloadThread(String url, IFileDownloadListener downloadListener)
     {
-        this.urlString = p_i41_1_;
-        this.listener = p_i41_2_;
+        this.urlString = url;
+        this.listener = downloadListener;
     }
 
     public void run()
@@ -18,11 +18,11 @@ public class FileDownloadThread extends Thread
         try
         {
             byte[] abyte = HttpPipeline.get(this.urlString, Minecraft.getMinecraft().getProxy());
-            this.listener.fileDownloadFinished(this.urlString, abyte, (Throwable)null);
+            this.listener.fileDownloadFinished(this.urlString, abyte, null);
         }
         catch (Exception exception)
         {
-            this.listener.fileDownloadFinished(this.urlString, (byte[])null, exception);
+            this.listener.fileDownloadFinished(this.urlString, null, exception);
         }
     }
 

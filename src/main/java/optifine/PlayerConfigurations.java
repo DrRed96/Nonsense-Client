@@ -7,7 +7,7 @@ import net.minecraft.client.model.ModelBiped;
 
 public class PlayerConfigurations
 {
-    private static Map mapConfigurations = null;
+    private static Map<String, PlayerConfiguration> mapConfigurations = null;
 
     public static void renderPlayerItems(ModelBiped p_renderPlayerItems_0_, AbstractClientPlayer p_renderPlayerItems_1_, float p_renderPlayerItems_2_, float p_renderPlayerItems_3_)
     {
@@ -19,9 +19,9 @@ public class PlayerConfigurations
         }
     }
 
-    public static synchronized PlayerConfiguration getPlayerConfiguration(AbstractClientPlayer p_getPlayerConfiguration_0_)
+    public static synchronized PlayerConfiguration getPlayerConfiguration(AbstractClientPlayer player)
     {
-        String s = p_getPlayerConfiguration_0_.getNameClear();
+        String s = player.getNameClear();
 
         if (s == null)
         {
@@ -29,7 +29,7 @@ public class PlayerConfigurations
         }
         else
         {
-            PlayerConfiguration playerconfiguration = (PlayerConfiguration)getMapConfigurations().get(s);
+            PlayerConfiguration playerconfiguration = getMapConfigurations().get(s);
 
             if (playerconfiguration == null)
             {
@@ -50,11 +50,11 @@ public class PlayerConfigurations
         getMapConfigurations().put(p_setPlayerConfiguration_0_, p_setPlayerConfiguration_1_);
     }
 
-    private static Map getMapConfigurations()
+    private static Map<String, PlayerConfiguration> getMapConfigurations()
     {
         if (mapConfigurations == null)
         {
-            mapConfigurations = new HashMap();
+            mapConfigurations = new HashMap<>();
         }
 
         return mapConfigurations;

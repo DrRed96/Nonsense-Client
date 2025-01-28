@@ -10,45 +10,45 @@ public abstract class SMCLog
 
     public static void severe(String message)
     {
-        LOGGER.error("[Shaders] " + message);
+        LOGGER.error(PREFIX + message);
     }
 
     public static void warning(String message)
     {
-        LOGGER.warn("[Shaders] " + message);
+        LOGGER.warn(PREFIX + message);
     }
 
     public static void info(String message)
     {
-        LOGGER.info("[Shaders] " + message);
+        LOGGER.info(PREFIX + message);
     }
 
     public static void fine(String message)
     {
-        LOGGER.debug("[Shaders] " + message);
+        LOGGER.debug(PREFIX + message);
     }
 
     public static void severe(String format, Object... args)
     {
         String s = String.format(format, args);
-        LOGGER.error("[Shaders] " + s);
+        LOGGER.error(PREFIX + s);
     }
 
     public static void warning(String format, Object... args)
     {
         String s = String.format(format, args);
-        LOGGER.warn("[Shaders] " + s);
+        LOGGER.warn(PREFIX + s);
     }
 
     public static void info(String format, Object... args)
     {
         String s = String.format(format, args);
-        LOGGER.info("[Shaders] " + s);
+        LOGGER.info(PREFIX + s);
     }
 
     public static void fine(String format, Object... args)
     {
         String s = String.format(format, args);
-        LOGGER.debug("[Shaders] " + s);
+        LOGGER.debug(PREFIX + s);
     }
 }

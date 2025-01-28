@@ -8,9 +8,9 @@ import net.minecraft.util.ResourceLocation;
 
 public class FontUtils
 {
-    public static Properties readFontProperties(ResourceLocation p_readFontProperties_0_)
+    public static Properties readFontProperties(ResourceLocation resourceLocation)
     {
-        String s = p_readFontProperties_0_.getResourcePath();
+        String s = resourceLocation.getResourcePath();
         Properties properties = new Properties();
         String s1 = ".png";
 
@@ -24,7 +24,7 @@ public class FontUtils
 
             try
             {
-                ResourceLocation resourcelocation = new ResourceLocation(p_readFontProperties_0_.getResourceDomain(), s2);
+                ResourceLocation resourcelocation = new ResourceLocation(resourceLocation.getResourceDomain(), s2);
                 InputStream inputstream = Config.getResourceStream(Config.getResourceManager(), resourcelocation);
 
                 if (inputstream == null)
