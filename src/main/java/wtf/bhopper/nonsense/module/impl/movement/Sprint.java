@@ -40,6 +40,7 @@ public class Sprint extends Module {
                         (mc.thePlayer.getFoodStats().getFoodLevel() >= 6 || mc.thePlayer.capabilities.allowFlying) &&
                         !mc.thePlayer.isCollidedHorizontally &&
                         !mc.thePlayer.isPotionActive(Potion.moveSlowdown) &&
+                        !mc.thePlayer.isPotionActive(Potion.blindness) &&
                         !mc.thePlayer.isUsingItem();
             };
         }

@@ -32,6 +32,8 @@ public class AntiCheat implements IMinecraft {
                 new AutoBlockB(),
                 new AutoBlockC(),
                 new RotationA(),
+                new ScaffoldA(),
+                new SprintA(),
                 new VelocityA()
         );
     }

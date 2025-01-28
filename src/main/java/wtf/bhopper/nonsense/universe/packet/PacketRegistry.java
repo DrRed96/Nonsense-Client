@@ -3,12 +3,8 @@ package wtf.bhopper.nonsense.universe.packet;
 import com.google.common.collect.BiMap;
 import com.google.common.collect.HashBiMap;
 import wtf.bhopper.nonsense.universe.packet.api.IPacket;
-import wtf.bhopper.nonsense.universe.packet.impl.client.C2SPacketKeepAlive;
-import wtf.bhopper.nonsense.universe.packet.impl.client.C2SPacketLogin;
-import wtf.bhopper.nonsense.universe.packet.impl.client.C2SPacketMessage;
-import wtf.bhopper.nonsense.universe.packet.impl.server.S2CPacketKeepAlive;
-import wtf.bhopper.nonsense.universe.packet.impl.server.S2CPacketLoginResponse;
-import wtf.bhopper.nonsense.universe.packet.impl.server.S2CPacketMessage;
+import wtf.bhopper.nonsense.universe.packet.impl.client.*;
+import wtf.bhopper.nonsense.universe.packet.impl.server.*;
 
 import java.lang.reflect.InvocationTargetException;
 
@@ -19,6 +15,8 @@ public enum PacketRegistry {
             this.registerPacket(0x00, C2SPacketLogin.class);
             this.registerPacket(0x01, C2SPacketKeepAlive.class);
             this.registerPacket(0x02, C2SPacketMessage.class);
+            this.registerPacket(0x03, C2SPacketRequestDiscordLink.class);
+            this.registerPacket(0x04, C2SPacketWhisper.class);
         }
     },
     SERVER2CLIENT {
@@ -26,6 +24,8 @@ public enum PacketRegistry {
             this.registerPacket(0x00, S2CPacketLoginResponse.class);
             this.registerPacket(0x01, S2CPacketKeepAlive.class);
             this.registerPacket(0x02, S2CPacketMessage.class);
+            this.registerPacket(0x03, S2CPacketDiscordCode.class);
+            this.registerPacket(0x04, S2CPacketWhisper.class);
         }
     };
 

@@ -8,8 +8,8 @@ public record Account(int id, String username, Rank rank) {
 
     public enum Rank {
         USER("User", "\247f"),
-        MODERATOR("Moderator", "\2479\u272D "),
-        ADMIN("Admin", "\247c\u269D "),
+        MODERATOR("Moderator", "\2479✭ "),
+        ADMIN("Admin", "\247c❂ "),
         BANNED("Banned", "\2470\247m");
 
         public final String name;

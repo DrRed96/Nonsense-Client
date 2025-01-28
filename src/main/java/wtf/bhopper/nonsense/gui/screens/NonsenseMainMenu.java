@@ -16,9 +16,11 @@ import org.lwjgl.util.glu.Project;
 import wtf.bhopper.nonsense.gui.screens.altmanager.GuiAltManager;
 import wtf.bhopper.nonsense.util.misc.GeneralUtil;
 import wtf.bhopper.nonsense.util.misc.InputUtil;
+import wtf.bhopper.nonsense.util.misc.Vec2i;
 import wtf.bhopper.nonsense.util.render.ColorUtil;
 import wtf.bhopper.nonsense.util.render.Fonts;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
+import wtf.bhopper.nonsense.util.render.RenderUtil;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -97,7 +99,7 @@ public class NonsenseMainMenu extends GuiScreen {
 
     @Override
     public void drawScreen(int ignoredX, int ignoredY, float partialTicks) {
-        int[] mousePos = InputUtil.getUnscaledMousePositions();
+        Vec2i mousePos = InputUtil.getUnscaledMousePositions();
         int width = this.scaledRes.getScaledWidth() * this.scaledRes.getScaleFactor();
         int height = this.scaledRes.getScaledHeight() * this.scaledRes.getScaleFactor();
 
@@ -132,12 +134,12 @@ public class NonsenseMainMenu extends GuiScreen {
         NVGHelper.resetTransform();
 
         for (Button button : this.buttons) {
-            button.draw(mousePos[0], mousePos[1]);
+            button.draw(mousePos.x, mousePos.y);
         }
         NVGHelper.end();
 
         for (IconButton iconButton : this.iconButtons) {
-            iconButton.draw(mousePos[0], mousePos[1]);
+            iconButton.draw(mousePos.x, mousePos.y);
         }
 
         GlStateManager.popMatrix();
@@ -146,17 +148,17 @@ public class NonsenseMainMenu extends GuiScreen {
     @Override
     protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
         super.mouseClicked(mouseX, mouseY, mouseButton);
-        int[] mousePos = InputUtil.getUnscaledMousePositions();
+        Vec2i mousePos = InputUtil.getUnscaledMousePositions();
         if (mouseButton == 0) {
             for (Button button : this.buttons) {
-                if (button.mouseIntersecting(mousePos[0], mousePos[1])) {
+                if (button.mouseIntersecting(mousePos.x, mousePos.y)) {
                     this.playPressSound(mc.getSoundHandler());
                     button.action.run();
                 }
             }
 
             for (IconButton button : this.iconButtons) {
-                if (button.mouseIntersecting(mousePos[0], mousePos[1])) {
+                if (button.mouseIntersecting(mousePos.x, mousePos.y)) {
                     this.playPressSound(mc.getSoundHandler());
                     button.action.run();
                 }
@@ -380,7 +382,7 @@ public class NonsenseMainMenu extends GuiScreen {
         public void draw(int mouseX, int mouseY) {
             NonsenseMainMenu.this.mc.getTextureManager().bindTexture(this.resource);
             if (this.mouseIntersecting(mouseX, mouseY)) {
-                GlStateManager.color(1.0F, 1.0F / 3.0F, 1.0F / 3.0F);
+                RenderUtil.glColor(ColorUtil.NONSENSE);
             } else {
                 GlStateManager.color(1.0F, 1.0F, 1.0F);
             }

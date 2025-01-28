@@ -4,6 +4,7 @@ import net.minecraft.entity.DataWatcher;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
 import net.minecraft.network.play.server.*;
+import net.minecraft.util.BlockPos;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
@@ -123,20 +124,20 @@ public class PlayerData implements IMinecraft {
         return this.getMoveYaw(this.getDeltaX(), this.getDeltaZ());
     }
 
-    public void handleRelMove(S14PacketEntity packetEntity) {
+    public void handleRelMove(S14PacketEntity packet) {
         this.updateDelay();
 
-        double x = (double) (this.entity.serverPosX + packetEntity.getX()) / 32.0;
-        double y = (double) (this.entity.serverPosY + packetEntity.getY()) / 32.0;
-        double z = (double) (this.entity.serverPosZ + packetEntity.getZ()) / 32.0;
-        float yaw = packetEntity.isRotating() ? (float) (packetEntity.getYaw() * 360) / 256.0F : this.rotationYaw;
-        float pitch = packetEntity.isRotating() ? (float) (packetEntity.getPitch() * 360) / 256.0F : this.rotationPitch;
+        double x = (double) (this.entity.serverPosX + packet.getX()) / 32.0;
+        double y = (double) (this.entity.serverPosY + packet.getY()) / 32.0;
+        double z = (double) (this.entity.serverPosZ + packet.getZ()) / 32.0;
+        float yaw = packet.isRotating() ? (float) (packet.getYaw() * 360) / 256.0F : this.rotationYaw;
+        float pitch = packet.isRotating() ? (float) (packet.getPitch() * 360) / 256.0F : this.rotationPitch;
 
         this.updatePosition(x, y, z);
         this.updateRotation(yaw, pitch);
 
         this.prevOnGround = this.onGround;
-        this.onGround = packetEntity.isOnGround();
+        this.onGround = packet.isOnGround();
 
         if (!this.onGround) {
             if (prevOnGround) {
@@ -150,20 +151,20 @@ public class PlayerData implements IMinecraft {
         this.teleportTicks++;
     }
 
-    public void handleTeleport(S18PacketEntityTeleport packetEntityTeleport) {
+    public void handleTeleport(S18PacketEntityTeleport packet) {
         this.updateDelay();
 
-        double x = (double) packetEntityTeleport.getX() / 32.0;
-        double y = (double) packetEntityTeleport.getY() / 32.0;
-        double z = (double) packetEntityTeleport.getZ() / 32.0;
-        float yaw = (float) (packetEntityTeleport.getYaw() * 360) / 256.0F;
-        float pitch = (float) (packetEntityTeleport.getPitch() * 360) / 256.0F;
+        double x = (double) packet.getX() / 32.0;
+        double y = (double) packet.getY() / 32.0;
+        double z = (double) packet.getZ() / 32.0;
+        float yaw = (float) (packet.getYaw() * 360) / 256.0F;
+        float pitch = (float) (packet.getPitch() * 360) / 256.0F;
 
         this.updatePosition(x, y, z);
         this.updateRotation(yaw, pitch);
 
         this.prevOnGround = this.onGround;
-        this.onGround = packetEntityTeleport.getOnGround();
+        this.onGround = packet.getOnGround();
 
         if (!this.onGround) {
             this.airTicks++;
@@ -174,25 +175,25 @@ public class PlayerData implements IMinecraft {
         this.teleportTicks = 0;
     }
 
-    public void handleAnimation(S0BPacketAnimation packetAnimation) {
-        if (packetAnimation.getAnimationType() == 0) {
+    public void handleAnimation(S0BPacketAnimation packet) {
+        if (packet.getAnimationType() == 0) {
             this.lastSwing.reset();
         }
     }
 
-    public void handleEquipment(S04PacketEntityEquipment equipment) {
-        if (equipment.getEquipmentSlot() == 0 && equipment.getItemStack() != null) {
-            this.recentItem = equipment.getItemStack().getItem();
+    public void handleEquipment(S04PacketEntityEquipment packet) {
+        if (packet.getEquipmentSlot() == 0 && packet.getItemStack() != null) {
+            this.recentItem = packet.getItemStack().getItem();
         }
     }
 
-    public void handleHeadLook(S19PacketEntityHeadLook packetEntityHeadLook) {
-        this.updateRotation((float) (packetEntityHeadLook.getYaw() * 360) / 256.0F, null);
+    public void handleHeadLook(S19PacketEntityHeadLook packet) {
+        this.updateRotation((float) (packet.getYaw() * 360) / 256.0F, null);
     }
 
-    public void handleEntityMetadata(S1CPacketEntityMetadata packetEntityMetadata) {
-        if (packetEntityMetadata.getMetadata() != null) {
-            for (DataWatcher.WatchableObject object : packetEntityMetadata.getMetadata()) {
+    public void handleEntityMetadata(S1CPacketEntityMetadata packet) {
+        if (packet.getMetadata() != null) {
+            for (DataWatcher.WatchableObject object : packet.getMetadata()) {
                 if (object.getDataValueId() == 0 && object.getObject() instanceof Byte) {
                     byte flagValue = (byte) object.getObject();
                     boolean sneaking = (flagValue & (1 << 1)) != 0;
@@ -490,6 +491,10 @@ public class PlayerData implements IMinecraft {
 
     public Stopwatch getLastSwing() {
         return this.lastSwing;
+    }
+
+    public BlockPos getBlockPosition() {
+        return new BlockPos(this.posX, this.posY, this.posZ);
     }
 
     @SuppressWarnings("unchecked")

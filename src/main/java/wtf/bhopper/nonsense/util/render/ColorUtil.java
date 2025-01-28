@@ -26,7 +26,6 @@ public class ColorUtil {
         return (color & 0xFFFFFF) | (alpha << 24);
     }
 
-
     public static int rainbow(float saturation, float brightness) {
         return rainbow(System.currentTimeMillis(), 0, saturation, brightness);
     }

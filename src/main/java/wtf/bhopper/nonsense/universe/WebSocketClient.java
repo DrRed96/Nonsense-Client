@@ -4,6 +4,8 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import org.glassfish.tyrus.client.ClientManager;
 import wtf.bhopper.nonsense.Nonsense;
+import wtf.bhopper.nonsense.gui.hud.notification.Notification;
+import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
 import wtf.bhopper.nonsense.universe.packet.PacketRegistry;
 import wtf.bhopper.nonsense.universe.packet.api.AbstractClientPacket;
 import wtf.bhopper.nonsense.universe.packet.api.IPacket;
@@ -20,7 +22,7 @@ public class WebSocketClient {
     private final JsonParser parser = new JsonParser();
 
     private String accessToken;
-    private Session session;
+    private Session session = null;
 
     public WebSocketClient(Universe universe) {
         this.universe = universe;
@@ -36,8 +38,14 @@ public class WebSocketClient {
 
     public void close() {
         try {
-            this.session.close();
+            if (this.session != null) {
+                this.session.close();
+            }
         } catch (IOException _) {}
+    }
+
+    public boolean isOpen() {
+        return this.session != null && this.session.isOpen();
     }
 
     @OnOpen
@@ -65,10 +73,15 @@ public class WebSocketClient {
 
     @OnClose
     public void onClose(Session session, CloseReason reason) {
-
+        Notification.send("Universe", "Disconnected (" + reason.getCloseCode().getCode() + "): " + reason.getReasonPhrase(), NotificationType.WARNING, 5000);
     }
 
     public void sendPacket(AbstractClientPacket packet) {
+
+        if (this.session == null) {
+            return;
+        }
+
         JsonObject json = new JsonObject();
         json.addProperty("id", PacketRegistry.CLIENT2SERVER.getPacketId(packet));
         json.add("data", packet.writeData());

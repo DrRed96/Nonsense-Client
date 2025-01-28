@@ -8,7 +8,7 @@ import net.minecraft.network.play.server.S1CPacketEntityMetadata;
 import wtf.bhopper.nonsense.anticheat.check.AbstractCheck;
 import wtf.bhopper.nonsense.anticheat.check.CheckInfo;
 import wtf.bhopper.nonsense.anticheat.PlayerData;
-import wtf.bhopper.nonsense.anticheat.check.data.CheckBuffer;
+import wtf.bhopper.nonsense.anticheat.check.data.AbstractCheckBuffer;
 
 @CheckInfo(
         name = "Auto-Block A",
@@ -62,6 +62,6 @@ public class AutoBlockA extends AbstractCheck {
         return -1;
     }
 
-    private static class Buffer extends CheckBuffer { }
+    private static class Buffer extends AbstractCheckBuffer { }
 
 }

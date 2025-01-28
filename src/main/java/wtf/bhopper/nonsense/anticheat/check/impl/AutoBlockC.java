@@ -7,7 +7,7 @@ import net.minecraft.network.play.server.*;
 import wtf.bhopper.nonsense.anticheat.PlayerData;
 import wtf.bhopper.nonsense.anticheat.check.AbstractCheck;
 import wtf.bhopper.nonsense.anticheat.check.CheckInfo;
-import wtf.bhopper.nonsense.anticheat.check.data.CheckBuffer;
+import wtf.bhopper.nonsense.anticheat.check.data.AbstractCheckBuffer;
 import wtf.bhopper.nonsense.util.misc.Stopwatch;
 
 import java.util.ArrayList;
@@ -96,7 +96,7 @@ public class AutoBlockC extends AbstractCheck {
                 (item instanceof ItemPotion && !ItemPotion.isSplash(itemStack.getMetadata()));
     }
 
-    private static final class Buffer extends CheckBuffer {
+    private static final class Buffer extends AbstractCheckBuffer {
         private final List<Stopwatch> swingList = new ArrayList<>();
     }
 

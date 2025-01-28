@@ -8,6 +8,7 @@ import wtf.bhopper.nonsense.gui.hud.Hud;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.impl.visual.ClickGui;
 import wtf.bhopper.nonsense.util.misc.InputUtil;
+import wtf.bhopper.nonsense.util.misc.Vec2i;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
 
 import java.io.IOException;
@@ -39,22 +40,22 @@ public class NovoGui extends GuiScreen {
         super.drawScreen(mouseXIgnored, mouseYIgnored, partialTicks);
 
         this.toolTip = null;
-        int[] mousePos = InputUtil.getUnscaledMousePositions();
+        Vec2i mousePos = InputUtil.getUnscaledMousePositions();
 
         NVGHelper.begin();
         for (NovoPanel panel : this.panels) {
 
             if (panel.moving) {
-                panel.x = mousePos[0] - panel.moveX;
-                panel.y = mousePos[1] - panel.moveY;
+                panel.x = mousePos.x - panel.moveX;
+                panel.y = mousePos.y - panel.moveY;
             }
 
-            panel.draw(mousePos[0] - panel.x, mousePos[1] - panel.y, partialTicks);
+            panel.draw(mousePos.x - panel.x, mousePos.y - panel.y, partialTicks);
         }
 
         if (this.toolTip != null && mod().toolTips.get()) {
 
-            float y = mousePos[1];
+            float y = mousePos.y;
 
             NVGHelper.fontSize(14.0F);
             NVGHelper.textAlign(NVG_ALIGN_LEFT | NVG_ALIGN_BOTTOM);
@@ -65,7 +66,7 @@ public class NovoGui extends GuiScreen {
             for (int i = parts.length - 1; i >= 0; i--) {
                 String tip = parts[i];
                 float[] b = new float[4];
-                NVGHelper.textBounds(mousePos[0], y, tip, b);
+                NVGHelper.textBounds(mousePos.x, y, tip, b);
                 if (bounds == null) {
                     bounds = b;
                 } else {
@@ -80,9 +81,9 @@ public class NovoGui extends GuiScreen {
             if (bounds != null) {
                 NVGHelper.drawRoundedRect(bounds[0] - 2.0F, bounds[1] - 2.0F, bounds[2] - bounds[0] + 4.0F, bounds[3] - bounds[1] + 4.0F, 4.0F, 0x80000000);
 
-                y = mousePos[1];
+                y = mousePos.y;
                 for (int i = parts.length - 1; i >= 0; i--) {
-                    NVGHelper.drawText(parts[i], mousePos[0], y, 0xFFFFFFFF, true);
+                    NVGHelper.drawText(parts[i], mousePos.x, y, 0xFFFFFFFF, true);
                     y -= 16.0F;
                 }
 
@@ -95,18 +96,18 @@ public class NovoGui extends GuiScreen {
     @Override
     protected void mouseClicked(int mouseXIgnored, int mouseYIgnored, int mouseButton) throws IOException {
         super.mouseClicked(mouseXIgnored, mouseYIgnored, mouseButton);
-        int[] mousePos = InputUtil.getUnscaledMousePositions();
+        Vec2i mousePos = InputUtil.getUnscaledMousePositions();
         for (NovoPanel dropdown : this.panels) {
-            dropdown.mouseClick(mousePos[0] - dropdown.x, mousePos[1] - dropdown.y, mouseButton);
+            dropdown.mouseClick(mousePos.x - dropdown.x, mousePos.y - dropdown.y, mouseButton);
         }
     }
 
     @Override
     protected void mouseReleased(int mouseXIgnored, int mouseYIgnored, int state) {
         super.mouseReleased(mouseXIgnored, mouseYIgnored, state);
-        int[] mousePos = InputUtil.getUnscaledMousePositions();
+        Vec2i mousePos = InputUtil.getUnscaledMousePositions();
         for (NovoPanel dropdown : this.panels) {
-            dropdown.mouseRelease(mousePos[0] - dropdown.x, mousePos[1] - dropdown.y, state);
+            dropdown.mouseRelease(mousePos.x - dropdown.x, mousePos.y - dropdown.y, state);
         }
     }
 

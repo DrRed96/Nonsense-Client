@@ -29,6 +29,7 @@ public enum Fonts implements IMinecraft {
     SEGOE("segoe","segoeui.ttf"),
     SEGOE_BOLD("segoebold", "segoeuib.ttf"),
     SF_PRO_ROUNDED("sfprorounded", "SF-Pro-Rounded-Regular.otf"),
+    SKEET("skeet", "skeet.ttf"), // Skeet ClickGUI icons
     TAHOMA("tahoma", "tahoma.ttf"), // Same font that Exhibition uses
     TIMES_NEW_ROMAN("timesnewroman", "times.ttf");
 

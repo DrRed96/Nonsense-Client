@@ -9,7 +9,6 @@ import io.netty.buffer.Unpooled;
 
 import java.io.IOException;
 import java.util.Collections;
-import java.util.Date;
 import java.util.List;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -109,7 +108,7 @@ public class NetHandlerPlayServer implements INetHandlerPlayServer, ITickable {
      */
     private int floatingTickCount;
     private boolean field_147366_g;
-    private int field_147378_h;
+    private int keepAliveId;
     private long lastPingTime;
     private long lastSentPingPacket;
 
@@ -141,10 +140,10 @@ public class NetHandlerPlayServer implements INetHandlerPlayServer, ITickable {
         ++this.networkTickCount;
 
         if ((long) this.networkTickCount - this.lastSentPingPacket > 40L) {
-            this.lastSentPingPacket = (long) this.networkTickCount;
+            this.lastSentPingPacket = this.networkTickCount;
             this.lastPingTime = this.currentTimeMillis();
-            this.field_147378_h = (int) this.lastPingTime;
-            this.sendPacket(new S00PacketKeepAlive(this.field_147378_h));
+            this.keepAliveId = (int) this.lastPingTime;
+            this.sendPacket(new S00PacketKeepAlive(this.keepAliveId));
         }
 
 
@@ -996,7 +995,7 @@ public class NetHandlerPlayServer implements INetHandlerPlayServer, ITickable {
      * Updates a players' ping statistics
      */
     public void processKeepAlive(C00PacketKeepAlive packetIn) {
-        if (packetIn.getKey() == this.field_147378_h) {
+        if (packetIn.getKey() == this.keepAliveId) {
             int i = (int) (this.currentTimeMillis() - this.lastPingTime);
             this.playerEntity.ping = (this.playerEntity.ping * 3 + i) / 4;
         }

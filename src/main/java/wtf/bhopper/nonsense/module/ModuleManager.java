@@ -103,6 +103,7 @@ public class ModuleManager {
                 new LightningDetector(),
                 new SkinBlinker(),
                 new DiscordRPCMod(),
+                new IrcMod(),
                 new Debugger(),
 
                 // Visual

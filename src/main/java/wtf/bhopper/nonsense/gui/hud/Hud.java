@@ -11,6 +11,7 @@ import wtf.bhopper.nonsense.gui.hud.notification.NotificationManager;
 import wtf.bhopper.nonsense.module.impl.visual.HudMod;
 import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
 import wtf.bhopper.nonsense.util.misc.InputUtil;
+import wtf.bhopper.nonsense.util.misc.Vec2i;
 import wtf.bhopper.nonsense.util.render.ColorUtil;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
 
@@ -56,13 +57,13 @@ public class Hud implements IMinecraft {
     public void drawComponents(ScaledResolution scaledRes, float delta, boolean mouse, boolean drawOutline) {
         GlStateManager.pushMatrix();
         scaledRes.scaleToFactor(1.0F);
-        int[] mousePos = mouse ? InputUtil.getUnscaledMousePositions() : new int[]{ -1, -1 };
+        Vec2i mousePos = mouse ? InputUtil.getUnscaledMousePositions() : new Vec2i(-1, -1);
 
         for (RenderComponent component : components) {
             if (component.isEnabled()) {
                 GlStateManager.pushMatrix();
                 GlStateManager.translate(component.getX(), component.getY(), 0.0);
-                component.draw(delta, mousePos[0], mousePos[1], drawOutline);
+                component.draw(delta, mousePos.x, mousePos.y, drawOutline);
                 GlStateManager.popMatrix();
                 if (drawOutline) {
                     component.drawOutline();
@@ -74,10 +75,10 @@ public class Hud implements IMinecraft {
     }
 
     public void componentsClick(int button) {
-        int[] mousePos = InputUtil.getUnscaledMousePositions();
+        Vec2i mousePos = InputUtil.getUnscaledMousePositions();
         for (RenderComponent component : components) {
             if (component.isEnabled()) {
-                component.onClick(mousePos[0] - component.getX(), mousePos[1] - component.getY(), button);
+                component.onClick(mousePos.x - component.getX(), mousePos.y - component.getY(), button);
             }
         }
     }

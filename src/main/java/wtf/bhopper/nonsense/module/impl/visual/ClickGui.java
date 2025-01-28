@@ -4,6 +4,7 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.client.audio.SoundHandler;
 import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
+import wtf.bhopper.nonsense.gui.click.compact.CompactGui;
 import wtf.bhopper.nonsense.gui.click.novoline.NovoGui;
 import wtf.bhopper.nonsense.module.Module;
 import wtf.bhopper.nonsense.module.ModuleCategory;
@@ -24,6 +25,7 @@ public class ClickGui extends Module {
     public final EnumProperty<Sound> sound = new EnumProperty<>("Sound", "Plays a sound when you press a button", Sound.NONE);
 
     private NovoGui novoline;
+    private CompactGui compact;
 
     public ClickGui() {
         super();
@@ -32,22 +34,26 @@ public class ClickGui extends Module {
 
     public void initGuis() {
         this.novoline = new NovoGui();
+        this.compact = new CompactGui();
     }
 
     @Override
     public void onEnable() {
         this.toggle(false);
-        if (mc.currentScreen == null) {
 
+        // Only display the ClickGUI if another screen isn't already open
+        if (mc.currentScreen == null) {
             switch (this.mode.get()) {
                 case NOVOLINE -> mc.displayGuiScreen(this.novoline);
+                case COMPACT -> mc.displayGuiScreen(this.compact);
                 default -> ChatUtil.error("Someone has been tampering with the Click GUI's!");
             }
         }
     }
 
     private enum Mode {
-        NOVOLINE
+        NOVOLINE,
+        COMPACT
     }
     
     public enum Sound {

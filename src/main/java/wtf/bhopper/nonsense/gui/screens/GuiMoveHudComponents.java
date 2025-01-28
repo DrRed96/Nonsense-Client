@@ -7,6 +7,7 @@ import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.gui.components.RenderComponent;
 import wtf.bhopper.nonsense.gui.hud.Hud;
 import wtf.bhopper.nonsense.util.misc.InputUtil;
+import wtf.bhopper.nonsense.util.misc.Vec2i;
 import wtf.bhopper.nonsense.util.render.Fonts;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
 
@@ -27,11 +28,11 @@ public class GuiMoveHudComponents extends GuiScreen {
     public void drawScreen(int ignoredX, int ignoredY, float partialTicks) {
         ScaledResolution sr = new ScaledResolution(mc);
 
-        int[] mousePos = InputUtil.getUnscaledMousePositions();
+        Vec2i mousePos = InputUtil.getUnscaledMousePositions();
 
         if (this.dragging != null) {
-            this.dragging.setX(mousePos[0] - this.dragX);
-            this.dragging.setY(mousePos[1] - this.dragY);
+            this.dragging.setX(mousePos.x - this.dragX);
+            this.dragging.setY(mousePos.y - this.dragY);
         }
 
         float textX = Display.getWidth() / 2.0F;
@@ -56,12 +57,12 @@ public class GuiMoveHudComponents extends GuiScreen {
             return;
         }
 
-        int[] mousePos = InputUtil.getUnscaledMousePositions();
+        Vec2i mousePos = InputUtil.getUnscaledMousePositions();
         for (RenderComponent component : Nonsense.getHud().getComponents()) {
-            if (component.mouseIntersecting(mousePos[0], mousePos[1])) {
+            if (component.mouseIntersecting(mousePos.x, mousePos.y)) {
                 this.dragging = component;
-                this.dragX = mousePos[0] - component.getX();
-                this.dragY = mousePos[1] - component.getY();
+                this.dragX = mousePos.x - component.getX();
+                this.dragY = mousePos.y - component.getY();
             }
         }
     }
