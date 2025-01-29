@@ -7,7 +7,7 @@ import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.gui.GuiPasswordField;
 import wtf.bhopper.nonsense.gui.hud.notification.Notification;
 import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.ButtonProperty;
@@ -20,7 +20,7 @@ import java.io.IOException;
         description = "Configure the IRC",
         category = ModuleCategory.OTHER,
         hidden = true, toggled = true)
-public class IrcMod extends Module {
+public class IrcMod extends AbstractModule {
 
     public final StringProperty chatPrefix = new StringProperty("Chat Prefix", "Prefix for IRC chat", "-");
     public final ButtonProperty openLogin = new ButtonProperty("Login", "Login to the IRC", () -> mc.displayGuiScreen(new GuiLogin()));

@@ -17,7 +17,7 @@ import wtf.bhopper.nonsense.event.impl.player.interact.EventClickAction;
 import wtf.bhopper.nonsense.event.impl.player.inventory.EventSelectItem;
 import wtf.bhopper.nonsense.event.impl.player.movement.EventMove;
 import wtf.bhopper.nonsense.event.impl.player.movement.EventMovementInput;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.annotations.DisplayName;
@@ -35,7 +35,7 @@ import java.util.List;
 @ModuleInfo(name = "Scaffold",
         description = "Automatically places blocks under you.",
         category = ModuleCategory.MOVEMENT)
-public class Scaffold extends Module {
+public class Scaffold extends AbstractModule {
 
     public static final List<Block> BAD_BLOCKS = Arrays.asList(
             Blocks.air,

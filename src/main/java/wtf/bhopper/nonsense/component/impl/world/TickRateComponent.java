@@ -2,7 +2,7 @@ package wtf.bhopper.nonsense.component.impl.world;
 
 import net.minecraft.network.play.server.S03PacketTimeUpdate;
 import net.minecraft.util.MathHelper;
-import wtf.bhopper.nonsense.component.Component;
+import wtf.bhopper.nonsense.component.AbstractComponent;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.player.EventJoinGame;
@@ -11,7 +11,7 @@ import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 
 import java.util.Arrays;
 
-public class TickRateComponent extends Component {
+public class TickRateComponent extends AbstractComponent {
 
     private final float[] tickRates = new float[20];
     private int nextIndex = 0;

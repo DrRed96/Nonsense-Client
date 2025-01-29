@@ -5,7 +5,7 @@ import net.minecraft.init.Blocks;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
@@ -16,7 +16,7 @@ import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 @ModuleInfo(name = "Xray",
         description = "Allows you to see ores thought blocks",
         category = ModuleCategory.VISUAL)
-public class Xray extends Module {
+public class Xray extends AbstractModule {
 
     private final GroupProperty ores = new GroupProperty("Ores", "Ores to be rendered", this);
     private final BooleanProperty diamond = new BooleanProperty("Diamond", "Render diamond ores", true);

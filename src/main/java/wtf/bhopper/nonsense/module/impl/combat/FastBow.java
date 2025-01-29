@@ -9,7 +9,7 @@ import net.minecraft.util.EnumFacing;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.player.EventUpdate;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.util.minecraft.player.PacketUtil;
@@ -17,7 +17,7 @@ import wtf.bhopper.nonsense.util.minecraft.player.PacketUtil;
 @ModuleInfo(name = "Fast Bow",
         description = "Turns your bow into a machine gun.",
         category = ModuleCategory.COMBAT)
-public class FastBow extends Module {
+public class FastBow extends AbstractModule {
 
     @EventLink
     public final Listener<EventUpdate> onUpdate = _ -> {

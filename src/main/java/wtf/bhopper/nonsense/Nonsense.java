@@ -10,12 +10,12 @@ import org.apache.logging.log4j.Logger;
 import wtf.bhopper.nonsense.alt.AltManager;
 import wtf.bhopper.nonsense.anticheat.AntiCheat;
 import wtf.bhopper.nonsense.command.CommandManager;
-import wtf.bhopper.nonsense.component.Component;
+import wtf.bhopper.nonsense.component.AbstractComponent;
 import wtf.bhopper.nonsense.component.ComponentManager;
 import wtf.bhopper.nonsense.config.ConfigManager;
 import wtf.bhopper.nonsense.event.EventBus;
 import wtf.bhopper.nonsense.gui.hud.Hud;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleManager;
 import wtf.bhopper.nonsense.module.impl.visual.ClickGui;
 import wtf.bhopper.nonsense.universe.Universe;
@@ -44,11 +44,11 @@ public final class Nonsense {
     private ConfigManager configManager;
     private ScriptManager scriptManager;
     private AltManager altManager;
-    private Universe universe;
 
     // Components
     private Hud hud;
     private AntiCheat antiCheat;
+    private Universe universe;
 
     // Util
     private long startTime;
@@ -100,7 +100,7 @@ public final class Nonsense {
         return INSTANCE.moduleManager;
     }
 
-    public static <T extends Module> T module(Class<T> clazz) {
+    public static <T extends AbstractModule> T module(Class<T> clazz) {
         return INSTANCE.moduleManager.get(clazz);
     }
 
@@ -112,7 +112,7 @@ public final class Nonsense {
         return INSTANCE.componentManager;
     }
 
-    public static <T extends Component> T component(Class<T> clazz) {
+    public static <T extends AbstractComponent> T component(Class<T> clazz) {
         return INSTANCE.componentManager.get(clazz);
     }
 
@@ -128,16 +128,16 @@ public final class Nonsense {
         return INSTANCE.altManager;
     }
 
-    public static Universe getUniverse() {
-        return INSTANCE.universe;
-    }
-
     public static Hud getHud() {
         return INSTANCE.hud;
     }
 
     public static AntiCheat getAntiCheat() {
         return INSTANCE.antiCheat;
+    }
+
+    public static Universe getUniverse() {
+        return INSTANCE.universe;
     }
 
     public static long getStartTime() {

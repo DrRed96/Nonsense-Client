@@ -2,7 +2,7 @@ package wtf.bhopper.nonsense.gui.click.novoline;
 
 import org.lwjgl.opengl.Display;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.util.misc.ResourceUtil;
 import wtf.bhopper.nonsense.util.render.Fonts;
@@ -49,7 +49,7 @@ public class NovoPanel extends NovoComponent {
             throw new RuntimeException(exception);
         }
 
-        for (Module module : Nonsense.getModuleManager().getInCategory(category)) {
+        for (AbstractModule module : Nonsense.getModuleManager().getInCategory(category)) {
             modules.add(new NovoModule(this, module));
         }
     }

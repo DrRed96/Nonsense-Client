@@ -9,7 +9,7 @@ import wtf.bhopper.nonsense.event.impl.render.EventRenderWorld;
 import wtf.bhopper.nonsense.event.impl.player.movement.EventSpeed;
 import wtf.bhopper.nonsense.event.impl.player.EventUpdate;
 import wtf.bhopper.nonsense.gui.hud.Hud;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
@@ -25,7 +25,7 @@ import wtf.bhopper.nonsense.util.render.RenderUtil;
 @ModuleInfo(name = "Target Strafe",
         description = "Strafes around entities",
         category = ModuleCategory.COMBAT)
-public class TargetStrafe extends Module {
+public class TargetStrafe extends AbstractModule {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Method for strafing", Mode.CIRCLE);
     private final NumberProperty range = new NumberProperty("Range", "Strafe range", 1.0, 0.1, 4.0, 0.05, NumberProperty.FORMAT_DISTANCE);

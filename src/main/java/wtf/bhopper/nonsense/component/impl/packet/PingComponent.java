@@ -2,7 +2,7 @@ package wtf.bhopper.nonsense.component.impl.packet;
 
 import net.minecraft.client.multiplayer.ServerAddress;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.component.Component;
+import wtf.bhopper.nonsense.component.AbstractComponent;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.player.EventPreMotion;
@@ -15,7 +15,7 @@ import java.util.concurrent.Callable;
 import java.util.concurrent.Executor;
 import java.util.concurrent.Executors;
 
-public class PingComponent extends Component {
+public class PingComponent extends AbstractComponent {
 
     private static final long TIMEOUT_AUTO_DISABLE = 120000L;
     private static final long DELAY = 10000L;

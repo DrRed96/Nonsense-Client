@@ -1,9 +1,9 @@
 package wtf.bhopper.nonsense.command.impl;
 
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.command.Command;
+import wtf.bhopper.nonsense.command.AbstractCommand;
 import wtf.bhopper.nonsense.command.CommandInfo;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.property.AbstractProperty;
 import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
 import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
@@ -11,7 +11,7 @@ import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 @CommandInfo(name = "Set",
         description = "Sets the value of a property.",
         syntax = ".set <module> <setting> <value>")
-public class SetCmd extends Command {
+public class SetCmd extends AbstractCommand {
     @Override
     public void execute(String[] args, String rawCommand) throws Exception {
         if (args.length < 4) {
@@ -19,7 +19,7 @@ public class SetCmd extends Command {
             return;
         }
 
-        Module module = Nonsense.getModuleManager().get(args[1]);
+        AbstractModule module = Nonsense.getModuleManager().get(args[1]);
         if (module == null) {
             ChatUtil.error("'%s' is not a module", args[1]);
             return;

@@ -3,7 +3,7 @@ package wtf.bhopper.nonsense.module.impl.other;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
@@ -19,7 +19,7 @@ import java.util.regex.Matcher;
 @ModuleInfo(name = "Spammer",
         description = "Spams a message in chat.",
         category = ModuleCategory.OTHER)
-public class Spammer extends Module {
+public class Spammer extends AbstractModule {
 
     private final StringProperty message = new StringProperty("Message", "Message to send.", "weed");
     private final NumberProperty delay = new NumberProperty("Delay", "Delay between sending messages.", 3000, 0, 30000, 50, NumberProperty.FORMAT_MS);

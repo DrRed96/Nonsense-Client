@@ -17,7 +17,7 @@ import wtf.bhopper.nonsense.event.impl.packet.EventSendPacket;
 import wtf.bhopper.nonsense.event.impl.player.interact.EventPostClick;
 import wtf.bhopper.nonsense.event.impl.player.EventUpdate;
 import wtf.bhopper.nonsense.event.impl.render.EventRenderWorld;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
@@ -36,7 +36,7 @@ import static org.lwjgl.opengl.GL11.GL_LINES;
 @ModuleInfo(name = "Auto Cops And Crims",
         description = "Aims for you in cops and crims",
         category = ModuleCategory.COMBAT)
-public class AutoCopsAndCrims extends Module {
+public class AutoCopsAndCrims extends AbstractModule {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Aiming method", Mode.DYNAMIC);
     private final EnumProperty<Sorting> sorting = new EnumProperty<>("Sorting", "Target sorting method", Sorting.ANGLE);

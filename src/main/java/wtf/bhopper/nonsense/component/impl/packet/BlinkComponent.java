@@ -1,7 +1,7 @@
 package wtf.bhopper.nonsense.component.impl.packet;
 
 import net.minecraft.network.Packet;
-import wtf.bhopper.nonsense.component.Component;
+import wtf.bhopper.nonsense.component.AbstractComponent;
 import wtf.bhopper.nonsense.event.EventPriorities;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
@@ -13,7 +13,7 @@ import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 import java.util.ArrayDeque;
 import java.util.Queue;
 
-public class BlinkComponent extends Component {
+public class BlinkComponent extends AbstractComponent {
 
     private boolean blink = false;
 

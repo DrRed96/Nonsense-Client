@@ -1,7 +1,7 @@
 package wtf.bhopper.nonsense.gui.click.compact;
 
 import org.lwjgl.nanovg.NanoVG;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.util.render.ColorUtil;
 import wtf.bhopper.nonsense.util.render.Fonts;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
@@ -9,11 +9,11 @@ import wtf.bhopper.nonsense.util.render.NVGHelper;
 public class CompactModule {
 
     private final CompactGui owner;
-    private final Module module;
+    private final AbstractModule module;
 
     private int y;
 
-    public CompactModule(CompactGui owner, Module module, int y) {
+    public CompactModule(CompactGui owner, AbstractModule module, int y) {
         this.owner = owner;
         this.module = module;
         this.y = y;

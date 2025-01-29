@@ -10,7 +10,7 @@ import net.minecraft.util.Vec3;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.player.EventPreMotion;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
@@ -21,7 +21,7 @@ import wtf.bhopper.nonsense.util.minecraft.player.PacketUtil;
         category = ModuleCategory.PLAYER,
         description = "Prevents fall damage.",
         searchAlias = "No Fall Damage")
-public class NoFall extends Module {
+public class NoFall extends AbstractModule {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Method to prevent fall damage.", Mode.SPOOF);
     private final BooleanProperty timer = new BooleanProperty("Timer", "Uses timer to help bypass.", false, () -> this.mode.is(Mode.PACKET));

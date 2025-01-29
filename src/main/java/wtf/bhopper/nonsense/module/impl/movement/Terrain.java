@@ -6,7 +6,7 @@ import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.world.EventBlockBounds;
 import wtf.bhopper.nonsense.event.impl.world.EventBlockCollision;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
@@ -15,7 +15,7 @@ import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 @ModuleInfo(name = "Terrain",
         description = "Modifies your movement on certain blocks.",
         category = ModuleCategory.MOVEMENT)
-public class Terrain extends Module {
+public class Terrain extends AbstractModule {
 
     private final EnumProperty<Mode> soulSand = new EnumProperty<>("Soul Sand", "Prevents you from being slowed by soul sand", Mode.NORMAL);
     private final EnumProperty<Mode> cobwebs = new EnumProperty<>("Cob Webs", "Prevents you from being slowed by cobwebs", Mode.NORMAL);

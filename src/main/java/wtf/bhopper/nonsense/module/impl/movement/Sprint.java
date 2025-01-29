@@ -5,7 +5,7 @@ import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.packet.EventActionStates;
 import wtf.bhopper.nonsense.event.impl.player.EventPostMotion;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
@@ -15,7 +15,7 @@ import wtf.bhopper.nonsense.util.minecraft.player.MoveUtil;
 @ModuleInfo(name = "Sprint",
         description = "Makes you sprint.",
         category = ModuleCategory.MOVEMENT)
-public class Sprint extends Module {
+public class Sprint extends AbstractModule {
 
     private final BooleanProperty omniSprint = new BooleanProperty("Omni Sprint", "Allows you to sprint in all directions", false);
     private final BooleanProperty keepSprint = new BooleanProperty("Keep Sprint", "Prevents sprint from being reset while attacking", false);

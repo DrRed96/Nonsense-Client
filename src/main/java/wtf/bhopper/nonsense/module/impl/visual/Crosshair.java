@@ -1,7 +1,7 @@
 package wtf.bhopper.nonsense.module.impl.visual;
 
 import org.lwjgl.opengl.Display;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
@@ -11,7 +11,7 @@ import wtf.bhopper.nonsense.util.render.NVGHelper;
 @ModuleInfo(name = "Crosshair",
         description = "Draws a custom crosshair",
         category = ModuleCategory.VISUAL)
-public class Crosshair extends Module {
+public class Crosshair extends AbstractModule {
 
     private final NumberProperty size = new NumberProperty("Size", "Size of the crosshair", 16, 1, 30, 1);
 

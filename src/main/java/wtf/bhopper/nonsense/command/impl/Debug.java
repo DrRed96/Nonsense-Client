@@ -9,7 +9,7 @@ import net.minecraft.network.play.server.S27PacketExplosion;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Vec3;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.command.Command;
+import wtf.bhopper.nonsense.command.AbstractCommand;
 import wtf.bhopper.nonsense.command.CommandInfo;
 import wtf.bhopper.nonsense.gui.hud.notification.Notification;
 import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
@@ -24,7 +24,7 @@ import java.util.ArrayList;
 @CommandInfo(name = "Debug",
         description = "Helps with debugging.",
         syntax = ".debug <args>")
-public class Debug extends Command {
+public class Debug extends AbstractCommand {
     @Override
     public void execute(String[] args, String rawCommand) throws Exception {
 
@@ -120,6 +120,21 @@ public class Debug extends Command {
                     1.0F,
                     new ArrayList<>(),
                     new Vec3(Byte.MAX_VALUE, Byte.MAX_VALUE, Byte.MAX_VALUE)));
+
+            case "test1" -> {
+                ChatUtil.print("1.");
+                ChatUtil.print("%s\247fMasterHaxor\2477: Hello!", ChatUtil.IRC_PREFIX);
+                ChatUtil.print("%s\2479✭ KoolKat55\2477: Hello!", ChatUtil.IRC_PREFIX);
+                ChatUtil.print("%s\247c❂ Operator1\2477: Hello!", ChatUtil.IRC_PREFIX);
+                ChatUtil.print("2.");
+                ChatUtil.print("%s\247fMasterHaxor\2477: Hello!", ChatUtil.IRC_PREFIX);
+                ChatUtil.print("%s\2479[MOD] KoolKat55\2477: Hello!", ChatUtil.IRC_PREFIX);
+                ChatUtil.print("%s\247c[ADMIN] Operator1\2477: Hello!", ChatUtil.IRC_PREFIX);
+                ChatUtil.print("3.");
+                ChatUtil.print("%s\247fMasterHaxor\2477: Hello!", ChatUtil.IRC_PREFIX);
+                ChatUtil.print("%s\2479KoolKat55\2477: Hello!", ChatUtil.IRC_PREFIX);
+                ChatUtil.print("%s\247cOperator1\2477: Hello!", ChatUtil.IRC_PREFIX);
+            }
 
             default -> ChatUtil.error("Unknown debugging command.");
 

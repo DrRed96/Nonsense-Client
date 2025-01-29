@@ -7,7 +7,7 @@ import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.client.EventKeyPress;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.impl.visual.HudMod;
 import wtf.bhopper.nonsense.module.property.AbstractProperty;
@@ -22,7 +22,7 @@ import static org.lwjgl.nanovg.NanoVG.*;
 public class TabGui implements IMinecraft {
 
     private ModuleCategory selectedCategory = ModuleCategory.values()[0];
-    private Module selectedModule = null;
+    private AbstractModule selectedModule = null;
     private AbstractProperty<?> selectedProperty = null;
 
     private boolean isInCategory = false;
@@ -86,7 +86,7 @@ public class TabGui implements IMinecraft {
 
         if (this.isInCategory) {
 
-            List<Module> modules = Nonsense.getModuleManager().getInCategory(this.selectedCategory);
+            List<AbstractModule> modules = Nonsense.getModuleManager().getInCategory(this.selectedCategory);
 
             float longestWidth = modules.stream()
                     .map(module -> getWidth.getWidth(module.name))

@@ -3,7 +3,7 @@ package wtf.bhopper.nonsense.module.impl.player;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
@@ -13,7 +13,7 @@ import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
         description = "Changes the game speed",
         category = ModuleCategory.PLAYER,
         searchAlias = "Timer")
-public class GameSpeed extends Module {
+public class GameSpeed extends AbstractModule {
 
     private final NumberProperty speed = new NumberProperty("Speed", "Game speed multiplier", 1.5, 0.1, 10.0, 0.01);
 

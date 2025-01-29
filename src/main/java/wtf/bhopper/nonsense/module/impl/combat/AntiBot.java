@@ -3,12 +3,11 @@ package wtf.bhopper.nonsense.module.impl.combat;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.EnumChatFormatting;
-import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.EventPriorities;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.annotations.DisplayName;
@@ -22,7 +21,7 @@ import java.util.Set;
 @ModuleInfo(name = "Anti Bot",
         description = "Prevents bot targeting",
         category = ModuleCategory.COMBAT)
-public class AntiBot extends Module {
+public class AntiBot extends AbstractModule {
 
     private static final String VALID_USERNAME_REGEX = "^[a-zA-Z0-9_]{1,16}+$";
 

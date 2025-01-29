@@ -6,7 +6,7 @@ import wtf.bhopper.nonsense.event.EventPriorities;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.player.EventPreMotion;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.annotations.Description;
@@ -18,7 +18,7 @@ import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
         description = "CS:GO anti aim but useless and in Minecraft",
         category = ModuleCategory.OTHER,
         searchAlias = {"Derp", "Annoy"})
-public class AntiAim extends Module {
+public class AntiAim extends AbstractModule {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "mode", Mode.SPIN);
     private final NumberProperty pitchSet = new NumberProperty("Pitch", "Pitch", () -> this.mode.is(Mode.SPIN), 0.0F, -90.0F, 90.0F, 1.0F);

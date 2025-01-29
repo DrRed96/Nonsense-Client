@@ -3,7 +3,7 @@ package wtf.bhopper.nonsense.command.impl;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.util.EnumChatFormatting;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.command.Command;
+import wtf.bhopper.nonsense.command.AbstractCommand;
 import wtf.bhopper.nonsense.command.CommandInfo;
 import wtf.bhopper.nonsense.config.Config;
 import wtf.bhopper.nonsense.gui.hud.notification.Notification;
@@ -16,7 +16,7 @@ import java.io.IOException;
         description = "Manage configs",
         syntax = ".config <load/save/del> <name> | .config list",
         alias = {"properties", "settings", "c", "s", "p"})
-public class ConfigCmd extends Command {
+public class ConfigCmd extends AbstractCommand {
     @Override
     public void execute(String[] args, String rawCommand) throws Exception {
 

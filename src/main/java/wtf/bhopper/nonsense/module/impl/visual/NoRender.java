@@ -1,8 +1,7 @@
 package wtf.bhopper.nonsense.module.impl.visual;
 
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
@@ -10,7 +9,7 @@ import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 @ModuleInfo(name = "No Render",
         description = "Prevents certain things from being rendered",
         category = ModuleCategory.VISUAL)
-public class NoRender extends Module {
+public class NoRender extends AbstractModule {
 
     public final BooleanProperty hurtCamera = new BooleanProperty("Hurt Camera", "Removes the shake effect from the camera when taking damage", true);
     public final BooleanProperty blindness = new BooleanProperty("Blindness", "Prevents the blindness effect", true);

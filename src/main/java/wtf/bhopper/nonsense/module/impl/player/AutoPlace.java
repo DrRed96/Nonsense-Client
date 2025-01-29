@@ -7,7 +7,7 @@ import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.player.EventUpdate;
 import wtf.bhopper.nonsense.event.impl.player.interact.EventClickAction;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.impl.movement.Scaffold;
@@ -18,7 +18,7 @@ import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
         description = "Automatically places blocks",
         category = ModuleCategory.PLAYER,
         searchAlias = "Legit Scaffold")
-public class AutoPlace extends Module {
+public class AutoPlace extends AbstractModule {
 
     private final NumberProperty delay = new NumberProperty("Delay", "Block place delay in ticks", 0, 0, 3, 1);
     private final BooleanProperty click = new BooleanProperty("Right Click", "Requires you to hold down right click.", true);

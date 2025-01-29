@@ -6,7 +6,7 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTException;
-import wtf.bhopper.nonsense.command.Command;
+import wtf.bhopper.nonsense.command.AbstractCommand;
 import wtf.bhopper.nonsense.command.CommandInfo;
 import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 import wtf.bhopper.nonsense.util.minecraft.inventory.InventoryUtil;
@@ -14,7 +14,7 @@ import wtf.bhopper.nonsense.util.minecraft.inventory.InventoryUtil;
 @CommandInfo(name = "Give",
         description = "Gives you any item (Requires creative mode)",
         syntax = ".give <item> [amount] [meta] [nbt]")
-public class Give extends Command {
+public class Give extends AbstractCommand {
     @Override
     public void execute(String[] args, String rawCommand) throws Exception {
 

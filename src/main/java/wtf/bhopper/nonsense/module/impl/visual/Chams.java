@@ -12,7 +12,7 @@ import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.render.EventPostRenderEntity;
 import wtf.bhopper.nonsense.event.impl.render.EventPreRenderEntity;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.impl.combat.AntiBot;
@@ -28,7 +28,7 @@ import static org.lwjgl.opengl.GL11.*;
 @ModuleInfo(name = "Chams",
         description = "Allows you to see entities through walls",
         category = ModuleCategory.VISUAL)
-public class Chams extends Module {
+public class Chams extends AbstractModule {
 
     private final GroupProperty targetsGroup = new GroupProperty("Targets", "What entities Chams should render", this);
     private final BooleanProperty players = new BooleanProperty("Players", "Target Players.", true);

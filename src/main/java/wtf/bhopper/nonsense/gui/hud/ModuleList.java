@@ -4,7 +4,7 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import org.lwjgl.opengl.Display;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.impl.visual.HudMod;
 import wtf.bhopper.nonsense.util.render.ColorUtil;
 import wtf.bhopper.nonsense.util.render.Fonts;
@@ -114,7 +114,7 @@ public class ModuleList {
     }
 
     public static class Slot {
-        private final Module module;
+        private final AbstractModule module;
 
         private boolean shouldDisplay;
         private String name;
@@ -124,7 +124,7 @@ public class ModuleList {
         private int color;
         private float animateFactor;
 
-        public Slot(HudMod hudMod, Module module) {
+        public Slot(HudMod hudMod, AbstractModule module) {
             this.module = module;
             this.updateText(hudMod, 1.0F);
         }

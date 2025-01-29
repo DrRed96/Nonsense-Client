@@ -1,15 +1,15 @@
 package wtf.bhopper.nonsense.command.impl;
 
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.command.Command;
+import wtf.bhopper.nonsense.command.AbstractCommand;
 import wtf.bhopper.nonsense.command.CommandInfo;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 
 @CommandInfo(name = "Hide",
         description = "Hides or shows a module in the array list",
         syntax = ".hide <module>/all/none")
-public class Hide extends Command {
+public class Hide extends AbstractCommand {
     @Override
     public void execute(String[] args, String rawCommand) throws Exception {
         if (args.length < 2) {
@@ -29,7 +29,7 @@ public class Hide extends Command {
             return;
         }
 
-        Module module = Nonsense.getModuleManager().get(args[1]);
+        AbstractModule module = Nonsense.getModuleManager().get(args[1]);
         if (module == null) {
             ChatUtil.error("'%s' is not a valid module", args[1].toLowerCase());
             return;

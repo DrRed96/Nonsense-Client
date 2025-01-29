@@ -2,13 +2,13 @@ package wtf.bhopper.nonsense.command.impl;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.item.ItemStack;
-import wtf.bhopper.nonsense.command.Command;
+import wtf.bhopper.nonsense.command.AbstractCommand;
 import wtf.bhopper.nonsense.command.CommandInfo;
 import wtf.bhopper.nonsense.util.minecraft.inventory.InventoryUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 
 @CommandInfo(name = "Clone", description = "Clones your held item (Requires creative mode)", syntax = ".clone [amount]")
-public class Clone extends Command {
+public class Clone extends AbstractCommand {
     @Override
     public void execute(String[] args, String rawCommand) throws Exception {
         if (!mc.thePlayer.capabilities.isCreativeMode) {

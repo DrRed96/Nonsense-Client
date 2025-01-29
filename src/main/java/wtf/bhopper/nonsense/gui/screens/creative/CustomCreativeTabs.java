@@ -92,9 +92,9 @@ public class CustomCreativeTabs extends CreativeTabs implements IMinecraft {
         NBTTagCompound fireworksExplosions0 = new NBTTagCompound();
         fireworksExplosions0.setIntArray("Colors", new int[]{0xFFFFFF});
         fireworksExplosions0.setIntArray("FadeColors", new int[]{0});
-        fireworksExplosions0.setByte("Flicker", (byte)1);
-        fireworksExplosions0.setByte("Trail", (byte)1);
-        fireworksExplosions0.setByte("Type", (byte)0);
+        fireworksExplosions0.setByte("Flicker", (byte) 1);
+        fireworksExplosions0.setByte("Trail", (byte) 1);
+        fireworksExplosions0.setByte("Type", (byte) 0);
         fireworksExplosions.appendTag(fireworksExplosions0);
         fireworks.setByte("Flight", Byte.MAX_VALUE);
         fireworks.setTag("Explosions", fireworksExplosions);
@@ -316,8 +316,8 @@ public class CustomCreativeTabs extends CreativeTabs implements IMinecraft {
                 .build());
 
         ItemBuilder everything = ItemBuilder.of(Items.potionitem)
-                        .setMeta(0x4001)
-                        .setDisplayName("\247rSplash Potion of Everything");
+                .setMeta(0x4001)
+                .setDisplayName("\247rSplash Potion of Everything");
         for (Potion potion : Potion.potionTypes) {
             if (potion != null) {
                 everything.addPotionEffect(potion, 1000000, 2);
@@ -517,69 +517,89 @@ public class CustomCreativeTabs extends CreativeTabs implements IMinecraft {
     });
 
     public static final CustomCreativeTabs tabHeads = new CustomCreativeTabs(7, "Player Heads", Items.skull, items -> {
+
+        items.add(ItemBuilder.of(Items.skull)
+                .setMeta(3)
+                .setDisplayName("\2476Al3xWarrior's Head")
+                .setLore("\2477I am not bald!")
+                .addTag("SkullOwner", ItemBuilder.skullCompound("2927f9c0-f64c-5ee7-b76e-b5f28debbe84", "e3RleHR1cmVzOntTS0lOOnt1cmw6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmM5YmZkMTIyNWEwMGNhOWVmYjQ5MzE2ZmM3MzhkOTdhNGY4MTEwN2NlNGQxNGNmOGZiMDE4NWFmYTNiZTdlNCJ9fX0="))
+                .build());
+
         items.add(ItemBuilder.of(Items.skull)
                 .setMeta(3)
                 .setDisplayName("\2476Arithmo's Head")
+                .setLore("\2477zzzzzz exhi > you")
                 .addTag("SkullOwner", ItemBuilder.skullCompound("fe7dbb41-998c-554f-812f-058604a39955", "e3RleHR1cmVzOntTS0lOOnt1cmw6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMmNiNWMwMmQzMDNiNGZkMjViM2JhYzVmY2M1YmI5YTI0ZGZlMWQ2ZjM0Yzg5YzY3Y2IwYTViYmY0NThjMWE4In19fQ=="))
                 .build());
 
         items.add(ItemBuilder.of(Items.skull)
                 .setMeta(3)
                 .setDisplayName("\2476aswdfzxcvbhgtyyn's Head")
+                .setLore("\2477F1Sh R Fr3Nds N0t Fudee!1!!")
                 .addTag("SkullOwner", ItemBuilder.skullCompound("51818755-c60f-5d6f-a771-b9889d1c75d7", "e3RleHR1cmVzOntTS0lOOnt1cmw6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvMzM1N2MyNWI1NzQ4Mjg1Njg4M2Q2NWI1MmI0OGIxYzNiNjI3MWQxMmVhMjZjOWI0NGM5NDI4MTJlNTcyIn19fQ=="))
                 .build());
 
         items.add(ItemBuilder.of(Items.skull)
                 .setMeta(3)
                 .setDisplayName("\2476CalculusHvH's Head")
+                .setLore("\2477∫ 2√(1-x^2) dx")
                 .addTag("SkullOwner", ItemBuilder.skullCompound("30880b64-84a0-5a1e-aceb-9c5660984230", "e3RleHR1cmVzOntTS0lOOnt1cmw6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGM4ZThlMjY2YmU4ZGY1NTk5ZjZhMDBlMGRkNDg2NmFiMWFiZTdjYzc1OTYyZWYzMjA0YjI1ZjlkNzJiNmExYSJ9fX0="))
                 .build());
 
         items.add(ItemBuilder.of(Items.skull)
                 .setMeta(3)
                 .setDisplayName("\2476DalekLogic's Head")
+                .setLore("\2477KCALS OP")
                 .addTag("SkullOwner", ItemBuilder.skullCompound("4f6e6c27-465a-54b9-a2e0-c9d51006d877", "e3RleHR1cmVzOntTS0lOOnt1cmw6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYTE5MWIyODI1NWViY2RiMDFkYzI0YWFmODU0YzllMjA1YTk1YWU0MWY3YzdjZTQ1ZDk2ZjQyNWM3MmQ4MTEyNiJ9fX0="))
                 .build());
 
         items.add(ItemBuilder.of(Items.skull)
                 .setMeta(3)
                 .setDisplayName("\2476REZA's Head")
+                .setLore("\2477Don't be naive. When it comes to bedwars I am superior to you.")
                 .addTag("SkullOwner", ItemBuilder.skullCompound("dae5a4e4-bf48-58fe-a42f-27ecdacf9b2b", "e3RleHR1cmVzOntTS0lOOnt1cmw6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNmVmZWFmNGUxOThjOWViZDNmN2ZiNmMxNTYxZGJkNjBkMDg5YzJmZWNkZGQ4ZTdkMjM2ZGFkY2U2ZmZiM2UzYiJ9fX0="))
                 .build());
 
         items.add(ItemBuilder.of(Items.skull)
                 .setMeta(3)
                 .setDisplayName("\2476Technoblade's Head")
+                .setLore("\2477TECHNOBLADE NEVER DIES")
                 .addTag("SkullOwner", ItemBuilder.skullCompound("3e256793-f343-5f21-8f79-d48e202968a2", "e3RleHR1cmVzOntTS0lOOnt1cmw6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvNGNhNTM4Zjc4NzA0OGRiYTI3ZGNkYmJjYjcyZDJmNTc4Zjg1NzczMTY4ZDcyNDY2MjY2ZTc1NWY0NzFjODkifX19"))
                 .build());
 
         items.add(ItemBuilder.of(Items.skull)
                 .setMeta(3)
                 .setDisplayName("\2476The_Bi11iona1re's Head")
+                .setLore("\2477God bypass")
                 .addTag("SkullOwner", ItemBuilder.skullCompound("57cab3df-9cb5-5e4d-b93f-187bd20da553", "e3RleHR1cmVzOntTS0lOOnt1cmw6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvYmU5Yjg0YTI0ZmJmNTFhZmM0YzYzODExNThiNmNjYTQ5NjQxYTUyNjEwZjVjYTcxYjAyY2FjMmI1ZmIwZDQxMyJ9fX0="))
                 .build());
 
         items.add(ItemBuilder.of(Items.skull)
                 .setMeta(3)
                 .setDisplayName("\2476tua's Head")
+                .setLore("\2477liv begged me to kiss her but she looked like a child, still fucked her anyways")
                 .addTag("SkullOwner", ItemBuilder.skullCompound("9d88b35b-f58d-5cce-8ebd-fe51449d1b53", "e3RleHR1cmVzOntTS0lOOnt1cmw6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZGY3NTc2YWVjZTY4NTllYzIzZjQyZDA2N2YyYmYxNjg1MDc1YzU3NmIzZmQyMDc2NTRlMTk0MjMxNTM4NjRjYyJ9fX0="))
                 .build());
 
         items.add(ItemBuilder.of(Items.skull)
                 .setMeta(3)
                 .setDisplayName("\2476Xylan's Head")
+                .setLore("\2477fucked by xyloooons")
                 .addTag("SkullOwner", ItemBuilder.skullCompound("966d29d4-d98a-5a8e-a7a1-a376bd203d40", "e3RleHR1cmVzOntTS0lOOnt1cmw6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvOTI5NjAxNmRjZTkyOWQ5MDJkNWUwMDA0Mjk4M2MxZDA1ZmVmZjA1YWM5MDgxMzQyMzMxODY2MGQ0NjRjMDE2In19fQ=="))
                 .build());
 
         items.add(ItemBuilder.of(Items.skull)
                 .setMeta(3)
                 .setDisplayName("\2476zarzel's Head")
+                .setLore("\2477no comprendo")
                 .addTag("SkullOwner", ItemBuilder.skullCompound("8ef75223-d9d7-55db-9598-a1056549b018", "e3RleHR1cmVzOntTS0lOOnt1cmw6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQubmV0L3RleHR1cmUvZDAwNzE3MjM4MzVjZDBjYTljNmU5ZTFiNTc1ZjZiODg2ZTIzYjJjNDA4OWVhNDQxMjhlYmU3YzIxMTY1N2MyZiJ9fX0="))
                 .build());
     });
 
-    public static final CustomCreativeTabs unused1 = new CustomCreativeTabs(8, "Unused", Item.getItemFromBlock(Blocks.air), tabs -> {});
-    public static final CustomCreativeTabs unused2 = new CustomCreativeTabs(9, "Unused", Item.getItemFromBlock(Blocks.air), tabs -> {});
+    public static final CustomCreativeTabs unused1 = new CustomCreativeTabs(8, "Unused", Item.getItemFromBlock(Blocks.air), tabs -> {
+    });
+    public static final CustomCreativeTabs unused2 = new CustomCreativeTabs(9, "Unused", Item.getItemFromBlock(Blocks.air), tabs -> {
+    });
 
     public static final CustomCreativeTabs tabStupid = new CustomCreativeTabs(10, "Nonsense", Item.getItemFromBlock(Blocks.deadbush), items -> {
 
@@ -807,7 +827,7 @@ public class CustomCreativeTabs extends CreativeTabs implements IMinecraft {
                 .addTag("BlockEntityTag", blockEntityTag)
                 .build();
         NBTTagCompound itemNbt = new NBTTagCompound();
-        itemNbt.setByte("Slot", (byte)0);
+        itemNbt.setByte("Slot", (byte) 0);
         item.writeToNBT(itemNbt);
 
         NBTTagCompound exploit = new NBTTagCompound();

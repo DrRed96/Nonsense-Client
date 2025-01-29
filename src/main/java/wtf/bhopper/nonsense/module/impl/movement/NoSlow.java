@@ -3,7 +3,6 @@ package wtf.bhopper.nonsense.module.impl.movement;
 import net.minecraft.item.EnumAction;
 import net.minecraft.network.play.client.C09PacketHeldItemChange;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.component.impl.packet.BlinkComponent;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.EventPriorities;
 import wtf.bhopper.nonsense.event.Listener;
@@ -11,7 +10,7 @@ import wtf.bhopper.nonsense.event.impl.player.interact.EventClickAction;
 import wtf.bhopper.nonsense.event.impl.player.EventPostMotion;
 import wtf.bhopper.nonsense.event.impl.player.EventPreMotion;
 import wtf.bhopper.nonsense.event.impl.player.movement.EventSlowDown;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.impl.combat.AutoBlock;
@@ -25,7 +24,7 @@ import wtf.bhopper.nonsense.util.minecraft.player.PacketUtil;
         description = "Prevents you from being slowed down while using an item.",
         category = ModuleCategory.MOVEMENT,
         searchAlias = "No Slow Down")
-public class NoSlow extends Module {
+public class NoSlow extends AbstractModule {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Method for no slow.", Mode.VANILLA);
     private final BooleanProperty sprintReset = new BooleanProperty("Sprint Reset", "Prevents sprint from being reset.", true);

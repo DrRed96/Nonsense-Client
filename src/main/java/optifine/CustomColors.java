@@ -1630,20 +1630,20 @@ public class CustomColors
         }
     }
 
-    public static int getTextColor(int p_getTextColor_0_, int p_getTextColor_1_)
+    public static int getTextColor(int format, int colorCode)
     {
         if (textColors == null)
         {
-            return p_getTextColor_1_;
+            return colorCode;
         }
-        else if (p_getTextColor_0_ >= 0 && p_getTextColor_0_ < textColors.length)
+        else if (format >= 0 && format < textColors.length)
         {
-            int i = textColors[p_getTextColor_0_];
-            return i < 0 ? p_getTextColor_1_ : i;
+            int i = textColors[format];
+            return i < 0 ? colorCode : i;
         }
         else
         {
-            return p_getTextColor_1_;
+            return colorCode;
         }
     }
 

@@ -4,7 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.component.Component;
+import wtf.bhopper.nonsense.component.AbstractComponent;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.EventPriorities;
 import wtf.bhopper.nonsense.event.Listener;
@@ -18,7 +18,7 @@ import wtf.bhopper.nonsense.util.minecraft.player.MoveUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.Rotation;
 import wtf.bhopper.nonsense.util.misc.MathUtil;
 
-public class RotationsComponent extends Component {
+public class RotationsComponent extends AbstractComponent {
 
     public float serverYaw = 0.0F;
     public float serverPitch = 0.0F;

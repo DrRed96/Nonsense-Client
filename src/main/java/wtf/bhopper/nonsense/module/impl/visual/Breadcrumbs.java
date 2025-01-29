@@ -9,7 +9,7 @@ import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.render.EventRenderWorld;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.ColorProperty;
@@ -26,7 +26,7 @@ import static org.lwjgl.opengl.GL11.*;
 @ModuleInfo(name = "Breadcrumbs",
         description = "Renders a line that displays where you have been",
         category = ModuleCategory.VISUAL)
-public class Breadcrumbs extends Module {
+public class Breadcrumbs extends AbstractModule {
 
     private final ColorProperty color = new ColorProperty("Color", "Color of the line", 0xFFFF0000);
 

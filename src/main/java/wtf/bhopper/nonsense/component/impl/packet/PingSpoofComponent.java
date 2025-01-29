@@ -5,7 +5,7 @@ import net.minecraft.network.Packet;
 import net.minecraft.network.play.client.*;
 import net.minecraft.network.play.server.*;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.component.Component;
+import wtf.bhopper.nonsense.component.AbstractComponent;
 import wtf.bhopper.nonsense.event.Cancellable;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
@@ -23,7 +23,7 @@ import java.util.concurrent.ConcurrentLinkedQueue;
 // I'm stealing your Ping Spoof Component and there's nothing you can do to stop me :smiling_imp:
 // Love from Calculus <3
 
-public class PingSpoofComponent extends Component {
+public class PingSpoofComponent extends AbstractComponent {
 
     private final ConcurrentLinkedQueue<PacketUtil.TimedPacket> packets = new ConcurrentLinkedQueue<>();
     private final Stopwatch enabledTimer = new Stopwatch();

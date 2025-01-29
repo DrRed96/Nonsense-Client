@@ -3,7 +3,7 @@ package wtf.bhopper.nonsense.module.impl.movement;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.player.movement.EventMove;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
@@ -13,7 +13,7 @@ import wtf.bhopper.nonsense.util.minecraft.player.MoveUtil;
         description = "Allows you to climb up walls",
         category = ModuleCategory.MOVEMENT,
         searchAlias = "Wall Climb")
-public class Spider extends Module {
+public class Spider extends AbstractModule {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Method for spider.", Mode.VANILLA);
 

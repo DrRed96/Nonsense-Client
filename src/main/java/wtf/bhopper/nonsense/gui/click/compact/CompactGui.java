@@ -5,7 +5,7 @@ import org.lwjgl.nanovg.NanoVG;
 import org.lwjgl.opengl.Display;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.gui.hud.Hud;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.util.misc.InputUtil;
 import wtf.bhopper.nonsense.util.misc.Vec2i;
@@ -39,13 +39,13 @@ public class CompactGui extends GuiScreen {
 
     public CompactGui() {
         for (ModuleCategory category : ModuleCategory.values()) {
-            List<Module> modulesInCategory = Nonsense.getModuleManager()
+            List<AbstractModule> modulesInCategory = Nonsense.getModuleManager()
                     .getInCategory(category);
 
             List<CompactModule> compactModules = new ArrayList<>();
 
             int count = 0;
-            for (Module module : modulesInCategory) {
+            for (AbstractModule module : modulesInCategory) {
                 compactModules.add(new CompactModule(this, module, 4 + count * (MODULE_FONT_SIZE + 8)));
                 ++count;
             }

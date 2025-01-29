@@ -1,5 +1,6 @@
 package wtf.bhopper.nonsense.anticheat;
 
+import net.minecraft.client.gui.ChatLine;
 import net.minecraft.entity.DataWatcher;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.Item;
@@ -276,14 +277,13 @@ public class PlayerData implements IMinecraft {
 
         boolean flagged = vl >= check.maxVl;
 
-        ChatUtil.Builder.of("\247d\247lAnti-Cheat %s%s \247rhas failed check \2476%s \2477\247ox%,d",
+        ChatUtil.Builder.of("\247lAnti-Cheat %s%s \2477has failed check \2476%s \2477\247ox%,d",
                         this.hacking || flagged ? EnumChatFormatting.RED : EnumChatFormatting.WHITE, this.entity.getName(), check.name, (int)vl)
-                .setColor(EnumChatFormatting.GRAY)
                 .setHoverEvent(GeneralUtil.paragraph(
                         "\247c\247l" + check.name,
                         "\2477" + check.description
                 ))
-                .send(-Math.abs(entity.getEntityId()));
+                .send(-Math.abs(entity.getEntityId()), new ChatLine.ChatColor());
 
         if (!this.hacking && flagged) {
             this.hacking = true;

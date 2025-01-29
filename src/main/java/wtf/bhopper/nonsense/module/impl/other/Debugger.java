@@ -15,7 +15,7 @@ import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.player.EventPostMotion;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
@@ -35,7 +35,7 @@ import java.util.Queue;
 @ModuleInfo(name = "Debugger",
         description = "Module to help with debugging.",
         category = ModuleCategory.OTHER)
-public class Debugger extends Module {
+public class Debugger extends AbstractModule {
 
     private final GroupProperty loggingGroup = new GroupProperty("Logging", "Logs things in chat", this);
     private final BooleanProperty tick = new BooleanProperty("Tick", "Log the start of a tick", false);

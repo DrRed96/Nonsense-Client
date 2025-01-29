@@ -8,7 +8,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.network.play.client.C17PacketCustomPayload;
-import wtf.bhopper.nonsense.command.Command;
+import wtf.bhopper.nonsense.command.AbstractCommand;
 import wtf.bhopper.nonsense.command.CommandInfo;
 import wtf.bhopper.nonsense.util.minecraft.inventory.ItemBuilder;
 import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
@@ -19,7 +19,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @CommandInfo(name = "BookBot", description = "Fills a book and quill with jumbled nonsense.", syntax = ".bookbot")
-public class BookBot extends Command {
+public class BookBot extends AbstractCommand {
     @Override
     public void execute(String[] args, String rawCommand) throws Exception {
         ItemStack heldItem = mc.thePlayer.getHeldItem();

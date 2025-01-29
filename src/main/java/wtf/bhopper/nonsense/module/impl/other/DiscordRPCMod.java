@@ -7,7 +7,7 @@ import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 
@@ -16,7 +16,7 @@ import wtf.bhopper.nonsense.module.ModuleInfo;
         description = "Discord Rich Presence.",
         category = ModuleCategory.OTHER,
         hidden = true)
-public class DiscordRPCMod extends Module {
+public class DiscordRPCMod extends AbstractModule {
 
     private static final String APPLICATION_ID = "1294195120781922305";
 

@@ -4,11 +4,10 @@ import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.ItemRenderer;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.EnumAction;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.MathHelper;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
@@ -19,7 +18,7 @@ import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
 @ModuleInfo(name = "Item Animations",
         description = "Modifies item animations.",
         category = ModuleCategory.VISUAL)
-public class ItemAnimations extends Module {
+public class ItemAnimations extends AbstractModule {
 
     private final GroupProperty posGroup = new GroupProperty("Position", "Modify item position.", this);
 

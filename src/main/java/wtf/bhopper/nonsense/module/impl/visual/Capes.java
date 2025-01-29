@@ -5,7 +5,7 @@ import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.annotations.Description;
@@ -23,7 +23,7 @@ import java.util.function.Supplier;
         description = "Client capes.",
         category = ModuleCategory.VISUAL,
         toggled = true)
-public class Capes extends Module {
+public class Capes extends AbstractModule {
 
     public final EnumProperty<Cape> cape = new EnumProperty<>("Cape", "There's too many of them...", Cape.NONSENSE);
     public final BooleanProperty glint = new BooleanProperty("Enchanted", "Renders an enchantment glint over the cape", false);

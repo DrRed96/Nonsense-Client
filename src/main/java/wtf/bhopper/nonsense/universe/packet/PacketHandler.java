@@ -36,7 +36,7 @@ public class PacketHandler {
     }
 
     public void handleMessage(S2CPacketMessage packet) {
-        ChatUtil.irc(packet.getMessage(), packet.getAccount());
+        ChatUtil.irc(packet.getMessage(), packet.getAccount(), packet.getColor());
     }
 
     public void handleDiscordCode(S2CPacketDiscordCode packet) {

@@ -8,7 +8,7 @@ import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.player.movement.EventMove;
 import wtf.bhopper.nonsense.event.impl.player.EventPreMotion;
 import wtf.bhopper.nonsense.event.impl.packet.EventReceivePacket;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
@@ -19,12 +19,10 @@ import wtf.bhopper.nonsense.util.minecraft.player.MoveUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 import wtf.bhopper.nonsense.util.misc.Stopwatch;
 
-import java.util.List;
-
 @ModuleInfo(name = "Speed",
         description = "Increases your move speed.",
         category = ModuleCategory.MOVEMENT)
-public class Speed extends Module {
+public class Speed extends AbstractModule {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Method for speed.", Mode.VANILLA);
     private final NumberProperty speedSet = new NumberProperty("Speed", "Move speed.", () -> this.mode.is(Mode.VANILLA), 1.0, 0.1, 3.0, 0.01);

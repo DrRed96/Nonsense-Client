@@ -6,7 +6,7 @@ import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.player.EventPreMotion;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
@@ -21,7 +21,7 @@ import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
         description = "Prevents you from falling off edges.",
         category = ModuleCategory.MOVEMENT,
         searchAlias = {"Anti Void", "No Void"})
-public class AntiFall extends Module {
+public class AntiFall extends AbstractModule {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Anti Fall method", Mode.PACKET);
     private final NumberProperty height = new NumberProperty("Height", "Fall height", 2.0F, 1.0F, 10.0F, 0.5F);

@@ -8,7 +8,7 @@ import wtf.bhopper.nonsense.event.impl.packet.EventReceivePacket;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
 import wtf.bhopper.nonsense.gui.hud.notification.Notification;
 import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
@@ -21,7 +21,7 @@ import wtf.bhopper.nonsense.util.misc.Stopwatch;
 @ModuleInfo(name = "Party Spammer",
         description = "Spams someone with party invites",
         category = ModuleCategory.OTHER)
-public class PartySpammer extends Module {
+public class PartySpammer extends AbstractModule {
 
     private final StringProperty player = new StringProperty("Player", "Player to spam", "knaall");
     private final NumberProperty delay = new NumberProperty("Delay", "Delay between invites", 250, 1, 1000, 50, NumberProperty.FORMAT_MS);

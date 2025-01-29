@@ -14,7 +14,7 @@ import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.render.EventRenderWorld;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.IPropertyContainer;
@@ -33,7 +33,7 @@ import java.util.List;
 @ModuleInfo(name = "Block Overlay",
         description = "Modify block overlay",
         category = ModuleCategory.VISUAL)
-public class BlockOverlay extends Module {
+public class BlockOverlay extends AbstractModule {
 
     private static final float BED_HEIGHT = 0.5625F;
 

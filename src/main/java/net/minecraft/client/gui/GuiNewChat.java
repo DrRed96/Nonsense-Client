@@ -31,7 +31,7 @@ public class GuiNewChat extends Gui {
 
     public void drawChat(int updateCounter) {
         if (this.mc.gameSettings.chatVisibility != EntityPlayer.EnumChatVisibility.HIDDEN) {
-            int i = this.getLineCount();
+            int lineCount = this.getLineCount();
             boolean flag = false;
             int j = 0;
             int k = this.chatMessages.size();
@@ -48,7 +48,7 @@ public class GuiNewChat extends Gui {
                 GlStateManager.translate(2.0F, 20.0F, 0.0F);
                 GlStateManager.scale(chatScale, chatScale, 1.0F);
 
-                for (int i1 = 0; i1 + this.scrollPos < this.chatMessages.size() && i1 < i; ++i1) {
+                for (int i1 = 0; i1 + this.scrollPos < this.chatMessages.size() && i1 < lineCount; ++i1) {
                     ChatLine chatline = this.chatMessages.get(i1 + this.scrollPos);
 
                     if (chatline != null) {
@@ -77,7 +77,7 @@ public class GuiNewChat extends Gui {
                                 }
                                 String s = chatline.getChatComponent().getFormattedText();
                                 GlStateManager.enableBlend();
-                                this.mc.fontRendererObj.drawStringWithShadow(s, (float) i2, (float) (j2 - 8), 0xffffff + (l1 << 24));
+                                this.mc.fontRendererObj.drawStringWithShadow(s, (float) i2, (float) (j2 - 8), chatline.getColor() + (l1 << 24));
                                 GlStateManager.disableAlpha();
                                 GlStateManager.disableBlend();
                             }
@@ -122,12 +122,19 @@ public class GuiNewChat extends Gui {
     /**
      * prints the ChatComponent to Chat. If the ID is not 0, deletes an existing Chat Line of that ID from the GUI
      */
-    public void printChatMessageWithOptionalDeletion(IChatComponent component, int line) {
-        this.setChatLine(component, line, this.mc.ingameGUI.getUpdateCounter(), false);
+    public void printChatMessageWithOptionalDeletion(IChatComponent component, int line, ChatLine.ChatColor color) {
+        this.setChatLine(component, line, this.mc.ingameGUI.getUpdateCounter(), false, color);
         logger.info("[CHAT] " + component.getUnformattedText());
     }
 
-    private void setChatLine(IChatComponent component, int chatLineID, int updateCounterCreated, boolean refresh) {
+    /**
+     * prints the ChatComponent to Chat. If the ID is not 0, deletes an existing Chat Line of that ID from the GUI
+     */
+    public void printChatMessageWithOptionalDeletion(IChatComponent component, int line) {
+        this.printChatMessageWithOptionalDeletion(component, line, null);
+    }
+
+    private void setChatLine(IChatComponent component, int chatLineID, int updateCounterCreated, boolean refresh, ChatLine.ChatColor color) {
         if (chatLineID != 0) {
             this.deleteChatLine(chatLineID);
         }
@@ -142,7 +149,7 @@ public class GuiNewChat extends Gui {
                 this.scroll(1);
             }
 
-            this.chatMessages.addFirst(new ChatLine(updateCounterCreated, ichatcomponent, chatLineID));
+            this.chatMessages.addFirst(new ChatLine(updateCounterCreated, ichatcomponent, chatLineID, color));
         }
 
         while (this.chatMessages.size() > 100) {
@@ -150,7 +157,7 @@ public class GuiNewChat extends Gui {
         }
 
         if (!refresh) {
-            this.chatLines.addFirst(new ChatLine(updateCounterCreated, component, chatLineID));
+            this.chatLines.addFirst(new ChatLine(updateCounterCreated, component, chatLineID, color));
 
             while (this.chatLines.size() > 100) {
                 this.chatLines.removeLast();
@@ -164,7 +171,7 @@ public class GuiNewChat extends Gui {
 
         for (int i = this.chatLines.size() - 1; i >= 0; --i) {
             ChatLine chatline = this.chatLines.get(i);
-            this.setChatLine(chatline.getChatComponent(), chatline.getChatLineID(), chatline.getUpdatedCounter(), true);
+            this.setChatLine(chatline.getChatComponent(), chatline.getChatLineID(), chatline.getUpdatedCounter(), true, chatline.getChatColor());
         }
     }
 

@@ -24,7 +24,7 @@ import wtf.bhopper.nonsense.event.impl.player.movement.EventMovementInput;
 import wtf.bhopper.nonsense.event.impl.render.*;
 import wtf.bhopper.nonsense.gui.hud.notification.Notification;
 import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
@@ -43,7 +43,7 @@ import java.util.List;
 @ModuleInfo(name = "Freecam",
         description = "Silent spectator mode",
         category = ModuleCategory.VISUAL)
-public class Freecam extends Module {
+public class Freecam extends AbstractModule {
 
     private final NumberProperty speed = new NumberProperty("Speed", "Freecam fly speed", 4.0, 1.0, 10.0, 1.0);
     private final BooleanProperty autoRefresh = new BooleanProperty("Auto Refresh", "Automatically refresh chunks when Free Camera is disabled", false);

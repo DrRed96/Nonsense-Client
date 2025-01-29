@@ -19,7 +19,7 @@ import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.render.EventRenderGui;
 import wtf.bhopper.nonsense.event.impl.render.EventRenderNameTag;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.impl.combat.AntiBot;
@@ -40,7 +40,7 @@ import java.util.*;
 @ModuleInfo(name = "ESP",
         description = "Gives you extrasensory perception",
         category = ModuleCategory.VISUAL)
-public class Esp extends Module {
+public class Esp extends AbstractModule {
 
     private static final NumberFormat HEALTH_FORMAT = new DecimalFormat("#0.#");
 

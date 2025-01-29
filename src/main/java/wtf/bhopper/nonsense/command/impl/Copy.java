@@ -1,14 +1,14 @@
 package wtf.bhopper.nonsense.command.impl;
 
 import net.minecraft.client.gui.GuiScreen;
-import wtf.bhopper.nonsense.command.Command;
+import wtf.bhopper.nonsense.command.AbstractCommand;
 import wtf.bhopper.nonsense.command.CommandInfo;
 import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 
 @CommandInfo(name = "Copy",
         description = "Copies text to the clipboard (used in copy chat click events)",
         syntax = ".copy <text>")
-public class Copy extends Command {
+public class Copy extends AbstractCommand {
 
 
     @Override

@@ -5,6 +5,7 @@ import net.minecraft.client.gui.inventory.GuiContainerCreative;
 import net.minecraft.client.gui.inventory.GuiInventory;
 import net.minecraft.init.Blocks;
 import net.minecraft.init.Items;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.*;
 import net.minecraft.potion.Potion;
 import wtf.bhopper.nonsense.Nonsense;
@@ -16,7 +17,7 @@ import wtf.bhopper.nonsense.event.impl.player.inventory.EventWindowClick;
 import wtf.bhopper.nonsense.gui.hud.notification.Notification;
 import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
 import wtf.bhopper.nonsense.gui.screens.creative.GuiCustomCreative;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.impl.movement.Scaffold;
@@ -38,7 +39,7 @@ import java.util.function.Supplier;
 @ModuleInfo(name = "Inventory Manager",
         description = "Manages your inventory.",
         category = ModuleCategory.PLAYER)
-public class InventoryManager extends Module {
+public class InventoryManager extends AbstractModule {
 
     public static final NumberFormat FORMAT_STACKS = new DecimalFormat("#0.## 'stacks'");
 
@@ -59,6 +60,11 @@ public class InventoryManager extends Module {
     private final EnumProperty<ActionMode> autoArmorMode = new EnumProperty<>("Mode", "Auto armor mode", ActionMode.ALWAYS);
     private final NumberProperty autoArmorDelay = new NumberProperty("Delay", "Delay between putting armor on", 5, 0, 20, 1, NumberProperty.FORMAT_TICKS);
     private final BooleanProperty autoArmorDrop = new BooleanProperty("Drop", "Drop armor that is taken off.", false);
+
+    private final GroupProperty stealerGroup = new GroupProperty("Chest Stealer", "Automatically takes items from chests", this);
+    private final BooleanProperty stealerEnable = new BooleanProperty("Enable", "Enable stealer", true);
+    private final NumberProperty stealDelay = new NumberProperty("Delay", "Delay between stealing items", 5, 0, 20, 1, NumberProperty.FORMAT_TICKS);
+    private final EnumProperty<ActionPattern> stealerPattern = new EnumProperty<>("Pattern", "How to steal the items", ActionPattern.PRIORITY);
 
     private final GroupProperty dropsGroup = new GroupProperty("Drops", "Item dropping", this);
     private final BooleanProperty dropSwords = new BooleanProperty("Swords", "Drops swords.", true);
@@ -102,6 +108,7 @@ public class InventoryManager extends Module {
     private final Map<Integer, ItemStack> prevTickItems = new HashMap<>();
     private final Map<Integer, Integer> itemTimeInSlot = new HashMap<>();
 
+    private final List<Integer> stealsToPerform = new ArrayList<>();
     private final List<SwapAction> autoArmorToPerform = new ArrayList<>();
     private final List<SwapAction> swapsToPerform = new ArrayList<>();
     private final List<Integer> dropsToPerform = new ArrayList<>();
@@ -112,7 +119,6 @@ public class InventoryManager extends Module {
     private boolean skip = false;
 
     public InventoryManager() {
-        super();
 
         this.slotsGroup.addProperties(this.swordSlot,
                 this.bowSlot,
@@ -137,6 +143,7 @@ public class InventoryManager extends Module {
                 this.dropGarbage);
 
         this.autoArmorGroup.addProperties(this.autoArmorMode, this.autoArmorDelay, this.autoArmorDrop);
+        this.stealerGroup.addProperties(this.stealerEnable, this.stealDelay, this.stealerPattern);
 
         this.potsGroup.addProperties(this.potionSorting);
 
@@ -204,6 +211,7 @@ public class InventoryManager extends Module {
         this.addProperties(this.slotsGroup,
                 this.dropsGroup,
                 this.autoArmorGroup,
+                this.stealerGroup,
                 this.weaponsGroup,
                 this.toolsGroup,
                 this.utilsGroup,
@@ -253,6 +261,10 @@ public class InventoryManager extends Module {
 
         if (this.canUpdate()) {
             this.update();
+
+            if (this.canSteal()) {
+                this.doSteals();
+            }
 
             if (this.canInteract(this.swapMode.get())) {
                 this.doAutoArmor();
@@ -318,15 +330,46 @@ public class InventoryManager extends Module {
             }
         }
 
+        this.computeStealer();
         this.computeAutoArmor();
         this.computeSwaps();
         this.computeDrops();
     }
 
+    private void computeStealer() {
+        this.stealsToPerform.clear();
+
+        if (InventoryUtil.getCurrentWindowId() == 0) {
+            return;
+        }
+
+        Container openContainer = InventoryUtil.getOpenContainer();
+        List<ItemStack> stacks = openContainer.getInventory();
+        int slots = stacks.size() - 36;
+        if (slots < 27) {
+            return;
+        }
+
+        for (int i = 0; i < slots; i++) {
+            ItemStack stack = stacks.get(i);
+            if (stack == null) {
+                continue;
+            }
+            for (ItemTracker tracker : this.trackers) {
+                if (!tracker.check(stack) || tracker.getAmountToKeep() <= 0) {
+                    continue;
+                }
+                this.stealsToPerform.add(i);
+            }
+        }
+
+        this.sortActions(this.stealsToPerform, this.stealerPattern.get(), Integer::compare);
+    }
+
     private void computeAutoArmor() {
         this.autoArmorToPerform.clear();
 
-        if (!this.canInteract(this.autoArmorMode.get())) {
+        if (!this.canInteract(this.autoArmorMode.get()) || InventoryUtil.getCurrentWindowId() != 0) {
             return;
         }
 
@@ -404,6 +447,18 @@ public class InventoryManager extends Module {
         this.sortActions(this.dropsToPerform, this.dropPattern.get(), Integer::compare);
     }
 
+    private void doSteals() {
+        while (!this.stealsToPerform.isEmpty()) {
+            int slot = this.stealsToPerform.removeFirst();
+            this.move(slot);
+
+            this.delay = this.stealDelay.getInt();
+            if (this.delay > 0) {
+                break;
+            }
+        }
+    }
+
     private void doAutoArmor() {
         while (!this.autoArmorToPerform.isEmpty()) {
             SwapAction action = this.autoArmorToPerform.removeFirst();
@@ -466,9 +521,21 @@ public class InventoryManager extends Module {
         };
     }
 
+    private boolean canSteal() {
+        return this.delay <= 0 && !this.stealsToPerform.isEmpty();
+    }
+
     private void swap(int srcSlot, int dstSlot) {
+        this.swap(srcSlot, dstSlot, true);
+    }
+
+    private void swap(int srcSlot, int dstSlot, boolean convert) {
         if (srcSlot != dstSlot && dstSlot >= InventoryUtil.HOTBAR_BEGIN && dstSlot < InventoryUtil.END) {
-            InventoryUtil.windowClick(0, srcSlot, dstSlot - InventoryUtil.HOTBAR_BEGIN, InventoryUtil.SWAP);
+            if (convert) {
+                InventoryUtil.windowClick(InventoryUtil.getCurrentWindowId(), InventoryUtil.convertToProperSlot(srcSlot), dstSlot - InventoryUtil.HOTBAR_BEGIN, InventoryUtil.SWAP);
+            } else {
+                InventoryUtil.windowClick(InventoryUtil.getCurrentWindowId(), srcSlot, dstSlot - InventoryUtil.HOTBAR_BEGIN, InventoryUtil.SWAP);
+            }
         } else {
             Notification.send("Inventory Manager", String.format("Swap called with unexpected args: %d -> %d", srcSlot, dstSlot), NotificationType.ERROR, 5000);
             return;
@@ -491,6 +558,10 @@ public class InventoryManager extends Module {
         this.itemTimeInSlot.put(srcSlot, 0);
         this.itemTimeInSlot.put(dstSlot, 0);
 
+    }
+
+    private void move(int srcSlot) {
+        InventoryUtil.windowClick(InventoryUtil.getCurrentWindowId(), srcSlot, 0, InventoryUtil.QUICK_MOVE);
     }
 
     private void queueAutoArmorSwap(int srcSlot, int dstSlot) {
@@ -536,7 +607,7 @@ public class InventoryManager extends Module {
     }
 
     private void drop(int slot) {
-        InventoryUtil.windowClick(0, slot, 1, InventoryUtil.DROP);
+        InventoryUtil.windowClick(InventoryUtil.getCurrentWindowId(), InventoryUtil.convertToProperSlot(slot), 1, InventoryUtil.DROP);
         this.itemSlots.put(slot, null);
         this.itemTimeInSlot.put(slot, 0);
     }
@@ -545,7 +616,14 @@ public class InventoryManager extends Module {
         boolean didAction = false;
         while (!this.inventoryActions.isEmpty()) {
             Action action = this.inventoryActions.removeFirst();
-            InventoryUtil.windowClick(action.windowId, action.slot, action.button, action.mode);
+            int currentWindowId = InventoryUtil.getCurrentWindowId();
+            if (currentWindowId == action.windowId) {
+                InventoryUtil.windowClick(action.windowId, action.slot, action.button, action.mode);
+            } else if (action.windowId == 0) {
+                InventoryUtil.windowClick(0, InventoryUtil.convertToProperSlot(action.slot), action.button, action.mode);
+            } else {
+                continue;
+            }
             didAction = true;
             this.delay = action.delay;
             if (this.delay > 0) {

@@ -19,7 +19,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 public class ModuleManager {
 
-    private final ImmutableClassToInstanceMap<Module> modules;
+    private final ImmutableClassToInstanceMap<AbstractModule> modules;
     private final List<AbstractScriptModule> scriptModules;
 
     public ModuleManager() {
@@ -141,7 +141,7 @@ public class ModuleManager {
 
     @EventLink
     public final Listener<EventKeyPress> onKeyPress = event -> {
-        for (final Module module : this.getModules()) {
+        for (final AbstractModule module : this.getModules()) {
             if (module.getBind() == event.key) {
                 module.toggle();
             }
@@ -149,27 +149,27 @@ public class ModuleManager {
     };
 
     @SuppressWarnings("unchecked")
-    private ImmutableClassToInstanceMap<Module> createModuleMap(Module... modules) {
-        ImmutableClassToInstanceMap.Builder<Module> builder = ImmutableClassToInstanceMap.builder();
+    private ImmutableClassToInstanceMap<AbstractModule> createModuleMap(AbstractModule... modules) {
+        ImmutableClassToInstanceMap.Builder<AbstractModule> builder = ImmutableClassToInstanceMap.builder();
         Arrays.stream(modules).forEach(module -> {
             if (module != null) {
-                builder.put((Class<Module>) module.getClass(), module);
+                builder.put((Class<AbstractModule>) module.getClass(), module);
             }
         });
         return builder.build();
     }
 
-    public List<Module> getModules() {
-        List<Module> modules = new ArrayList<>(this.modules.values());
+    public List<AbstractModule> getModules() {
+        List<AbstractModule> modules = new ArrayList<>(this.modules.values());
         modules.addAll(this.scriptModules);
         return modules;
     }
 
-    public <T extends Module> T get(Class<T> clazz) {
+    public <T extends AbstractModule> T get(Class<T> clazz) {
         return this.modules.getInstance(clazz);
     }
 
-    public Module get(String name) {
+    public AbstractModule get(String name) {
         return this.getModules()
                 .stream()
                 .filter(module -> module.name.equalsIgnoreCase(name))
@@ -185,14 +185,14 @@ public class ModuleManager {
                 .orElse(null);
     }
 
-    public List<Module> getInCategory(ModuleCategory category) {
+    public List<AbstractModule> getInCategory(ModuleCategory category) {
         return this.getModules()
                 .stream()
                 .filter(module -> module.category == category)
                 .toList();
     }
 
-    public List<Module> search(String name) {
+    public List<AbstractModule> search(String name) {
         return this.getModules()
                 .stream()
                 .filter(module -> module.matches(name))
@@ -206,7 +206,7 @@ public class ModuleManager {
     public int amountEnabled() {
         return (int)this.getModules()
                 .stream()
-                .filter(Module::isToggled)
+                .filter(AbstractModule::isToggled)
                 .count();
     }
 
@@ -222,10 +222,10 @@ public class ModuleManager {
         this.scriptModules.clear();
     }
 
-    private Module loadPrivateModule(String name) {
+    private AbstractModule loadPrivateModule(String name) {
         try {
             Class<?> clazz = Class.forName(this.getClass().getPackageName() + ".impl." + name);
-            return (Module)clazz.getConstructor().newInstance();
+            return (AbstractModule)clazz.getConstructor().newInstance();
         } catch (Exception _) {
             return null;
         }

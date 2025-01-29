@@ -1,5 +1,6 @@
 package wtf.bhopper.nonsense.util.minecraft.player;
 
+import net.minecraft.client.gui.ChatLine;
 import net.minecraft.event.ClickEvent;
 import net.minecraft.event.HoverEvent;
 import net.minecraft.nbt.NBTTagCompound;
@@ -95,10 +96,10 @@ public class ChatUtil implements IMinecraft {
         }
     }
 
-    public static void irc(String message, Account account) {
+    public static void irc(String message, Account account, int color) {
         Builder.of("%s%s\2477: %s", IRC_PREFIX, account.getDisplayName(), message)
                 .setColor(EnumChatFormatting.GRAY)
-                .send();
+                .send(0, new ChatLine.ChatColor(color));
     }
 
     public static void whisper(String message, Account account, boolean sending) {
@@ -260,8 +261,8 @@ public class ChatUtil implements IMinecraft {
             ChatUtil.raw(this.build());
         }
 
-        public void send(int chatLine) {
-            mc.ingameGUI.getChatGUI().printChatMessageWithOptionalDeletion(this.build(), chatLine);
+        public void send(int chatLine, ChatLine.ChatColor chatColor) {
+            mc.ingameGUI.getChatGUI().printChatMessageWithOptionalDeletion(this.build(), chatLine, chatColor);
         }
 
         public enum Inheritance {

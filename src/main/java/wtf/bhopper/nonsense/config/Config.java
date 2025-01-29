@@ -2,7 +2,7 @@ package wtf.bhopper.nonsense.config;
 
 import com.google.gson.JsonObject;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.util.misc.JsonUtil;
 
 import java.io.File;
@@ -45,7 +45,7 @@ public class Config {
         JsonObject root = new JsonObject();
 
         JsonObject modules = new JsonObject();
-        for (Module module : Nonsense.getModuleManager().getModules()) {
+        for (AbstractModule module : Nonsense.getModuleManager().getModules()) {
             modules.add(module.name, module.serialize());
         }
         root.add("modules", modules);
@@ -57,7 +57,7 @@ public class Config {
 
         JsonObject modules = object.getAsJsonObject("modules");
 
-        for (Module module : Nonsense.getModuleManager().getModules()) {
+        for (AbstractModule module : Nonsense.getModuleManager().getModules()) {
             module.deserialize(modules.getAsJsonObject(module.name));
         }
 

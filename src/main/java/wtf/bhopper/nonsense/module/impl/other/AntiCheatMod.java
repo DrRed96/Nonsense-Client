@@ -3,7 +3,7 @@ package wtf.bhopper.nonsense.module.impl.other;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.anticheat.check.AbstractCheck;
 import wtf.bhopper.nonsense.anticheat.check.CheckInfo;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
@@ -19,7 +19,7 @@ import java.util.concurrent.ConcurrentHashMap;
         hidden = true,
         toggled = true,
         searchAlias = {"Hacker Detector", "Cheater Detector"})
-public class AntiCheatMod extends Module {
+public class AntiCheatMod extends AbstractModule {
 
     private final GroupProperty checksGroup = new GroupProperty("Checks", "Anti Cheat checks", this);
     private final Map<AbstractCheck, BooleanProperty> checkProperties = new ConcurrentHashMap<>();

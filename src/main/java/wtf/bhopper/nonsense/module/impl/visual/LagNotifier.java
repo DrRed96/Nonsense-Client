@@ -4,7 +4,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.component.impl.world.TickRateComponent;
 import wtf.bhopper.nonsense.gui.components.RenderComponent;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
@@ -15,7 +15,7 @@ import java.text.NumberFormat;
 @ModuleInfo(name = "Lag Notifier",
         description = "Notifies you about lag",
         category = ModuleCategory.VISUAL)
-public class LagNotifier extends Module {
+public class LagNotifier extends AbstractModule {
 
     private final NumberProperty threshold = new NumberProperty("Threshold", "Lag threshold", 1500, 1000, 3000, 50, NumberProperty.FORMAT_MS);
 

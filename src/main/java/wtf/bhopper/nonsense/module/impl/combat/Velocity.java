@@ -1,12 +1,11 @@
 package wtf.bhopper.nonsense.module.impl.combat;
 
 import net.minecraft.network.play.server.S12PacketEntityVelocity;
-import net.minecraft.network.play.server.S27PacketExplosion;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.packet.EventReceivePacket;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
@@ -17,7 +16,7 @@ import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
         description = "Reduces/removes knock-back.",
         category = ModuleCategory.COMBAT,
         searchAlias = {"Anti Knock Back", "Anti KB", "Anti Velocity"})
-public class Velocity extends Module {
+public class Velocity extends AbstractModule {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Method for velocity.", Mode.NORMAL);
     private final NumberProperty vertical = new NumberProperty("Vertical", "Vertical velocity", () -> this.mode.is(Mode.NORMAL), 0.0F, 0.0F, 100.0F, 0.01F, NumberProperty.FORMAT_PERCENT);

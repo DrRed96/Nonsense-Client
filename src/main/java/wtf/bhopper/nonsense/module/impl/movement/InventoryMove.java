@@ -6,7 +6,7 @@ import net.minecraft.client.settings.KeyBinding;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.player.EventUpdate;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
@@ -15,7 +15,7 @@ import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 @ModuleInfo(name = "Inventory Move",
         description = "Allows you to move whilst in your inventory or other GUI's",
         category = ModuleCategory.MOVEMENT)
-public class InventoryMove extends Module {
+public class InventoryMove extends AbstractModule {
 
     private final BooleanProperty clientSide = new BooleanProperty("Client Side Only", "Only move in client sided GUI's", false);
 

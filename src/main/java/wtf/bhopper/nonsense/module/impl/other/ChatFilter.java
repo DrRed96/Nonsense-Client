@@ -7,7 +7,7 @@ import wtf.bhopper.nonsense.command.CommandManager;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.packet.EventSendPacket;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
@@ -26,7 +26,7 @@ import java.util.List;
         description = "Allows you to bypass chat filters",
         category = ModuleCategory.OTHER,
         searchAlias = "Chat Bypass")
-public class ChatFilter extends Module {
+public class ChatFilter extends AbstractModule {
 
     private static final List<String> COMMANDS = Arrays.asList("message", "msg", "whisper", "w", "tell", "reply", "r");
     private static final List<String> HYPIXEL_COMMANDS = Arrays.asList(

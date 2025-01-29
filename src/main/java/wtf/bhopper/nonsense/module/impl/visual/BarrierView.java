@@ -1,6 +1,6 @@
 package wtf.bhopper.nonsense.module.impl.visual;
 
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 
@@ -8,6 +8,6 @@ import wtf.bhopper.nonsense.module.ModuleInfo;
         description = "Allows you to see barrier blocks",
         category = ModuleCategory.VISUAL,
         searchAlias = "Barrier")
-public class BarrierView extends Module {
+public class BarrierView extends AbstractModule {
 
 }

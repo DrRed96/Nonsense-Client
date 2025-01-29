@@ -16,7 +16,7 @@ public class SprintA extends AbstractCheck {
             if (data.hasCheckData(Buffer.class) && data.getCheckData(Buffer.class).getBuffer() > 0.0F) {
                 data.getCheckData(Buffer.class).decrementBuffer(0.1F);
             }
-            data.decrementVl(this, 0.1F);
+            data.decrementVl(this, 0.985F);
             return;
         }
 

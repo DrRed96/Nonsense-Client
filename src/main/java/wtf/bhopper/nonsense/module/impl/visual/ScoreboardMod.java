@@ -9,7 +9,7 @@ import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraft.util.EnumChatFormatting;
 import wtf.bhopper.nonsense.gui.hud.Hud;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
@@ -19,7 +19,7 @@ import java.util.List;
 @ModuleInfo(name = "Scoreboard",
         description = "Improves the scoreboard",
         category = ModuleCategory.VISUAL)
-public class ScoreboardMod extends Module {
+public class ScoreboardMod extends AbstractModule {
 
     private final BooleanProperty shadow = new BooleanProperty("Shadow", "Draws a drop shadow on the text.", true);
     private final BooleanProperty noScore = new BooleanProperty("No Score", "Prevents the score (red numbers) from rendering.", true);

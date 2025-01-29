@@ -9,7 +9,7 @@ import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.player.interact.EventPreClick;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
@@ -21,7 +21,7 @@ import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 @ModuleInfo(name = "Criticals",
         description = "Makes you do critical hits.",
         category = ModuleCategory.COMBAT)
-public class Criticals extends Module {
+public class Criticals extends AbstractModule {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Criticals method.", Mode.PACKET);
     private final NumberProperty delay = new NumberProperty("Delay", "Delay between critical hits in ticks.", 15, 0, 20, 1);

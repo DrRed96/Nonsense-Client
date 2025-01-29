@@ -11,7 +11,7 @@ import net.minecraft.entity.item.EntityItem;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 
@@ -22,7 +22,7 @@ import static org.lwjgl.opengl.GL11.*;
 @ModuleInfo(name = "Item Physics",
         description = "Item physics mod",
         category = ModuleCategory.VISUAL)
-public class ItemPhysics extends Module {
+public class ItemPhysics extends AbstractModule {
 
     public static long tick;
     public static double rotation = 0;

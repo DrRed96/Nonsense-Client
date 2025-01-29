@@ -1,9 +1,9 @@
 package wtf.bhopper.nonsense.component.impl.player;
 
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.component.Component;
+import wtf.bhopper.nonsense.component.AbstractComponent;
 
-public class SilentSlotComponent extends Component {
+public class SilentSlotComponent extends AbstractComponent {
 
     public int slot = 0;
 

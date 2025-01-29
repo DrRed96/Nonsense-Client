@@ -1,14 +1,14 @@
 package wtf.bhopper.nonsense.command.impl;
 
 import net.minecraft.command.CommandBase;
-import wtf.bhopper.nonsense.command.Command;
+import wtf.bhopper.nonsense.command.AbstractCommand;
 import wtf.bhopper.nonsense.command.CommandInfo;
 import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 
 @CommandInfo(name = "VClip",
         description = "Teleports you vertically",
         syntax = ".vclip <blocks>")
-public class Vclip extends Command {
+public class Vclip extends AbstractCommand {
     @Override
     public void execute(String[] args, String rawCommand) throws Exception {
         if (args.length < 2) {

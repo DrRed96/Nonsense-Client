@@ -2,6 +2,7 @@ package wtf.bhopper.nonsense.util.minecraft.inventory;
 
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.inventory.Container;
 import net.minecraft.item.ItemStack;
 import net.minecraft.network.play.client.C10PacketCreativeInventoryAction;
 import wtf.bhopper.nonsense.util.minecraft.IMinecraft;
@@ -9,25 +10,31 @@ import wtf.bhopper.nonsense.util.minecraft.player.PacketUtil;
 
 public class InventoryUtil implements IMinecraft {
 
-    // Constants for slots in the inventory
-    public static final int INCLUDE_ARMOR_BEGIN = 5;
-    public static final int EXCLUDE_ARMOR_BEGIN = 9;
-    public static final int HOTBAR_BEGIN = 36;
-    public static final int END = 45;
+    /** Inventory slot constants */
+    public static final int
+            INCLUDE_ARMOR_BEGIN = 5,
+            EXCLUDE_ARMOR_BEGIN = 9,
+            HOTBAR_BEGIN = 36,
+            END = 45;
 
-    public static final int PICKUP = 0;
-    public static final int QUICK_MOVE = 1;
-    public static final int SWAP = 2;
-    public static final int CLONE = 3;
-    public static final int DROP = 4;
-    public static final int QUICK_CRAFT = 5;
-    public static final int PICKUP_ALL = 6;
+    /** Inventory actions */
+    public static final int
+            PICKUP = 0,
+            QUICK_MOVE = 1,
+            SWAP = 2,
+            CLONE = 3,
+            DROP = 4,
+            QUICK_CRAFT = 5,
+            PICKUP_ALL = 6;
 
     public static ItemStack getStack(int slot) {
         return mc.thePlayer.inventoryContainer.getSlot(slot).getStack();
     }
 
     public static void windowClick(int windowId, int slot, int button, int mode) {
+        if (slot == -1) {
+            throw new IllegalArgumentException("Invalid slot: " + slot);
+        }
         mc.playerController.windowClick(windowId, slot, button, mode, mc.thePlayer);
     }
 
@@ -44,33 +51,29 @@ public class InventoryUtil implements IMinecraft {
         return false;
     }
 
-    public static int properSlot(int windowId, int slotId) {
+    public static int getCurrentWindowId() {
+        return mc.thePlayer.openContainer.windowId;
+    }
 
-        GuiScreen currentScreen = mc.currentScreen;
+    public static Container getOpenContainer() {
+        return mc.thePlayer.openContainer;
+    }
 
-        if (windowId != 0) {
-            if (!(currentScreen instanceof GuiContainer guiContainer)) {
-                return -1;
-            }
+    public static int convertToProperSlot(int slot) {
+        Container container = mc.thePlayer.openContainer;
+        int windowId = container.windowId;
 
-            if (guiContainer.inventorySlots.windowId != windowId) {
-                return -1;
-            }
-
-            return slotId;
+        if (windowId == 0) {
+            return slot;
         }
 
-        if (currentScreen instanceof GuiContainer guiContainer) {
-            int containerSize = guiContainer.inventorySlots.inventorySlots.size() - 36;
-
-            if (slotId < EXCLUDE_ARMOR_BEGIN) {
-                return -1;
-            }
-
-            return slotId - EXCLUDE_ARMOR_BEGIN + containerSize;
+        if (slot < EXCLUDE_ARMOR_BEGIN) {
+            return -1;
         }
 
-        return slotId;
+        int length = container.inventorySlots.size();
+        int numberOfSlots = length - 36;
+        return slot - EXCLUDE_ARMOR_BEGIN + numberOfSlots;
     }
 
 }

@@ -1,6 +1,5 @@
 package wtf.bhopper.nonsense.module.impl.movement;
 
-import net.minecraft.network.play.client.C03PacketPlayer;
 import net.minecraft.network.play.client.C0BPacketEntityAction;
 import net.minecraft.network.play.server.S08PacketPlayerPosLook;
 import wtf.bhopper.nonsense.event.EventLink;
@@ -9,11 +8,10 @@ import wtf.bhopper.nonsense.event.impl.player.movement.EventMove;
 import wtf.bhopper.nonsense.event.impl.player.EventPreMotion;
 import wtf.bhopper.nonsense.event.impl.packet.EventReceivePacket;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.annotations.Description;
-import wtf.bhopper.nonsense.module.property.annotations.DisplayName;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
 import wtf.bhopper.nonsense.module.property.impl.GroupProperty;
@@ -27,7 +25,7 @@ import wtf.bhopper.nonsense.util.misc.Stopwatch;
         description = "Allows you to fly.",
         category = ModuleCategory.MOVEMENT,
         searchAlias = "fly")
-public class Flight extends Module {
+public class Flight extends AbstractModule {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Flight method.", Mode.VANILLA);
 

@@ -14,7 +14,7 @@ import wtf.bhopper.nonsense.gui.components.RenderComponent;
 import wtf.bhopper.nonsense.gui.hud.Hud;
 import wtf.bhopper.nonsense.gui.hud.notification.Notification;
 import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
@@ -32,7 +32,7 @@ import java.util.List;
 @ModuleInfo(name = "Guess The Build Solver",
         description = "Attempts to solve Guess The Build builds",
         category = ModuleCategory.OTHER)
-public class GuessTheBuildSolver extends Module {
+public class GuessTheBuildSolver extends AbstractModule {
 
     private static final String[] RANK_PREFIX = {
             "Rookie",

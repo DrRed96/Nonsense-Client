@@ -12,7 +12,7 @@ import wtf.bhopper.nonsense.component.impl.player.RotationsComponent;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.player.EventUpdate;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
@@ -23,7 +23,6 @@ import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.RotationUtil;
 import wtf.bhopper.nonsense.util.minecraft.world.BlockUtil;
 import wtf.bhopper.nonsense.util.misc.MathUtil;
-import wtf.bhopper.nonsense.util.misc.Stopwatch;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -31,7 +30,7 @@ import java.util.List;
 @ModuleInfo(name = "Nuker",
         description = "Destroys large amounts of blocks",
         category = ModuleCategory.PLAYER)
-public class Nuker extends Module {
+public class Nuker extends AbstractModule {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Nuker method", Mode.SINGLE);
     private final NumberProperty radius = new NumberProperty("Radius", "Block break radius", 4.5, 1.0, 6.0, 0.1);

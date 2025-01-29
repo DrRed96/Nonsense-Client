@@ -13,7 +13,7 @@ import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.render.EventRenderWorld;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.impl.combat.AntiBot;
@@ -26,7 +26,7 @@ import static org.lwjgl.opengl.GL11.*;
 @ModuleInfo(name = "Tracers",
         description = "Draws a line to nearby entities",
         category = ModuleCategory.VISUAL)
-public class Tracers extends Module {
+public class Tracers extends AbstractModule {
 
     private final GroupProperty targetsGroup = new GroupProperty("Targets", "What entities Tracers should render", this);
     private final BooleanProperty players = new BooleanProperty("Players", "Target Players.", true);

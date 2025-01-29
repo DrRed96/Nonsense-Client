@@ -2,12 +2,12 @@ package wtf.bhopper.nonsense.command.impl;
 
 import net.minecraft.command.CommandBase;
 import net.minecraft.util.Vec3;
-import wtf.bhopper.nonsense.command.Command;
+import wtf.bhopper.nonsense.command.AbstractCommand;
 import wtf.bhopper.nonsense.command.CommandInfo;
 import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 
 @CommandInfo(name = "Teleport", description = "Teleports you", syntax = ".tp <x> <y> <z>", alias = "tp")
-public class Teleport extends Command {
+public class Teleport extends AbstractCommand {
     @Override
     public void execute(String[] args, String rawCommand) throws Exception {
 

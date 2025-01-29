@@ -25,7 +25,7 @@ import wtf.bhopper.nonsense.event.impl.render.EventRenderWorld;
 import wtf.bhopper.nonsense.gui.hud.Hud;
 import wtf.bhopper.nonsense.gui.hud.notification.Notification;
 import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.impl.movement.Scaffold;
@@ -47,7 +47,7 @@ import java.util.List;
         description = "Automatically attacks nearby entities",
         category = ModuleCategory.COMBAT,
         searchAlias = {"Trigger Bot", "Force Field", "Auto Attack"})
-public class KillAura extends Module {
+public class KillAura extends AbstractModule {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Target selection method", Mode.SWITCH);
     private final EnumProperty<Sorting> sorting = new EnumProperty<>("Sorting", "Target sorting method", Sorting.RANGE);

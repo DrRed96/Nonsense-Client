@@ -7,7 +7,7 @@ import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.packet.EventReceivePacket;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.*;
@@ -17,7 +17,7 @@ import wtf.bhopper.nonsense.util.render.ColorUtil;
 @ModuleInfo(name = "Atmosphere",
         description = "Modifies the atmosphere",
         category = ModuleCategory.VISUAL)
-public class Atmosphere extends Module {
+public class Atmosphere extends AbstractModule {
 
     private final EnumProperty<FullBright> fullBright = new EnumProperty<>("Full Bright", "Method for brightness", FullBright.GAMMA);
     

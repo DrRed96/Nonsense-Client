@@ -9,11 +9,13 @@ public class S2CPacketMessage extends AbstractServerPacket {
 
     private String message;
     private Account account;
+    private int color;
 
     @Override
     public void readData(JsonObject json) {
         this.message = json.get("message").getAsString();
         this.account = PacketHandler.readAccount(json.get("account").getAsJsonObject());
+        this.color = json.get("color").getAsInt();
     }
 
     @Override
@@ -27,6 +29,10 @@ public class S2CPacketMessage extends AbstractServerPacket {
 
     public Account getAccount() {
         return this.account;
+    }
+
+    public int getColor() {
+        return this.color;
     }
 
 }

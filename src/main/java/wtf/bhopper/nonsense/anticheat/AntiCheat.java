@@ -28,13 +28,15 @@ public class AntiCheat implements IMinecraft {
     public AntiCheat() {
         Nonsense.getEventBus().subscribe(this);
         this.addChecks(
-                new AutoBlockA(),
-                new AutoBlockB(),
-                new AutoBlockC(),
                 new RotationA(),
                 new ScaffoldA(),
                 new SprintA(),
-                new VelocityA()
+                new VelocityA(),
+
+                // Auto-Block checks are added last so they always appear on top in the chat
+                new AutoBlockC(),
+                new AutoBlockB(),
+                new AutoBlockA()
         );
     }
 

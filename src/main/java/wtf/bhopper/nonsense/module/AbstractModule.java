@@ -18,7 +18,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Supplier;
 
-public abstract class Module implements IPropertyContainer, ISerializable, IMinecraft {
+public abstract class AbstractModule implements IPropertyContainer, ISerializable, IMinecraft {
 
     public final String name;
     public final String displayName;
@@ -33,9 +33,9 @@ public abstract class Module implements IPropertyContainer, ISerializable, IMine
 
     private Supplier<String> suffix = () -> null;
 
-    public Module() {
+    public AbstractModule() {
         if (!this.getClass().isAnnotationPresent(ModuleInfo.class)) {
-            throw new IllegalStateException("Module using the default constructor must be annotated with @ModuleInfo");
+            throw new IllegalStateException("Module using the default constructor must be annotated with " + ModuleInfo.class);
         }
 
         this.name = this.getClass().getAnnotation(ModuleInfo.class).name().replace(" ", "").toLowerCase();
@@ -49,7 +49,7 @@ public abstract class Module implements IPropertyContainer, ISerializable, IMine
         this.hidden = this.getClass().getAnnotation(ModuleInfo.class).hidden() || this.category == ModuleCategory.VISUAL;
     }
 
-    public Module(String displayName, String description, ModuleCategory category) {
+    public AbstractModule(String displayName, String description, ModuleCategory category) {
         this.name = displayName.replace(" ", "").toLowerCase();
         this.displayName = displayName;
         this.description = description;

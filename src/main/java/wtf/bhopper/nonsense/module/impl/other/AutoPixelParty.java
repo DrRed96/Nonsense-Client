@@ -9,7 +9,7 @@ import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.packet.EventReceivePacket;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
@@ -22,7 +22,7 @@ import wtf.bhopper.nonsense.util.minecraft.world.BlockUtil;
 @ModuleInfo(name = "Auto Pixel Party",
         description = "Plays pixel party for you",
         category = ModuleCategory.OTHER)
-public class AutoPixelParty extends Module {
+public class AutoPixelParty extends AbstractModule {
 
     private final BooleanProperty update = new BooleanProperty("Update", "Re-Updates the blocks", false);
     private final BooleanProperty debug = new BooleanProperty("Debug", "Prints debugging", false);

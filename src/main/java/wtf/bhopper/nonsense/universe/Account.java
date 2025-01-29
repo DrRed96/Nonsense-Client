@@ -22,7 +22,7 @@ public record Account(int id, String username, Rank rank) {
     }
 
     public String getDisplayName() {
-        return this.rank.prefix + this.username;
+        return this.rank.prefix + "\247r" + this.username;
     }
 
     @Override

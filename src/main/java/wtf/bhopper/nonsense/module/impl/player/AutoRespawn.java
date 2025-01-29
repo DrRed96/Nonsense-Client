@@ -4,7 +4,7 @@ import net.minecraft.client.gui.GuiGameOver;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
@@ -12,7 +12,7 @@ import wtf.bhopper.nonsense.util.minecraft.player.PlayerUtil;
 @ModuleInfo(name = "Auto Respawn",
         description = "Automatically respawns you upon death.",
         category = ModuleCategory.PLAYER)
-public class AutoRespawn extends Module {
+public class AutoRespawn extends AbstractModule {
 
     @EventLink
     public final Listener<EventTick> onTick = _ -> {

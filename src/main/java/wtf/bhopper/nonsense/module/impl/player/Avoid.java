@@ -6,7 +6,7 @@ import net.minecraft.util.AxisAlignedBB;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.world.EventBlockBounds;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
@@ -14,7 +14,7 @@ import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 @ModuleInfo(name = "Avoid",
         description = "Prevents you from interacting with certain blocks",
         category = ModuleCategory.PLAYER)
-public class Avoid extends Module {
+public class Avoid extends AbstractModule {
 
     private final BooleanProperty cactus = new BooleanProperty("Cactus", "Prevents you from interacting with cacti.", true);
     private final BooleanProperty lava = new BooleanProperty("Lava", "Prevents you from walking into lava.", false);

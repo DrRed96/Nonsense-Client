@@ -1,7 +1,7 @@
 package wtf.bhopper.nonsense.script;
 
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
@@ -15,7 +15,7 @@ import java.io.IOException;
 @ModuleInfo(name = "Script Options",
         description = "Configure script options.",
         category = ModuleCategory.SCRIPT)
-public class ScriptOptionsMod extends Module {
+public class ScriptOptionsMod extends AbstractModule {
 
     private final GroupProperty javaOptions = new GroupProperty("Java", "Configure Java scripts.", this);
     public final BooleanProperty javaUnsafe = new BooleanProperty("Allow Unsafe", "Allow potentially unsafe scripts to be ran.", false);

@@ -16,11 +16,11 @@ public class CommandManager {
 
     public static final String PREFIX = ".";
 
-    private final List<Command> commands = new ArrayList<>();
+    private final List<AbstractCommand> commands = new ArrayList<>();
 
     public CommandManager() {
         new Reflections(Help.class.getPackage().getName())
-                .getSubTypesOf(Command.class)
+                .getSubTypesOf(AbstractCommand.class)
                 .stream()
                 .sorted(Comparator.comparing(clazz -> clazz.getAnnotation(CommandInfo.class).name()))
                 .forEach(command -> {
@@ -33,7 +33,7 @@ public class CommandManager {
         Nonsense.getEventBus().subscribe(this);
     }
 
-    public List<Command> getCommands() {
+    public List<AbstractCommand> getCommands() {
         return this.commands;
     }
 
@@ -53,7 +53,7 @@ public class CommandManager {
             String[] args = event.message.split("\\s+");
             String commandName = args[0].substring(PREFIX.length());
 
-            for (Command command : this.commands) {
+            for (AbstractCommand command : this.commands) {
                 for (String alias : command.alias) {
                     if (alias.equalsIgnoreCase(commandName)) {
                         try {

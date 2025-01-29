@@ -16,7 +16,7 @@ import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.packet.EventSendPacket;
 import wtf.bhopper.nonsense.event.impl.player.EventUpdate;
 import wtf.bhopper.nonsense.event.impl.player.interact.EventClickAction;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
@@ -30,7 +30,7 @@ import wtf.bhopper.nonsense.util.misc.MathUtil;
         description = "Automatically breaks specific blocks.",
         category = ModuleCategory.PLAYER,
         searchAlias = {"Nuker", "Fucker" /* Yes, some clients actually call it "Fucker" (Astolfo and Future :eyes:) */ })
-public class Breaker extends Module {
+public class Breaker extends AbstractModule {
 
     private final EnumProperty<TargetBlock> targetBlock = new EnumProperty<>("Target Block", "Block to break", TargetBlock.BED);
     private final NumberProperty range = new NumberProperty("Range", "Break range", 5.0, 1.0, 6.0, 0.1, NumberProperty.FORMAT_DISTANCE);

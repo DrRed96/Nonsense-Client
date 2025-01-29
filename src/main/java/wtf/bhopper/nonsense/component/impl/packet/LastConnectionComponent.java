@@ -1,12 +1,12 @@
 package wtf.bhopper.nonsense.component.impl.packet;
 
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.component.Component;
+import wtf.bhopper.nonsense.component.AbstractComponent;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.client.EventJoinServer;
 
-public class LastConnectionComponent extends Component {
+public class LastConnectionComponent extends AbstractComponent {
 
     private String ip;
     private int port;

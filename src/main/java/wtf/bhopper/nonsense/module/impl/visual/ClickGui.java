@@ -6,7 +6,7 @@ import net.minecraft.util.ResourceLocation;
 import org.lwjgl.input.Keyboard;
 import wtf.bhopper.nonsense.gui.click.compact.CompactGui;
 import wtf.bhopper.nonsense.gui.click.novoline.NovoGui;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
@@ -17,7 +17,7 @@ import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
         description = "Configure the Click GUI.",
         category = ModuleCategory.VISUAL,
         bind = Keyboard.KEY_RSHIFT)
-public class ClickGui extends Module {
+public class ClickGui extends AbstractModule {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Which Click GUI to use.", Mode.NOVOLINE);
     public final BooleanProperty categoryColors = new BooleanProperty("Category Colors", "Category colors.", false);

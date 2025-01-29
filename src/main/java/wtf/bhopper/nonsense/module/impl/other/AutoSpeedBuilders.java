@@ -21,7 +21,7 @@ import wtf.bhopper.nonsense.event.impl.player.EventJoinGame;
 import wtf.bhopper.nonsense.event.impl.player.inventory.EventSelectItem;
 import wtf.bhopper.nonsense.event.impl.player.EventUpdate;
 import wtf.bhopper.nonsense.event.impl.render.EventRenderWorld;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
@@ -43,7 +43,7 @@ import java.util.concurrent.ConcurrentHashMap;
 @ModuleInfo(name = "Auto Speed Builders",
         description = "Plays speed builders for you.",
         category = ModuleCategory.OTHER)
-public class AutoSpeedBuilders extends Module {
+public class AutoSpeedBuilders extends AbstractModule {
 
     private static final EnumFacing[] OPTIMAL_PLACE_DIRECTIONS = {
             EnumFacing.UP,

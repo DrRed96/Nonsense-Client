@@ -7,7 +7,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.JsonToNBT;
 import net.minecraft.nbt.NBTException;
 import net.minecraft.network.play.client.C10PacketCreativeInventoryAction;
-import wtf.bhopper.nonsense.command.Command;
+import wtf.bhopper.nonsense.command.AbstractCommand;
 import wtf.bhopper.nonsense.command.CommandInfo;
 import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.PacketUtil;
@@ -16,7 +16,7 @@ import wtf.bhopper.nonsense.util.minecraft.player.PacketUtil;
         description = "Creates an item then drops it, this will delete your current held item.",
         syntax = ".dropgive <item> [amount] [meta] [nbt]",
         alias = "drop")
-public class DropGive extends Command {
+public class DropGive extends AbstractCommand {
     @Override
     public void execute(String[] args, String rawCommand) throws Exception {
         if (!mc.thePlayer.capabilities.isCreativeMode) {

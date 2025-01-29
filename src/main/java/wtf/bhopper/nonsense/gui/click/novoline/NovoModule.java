@@ -1,7 +1,7 @@
 package wtf.bhopper.nonsense.gui.click.novoline;
 
 import net.minecraft.client.Minecraft;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.property.AbstractProperty;
 import wtf.bhopper.nonsense.module.property.impl.*;
 import wtf.bhopper.nonsense.util.render.NVGHelper;
@@ -13,12 +13,12 @@ import static org.lwjgl.nanovg.NanoVG.*;
 
 public class NovoModule extends NovoComponent {
 
-    private final Module module;
+    private final AbstractModule module;
 
     private boolean expanded = false;
     private final List<NovoComponent> components = new ArrayList<>();
 
-    public NovoModule(NovoPanel panel, Module module) {
+    public NovoModule(NovoPanel panel, AbstractModule module) {
         super(panel, 0);
         this.module = module;
 

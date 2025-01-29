@@ -14,7 +14,7 @@ import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.player.inventory.EventSelectItem;
 import wtf.bhopper.nonsense.event.impl.player.EventUpdate;
 import wtf.bhopper.nonsense.event.impl.player.interact.EventClickAction;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
@@ -28,7 +28,7 @@ import java.util.Comparator;
 @ModuleInfo(name = "Auto Zombies",
         description = "Some tools for zombies",
         category = ModuleCategory.COMBAT)
-public class AutoZombies extends Module {
+public class AutoZombies extends AbstractModule {
 
     private final BooleanProperty silent = new BooleanProperty("Silent Aim", "Aims silently", true);
     private final BooleanProperty autoShoot = new BooleanProperty("Auto Shoot", "Automatically shoots", true);

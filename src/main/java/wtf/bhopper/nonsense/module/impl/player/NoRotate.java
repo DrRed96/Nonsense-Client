@@ -7,7 +7,7 @@ import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.packet.EventReceivePacket;
 import wtf.bhopper.nonsense.event.impl.player.EventUpdate;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
@@ -18,7 +18,7 @@ import wtf.bhopper.nonsense.util.minecraft.player.Rotation;
 @ModuleInfo(name = "No Rotate",
         description = "Prevents the server from modifying your rotations",
         category = ModuleCategory.PLAYER)
-public class NoRotate extends Module {
+public class NoRotate extends AbstractModule {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "No rotate method", Mode.VANILLA);
 

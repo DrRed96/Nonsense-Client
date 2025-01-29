@@ -7,7 +7,7 @@ import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.player.movement.EventPostStep;
 import wtf.bhopper.nonsense.event.impl.player.movement.EventPreStep;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.annotations.DisplayName;
@@ -18,12 +18,10 @@ import wtf.bhopper.nonsense.module.property.impl.NumberProperty;
 import wtf.bhopper.nonsense.util.minecraft.player.MoveUtil;
 import wtf.bhopper.nonsense.util.minecraft.player.PacketUtil;
 
-import java.util.function.Supplier;
-
 @ModuleInfo(name = "Step",
         description = "Allows you to step up blocks",
         category = ModuleCategory.MOVEMENT)
-public class Step extends Module {
+public class Step extends AbstractModule {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Step method", Mode.VANILLA);
     private final NumberProperty height = new NumberProperty("Height", "Step height", () -> this.mode.is(Mode.VANILLA), 1.0, 1.0, 10.0, 0.5);

@@ -5,7 +5,7 @@ import net.minecraft.client.audio.PositionedSoundRecord;
 import net.minecraft.util.ResourceLocation;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.gui.screens.GuiMoveHudComponents;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.annotations.DisplayName;
@@ -18,7 +18,7 @@ import wtf.bhopper.nonsense.util.render.Fonts;
         description = "Heads Up Display.",
         category = ModuleCategory.VISUAL,
         toggled = true)
-public class HudMod extends Module {
+public class HudMod extends AbstractModule {
 
     private final GroupProperty moduleListGroup = new GroupProperty("Module List", "Displays what modules are enabled", this);
     public final BooleanProperty moduleListEnabled = new BooleanProperty("Enable", "Enable the module list.", true);

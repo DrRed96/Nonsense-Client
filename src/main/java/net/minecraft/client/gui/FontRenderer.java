@@ -145,31 +145,31 @@ public class FontRenderer implements IResourceManagerReloadListener {
         this.bindTexture(this.locationFontTexture);
 
         for (int i = 0; i < 32; ++i) {
-            int j = (i >> 3 & 1) * 85;
-            int k = (i >> 2 & 1) * 170 + j;
-            int l = (i >> 1 & 1) * 170 + j;
-            int i1 = (i >> 0 & 1) * 170 + j;
+            int a = (i >> 3 & 1) * 85;
+            int r = (i >> 2 & 1) * 170 + a;
+            int g = (i >> 1 & 1) * 170 + a;
+            int b = (i >> 0 & 1) * 170 + a;
 
             if (i == 6) {
-                k += 85;
+                r += 85;
             }
 
             if (gameSettingsIn.anaglyph) {
-                int j1 = (k * 30 + l * 59 + i1 * 11) / 100;
-                int k1 = (k * 30 + l * 70) / 100;
-                int l1 = (k * 30 + i1 * 70) / 100;
-                k = j1;
-                l = k1;
-                i1 = l1;
+                int j1 = (r * 30 + g * 59 + b * 11) / 100;
+                int k1 = (r * 30 + g * 70) / 100;
+                int l1 = (r * 30 + b * 70) / 100;
+                r = j1;
+                g = k1;
+                b = l1;
             }
 
             if (i >= 16) {
-                k /= 4;
-                l /= 4;
-                i1 /= 4;
+                r /= 4;
+                g /= 4;
+                b /= 4;
             }
 
-            this.colorCode[i] = (k & 255) << 16 | (l & 255) << 8 | i1 & 255;
+            this.colorCode[i] = (r & 255) << 16 | (g & 255) << 8 | b & 255;
         }
 
         this.readGlyphSizes();
@@ -406,47 +406,47 @@ public class FontRenderer implements IResourceManagerReloadListener {
     /**
      * Render a single line string at the current (posX,posY) and update posX
      */
-    private void renderStringAtPos(String p_78255_1_, boolean p_78255_2_) {
-        for (int i = 0; i < p_78255_1_.length(); ++i) {
-            char c0 = p_78255_1_.charAt(i);
+    private void renderStringAtPos(String text, boolean dropShadow) {
+        for (int i = 0; i < text.length(); ++i) {
+            char c = text.charAt(i);
 
-            if (c0 == 167 && i + 1 < p_78255_1_.length()) {
-                int i1 = "0123456789abcdefklmnor".indexOf(p_78255_1_.toLowerCase().charAt(i + 1));
+            if (c == 167 && i + 1 < text.length()) {
+                int format = "0123456789abcdefklmnor".indexOf(text.toLowerCase().charAt(i + 1));
 
-                if (i1 < 16) {
+                if (format < 16) {
                     this.randomStyle = false;
                     this.boldStyle = false;
                     this.strikethroughStyle = false;
                     this.underlineStyle = false;
                     this.italicStyle = false;
 
-                    if (i1 < 0 || i1 > 15) {
-                        i1 = 15;
+                    if (format < 0 || format > 15) {
+                        format = 15;
                     }
 
-                    if (p_78255_2_) {
-                        i1 += 16;
+                    if (dropShadow) {
+                        format += 16;
                     }
 
-                    int j1 = this.colorCode[i1];
+                    int color = this.colorCode[format];
 
                     if (Config.isCustomColors()) {
-                        j1 = CustomColors.getTextColor(i1, j1);
+                        color = CustomColors.getTextColor(format, color);
                     }
 
-                    this.textColor = j1;
-                    this.setColor((float) (j1 >> 16) / 255.0F, (float) (j1 >> 8 & 255) / 255.0F, (float) (j1 & 255) / 255.0F, this.alpha);
-                } else if (i1 == 16) {
+                    this.textColor = color;
+                    this.setColor((float) (color >> 16) / 255.0F, (float) (color >> 8 & 255) / 255.0F, (float) (color & 255) / 255.0F, this.alpha);
+                } else if (format == 16) {
                     this.randomStyle = true;
-                } else if (i1 == 17) {
+                } else if (format == 17) {
                     this.boldStyle = true;
-                } else if (i1 == 18) {
+                } else if (format == 18) {
                     this.strikethroughStyle = true;
-                } else if (i1 == 19) {
+                } else if (format == 19) {
                     this.underlineStyle = true;
-                } else if (i1 == 20) {
+                } else if (format == 20) {
                     this.italicStyle = true;
-                } else if (i1 == 21) {
+                } else if (format == 21) {
                     this.randomStyle = false;
                     this.boldStyle = false;
                     this.strikethroughStyle = false;
@@ -457,10 +457,10 @@ public class FontRenderer implements IResourceManagerReloadListener {
 
                 ++i;
             } else {
-                int j = "\u00c0\u00c1\u00c2\u00c8\u00ca\u00cb\u00cd\u00d3\u00d4\u00d5\u00da\u00df\u00e3\u00f5\u011f\u0130\u0131\u0152\u0153\u015e\u015f\u0174\u0175\u017e\u0207\u0000\u0000\u0000\u0000\u0000\u0000\u0000 !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\u0000\u00c7\u00fc\u00e9\u00e2\u00e4\u00e0\u00e5\u00e7\u00ea\u00eb\u00e8\u00ef\u00ee\u00ec\u00c4\u00c5\u00c9\u00e6\u00c6\u00f4\u00f6\u00f2\u00fb\u00f9\u00ff\u00d6\u00dc\u00f8\u00a3\u00d8\u00d7\u0192\u00e1\u00ed\u00f3\u00fa\u00f1\u00d1\u00aa\u00ba\u00bf\u00ae\u00ac\u00bd\u00bc\u00a1\u00ab\u00bb\u2591\u2592\u2593\u2502\u2524\u2561\u2562\u2556\u2555\u2563\u2551\u2557\u255d\u255c\u255b\u2510\u2514\u2534\u252c\u251c\u2500\u253c\u255e\u255f\u255a\u2554\u2569\u2566\u2560\u2550\u256c\u2567\u2568\u2564\u2565\u2559\u2558\u2552\u2553\u256b\u256a\u2518\u250c\u2588\u2584\u258c\u2590\u2580\u03b1\u03b2\u0393\u03c0\u03a3\u03c3\u03bc\u03c4\u03a6\u0398\u03a9\u03b4\u221e\u2205\u2208\u2229\u2261\u00b1\u2265\u2264\u2320\u2321\u00f7\u2248\u00b0\u2219\u00b7\u221a\u207f\u00b2\u25a0\u0000".indexOf(c0);
+                int j = "\u00c0\u00c1\u00c2\u00c8\u00ca\u00cb\u00cd\u00d3\u00d4\u00d5\u00da\u00df\u00e3\u00f5\u011f\u0130\u0131\u0152\u0153\u015e\u015f\u0174\u0175\u017e\u0207\u0000\u0000\u0000\u0000\u0000\u0000\u0000 !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~\u0000\u00c7\u00fc\u00e9\u00e2\u00e4\u00e0\u00e5\u00e7\u00ea\u00eb\u00e8\u00ef\u00ee\u00ec\u00c4\u00c5\u00c9\u00e6\u00c6\u00f4\u00f6\u00f2\u00fb\u00f9\u00ff\u00d6\u00dc\u00f8\u00a3\u00d8\u00d7\u0192\u00e1\u00ed\u00f3\u00fa\u00f1\u00d1\u00aa\u00ba\u00bf\u00ae\u00ac\u00bd\u00bc\u00a1\u00ab\u00bb\u2591\u2592\u2593\u2502\u2524\u2561\u2562\u2556\u2555\u2563\u2551\u2557\u255d\u255c\u255b\u2510\u2514\u2534\u252c\u251c\u2500\u253c\u255e\u255f\u255a\u2554\u2569\u2566\u2560\u2550\u256c\u2567\u2568\u2564\u2565\u2559\u2558\u2552\u2553\u256b\u256a\u2518\u250c\u2588\u2584\u258c\u2590\u2580\u03b1\u03b2\u0393\u03c0\u03a3\u03c3\u03bc\u03c4\u03a6\u0398\u03a9\u03b4\u221e\u2205\u2208\u2229\u2261\u00b1\u2265\u2264\u2320\u2321\u00f7\u2248\u00b0\u2219\u00b7\u221a\u207f\u00b2\u25a0\u0000".indexOf(c);
 
                 if (this.randomStyle && j != -1) {
-                    int k = this.getCharWidth(c0);
+                    int k = this.getCharWidth(c);
                     char c1;
 
                     do {
@@ -469,18 +469,18 @@ public class FontRenderer implements IResourceManagerReloadListener {
 
                     } while (k != this.getCharWidth(c1));
 
-                    c0 = c1;
+                    c = c1;
                 }
 
                 float f1 = j != -1 && !this.unicodeFlag ? this.offsetBold : 0.5F;
-                boolean flag = (c0 == 0 || j == -1 || this.unicodeFlag) && p_78255_2_;
+                boolean flag = (c == 0 || j == -1 || this.unicodeFlag) && dropShadow;
 
                 if (flag) {
                     this.posX -= f1;
                     this.posY -= f1;
                 }
 
-                float f = this.func_181559_a(c0, this.italicStyle);
+                float f = this.func_181559_a(c, this.italicStyle);
 
                 if (flag) {
                     this.posX += f1;
@@ -495,7 +495,7 @@ public class FontRenderer implements IResourceManagerReloadListener {
                         this.posY -= f1;
                     }
 
-                    this.func_181559_a(c0, this.italicStyle);
+                    this.func_181559_a(c, this.italicStyle);
                     this.posX -= f1;
 
                     if (flag) {

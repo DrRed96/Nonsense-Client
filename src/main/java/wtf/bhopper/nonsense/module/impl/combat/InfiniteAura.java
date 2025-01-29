@@ -18,7 +18,7 @@ import wtf.bhopper.nonsense.event.impl.client.EventTick;
 import wtf.bhopper.nonsense.event.impl.player.EventUpdate;
 import wtf.bhopper.nonsense.gui.hud.notification.Notification;
 import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.annotations.DisplayName;
@@ -39,7 +39,7 @@ import java.util.List;
 @ModuleInfo(name = "Infinite Aura",
         description = "Kill Aura with unlimited range.",
         category = ModuleCategory.COMBAT)
-public class InfiniteAura extends Module {
+public class InfiniteAura extends AbstractModule {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Method for TP aura", Mode.INSTANT);
     private final EnumProperty<Sorting> sorting = new EnumProperty<>("Sorting", "Target sorting method", Sorting.FOV);

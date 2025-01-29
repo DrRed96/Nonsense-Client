@@ -2,16 +2,16 @@ package wtf.bhopper.nonsense.command.impl;
 
 import org.lwjgl.input.Keyboard;
 import wtf.bhopper.nonsense.Nonsense;
-import wtf.bhopper.nonsense.command.Command;
+import wtf.bhopper.nonsense.command.AbstractCommand;
 import wtf.bhopper.nonsense.command.CommandInfo;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.util.minecraft.player.ChatUtil;
 
 @CommandInfo(name = "Bind",
         description = "Sets a key-bind.",
         syntax = ".bind <module> <key> | .bind del <module> | .bind <clear>",
         alias = "b")
-public class Bind extends Command {
+public class Bind extends AbstractCommand {
     @Override
     public void execute(String[] args, String rawCommand) throws Exception {
         if (args.length < 2) {
@@ -20,7 +20,7 @@ public class Bind extends Command {
         }
 
         if (args[1].equalsIgnoreCase("clear")) {
-            for (Module module : Nonsense.getModuleManager().getModules()) {
+            for (AbstractModule module : Nonsense.getModuleManager().getModules()) {
                 module.setBind(Keyboard.KEY_NONE);
             }
             ChatUtil.info("Reset key-binds");
@@ -29,7 +29,7 @@ public class Bind extends Command {
                 ChatUtil.error("Missing arguments: %s", this.syntax);
                 return;
             }
-            Module module = Nonsense.getModuleManager().get(args[2]);
+            AbstractModule module = Nonsense.getModuleManager().get(args[2]);
 
             if (module == null) {
                 ChatUtil.error("'%s' is not a module", args[2]);
@@ -45,7 +45,7 @@ public class Bind extends Command {
                 return;
             }
 
-            Module module = Nonsense.getModuleManager().get(args[1]);
+            AbstractModule module = Nonsense.getModuleManager().get(args[1]);
 
             if (module == null) {
                 ChatUtil.error("'%s' is not a module", args[1]);

@@ -4,6 +4,7 @@ import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.player.EventChat;
+import wtf.bhopper.nonsense.gui.hud.Hud;
 import wtf.bhopper.nonsense.module.impl.other.IrcMod;
 import wtf.bhopper.nonsense.universe.packet.PacketHandler;
 import wtf.bhopper.nonsense.universe.packet.api.AbstractClientPacket;
@@ -62,7 +63,7 @@ public class Universe {
                 return;
             }
 
-            this.sendPacket(new C2SPacketMessage(event.message.substring(prefix.length())));
+            this.sendPacket(new C2SPacketMessage(event.message.substring(prefix.length()), Hud.color()));
         }
     };
 
@@ -72,7 +73,7 @@ public class Universe {
             params.put("user", username);
             params.put("pass", password);
             Http http = new Http(API_BASE_URL + "/access")
-                    .header("User-Agent", "Nonsense Client")
+                    .header("User-Agent", Nonsense.NAME)
                     .postJson(params);
 
             if (http.status() != 200) {

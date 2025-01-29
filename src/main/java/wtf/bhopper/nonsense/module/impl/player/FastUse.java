@@ -5,7 +5,7 @@ import net.minecraft.network.play.client.C03PacketPlayer;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.player.EventPreMotion;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.EnumProperty;
@@ -15,7 +15,7 @@ import wtf.bhopper.nonsense.util.minecraft.player.PacketUtil;
 @ModuleInfo(name = "Fast Use",
         description = "Use items faster",
         category = ModuleCategory.PLAYER)
-public class FastUse extends Module {
+public class FastUse extends AbstractModule {
 
     private final EnumProperty<Mode> mode = new EnumProperty<>("Mode", "Fast use method", Mode.PACKET);
     private final NumberProperty packets = new NumberProperty("Packets", "Amount of packets to send", () -> this.mode.is(Mode.PACKET), 35, 1, 50, 1);

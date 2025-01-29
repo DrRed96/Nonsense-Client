@@ -9,7 +9,7 @@ import wtf.bhopper.nonsense.event.EventPriorities;
 import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.packet.EventReceivePacket;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
@@ -17,7 +17,7 @@ import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
 @ModuleInfo(name = "Better Chat",
         description = "Improves your chat",
         category = ModuleCategory.VISUAL)
-public class BetterChat extends Module {
+public class BetterChat extends AbstractModule {
 
     private final BooleanProperty chatStacker = new BooleanProperty("Chat Stacker", "Stacks duplicate chat messages.", true);
     private final BooleanProperty noClose = new BooleanProperty("No Close", "Prevents the server from closing your chat.", true);

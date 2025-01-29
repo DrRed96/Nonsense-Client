@@ -15,7 +15,7 @@ import wtf.bhopper.nonsense.event.EventLink;
 import wtf.bhopper.nonsense.event.Listener;
 import wtf.bhopper.nonsense.event.impl.packet.EventReceivePacket;
 import wtf.bhopper.nonsense.event.impl.packet.EventSendPacket;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
@@ -28,7 +28,7 @@ import wtf.bhopper.nonsense.util.misc.GeneralUtil;
 @ModuleInfo(name = "Announcer",
         description = "Announces things in chat.",
         category = ModuleCategory.OTHER)
-public class Announcer extends Module {
+public class Announcer extends AbstractModule {
 
     private static final String[] WELCOME_MESSAGES = new String[]{
             "Welcome",

@@ -10,7 +10,7 @@ import wtf.bhopper.nonsense.event.impl.packet.EventReceivePacket;
 import wtf.bhopper.nonsense.event.impl.client.EventTick;
 import wtf.bhopper.nonsense.gui.hud.notification.Notification;
 import wtf.bhopper.nonsense.gui.hud.notification.NotificationType;
-import wtf.bhopper.nonsense.module.Module;
+import wtf.bhopper.nonsense.module.AbstractModule;
 import wtf.bhopper.nonsense.module.ModuleCategory;
 import wtf.bhopper.nonsense.module.ModuleInfo;
 import wtf.bhopper.nonsense.module.property.impl.BooleanProperty;
@@ -26,7 +26,7 @@ import java.util.regex.Pattern;
 @ModuleInfo(name = "Auto Hypixel",
         description = "Useful mods for Hypixel",
         category = ModuleCategory.OTHER)
-public class AutoHypixel extends Module {
+public class AutoHypixel extends AbstractModule {
 
     // Taken from Sk1er AutoGG mod XD
     public static final Pattern[] AUTO_GG_REGEX = {
