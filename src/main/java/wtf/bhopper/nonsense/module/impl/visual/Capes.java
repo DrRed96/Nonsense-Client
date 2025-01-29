@@ -51,7 +51,7 @@ public class Capes extends AbstractModule {
         ICape cape = this.cape.get().cape;
         if (cape instanceof AnimatedCape animatedCape) {
             if (mc.thePlayer.ticksExisted % animatedCape.tickDelay == 0) {
-                frameCounter++;
+                this.frameCounter++;
             }
         }
     };
@@ -160,7 +160,7 @@ public class Capes extends AbstractModule {
         @Override
         public CapeLocation getResource() {
             int frameCounter = Nonsense.module(Capes.class).frameCounter;
-            return new CapeLocation(locations[frameCounter % frames], null, Color.WHITE);
+            return new CapeLocation(this.locations[frameCounter % frames], null, Color.WHITE);
         }
     }
 
