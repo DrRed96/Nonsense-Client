@@ -102,12 +102,12 @@ public class ModelPlayer extends ModelBiped
         GlStateManager.popMatrix();
     }
 
-    public void renderDeadmau5Head(float p_178727_1_)
+    public void renderDeadmau5Head(float scale)
     {
         copyModelAngles(this.bipedHead, this.bipedDeadmau5Head);
         this.bipedDeadmau5Head.rotationPointX = 0.0F;
         this.bipedDeadmau5Head.rotationPointY = 0.0F;
-        this.bipedDeadmau5Head.render(p_178727_1_);
+        this.bipedDeadmau5Head.render(scale);
     }
 
     public void renderCape(float scale)

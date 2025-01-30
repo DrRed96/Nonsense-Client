@@ -1,5 +1,6 @@
 package wtf.bhopper.nonsense.module.impl.visual;
 
+import net.minecraft.client.entity.AbstractClientPlayer;
 import net.minecraft.util.ResourceLocation;
 import wtf.bhopper.nonsense.Nonsense;
 import wtf.bhopper.nonsense.event.EventLink;
@@ -20,20 +21,20 @@ import java.awt.*;
 import java.util.function.Supplier;
 
 @ModuleInfo(name = "Capes",
-        description = "Client capes.",
+        description = "Renders a cape on your player model (Client side only)",
         category = ModuleCategory.VISUAL,
         toggled = true)
 public class Capes extends AbstractModule {
 
     public final EnumProperty<Cape> cape = new EnumProperty<>("Cape", "There's too many of them...", Cape.NONSENSE);
     public final BooleanProperty glint = new BooleanProperty("Enchanted", "Renders an enchantment glint over the cape", false);
+    public final BooleanProperty deadmau5 = new BooleanProperty("deadmau5", "Renders the deadmau5 ears on your player model", false);
 
     // Frame counter for animated capes
     private int frameCounter = 0;
 
     public Capes() {
-        super();
-        this.addProperties(this.cape, this.glint);
+        this.addProperties(this.cape, this.glint, this.deadmau5);
         this.cape.addValueChangeListener((_, _) -> this.frameCounter = 0);
     }
 
@@ -55,6 +56,10 @@ public class Capes extends AbstractModule {
             }
         }
     };
+
+    public boolean shoudlDoDeadmau5(AbstractClientPlayer player) {
+        return this.isToggled() && this.deadmau5.get() && player.isClientPlayer();
+    }
 
     public enum Cape {
         ASTOLFO,

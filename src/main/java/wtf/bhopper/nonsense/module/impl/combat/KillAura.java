@@ -76,12 +76,12 @@ public class KillAura extends AbstractModule {
     private final GroupProperty renderGroup = new GroupProperty("Render", "Rendering options", this);
     private final EnumProperty<RangeIndicator> rangeIndicator = new EnumProperty<>("Range Indicator", "Draws a circle to indicate your range", RangeIndicator.NONE);
     private final ColorProperty attackColor = new ColorProperty("Attack Color", "Color for attacking", ColorUtil.RED, () -> !this.rangeIndicator.is(RangeIndicator.NONE));
+    private final BooleanProperty particles = new BooleanProperty("Particles", "Renderers particles when attacking", true);
 
     private final EnumProperty<Swing> swingMode = new EnumProperty<>("Swing", "Swinging", Swing.CLIENT);
     private final BooleanProperty autoDisable = new BooleanProperty("Auto Disable", "Automatically disabled Kill Aura in certain situations", true);
     private final NumberProperty switchDelay = new NumberProperty("Switch Delay", "Delay between switching targets", () -> this.mode.is(Mode.SWITCH), 250.0, 0.0, 1000.0, 50.0, NumberProperty.FORMAT_MS);
     private final NumberProperty maxTargets = new NumberProperty("Max Targets", "Maximum amount of targets", () -> this.mode.is(Mode.SWITCH), 15, 1, 50, 1, NumberProperty.FORMAT_INT);
-    private final BooleanProperty particles = new BooleanProperty("Particles", "Renderers particles when attacking", true);
 
     private final List<EntityLivingBase> targets = new ArrayList<>();
     private final List<EntityLivingBase> invalidTargets = new ArrayList<>();
@@ -113,8 +113,8 @@ public class KillAura extends AbstractModule {
         super();
         this.targetsGroup.addProperties(this.players, this.mobs, this.animals, this.others, this.invis, this.dead, this.teams, this.existed);
         this.rangeGroup.addProperties(this.playerRange, this.otherRange, this.rotRange, this.swingRange, this.fov);
-        this.renderGroup.addProperties(this.rangeIndicator, this.attackColor);
-        this.addProperties(this.mode, this.sorting, this.minAps, this.maxAps, this.targetsGroup, this.rangeGroup, this.rotationsProperty, this.renderGroup, this.swingMode, this.autoDisable, this.switchDelay, this.maxTargets, this.particles);
+        this.renderGroup.addProperties(this.rangeIndicator, this.attackColor, this.particles);
+        this.addProperties(this.mode, this.sorting, this.minAps, this.maxAps, this.targetsGroup, this.rangeGroup, this.rotationsProperty, this.renderGroup, this.swingMode, this.autoDisable, this.switchDelay, this.maxTargets);
         this.setSuffix(this.mode::getDisplayValue);
 
         this.minAps.addValueChangeListener((oldValue, value) -> {
@@ -431,7 +431,7 @@ public class KillAura extends AbstractModule {
         ANGLE,
         RANGE,
         ARMOR,
-        HEALTH,
+        HEALTH
     }
 
     private enum Swing {
